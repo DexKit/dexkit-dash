@@ -115,7 +115,13 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   };
 });
 
-const WalletInfo = (props: any) => {
+interface Props {
+  onClick?: () => void;
+}
+
+const WalletInfo: React.FC<Props> = (props) => {
+  const {onClick} = props;
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const theme = useTheme();
@@ -151,29 +157,30 @@ const WalletInfo = (props: any) => {
   const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
-  const {data: balances} = useNativeSingleBalance(
-    network,
-    defaultAccount,
-  );
+  const {data: balances} = useNativeSingleBalance(network, defaultAccount);
 
   const onGoToWallet = () => {
     handleClose();
     history.push('/wallet');
+    onClick!();
   };
 
   const handleShowAccounts = useCallback(() => {
     handleClose();
     accountsModal.setShow(true);
-  }, [handleClose, accountsModal]);
+    onClick!();
+  }, [handleClose, accountsModal, onClick]);
 
   const onGoToManageWallet = () => {
     handleClose();
     history.push('/onboarding/login-wallet');
+    onClick!();
   };
 
   const onGoToLoginWallet = () => {
     handleClose();
     history.push('/onboarding/login-wallet');
+    onClick!();
   };
 
   let ethBalanceValue;
@@ -205,7 +212,7 @@ const WalletInfo = (props: any) => {
 
   const {tokenSymbol} = useChainInfo();
 
-  return web3State === Web3State.Done || defaultAccount ? (
+  return web3State === Web3State.Done || accounts.length > 0 ? (
     <Box className={classes.walletBalance}>
       <Grid
         container
@@ -291,7 +298,11 @@ const WalletInfo = (props: any) => {
                     a?.address?.toLowerCase() !== defaultAccount?.toLowerCase(),
                 )
                 .map((a, i) => (
-                  <MenuItem key={i} onClick={() => onSetDefaultAccount(a)}>
+                  <MenuItem
+                    key={i}
+                    onClick={() => {
+                      onSetDefaultAccount(a);
+                    }}>
                     <Box display='flex' alignItems='center'>
                       {a?.address?.toLowerCase() ===
                       web3Account?.toLowerCase() ? (
