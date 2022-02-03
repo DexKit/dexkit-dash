@@ -103,40 +103,38 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           (result: ethers.providers.TransactionReceipt | undefined) => {
             if (result !== undefined) {
               if ((result.status || 0) === 1) {
-                if (window.Notification.permission === 'denied') {
-                  enqueueSnackbar(
-                    messages['app.common.transactionConfirmed'] as string,
-                    {
-                      variant: 'success',
-                      autoHideDuration: 5000,
-                      action: (
-                        <Button
-                          onClick={() =>
-                            handleViewTransaction(
-                              metadata.chainId,
-                              metadata.transactionHash,
-                            )
-                          }>
-                          <IntlMessages id='app.common.view' />
-                        </Button>
-                      ),
-                    },
-                  );
-                } else {
-                  window.Notification.requestPermission().then((value) => {
-                    if (typeof window !== 'undefined') {
-                      const notification = new window.Notification(
-                        messages['app.common.transactionConfirmed'] as string,
-                      );
+                enqueueSnackbar(
+                  messages['app.common.transactionConfirmed'] as string,
+                  {
+                    variant: 'success',
+                    autoHideDuration: 5000,
+                    action: (
+                      <Button
+                        onClick={() =>
+                          handleViewTransaction(
+                            metadata.chainId,
+                            metadata.transactionHash,
+                          )
+                        }>
+                        <IntlMessages id='app.common.view' />
+                      </Button>
+                    ),
+                  },
+                );
 
-                      notification.onclick = () =>
-                        handleViewTransaction(
-                          metadata.chainId,
-                          metadata.transactionHash,
-                        );
-                    }
-                  });
-                }
+                // window.Notification.requestPermission().then((value) => {
+                //   if (typeof window !== 'undefined') {
+                //     const notification = new window.Notification(
+                //       messages['app.common.transactionConfirmed'] as string,
+                //     );
+
+                //     notification.onclick = () =>
+                //       handleViewTransaction(
+                //         metadata.chainId,
+                //         metadata.transactionHash,
+                //       );
+                //   }
+                // });
 
                 dispatch(
                   updateNotification({
@@ -149,40 +147,38 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 );
                 setWaitingConfirm(false);
               } else if ((result.status || 0) === 0) {
-                if (window.Notification.permission === 'denied') {
-                  enqueueSnackbar(
-                    messages['app.common.transactionFailed'] as string,
-                    {
-                      variant: 'error',
-                      autoHideDuration: 5000,
-                      action: (
-                        <Button
-                          onClick={() =>
-                            handleViewTransaction(
-                              metadata.chainId,
-                              metadata.transactionHash,
-                            )
-                          }>
-                          <IntlMessages id='app.common.view' />
-                        </Button>
-                      ),
-                    },
-                  );
-                } else {
-                  window.Notification.requestPermission().then((value) => {
-                    if (typeof window !== 'undefined') {
-                      const notification = new window.Notification(
-                        messages['app.common.transactionFailed'] as string,
-                      );
+                enqueueSnackbar(
+                  messages['app.common.transactionFailed'] as string,
+                  {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                    action: (
+                      <Button
+                        onClick={() =>
+                          handleViewTransaction(
+                            metadata.chainId,
+                            metadata.transactionHash,
+                          )
+                        }>
+                        <IntlMessages id='app.common.view' />
+                      </Button>
+                    ),
+                  },
+                );
 
-                      notification.onclick = () =>
-                        handleViewTransaction(
-                          metadata.chainId,
-                          metadata.transactionHash,
-                        );
-                    }
-                  });
-                }
+                // window.Notification.requestPermission().then((value) => {
+                //   if (typeof window !== 'undefined') {
+                //     const notification = new window.Notification(
+                //       messages['app.common.transactionFailed'] as string,
+                //     );
+
+                //     notification.onclick = () =>
+                //       handleViewTransaction(
+                //         metadata.chainId,
+                //         metadata.transactionHash,
+                //       );
+                //   }
+                // });
 
                 dispatch(
                   updateNotification({
