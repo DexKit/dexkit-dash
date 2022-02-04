@@ -32,6 +32,7 @@ import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDial
 
 import WelcomeDialog from 'shared/components/WelcomeDialog';
 import {useAppGlobalState} from 'hooks/useGlobalState';
+import SignDataDialog from 'shared/components/SignDataDialog';
 
 interface MiniSidebarToggleProps {
   props?: any;
@@ -65,6 +66,16 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
         onCancel={globalState.handleTransactionCancel}
         data={globalState.data}
         onConfirm={globalState.handleTransactionConfirm}
+      />
+      <SignDataDialog
+        dialogProps={{
+          open: globalState.showSignDataDialog,
+          maxWidth: 'xs',
+          fullWidth: true,
+        }}
+        signData={globalState.signData}
+        onConfirm={globalState.handleSignConfirm}
+        onCancel={globalState.handleSignCancel}
       />
       <WelcomeDialog onClose={handleCloseWelcome} open={welcomeModal.show} />
       <Box

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import {Theme, createStyles, makeStyles} from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
-import { Fonts } from 'shared/constants/AppEnums';
+import {Fonts} from 'shared/constants/AppEnums';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,10 +41,50 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.16'
+          id='panelv0.0.6.16-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.17- 03-02-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Bug fix's</Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.16'
+          id='panelv0.0.6.16-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.16 - 02-02-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Browser Notifications
+            </Typography>
+          </Box>
+        </AccordionDetails>
+
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Several bugs fix's and designs tweaks
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.15'
           id='panelv0.0.6.15-header'>
           <Typography className={classes.heading}>
-            v0.0.6.15 -  28-01-2021{' '}
+            v0.0.6.15 - 28-01-2021{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -84,8 +124,7 @@ const Changelog = () => {
         </AccordionDetails>
       </Accordion>
 
-
-      <Accordion >
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.14'
@@ -96,9 +135,7 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-            <Typography className={classes.item}>
-              Bug fix's
-            </Typography>
+            <Typography className={classes.item}>Bug fix's</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -116,10 +153,7 @@ const Changelog = () => {
             <Typography className={classes.item}>
               Bug fix's on Trade and Overview page
             </Typography>
-            <Typography className={classes.item}>
-              Added Ramp
-            </Typography>
-
+            <Typography className={classes.item}>Added Ramp</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -152,7 +186,8 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
-              Affiliate Page - Fix Affiliate balances for BSC, and make it more clear for user.
+              Affiliate Page - Fix Affiliate balances for BSC, and make it more
+              clear for user.
             </Typography>
           </Box>
         </AccordionDetails>
@@ -228,7 +263,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion >
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'

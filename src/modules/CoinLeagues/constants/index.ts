@@ -705,7 +705,7 @@ export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xA67B9dBfb1371DEBB7f60B681A74798f014cb007',
   [ChainId.Matic]: '0xc93f920483Db1122D6Fc7f2f832C3610c73C0C8E',
-  [ChainId.Binance]: '0x34C21825ef6Bfbf69cb8748B4587f88342da7aFb',
+  [ChainId.Binance]: '0xa1B3a09D5f83a52085fd37becb229038bCeacFf3',
 };
 
 export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
@@ -720,4 +720,4 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 
 export const GAME_METADATA_API =
   'https://coinleague-app-api-yxwk6.ondigitalocean.app';
-//export const GAME_METADATA_API = 'http://localhost:4001'
+//export const GAME_METADATA_API = 'http://localhost:4001';

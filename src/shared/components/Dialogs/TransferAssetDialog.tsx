@@ -99,7 +99,7 @@ export const TransferAssetDialog: React.FC<Props> = ({
             title: messages['app.wallet.transferringAsset'].toString(),
             body: messages['app.wallet.trasnferingAssetTo'].toString(),
             timestamp: Date.now(),
-            url: `${getScannerUrl(chainId)}/tx/`,
+            url: `${getScannerUrl(chainId)}/tx/${result.hash}`,
             urlCaption: messages['app.wallet.viewTransaction'].toString(),
             type: NotificationType.TRANSACTION,
             metadata: {
