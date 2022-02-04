@@ -57,13 +57,27 @@ export function getNormalizedUrl(url: string) {
 }
 
 export function isMetamaskWallet() {
-  return window.ethereum && window?.ethereum?.isMetaMask;
+  if (
+    typeof window !== 'undefined' &&
+    window.ethereum &&
+    typeof window.ethereum.isMetamask !== 'undefined'
+  ) {
+    return window.ethereum.isMetamask;
+  }
+
+  return false;
 }
 
 export function isTrustWallet() {
-  return (
+  if (
+    typeof window !== 'undefined' &&
     window.ethereum &&
-    window?.ethereum?.isTrust !== undefined &&
-    window?.ethereum?.isTrust
-  );
+    typeof window.ethereum.isTrust !== 'undefined'
+  ) {
+    return window.ethereum.isTrust;
+  }
+
+  return false;
 }
+
+
