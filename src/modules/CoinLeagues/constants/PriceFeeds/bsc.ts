@@ -58,7 +58,7 @@ export const BSCPriceFeeds = [
   {
     address: '0x0Db8945f9aEf5651fa5bd52314C5aAe78DfDe540',
     base: 'COMP',
-    baseName: 'Coumpound',
+    baseName: 'Compound',
     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png',
     quote: 'USD',
     tv: 'COINBASE:COMPUSD',
