@@ -1,0 +1,27 @@
+import {useWeb3} from 'hooks/useWeb3';
+import {useQuery} from 'react-query';
+
+import {GET_GAME} from '../services/gql';
+import {getGraphClient} from '../services/graphql';
+import {GameGraph} from '../utils/type';
+
+export const useGameGraph = (id: string) => {
+  const {chainId} = useWeb3();
+
+  const gamesQuery = useQuery(['GET_GAME_NFT_LEAGUE', chainId, id], () => {
+    const client = getGraphClient(chainId);
+
+    if (!chainId || !client) {
+      return;
+    }
+
+    return client.query<GameGraph, {id: string}>({
+      query: GET_GAME,
+      variables: {
+        id,
+      },
+    });
+  });
+
+  return gamesQuery;
+};
