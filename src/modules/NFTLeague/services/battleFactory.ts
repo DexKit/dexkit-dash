@@ -3,7 +3,7 @@ import {CallInput} from '@indexed-finance/multicall';
 import {ContractTransaction, ethers, providers} from 'ethers';
 import {getMulticallFromProvider} from 'services/multicall';
 import battleFactoryAbi from '../constants/ABI/BattleNFTFactory.json';
-import {Coin, CreateAndJoinParams, Game, JoinGameParams} from '../utils/type';
+import {Coin, CreateAndJoinParams, Game, JoinGameParams} from '../utils/types';
 
 export const getBattleFactoryContract = async (
   address: string,
