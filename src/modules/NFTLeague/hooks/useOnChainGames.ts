@@ -1,7 +1,7 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useQuery} from 'react-query';
 import {ChainId, Web3State} from 'types/blockchain';
-import {NFT_LEAGUES_FACTORY_ADDRESS} from '../constants';
+import {NFT_LEAGUE_FACTORY_ADDRESS} from '../constants';
 import {getGamesData} from '../services/battleFactory';
 
 export const useOnChainGames = (ids: string[]) => {
@@ -14,8 +14,7 @@ export const useOnChainGames = (ids: string[]) => {
         return;
       }
       const provider = getProvider();
-      const gameAddress =
-        NFT_LEAGUES_FACTORY_ADDRESS[chainId as ChainId.Mumbai];
+      const gameAddress = NFT_LEAGUE_FACTORY_ADDRESS[chainId as ChainId.Mumbai];
 
       return getGamesData(gameAddress, ids, provider);
     },
