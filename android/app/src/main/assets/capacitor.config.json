@@ -1,0 +1,6 @@
+{
+	"appId": "com.coinleague.dexkit.app",
+	"appName": "Coinleague",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
