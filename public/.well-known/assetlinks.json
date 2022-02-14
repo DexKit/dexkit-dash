@@ -1,0 +1,5 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "com.coinleague.dexkit.app",
+                 "sha256_cert_fingerprints": ["C4:3B:DB:0D:F5:17:44:BF:31:0E:38:EB:6B:BE:8C:5B:69:5D:BE:52:AF:43:A2:7F:D4:1F:93:75:29:A2:2C:49"] }
+}]
