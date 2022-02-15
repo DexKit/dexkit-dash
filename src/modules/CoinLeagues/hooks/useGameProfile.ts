@@ -147,8 +147,9 @@ export const useProfileGameDeleteCallback = () => {
 export const useProfileGame = (account?: string) => {
   return useQuery(['GET_GAME_PROFILE', account], () => {
     if (!account) {
-      return;
+      return undefined;
     }
+
     return getProfile(account);
   });
 };

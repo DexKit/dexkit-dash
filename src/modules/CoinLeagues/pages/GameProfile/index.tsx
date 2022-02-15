@@ -19,6 +19,7 @@ import {useWeb3} from 'hooks/useWeb3';
 
 const GameProfile = () => {
   const isMobile = useMobile();
+  // eslint-disable-next-line
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {onPostMetadata} = useGameProfileUpdater();
   const {account} = useWeb3();
@@ -58,7 +59,7 @@ const GameProfile = () => {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
-      {!isMobile && (
+      {/* {!isMobile && (
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
             <Breadcrumbs>
@@ -80,7 +81,7 @@ const GameProfile = () => {
       <Grid item xs={12} sm={12} xl={12}>
         <Box display={'flex'}>{data?.username}</Box>
         <Box display={'flex'}>{data?.profileImage}</Box>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

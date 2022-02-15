@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {providers} from 'ethers';
 import {_TypedDataEncoder} from 'ethers/lib/utils';
 import {ChainId} from 'types/blockchain';
@@ -107,14 +108,9 @@ export const remove = (sig: string, message: string, account: string) => {
 };
 
 export const getProfile = async (address: string) => {
-  try {
-    const response = await fetch(`${PROFILE_API}/${address}`);
-    if (response.ok && response.status === 200) {
-      return (await response.json()) as GameProfile;
-    }
-  } catch {
-    return;
-  }
+  return axios
+    .get<GameProfile>(`${PROFILE_API}/${address}`)
+    .then((response) => response.data);
 };
 
 /**

@@ -49,7 +49,7 @@ export function getNormalizedUrl(url: string) {
   let fetchUrl = url;
 
   if (isIpfsUrl(url)) {
-    let path = url.substring(6, url.length);
+    let path = url.substring('ipfs://'.length, url.length);
     fetchUrl = `${IPFS_GATEWAY}${path}`;
   }
 

@@ -103,3 +103,19 @@ export interface MultiplierInterface {
   championId: BigNumber;
   isChampionsMultiplier: boolean;
 }
+
+export interface ProfileStats {
+  totalWinnedGames: string;
+  totalFirstWinnedGames: string;
+  totalSecondWinnedGames: string;
+  totalThirdWinnedGames: string;
+  totalJoinedGames: string;
+  totalEarned: string;
+  totalSpent: string;
+}
+
+export enum CoinLeagueGames {
+  CoinLeague,
+  SquidGame,
+  NFTLeague,
+}
