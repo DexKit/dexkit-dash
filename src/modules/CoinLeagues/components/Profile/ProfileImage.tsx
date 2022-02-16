@@ -26,10 +26,13 @@ interface Props {
 
 export const ProfileImage: React.FC<Props> = ({image, onClick}) => {
   const classes = useStyles();
-  console.log('image', image);
   return (
     <ButtonBase className={classes.button} onClick={onClick}>
-      <img alt='' className={classes.root} src={image} />
+      <img
+        alt=''
+        className={classes.root}
+        src={!image ? require('../../assets/no-profile.png') : image}
+      />
     </ButtonBase>
   );
 };

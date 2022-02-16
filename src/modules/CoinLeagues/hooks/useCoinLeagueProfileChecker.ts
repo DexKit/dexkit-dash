@@ -5,12 +5,22 @@ const PROFILE_USERNAME_CHECK_QUERY = 'PROFILE_USERNAME_CHECK_QUERY';
 
 export function useCoinLeagueProfileChecker(username: string) {
   return useQuery([PROFILE_USERNAME_CHECK_QUERY, username], async () => {
-    const profile = await getProfile(username);
-
-    if (profile.id) {
-      return {isAvailable: false};
+    if (!username) {
+      return;
     }
 
-    return {isAvailable: true};
+    return getProfile(username)
+      .then((profile) => {
+        return {isAvailable: false};
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.status === 404) {
+            return {isAvailable: true};
+          }
+        }
+
+        return err;
+      });
   });
 }

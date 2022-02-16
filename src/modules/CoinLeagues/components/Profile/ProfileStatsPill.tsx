@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {makeStyles, Paper, Box, Typography} from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +40,7 @@ export const ProfileStatsPill: React.FC<Props> = ({caption, value, icon}) => {
           {caption}
         </Typography>
         <Typography noWrap className={classes.value} variant='h5'>
-          {!value ? <Skeleton /> : value}
+          {value === undefined ? '0' : value}
         </Typography>
       </Box>
     </Paper>

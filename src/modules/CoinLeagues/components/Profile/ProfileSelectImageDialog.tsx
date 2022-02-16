@@ -49,11 +49,9 @@ export const ProfileSelectImageDialog: React.FC<Props> = ({
   onSelect,
   address,
 }) => {
-  console.log('sadsad rerender');
-
   const {chainId} = useLeaguesChainInfo();
 
-  const myChampions = useMyChampions(chainId);
+  const myChampions = useMyChampions({chainId});
 
   const {account} = useWeb3();
 

@@ -58,7 +58,7 @@ export const ProfileImageCard: React.FC<Props> = ({
         });
       }
     }
-  }, [onClick, tokenId, contractAddress]);
+  }, [onClick, tokenId, contractAddress, image]);
 
   return (
     <Card

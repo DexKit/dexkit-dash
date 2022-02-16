@@ -7,7 +7,11 @@ import {
   Button,
   InputAdornment,
   CircularProgress,
+  Breadcrumbs,
+  Link,
+  IconButton,
 } from '@material-ui/core';
+import {Link as RouterLink} from 'react-router-dom';
 
 import React, {useCallback, useState, useEffect} from 'react';
 import MainLayout from 'shared/components/layouts/main';
@@ -15,7 +19,7 @@ import MainLayout from 'shared/components/layouts/main';
 import {Edit} from '@material-ui/icons';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import {useParams} from 'react-router';
+import {useHistory, useParams} from 'react-router';
 import {ProfileImage} from 'modules/CoinLeagues/components/Profile/ProfileImage';
 
 import {useDebounce} from 'hooks/useDebounce';
@@ -34,6 +38,12 @@ import {
   useProfileGame,
 } from 'modules/CoinLeagues/hooks/useGameProfile';
 import {getNormalizedUrl} from 'utils/browser';
+import {HOME_ROUTE} from 'shared/constants/routes';
+import {isAddress} from 'web3-utils';
+import {reduceAddress} from 'modules/CoinLeagues/utils/game';
+
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Alert} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   fontBold: {
@@ -44,9 +54,14 @@ const useStyles = makeStyles((theme) => ({
 export const ProfileEditPage: React.FC = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const {messages} = useIntl();
   const isMobile = useMobile();
 
+  const [error, setError] = useState<Error>();
+  const [successMessage, setSuccessMessage] = useState<string>();
+
+  const [pending, setPending] = useState(false);
   const [username, setUsername] = useState('');
 
   const selectImageToggler = useToggler();
@@ -58,14 +73,6 @@ export const ProfileEditPage: React.FC = () => {
   const [image, setImage] = useState<string>();
   const [selectedAsset, setSelectedAsset] =
     useState<{tokenId: string; contractAddress: string}>();
-
-  const isSelfUser = useCallback(() => {
-    if (profileGame.data) {
-      return profileGame.data?.username === username;
-    }
-
-    return false;
-  }, [profileGame, username]);
 
   const handleCloseSelectImageDialog = useCallback(() => {
     selectImageToggler.set(false);
@@ -87,8 +94,6 @@ export const ProfileEditPage: React.FC = () => {
   const handleSelectProfileImage = useCallback(
     (params: {tokenId: string; contractAddress: string; image: string}) => {
       setSelectedAsset(params);
-
-      console.log(params.image);
 
       selectImageToggler.set(false);
       setImage(params.image);
@@ -144,23 +149,42 @@ export const ProfileEditPage: React.FC = () => {
 
   const handleSaveProfile = useCallback(() => {
     if (selectedAsset !== undefined && username !== '') {
+      setPending(true);
       profileUpdater.onPostMetadata(
         username,
         selectedAsset.contractAddress,
         selectedAsset.tokenId,
+        {
+          onConfirmation: () => {
+            if (profileGame.data) {
+              setSuccessMessage(
+                messages['app.coinLeague.profileUpdated'] as string,
+              );
+            } else {
+              setSuccessMessage(
+                messages['app.coinLeague.profileCreated'] as string,
+              );
+            }
+            setPending(false);
+          },
+          onError: (err) => {
+            setError(err);
+            setPending(false);
+          },
+        },
       );
     }
-  }, [profileUpdater, username, selectedAsset]);
+  }, [profileUpdater, username, selectedAsset, profileGame, messages]);
 
-  const handleUpdateProfile = useCallback(() => {
-    if (selectedAsset !== undefined && username !== '') {
-      profileUpdater.onPostMetadata(
-        username,
-        selectedAsset.contractAddress,
-        selectedAsset.tokenId,
-      );
-    }
-  }, [profileUpdater, username, selectedAsset]);
+  const handleGoClick = useCallback(() => {
+    history.push(`/coin-league/profile/${address}`);
+  }, [history, address]);
+
+  const handleClearError = useCallback(() => setError(undefined), []);
+  const handleClearSuccess = useCallback(
+    () => setSuccessMessage(undefined),
+    [],
+  );
 
   return (
     <>
@@ -179,6 +203,63 @@ export const ProfileEditPage: React.FC = () => {
       )}
       <MainLayout>
         <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              {!isMobile ? (
+                <Grid item xs={12}>
+                  <Breadcrumbs>
+                    <Link
+                      color='inherit'
+                      component={RouterLink}
+                      to={HOME_ROUTE}>
+                      <IntlMessages id='app.coinLeagues.dashboard' />
+                    </Link>
+                    <Link
+                      color='inherit'
+                      component={RouterLink}
+                      to={`/coin-league/profile/${address}`}>
+                      <IntlMessages id='app.coinLeagues.profile' />
+                    </Link>
+                    <Typography>
+                      {profileGame.data?.username
+                        ? profileGame.data?.username
+                        : isAddress(address)
+                        ? reduceAddress(address)
+                        : ''}
+                    </Typography>
+                  </Breadcrumbs>
+                </Grid>
+              ) : null}
+              <Grid item xs={12}>
+                <Grid container spacing={2} alignItems='center'>
+                  <Grid item>
+                    <IconButton onClick={handleGoClick} size='small'>
+                      <ArrowBackIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant='h5'>
+                      <IntlMessages id='app.coinLeague.edit' />
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {error && (
+            <Grid item xs={12}>
+              <Alert severity='error' onClose={handleClearError}>
+                {error?.message}
+              </Alert>
+            </Grid>
+          )}
+          {successMessage && (
+            <Grid item xs={12}>
+              <Alert severity='success' onClose={handleClearSuccess}>
+                {successMessage}
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Typography
               className={classes.fontBold}
@@ -232,10 +313,19 @@ export const ProfileEditPage: React.FC = () => {
 
           <Grid item xs={12}>
             <Button
-              onClick={
-                profileGame.data ? handleUpdateProfile : handleSaveProfile
+              disabled={
+                pending ||
+                (lazyUsername !== (profileGame.data?.username || '') &&
+                  !profileChecker.data?.isAvailable)
               }
-              startIcon={<Edit />}
+              onClick={handleSaveProfile}
+              startIcon={
+                pending ? (
+                  <CircularProgress color='inherit' size='1.2rem' />
+                ) : (
+                  <Edit />
+                )
+              }
               variant='contained'
               color='primary'>
               <IntlMessages id='app.coinLeague.save' />

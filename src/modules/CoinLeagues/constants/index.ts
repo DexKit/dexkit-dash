@@ -722,6 +722,7 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 //   'https://coinleague-app-api-yxwk6.ondigitalocean.app';
 //export const GAME_METADATA_API = 'http://localhost:4001';
 
-export const GAME_METADATA_API = 'http://172.18.118.48:4001';
+export const GAME_METADATA_API =
+  process.env.REACT_APP_PROFILE_API || 'http://localhost:4001';
 
 export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;

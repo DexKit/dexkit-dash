@@ -8,6 +8,7 @@ import {
 } from 'modules/CoinLeagues/constants/enums';
 import {gql} from 'graphql-tag';
 import {ChainId} from 'types/blockchain';
+import {CoinLeagueGames} from './types';
 
 export const isGameCreator = (address?: string) => {
   if (!address) {
@@ -355,4 +356,28 @@ export function reduceAddress(address?: string) {
   }
 
   return '';
+}
+
+export function slugToCoinLeagueGame(slug: string) {
+  switch (slug) {
+    case 'coin-leagues':
+      return CoinLeagueGames.CoinLeague;
+    case 'squid-game':
+      return CoinLeagueGames.SquidGame;
+    case 'nft-league':
+      return CoinLeagueGames.NFTLeague;
+    default:
+      return CoinLeagueGames.CoinLeague;
+  }
+}
+
+export function coinLeagueGamesToSlug(game: CoinLeagueGames) {
+  switch (game) {
+    case CoinLeagueGames.CoinLeague:
+      return 'coin-leagues';
+    case CoinLeagueGames.SquidGame:
+      return 'squid-game';
+    case CoinLeagueGames.NFTLeague:
+      return 'nft-league';
+  }
 }

@@ -17,10 +17,16 @@ import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {getWindowUrl} from 'utils/browser';
+import {ChainId} from 'types/blockchain';
+import {coinLeagueGamesToSlug} from 'modules/CoinLeagues/utils/game';
+import {chainIdToSlug} from 'utils/nft';
+import {CoinLeagueGames} from 'modules/CoinLeagues/utils/types';
 
 interface Props {
   dialogProps: DialogProps;
   address?: string;
+  network?: ChainId;
+  game?: CoinLeagueGames;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +35,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ProfileShareDialog: React.FC<Props> = ({dialogProps, address}) => {
+export const ProfileShareDialog: React.FC<Props> = ({
+  dialogProps,
+  address,
+  game,
+  network,
+}) => {
   const classes = useStyles();
   const {onClose} = dialogProps;
 
@@ -46,8 +57,16 @@ export const ProfileShareDialog: React.FC<Props> = ({dialogProps, address}) => {
   const [showCopiedText, setShowCopiedText] = useState(false);
 
   const profileAddress = useMemo(() => {
-    return `${getWindowUrl()}/coin-league/profile/${address}`;
-  }, [address]);
+    console.log('profile');
+
+    if (game !== undefined && network !== undefined && address) {
+      return `${getWindowUrl()}/coin-league/profile/${address}?network=${chainIdToSlug(
+        network,
+      )}&game=${coinLeagueGamesToSlug(game)}`;
+    }
+  }, [address, game, network]);
+
+  console.log(game, network);
 
   const handleTooltipOpen = useCallback(() => {
     setShowCopiedText(true);

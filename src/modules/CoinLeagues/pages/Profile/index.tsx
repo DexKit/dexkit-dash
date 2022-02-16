@@ -16,10 +16,8 @@ import {Link as RouterLink} from 'react-router-dom';
 import {Skeleton} from '@material-ui/lab';
 
 import {ProfileImage} from 'modules/CoinLeagues/components/Profile/ProfileImage';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import MainLayout from 'shared/components/layouts/main';
-
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Edit, Share} from '@material-ui/icons';
@@ -31,7 +29,7 @@ import {
 } from 'modules/CoinLeagues/components/Profile/icons';
 
 // import {CoinStack} from 'modules/CoinLeagues/components/Profile/CoinStack';
-import {useParams} from 'react-router';
+import {useHistory, useParams} from 'react-router';
 import {usePlayerProfileStats} from 'modules/CoinLeagues/hooks/usePlayerProfileStats';
 import {truncateAddress} from 'utils';
 import {isAddress} from 'web3-utils';
@@ -44,10 +42,19 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useMobile} from 'hooks/useMobile';
 import ProfileShareDialog from 'modules/CoinLeagues/components/Profile/ProfileShareDialog';
 import {useToggler} from 'hooks/useToggler';
-import {reduceAddress} from 'modules/CoinLeagues/utils/game';
+import {
+  coinLeagueGamesToSlug,
+  reduceAddress,
+  slugToCoinLeagueGame,
+} from 'modules/CoinLeagues/utils/game';
 import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 import CopyButton from 'shared/components/CopyButton';
 import {useWeb3} from 'hooks/useWeb3';
+import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {getNormalizedUrl} from 'utils/browser';
+import {useChampionBalance} from 'modules/CoinLeagues/hooks/champions';
+import {chainIdToSlug, slugToChainId} from 'utils/nft';
+import {ChainId} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -67,19 +74,37 @@ const useStyles = makeStyles((theme) => ({
   },
   seeCollectionCallToAction: {
     padding: theme.spacing(4),
+    display: 'flex',
+  },
+  nftButtonImage: {
+    marginBottom: -theme.spacing(5),
+  },
+  innerPaper: {
+    paddingTop: theme.spacing(4),
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+    backgroundColor: theme.palette.action.disabledBackground,
   },
 }));
 
 export const ProfilePage: React.FC = () => {
   const classes = useStyles();
 
+  const history = useHistory();
+
+  const searchParams = new URLSearchParams(history.location.search);
+
   const {account} = useWeb3();
 
-  const {coinSymbol} = useLeaguesChainInfo();
+  const {coinSymbol, chainId} = useLeaguesChainInfo();
 
   const {address} = useParams<{address: string}>();
 
   const playerStats = usePlayerProfileStats(address.toLowerCase());
+
+  const gameProfile = useProfileGame(address.toLowerCase());
+
+  const championsBalance = useChampionBalance({chainId, account: address});
 
   const {messages} = useIntl();
 
@@ -87,9 +112,24 @@ export const ProfilePage: React.FC = () => {
     CoinLeagueGames.CoinLeague,
   );
 
+  const [network, setNetwork] = useState<ChainId>(ChainId.Matic);
+
   const handleSelectGame = useCallback((e) => {
+    console.log('chage', e.target.value);
     setSelectedGame(e.target.value);
   }, []);
+
+  const handleNetworkChange = useCallback(
+    (e) => {
+      setNetwork(e.target.value);
+      history.replace(
+        `/coin-league/profile/${address}?network=${chainIdToSlug(
+          e.target.value as ChainId,
+        )}&game=${coinLeagueGamesToSlug(selectedGame)}`,
+      );
+    },
+    [history, address, selectedGame],
+  );
 
   const isMobile = useMobile();
 
@@ -98,6 +138,24 @@ export const ProfilePage: React.FC = () => {
   const handleCloseShareDialog = useCallback(() => {
     shareDialogToggler.set(false);
   }, [shareDialogToggler]);
+
+  const handleGoCollection = useCallback(() => {
+    history.push(`/coin-league/profile/${address}/my-champions`);
+  }, [history, address]);
+
+  useEffect(() => {
+    const game = searchParams.get('game');
+    const networkParam = searchParams.get('network');
+
+    if (game !== null) {
+      setSelectedGame(slugToCoinLeagueGame(game));
+    }
+
+    if (networkParam !== null) {
+      setNetwork(slugToChainId(networkParam));
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -110,6 +168,8 @@ export const ProfilePage: React.FC = () => {
           fullScreen: isMobile,
         }}
         address={isAddress(address) ? address : ''}
+        game={selectedGame}
+        network={network ? network : chainId}
       />
       <MainLayout>
         <Grid container spacing={4}>
@@ -125,7 +185,13 @@ export const ProfilePage: React.FC = () => {
                   alignContent='center'
                   alignItems='center'
                   justifyContent='center'>
-                  <ProfileImage image='' />
+                  <ProfileImage
+                    image={
+                      gameProfile.data?.profileImage
+                        ? getNormalizedUrl(gameProfile.data?.profileImage)
+                        : undefined
+                    }
+                  />
                 </Box>
               </Grid>
               <Grid item xs={isMobile ? 12 : undefined} sm>
@@ -133,7 +199,11 @@ export const ProfilePage: React.FC = () => {
                   className={classes.fontBold}
                   align={isMobile ? 'center' : 'left'}
                   variant='body1'>
-                  {isAddress(address) ? reduceAddress(address) : null}
+                  {gameProfile.data && !gameProfile.error
+                    ? gameProfile.data.username
+                    : isAddress(address)
+                    ? reduceAddress(address)
+                    : null}
                 </Typography>
                 <Typography
                   color='textSecondary'
@@ -155,7 +225,7 @@ export const ProfilePage: React.FC = () => {
                   )}
                 </Typography>
               </Grid>
-              {!isMobile ? (
+              {/* {!isMobile ? (
                 <Grid item>
                   <Grid container spacing={2}>
                     <Grid item>
@@ -194,13 +264,13 @@ export const ProfilePage: React.FC = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-              ) : null}
+              ) : null} */}
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Divider />
           </Grid>
-          {isMobile ? (
+          {/* {isMobile ? (
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item xs>
@@ -235,15 +305,15 @@ export const ProfilePage: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-          ) : null}
+          ) : null} */}
           <Grid item xs={12}>
             <Grid
               container
               spacing={4}
               alignItems='center'
               alignContent='center'>
-              <Grid item xs={isMobile ? true : undefined}>
-                {account === address ? (
+              {account === address ? (
+                <Grid item xs={isMobile ? true : undefined}>
                   <Button
                     component={RouterLink}
                     to={`/coin-league/profile/${address}/edit`}
@@ -253,12 +323,18 @@ export const ProfilePage: React.FC = () => {
                     startIcon={<Edit />}>
                     <IntlMessages id='app.coinLeague.edit' />
                   </Button>
-                ) : (
-                  <Button fullWidth color='primary' variant='contained'>
+                </Grid>
+              ) : false ? (
+                <Grid item xs={isMobile ? true : undefined}>
+                  <Button
+                    disabled
+                    fullWidth
+                    color='primary'
+                    variant='contained'>
                     <IntlMessages id='app.coinLeague.follow' />
                   </Button>
-                )}
-              </Grid>
+                </Grid>
+              ) : null}
               <Grid item xs={isMobile ? true : undefined}>
                 <Button
                   fullWidth
@@ -281,9 +357,13 @@ export const ProfilePage: React.FC = () => {
             <Typography gutterBottom variant='body2' color='textSecondary'>
               <IntlMessages id='app.coinLeague.selectANetworkToViewDataFrom' />
             </Typography>
-            <Select variant='outlined' fullWidth value='1'>
-              <MenuItem value='1'>Polygon</MenuItem>
-              <MenuItem value='2'>Binance Smart Chain</MenuItem>
+            <Select
+              value={network}
+              onChange={handleNetworkChange}
+              variant='outlined'
+              fullWidth>
+              <MenuItem value={ChainId.Matic}>Polygon</MenuItem>
+              <MenuItem value={ChainId.Binance}>Binance Smart Chain</MenuItem>
             </Select>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -321,7 +401,10 @@ export const ProfilePage: React.FC = () => {
 
             {selectedGame === CoinLeagueGames.CoinLeague && (
               <Box className={classes.container}>
-                <Grid container spacing={4} wrap='nowrap'>
+                <Grid
+                  container
+                  spacing={4}
+                  wrap={isMobile ? 'nowrap' : undefined}>
                   <Grid item>
                     <ProfileStatsPill
                       icon={<CupStatsIcon />}
@@ -400,33 +483,43 @@ export const ProfilePage: React.FC = () => {
           </Typography>
           <CoinStack coins={[{image: ''}, {image: ''}, {image: ''}]} />
         </Grid> */}
-          <Grid item xs={12}>
-            <Typography
-              className={classes.fontBold}
-              color='textPrimary'
-              variant='subtitle1'>
-              My Champions
-            </Typography>
-            <Typography gutterBottom variant='body2' color='textSecondary'>
-              Click below to see your champion collection
-            </Typography>
-
+          <Grid item xs={isMobile ? 12 : undefined}>
             <ButtonBase
+              onClick={handleGoCollection}
               component={Paper}
               className={classes.seeCollectionCallToAction}>
-              <Grid
-                container
-                alignContent='center'
-                alignItems='center'
-                spacing={4}>
-                <Grid item></Grid>
+              <Grid container spacing={4}>
                 <Grid item>
-                  <Typography variant='h4'>20</Typography>
+                  <img
+                    className={classes.nftButtonImage}
+                    src={require('../../assets/profile-coin-nft.png')}
+                    alt=''
+                  />
                 </Grid>
-                <Grid item>
-                  <Box display='flex' alignContent='center' alignItems='center'>
-                    <NavigateNextIcon />
-                  </Box>
+                <Grid item xs>
+                  <Typography
+                    className={classes.fontBold}
+                    color='textPrimary'
+                    variant='subtitle1'>
+                    <IntlMessages id='app.coinLeague.myChampions' />
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant='body2'
+                    color='textSecondary'>
+                    Click here to see your champion collection
+                  </Typography>
+                  <Typography variant='h5'>
+                    {championsBalance.isLoading ? (
+                      <Skeleton />
+                    ) : (
+                      <>
+                        {' '}
+                        {championsBalance.data}{' '}
+                        <IntlMessages id='app.coinLeague.items' />
+                      </>
+                    )}
+                  </Typography>
                 </Grid>
               </Grid>
             </ButtonBase>
