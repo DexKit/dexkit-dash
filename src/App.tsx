@@ -18,6 +18,8 @@ import 'react-notifications-component/dist/theme.css';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import CacheBuster from 'shared/components/CacheBuster';
 
+import {SnackbarProvider} from 'notistack';
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -30,15 +32,17 @@ const App = () => (
             <CremaStyleProvider>
               <LocaleProvider>
                 <ConnectedRouter history={history}>
-                  <WalletRoutes>
-                    <CssBaseline />
-                    <Web3Manager />
-                    <ReactNotification />
+                  <SnackbarProvider maxSnack={3}>
+                    <WalletRoutes>
+                      <CssBaseline />
+                      <Web3Manager />
+                      <ReactNotification />
 
-                    {/*  <ThemeSetting props={{}}/>*/}
-                    <InfoView />
-                    <AppLayout />
-                  </WalletRoutes>
+                      {/*  <ThemeSetting props={{}}/>*/}
+                      <InfoView />
+                      <AppLayout />
+                    </WalletRoutes>
+                  </SnackbarProvider>
                 </ConnectedRouter>
               </LocaleProvider>
             </CremaStyleProvider>

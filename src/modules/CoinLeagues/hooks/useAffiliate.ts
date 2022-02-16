@@ -1,25 +1,30 @@
-import { useQuery } from '@apollo/client';
-import { useEffect } from 'react';
-import { POLL_INTERVAL_GAMES } from '../constants';
-import { GET_AFFILIATES_ENTRIES, GET_PLAYER_AFFILIATE } from '../services/gql/affiliate';
+import {useQuery} from '@apollo/client';
+import {useEffect} from 'react';
+import {POLL_INTERVAL_GAMES} from '../constants';
+import {
+  GET_AFFILIATES_ENTRIES,
+  GET_PLAYER_AFFILIATE,
+} from '../services/gql/affiliate';
 
-import { client, nftClient } from '../services/graphql';
+import {getGraphClient} from '../services/graphql';
 
-import { useIsNFTGame } from './useCoinLeaguesFactory';
+import {useIsNFTGame} from './useCoinLeaguesFactory';
+import {useLeaguesChainInfo} from './useLeaguesChainInfo';
 
-export const usePlayerGames = () => { };
+export const usePlayerGames = () => {};
 
 export interface AffiliateParams {
-  address: string,
-  first?: number,
+  address: string;
+  first?: number;
   skip?: number;
 }
 
 export const useAffiliateEntries = (params: AffiliateParams, isNFT = false) => {
-  const { address, first, skip } = params;
+  const {address, first, skip} = params;
+  const {chainId} = useLeaguesChainInfo();
   const isNFTGame = useIsNFTGame() || isNFT;
   const variables: any = {
-    affiliate: address
+    affiliate: address,
   };
   if (first) {
     variables.first = first;
@@ -28,10 +33,9 @@ export const useAffiliateEntries = (params: AffiliateParams, isNFT = false) => {
     variables.skip = skip;
   }
 
-
-  const query = useQuery<{ affiliates: any }>(GET_AFFILIATES_ENTRIES, {
+  const query = useQuery<{affiliates: any}>(GET_AFFILIATES_ENTRIES, {
     variables,
-    client: isNFTGame ? nftClient : client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
@@ -45,15 +49,15 @@ export const useAffiliateEntries = (params: AffiliateParams, isNFT = false) => {
 };
 
 export const useAffiliatePlayer = (address: string, isNFT = false) => {
-
+  const {chainId} = useLeaguesChainInfo();
   const isNFTGame = useIsNFTGame() || isNFT;
   const variables = {
-    affiliate: address
-  }
+    affiliate: address,
+  };
 
-  const query = useQuery<{ player: any }>(GET_PLAYER_AFFILIATE, {
+  const query = useQuery<{player: any}>(GET_PLAYER_AFFILIATE, {
     variables,
-    client: isNFTGame ? nftClient : client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 

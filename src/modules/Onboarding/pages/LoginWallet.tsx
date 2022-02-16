@@ -515,39 +515,42 @@ export const CreateWallet = (props: Props) => {
                 <IntlMessages id='app.onBoarding.orConnectAnExternalWallet' />
               </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <ButtonBase
-                onClick={handleConnectWeb3}
-                className={classes.actionButton}>
-                <Paper variant='outlined' className={classes.actionButtonPaper}>
-                  <Box p={4}>
-                    <Grid
-                      container
-                      spacing={2}
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid item>
-                        <Box className={classes.boxCircle}>
-                          <ReceiptAddIcon />
-                        </Box>
+            {!isMobile ? (
+              <Grid item xs={12}>
+                <ButtonBase
+                  onClick={handleConnectWeb3}
+                  className={classes.actionButton}>
+                  <Paper
+                    variant='outlined'
+                    className={classes.actionButtonPaper}>
+                    <Box p={4}>
+                      <Grid
+                        container
+                        spacing={2}
+                        alignItems='center'
+                        alignContent='center'>
+                        <Grid item>
+                          <Box className={classes.boxCircle}>
+                            <ReceiptAddIcon />
+                          </Box>
+                        </Grid>
+                        <Grid item xs>
+                          <Typography variant='body1' style={{fontWeight: 500}}>
+                            <IntlMessages id='app.onBoarding.connectTheExternalWallet' />
+                          </Typography>
+                          <Typography variant='body2' color='textSecondary'>
+                            <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <NavigateNextIcon />
+                        </Grid>
                       </Grid>
-                      <Grid item xs>
-                        <Typography variant='body1' style={{fontWeight: 500}}>
-                          <IntlMessages id='app.onBoarding.connectTheExternalWallet' />
-                        </Typography>
-                        <Typography variant='body2' color='textSecondary'>
-                          <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
-                        </Typography>
-                      </Grid>
-
-                      <Grid item>
-                        <NavigateNextIcon />
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </ButtonBase>
-            </Grid>
+                    </Box>
+                  </Paper>
+                </ButtonBase>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
               <ButtonBase
                 onClick={handleConnectWalletLater}

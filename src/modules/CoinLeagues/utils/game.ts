@@ -10,6 +10,7 @@ import {gql} from 'graphql-tag';
 import {ChainId} from 'types/blockchain';
 import {CoinLeagueGames} from './types';
 
+
 export const isGameCreator = (address?: string) => {
   if (!address) {
     return false;
@@ -126,7 +127,7 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
 
 export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic) => {
   if (chainId === ChainId.Binance) {
-    if (entry.lt(ethers.utils.parseEther('0.01'))) {
+    if (entry.lt(ethers.utils.parseEther('0.02'))) {
       return 'Beginner';
     } else if (entry.lt(ethers.utils.parseEther('0.05'))) {
       return 'Intermediate';
