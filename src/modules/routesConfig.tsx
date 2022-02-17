@@ -1,4 +1,4 @@
-//import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 export interface IconProps {
   src: string;
@@ -92,7 +92,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /*    {
+    {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',
