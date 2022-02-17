@@ -1,8 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
+
+import {useSnackbar} from 'notistack';
 
 import {
   Grid,
   DialogProps,
+  Button,
   Dialog,
   Box,
   IconButton,
@@ -19,6 +22,8 @@ import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
 import {useMobile} from 'hooks/useMobile';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -35,6 +40,10 @@ interface NotificationsDialogProps extends DialogProps {}
 export const NotificationsDialog = (props: NotificationsDialogProps) => {
   const {onClose} = props;
 
+  const {enqueueSnackbar} = useSnackbar();
+
+  const {messages} = useIntl();
+
   const classes = useStyles();
 
   const {notifications} = useSelector<AppState, AppState['notification']>(
@@ -49,12 +58,30 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
     }
   }, [onClose]);
 
+  const handleNotifyMe = useCallback(() => {
+    if (!('Notification' in window)) {
+      return;
+    }
+
+    window.Notification.requestPermission().then(function (permission: string) {
+      // If the user accepts, let's create a notification
+
+      if (permission === 'granted') {
+        new Notification(messages['app.common.notificationsEnabled'] as string);
+      } else {
+        enqueueSnackbar(messages['app.common.notificationsEnabled'] as string, {
+          variant: 'success',
+          anchorOrigin: {horizontal: 'right', vertical: 'top'},
+        });
+      }
+    });
+  }, [enqueueSnackbar, messages]);
+
   const isMobile = useMobile();
 
-  const reversedNotifications = useMemo(() => {
-    return [...notifications].reverse();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [String(notifications)]);
+  const canEnableNotifications = useCallback(() => {
+    return false;
+  }, []);
 
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>
@@ -74,16 +101,40 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
             </Box>
             <Typography variant='body1'>Notifications</Typography>
           </Box>
+          <Box></Box>
           <IconButton onClick={handleClose} size='small'>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
       <Divider />
+
+      {canEnableNotifications() ? (
+        <Box p={4}>
+          <Grid
+            container
+            alignItems='center'
+            justifyContent='center'
+            direction='column'
+            spacing={2}>
+            <Grid item>
+              <Typography align='center' variant='body1'>
+                <IntlMessages id='app.common.pleaseEnableBrowserNotifications' />
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button color='primary' onClick={handleNotifyMe}>
+                <IntlMessages id='app.common.enableNotifications' />
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      ) : null}
+      <Divider />
       <DialogContent className={classes.noPadding}>
         {notifications.length > 0 ? (
           <List disablePadding>
-            {reversedNotifications.map((item, i) => (
+            {notifications.map((item, i) => (
               <NotificationItem
                 onClick={handleClick}
                 id={Number(item?.id || i)}

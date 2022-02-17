@@ -1,5 +1,4 @@
 export const BSCPriceFeeds = [
-
   {
     address: '0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf',
     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoin/info/logo.png',
@@ -59,7 +58,7 @@ export const BSCPriceFeeds = [
   {
     address: '0x0Db8945f9aEf5651fa5bd52314C5aAe78DfDe540',
     base: 'COMP',
-    baseName: 'Coumpound',
+    baseName: 'Compound',
     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png',
     quote: 'USD',
     tv: 'COINBASE:COMPUSD',
@@ -86,7 +85,7 @@ export const BSCPriceFeeds = [
     baseName: 'DeFiPulse Index',
     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo.png',
     quote: 'USD',
-    tv: 'KUCOIN:DPIUSDT', 
+    tv: 'KUCOIN:DPIUSDT',
   },
   {
     address: '0xd5508c8Ffdb8F15cE336e629fD4ca9AdB48f50F0',
@@ -227,31 +226,31 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'BINANCE:AUTOUSD',
   },
- /* {
+  {
     address: '0x7B49524ee5740c99435f52d731dFC94082fE61Ab',
     base: 'AXS',
-    baseName: '',
-    logo: '', "SEM FEED NA LISTA DA CHAINLINK"
-    quote: '',
-    tv: '',
+    baseName: 'Axie Infinity',
+    logo: 'https://assets.coingecko.com/coins/images/13029/small/axie_infinity_logo.png?1604471082',
+    quote: 'USD',
+    tv: 'COINBASE:AXSUSD',
   },
-  {
+  /*{
     address: '0x368b7ab0a0Ff94E23fF5e4A7F04327dF7079E174',
     base: 'BAC',
     baseName: '',
     logo: '',  "SEM FEED NA LISTA DA CHAINLINK"
     quote: '',
     tv: '',
-  },
+  },*/
   {
     address: '0xC78b99Ae87fF43535b0C782128DB3cB49c74A4d3',
     base: 'BAND',
-    baseName: '',
-    logo: '',  "SEM FEED NA LISTA DA CHAINLINK"
-    quote: '',
-    tv: '',
-  },*/
- /* {
+    baseName: 'Band Protocol',
+    logo: 'https://assets.coingecko.com/coins/images/9545/small/Band_token_blue_violet_token.png?1625881431',
+    quote: 'USD',
+    tv: 'COINBASE:BANDUSD',
+  },
+  /* {
     address: '0x2A3796273d47c4eD363b361D3AEFb7F7E2A13782',
     base: 'BETH', 
     baseName: 'Binance ETH staking',
@@ -268,14 +267,14 @@ export const BSCPriceFeeds = [
     tv: '',
   },*/
   {
-    address: '0xaB827b69daCd586A37E80A7d552a4395d576e645', 
+    address: '0xaB827b69daCd586A37E80A7d552a4395d576e645',
     base: 'BIFI',
     baseName: 'Beefy.Finance',
     logo: 'https://assets.coingecko.com/coins/images/12704/small/token.png?1601876182',
     quote: 'USDT',
-    tv: 'POLONIEX:BIFIUSDT', // "TEM BIFI / US DOLLAR PELA BITTREX MAS O VALOR DA MOEDA NÃO BATE COM A CHAINLINK" 
+    tv: 'POLONIEX:BIFIUSDT', // "TEM BIFI / US DOLLAR PELA BITTREX MAS O VALOR DA MOEDA NÃO BATE COM A CHAINLINK"
   },
- /* {
+  /* {
     address: '0x5289A08b6d5D2f8fAd4cC169c65177f68C0f0A99',
     base: 'BRK.B',
     baseName: '',
@@ -321,7 +320,7 @@ export const BSCPriceFeeds = [
     baseName: 'Cream',
     logo: 'https://assets.coingecko.com/coins/images/11976/small/Cream.png?1596593418',
     quote: 'USD',
-    tv: 'FTX:CREAMUSD'// ou 'EIGHTCAP:ACREAMUSD', // NÃO TEM PELA COINBASE NEM BINANCE
+    tv: 'FTX:CREAMUSD', // ou 'EIGHTCAP:ACREAMUSD', // NÃO TEM PELA COINBASE NEM BINANCE
   },
   {
     address: '0x39F1275366D130eB677D4F47D40F9296B62D877A',
@@ -331,14 +330,14 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'BINANCE:DEGOUSD',
   },
-/*   {
-     address: '0x1b816F5E122eFa230300126F97C018716c4e47F5' ,
-     base: 'DF' ,
-     baseName: 'dForce Token',
-     logo: 'https://assets.coingecko.com/coins/images/9709/small/xlGxxIjI_400x400.jpg?1571006794',
-     quote: ,
-     tv: , // "NÃO TEM NA TRADINGVIEW COM USD"
-   },*/
+  {
+    address: '0x1b816F5E122eFa230300126F97C018716c4e47F5',
+    base: 'DF',
+    baseName: 'dForce Token',
+    logo: 'https://assets.coingecko.com/coins/images/9709/small/xlGxxIjI_400x400.jpg?1571006794',
+    quote: 'USDT',
+    tv: 'BINANCE:DFUSDT',
+  },
   {
     address: '0x87701B15C08687341c2a847ca44eCfBc8d7873E1',
     base: 'DODO',
@@ -363,7 +362,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:FILUSD',
   },
- /* {
+  /* {
     address: '0x66cD2975d02f5F5cdEF2E05cBca12549B1a5022D',
     base: 'GME',
     baseName: '',
@@ -411,7 +410,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:MASKUSD',
   },
-/*  {
+  /*  {
     address: '0xc9D267542B23B41fB93397a93e5a1D7B80Ea5A01',
     base: 'MIM',
     baseName: '',
@@ -425,9 +424,9 @@ export const BSCPriceFeeds = [
     baseName: 'Mirror Protocol',
     logo: 'https://assets.coingecko.com/coins/images/13295/small/mirror_logo_transparent.png?1611554658',
     quote: 'USD',
-    tv: 'COINBASE:MIRUSD',// "A LOGO NA TRADINGVIEW APARECE DIFERENTE (MAS O PREÇO É PRÓXIMO AO DA CHAINLINK)"
+    tv: 'COINBASE:MIRUSD', // "A LOGO NA TRADINGVIEW APARECE DIFERENTE (MAS O PREÇO É PRÓXIMO AO DA CHAINLINK)"
   },
- /* {
+  /* {
     address: '0x6101F4DFBb24Cac3D64e28A815255B428b93639f',
     base: 'MRNA',
     baseName: '',
@@ -435,7 +434,7 @@ export const BSCPriceFeeds = [
     quote: '',
     tv: '',
   },*/
- /* {
+  /* {
     address: '0x6b25F7f189c3f26d3caC43b754578b67Fc8d952A',
     base: 'MS',
     baseName: '',
@@ -467,14 +466,7 @@ export const BSCPriceFeeds = [
     quote: '',
     tv: '',
   },
-  {
-    address: '0xaCFBE73231d312AC6954496b3f786E892bF0f7e5',
-    base: 'NULS',
-    baseName: '',
-    logo: '', "SEM FEED NA LISTA DA CHAINLINK"
-    quote: '',
-    tv: '',
-  },
+ 
   {
     address: '0xea5c2Cbb5cD57daC24E26180b19a929F3E9699B8',
     base: 'NVDA',
@@ -483,6 +475,14 @@ export const BSCPriceFeeds = [
     quote: '',
     tv: '',
   },*/
+  {
+    address: '0xaCFBE73231d312AC6954496b3f786E892bF0f7e5',
+    base: 'NULS',
+    baseName: 'NULS',
+    logo: 'https://assets.coingecko.com/coins/images/1053/small/Nuls.png?1556868153',
+    quote: 'USD',
+    tv: 'BINANCE:NULSUSD',
+  },
   {
     address: '0xcF95796f3016801A1dA5C518Fc7A59C51dcEf793',
     base: 'ONG',
@@ -499,7 +499,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'BINANCE:ONTUSD',
   },
- /* {
+  /* {
     address: '0xe9bEC24f14AB49b0a81a482a4224e7505d2d29e9',
     base: 'PACB',
     baseName: '',
@@ -515,7 +515,7 @@ export const BSCPriceFeeds = [
     quote: '',
     tv: '',
   },*/
- /* {
+  /* {
     address: '0x9A41B56b2c24683E2f23BdE15c14BC7c4a58c3c4',
     base: 'QQQ',
     baseName: '',
@@ -539,7 +539,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'BINANCE:REEFUSD',
   },
-   {
+  {
     address: '0xA615Be6cb0f3F36A641858dB6F30B9242d0ABeD8',
     base: 'SHIB',
     baseName: 'Shiba Inu ',
@@ -547,7 +547,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:SHIBUSD', //"CONFERIR PORQUE ACHEI UMAS LOGOS PARECIDAS DE MOEDAS QUE COMEÇAM COM SHIB"
   },
- /* {
+  /* {
     address: '0xC861a351b2b50985b9061a5b68EBF9018e7FfB7b',
     base: 'SPCE',
     baseName: '',
@@ -563,7 +563,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:SPELLUSD',
   },
- /* {
+  /* {
     address: '0xb24D1DeE5F9a3f761D286B56d2bC44CE1D02DF7e',
     base: 'SPY',
     baseName: '',
@@ -579,7 +579,7 @@ export const BSCPriceFeeds = [
     quote: 'USD',
     tv: 'BINANCE:SXPUSD',
   },
- /* {
+  /* {
     address: '0x685fC5acB74CE3d5DF03543c9813C73DFCe50de8',
     base: 'TSM',
     baseName: '',
@@ -625,9 +625,9 @@ export const BSCPriceFeeds = [
     baseName: 'WOO Network',
     logo: 'https://assets.coingecko.com/coins/images/12921/small/w2UiemF__400x400.jpg?1603670367',
     quote: 'USDT',
-    tv: 'KUCOIN:WOOUSDT', 
+    tv: 'KUCOIN:WOOUSDT',
   },
- /* {
+  /* {
     address: '0xb1BED6C1fC1adE2A975F54F24851c7F410e27718',
     base: 'WTI',
     baseName: '',

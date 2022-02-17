@@ -319,7 +319,10 @@ export const KittyEdit = () => {
                         </Grid>
                       ) : (
                         <Button
-                          disabled={kittygotchi.isLoading}
+                          disabled={
+                            kittygotchi.isLoading ||
+                            kitAmount < KITTYGOTCHI_EDIT_MIN_AMOUNT
+                          }
                           fullWidth
                           onClick={handleEdit}
                           variant='contained'
