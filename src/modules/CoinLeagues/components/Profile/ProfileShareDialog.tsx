@@ -57,16 +57,12 @@ export const ProfileShareDialog: React.FC<Props> = ({
   const [showCopiedText, setShowCopiedText] = useState(false);
 
   const profileAddress = useMemo(() => {
-    console.log('profile');
-
     if (game !== undefined && network !== undefined && address) {
       return `${getWindowUrl()}/coin-league/profile/${address}?network=${chainIdToSlug(
         network,
       )}&game=${coinLeagueGamesToSlug(game)}`;
     }
   }, [address, game, network]);
-
-  console.log(game, network);
 
   const handleTooltipOpen = useCallback(() => {
     setShowCopiedText(true);

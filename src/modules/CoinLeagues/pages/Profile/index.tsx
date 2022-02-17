@@ -115,7 +115,6 @@ export const ProfilePage: React.FC = () => {
   const [network, setNetwork] = useState<ChainId>(ChainId.Matic);
 
   const handleSelectGame = useCallback((e) => {
-    console.log('chage', e.target.value);
     setSelectedGame(e.target.value);
   }, []);
 

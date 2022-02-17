@@ -148,33 +148,40 @@ export const ProfileEditPage: React.FC = () => {
   }, [profileGame.data]);
 
   const handleSaveProfile = useCallback(() => {
-    if (selectedAsset !== undefined && username !== '') {
+    if (lazyUsername !== '') {
       setPending(true);
-      profileUpdater.onPostMetadata(
-        username,
-        selectedAsset.contractAddress,
-        selectedAsset.tokenId,
-        {
-          onConfirmation: () => {
-            if (profileGame.data) {
-              setSuccessMessage(
-                messages['app.coinLeague.profileUpdated'] as string,
-              );
-            } else {
-              setSuccessMessage(
-                messages['app.coinLeague.profileCreated'] as string,
-              );
-            }
-            setPending(false);
-          },
-          onError: (err) => {
-            setError(err);
-            setPending(false);
-          },
+
+      const callbacks = {
+        onConfirmation: () => {
+          if (profileGame.data) {
+            setSuccessMessage(
+              messages['app.coinLeague.profileUpdated'] as string,
+            );
+          } else {
+            setSuccessMessage(
+              messages['app.coinLeague.profileCreated'] as string,
+            );
+          }
+          setPending(false);
         },
-      );
+        onError: (err: Error) => {
+          setError(err);
+          setPending(false);
+        },
+      };
+
+      if (selectedAsset !== undefined) {
+        profileUpdater.onPostMetadata(
+          lazyUsername,
+          selectedAsset.contractAddress,
+          selectedAsset.tokenId,
+          callbacks,
+        );
+      } else {
+        profileUpdater.onPostOnlyUsernameMetadata(lazyUsername, callbacks);
+      }
     }
-  }, [profileUpdater, username, selectedAsset, profileGame, messages]);
+  }, [profileUpdater, lazyUsername, selectedAsset, profileGame, messages]);
 
   const handleGoClick = useCallback(() => {
     history.push(`/coin-league/profile/${address}`);
@@ -301,6 +308,7 @@ export const ProfileEditPage: React.FC = () => {
               value={username}
               variant='outlined'
               fullWidth
+              required
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>
@@ -316,7 +324,8 @@ export const ProfileEditPage: React.FC = () => {
               disabled={
                 pending ||
                 (lazyUsername !== (profileGame.data?.username || '') &&
-                  !profileChecker.data?.isAvailable)
+                  !profileChecker.data?.isAvailable) ||
+                username === ''
               }
               onClick={handleSaveProfile}
               startIcon={

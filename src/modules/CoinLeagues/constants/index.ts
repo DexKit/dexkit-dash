@@ -723,6 +723,8 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 //export const GAME_METADATA_API = 'http://localhost:4001';
 
 export const GAME_METADATA_API =
-  process.env.REACT_APP_PROFILE_API || 'http://localhost:4001';
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:4001'
+    : process.env.REACT_APP_PROFILE_API;
 
 export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;

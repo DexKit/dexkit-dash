@@ -89,7 +89,7 @@ export const createUsername = (
       chainId: chainId,
     }),
   };
-  return fetch(`${PROFILE_API}/create`, myInit);
+  return fetch(`${PROFILE_API}/create-username`, myInit);
 };
 
 export const remove = (sig: string, message: string, account: string) => {
