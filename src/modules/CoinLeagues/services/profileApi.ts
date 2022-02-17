@@ -115,11 +115,11 @@ export const getProfile = async (address: string) => {
 
 /**
  *
- * @param addresses they are split by ','
+ * @param addresses list of addresses
  * @returns
  */
-export const getProfiles = (addresses: string) => {
-  return fetch(`${PROFILE_API}/all/${addresses}`)
-    .then((r) => r.json())
-    .then((r) => r as GameProfile[]);
+export const getProfiles = (addresses: string[]): Promise<GameProfile[]> => {
+  return axios
+    .post<GameProfile[]>(`${PROFILE_API}/get-all-address`, {addresses})
+    .then((response) => response.data);
 };

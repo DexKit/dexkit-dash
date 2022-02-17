@@ -7,7 +7,6 @@ import {
   create,
   createUsername,
   getProfile,
-  getProfiles,
 } from '../services/profileApi';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
@@ -151,14 +150,5 @@ export const useProfileGame = (account?: string) => {
     }
 
     return getProfile(account);
-  });
-};
-
-export const useProfilesGame = (accounts?: string) => {
-  return useQuery(['GET_GAMES_PROFILES', accounts], () => {
-    if (!accounts) {
-      return;
-    }
-    return getProfiles(accounts);
   });
 };

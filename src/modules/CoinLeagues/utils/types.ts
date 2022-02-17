@@ -119,3 +119,7 @@ export enum CoinLeagueGames {
   SquidGame,
   NFTLeague,
 }
+
+export interface ProfileContextState {
+  profiles: GameProfile[];
+}
