@@ -74,7 +74,6 @@
     "firebase": "^7.15.4",
     "flag-icon-css": "^3.5.0",
     "formik": "^2.1.4",
-    "formik-stepper": "^2.0.3",
     "graphql": "^15.3.0",
     "history": "4.7.2",
     "immutable": "3.8.1",
