@@ -14,6 +14,7 @@ import {
   Paper,
   Toolbar,
   Typography,
+  Button,
 } from '@material-ui/core';
 
 import {Loader} from '@crema';
@@ -67,9 +68,10 @@ const AppsTable = () => {
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showDialog, setShowDialog] = useState(false);
+  const [showDeployDialog, setShowDeployDialog] = useState(false);
   const {account} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
-  const { data: balances} = useBalance();
+  const {data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -267,6 +269,12 @@ const AppsTable = () => {
                             }}>
                             <DeleteIcon />
                           </IconButton>
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={() => setShowDeployDialog(true)}>
+                            Deploy
+                          </Button>
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
@@ -278,6 +286,13 @@ const AppsTable = () => {
                           setShowDialog(!showDialog);
                         }}
                         onDeny={(x) => setShowDialog(x)}
+                      />
+                      <ConfirmationDialog
+                        title={`Deploy your app to your own domain, you will receive a CNAME to point to your app`}
+                        dialogTitle={'Deploy to own domain?'}
+                        open={showDeployDialog}
+                        onConfirm={() => {}}
+                        onDeny={(x) => setShowDeployDialog(x)}
                       />
                     </TableRow>
                   ))}

@@ -13,7 +13,6 @@ import Ripple from 'assets/images/ripple.png';
 import Alert from '@material-ui/lab/Alert';
 //import {useBalance} from 'hooks/balance/useBalance';
 //import ErrorView from 'modules/Common/ErrorView';
-import AppsIcon from '@material-ui/icons/Apps';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
 // import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
@@ -38,7 +37,6 @@ const MyApps: React.FC = () => {
     <>
       <Box pt={{xl: 4}}>
         <Box display='flex' alignItems='center' mt={1}>
-          <AppsIcon color={'primary'} fontSize={'large'} />
           <Box
             component='h3'
             color='text.primary'
@@ -50,11 +48,11 @@ const MyApps: React.FC = () => {
         </Box>
 
         <Box pb={2} mt={2}>
-          <Alert severity='warning'>
+          {/* <Alert severity='warning'>
             This feature is still under high development, You will need KIT to
             use this. Check our live updates to see when this feature will be
             enable for everyone!
-          </Alert>
+            </Alert>*/}
           {insufficientAmountAlert && (
             <Alert severity='warning'>
               You don't have the amount of sufficient kit to keep run your apps,
@@ -63,7 +61,7 @@ const MyApps: React.FC = () => {
           )}
         </Box>
         <GridContainer>
-         {/* <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             {loading ? (
               <LoadingInfo />
             ) : error ? (

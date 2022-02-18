@@ -1,5 +1,5 @@
-import {ConfigFileAggregator, AggregatorLinks} from 'types/myApps';
-import {HelpText} from '../shared';
+import { ConfigFileAggregator, AggregatorLinks } from 'types/myApps';
+import { HelpText } from '../../shared';
 export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   name: [
     'Enter a name that has not yet been used in other projects as the title of the current project.',

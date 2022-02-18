@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {GridContainer} from '@crema';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -9,32 +9,28 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import {Breadcrumbs, Grid, Link} from '@material-ui/core';
+import {Box, Breadcrumbs, Grid, IconButton, Link} from '@material-ui/core';
+import {Form, Formik} from 'formik';
 
-import {
-  ConfigFileAggregator,
-  GeneralConfigAggregator,
-  AggregatorLinks,
-  AggregatorWallet,
-  TokenFeeProgramConfig,
-  AggregatorTheme,
-} from 'types/myApps';
-import {ChainId} from 'types/blockchain';
+import {ConfigFileAggregator, GeneralConfigAggregator} from 'types/myApps';
 
-import {WizardProps} from '../shared';
-
-import {SubmitComponent} from '../shared/Buttons/submit';
 import {NavigationButton} from '../shared/Buttons/navigationButton';
 
-import GeneralForm from './general';
-import ThemeForm from './theme';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
+import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
+import {ValidationSchemas} from './utils/validationSchemas';
+import {useSendConfig} from 'modules/MyApps/hooks/useSendConfig';
+import {GeneralForm} from './forms/General';
+import {ThemeForm} from './forms/Theme';
+import {WALLET_ROUTE} from 'shared/constants/routes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      margin: theme.spacing(2),
+      padding: theme.spacing(2),
     },
     button: {
       marginTop: theme.spacing(1),
@@ -77,13 +73,13 @@ const initConfig: GeneralConfigAggregator = {
   name: 'Swap',
   logo: 'https://swap.dexkit.com/logos/logo_white.svg',
   logo_dark: 'https://swap.dexkit.com/logos/logo.svg',
-  domain: 'https://swap.dexkit.com/',
+  domain: 'https://swap.dexkit.com',
   feeRecipient: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
   buyTokenPercentage: '0.3',
   brand_color: '#ff7149',
   brand_color_dark: '#2172E5',
   support_bsc: true,
-  bsc_as_default: false,
+  bsc_as_default: true,
   matic_as_default: false,
   avax_as_default: false,
   fantom_as_default: false,
@@ -100,87 +96,51 @@ const initConfig: GeneralConfigAggregator = {
   default_slippage: 1,
 };
 
-function getStepContent(
-  step: number,
-  label: string,
-  wizardProps: WizardProps<ConfigFileAggregator, WizardData>,
-  chainId: ChainId,
-) {
-  const {config, changeIssuerForm, validator, isValid, editable} = wizardProps;
+function _renderStepContent(step: number, formik: any) {
   switch (step) {
     case 0:
-      const data: ConfigFileAggregator =
-        config !== null && 'name' in config
-          ? ({...config} as GeneralConfigAggregator)
-          : initConfig;
-      type k = keyof typeof data;
-      const _isValid = Object.keys(data).reduce(
-        (acu, cur) => acu && data[cur as k] === true,
-        true,
-      );
-      return (
-        <GeneralForm
-          title={label}
-          data={data}
-          editable={editable}
-          changeIssuerForm={changeIssuerForm}
-          validator={validator}
-          isValid={_isValid ?? isValid}
-        />
-      );
+      return <GeneralForm formik={formik} />;
     case 1:
-      const theme: AggregatorTheme = {
-        brand_color: config?.brand_color,
-        brand_color_dark: config?.brand_color_dark,
-        is_dark_mode: config?.is_dark_mode ?? true,
-      };
-      return (
-        <ThemeForm
-          theme={theme}
-          changeIssuerForm={changeIssuerForm}
-          editable={editable}
-        />
-      );
-    /*  case 2: {
-      const data =
-        config?.links ??
-        ({
-          about: undefined,
-          analytics: undefined,
-          code: undefined,
-          discord: undefined,
-          docs: undefined,
-          telegram: undefined,
-        } as AggregatorLinks);
-      return (
-        <LinksForm
-          changeIssuerForm={changeIssuerForm}
-          data={data}
-          config={config}
-          validator={validator}
-          isValid={isValid}
-          editable={editable}
-        />
-      );
-    }*/
+      return <ThemeForm formik={formik} />;
     default:
-      return <Typography>{'Unknown step'}</Typography>;
+      return <div>Not Found</div>;
   }
 }
 
-export default function VerticalLinearStepper() {
-  const [data, setData] = useState<ConfigFileAggregator>({...initConfig});
-  const [isValid, setValid] = useState(false);
-  const classes = useStyles();
-  /* eslint-disable */
-  const [editable, setEditable] = React.useState(true);
-  /* eslint-disable */
-  const [preview, setPreview] = React.useState(false);
-  const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
+export default function WizardAggregator(props: any) {
+  const {
+    match: {params},
+  } = props;
+  const {slug} = params;
   const history = useHistory();
 
-  const {chainId} = useWeb3();
+  const [data, setData] = useState<ConfigFileAggregator>();
+
+  const classes = useStyles();
+
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = getSteps();
+
+  const {account} = useWeb3();
+
+  const {configs} = useMyAppsConfig(account);
+
+  const {onSendConfigCallback, isLoading} = useSendConfig();
+
+  useEffect(() => {
+    if (configs) {
+      const index = configs.findIndex(
+        (c, i) =>
+          c.type === 'AGGREGATOR' &&
+          c.slug?.toLowerCase() === slug?.toLowerCase(),
+      );
+
+      if (index >= 0) {
+        const config: ConfigFileAggregator = JSON.parse(configs[index].config);
+        setData({...config});
+      }
+    }
+  }, [configs, slug]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -194,127 +154,66 @@ export default function VerticalLinearStepper() {
     setActiveStep(0);
   };
 
-  const validator = useCallback(
-    (_isValid: boolean) => {
-      setValid(_isValid);
-    },
-    [setValid],
-  );
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  const updateData = (
-    key: WizardData | 'editable',
-    value:
-      | GeneralConfigAggregator
-      | TokenFeeProgramConfig[]
-      | AggregatorLinks
-      | AggregatorWallet,
-  ) => {
-    const dataType = Object.values(WizardData).find((e) => e === key);
-    switch (dataType) {
-      case WizardData.GENERAL: {
-        if (data === null) {
-          setData({...value} as ConfigFileAggregator);
-        } else {
-          type k = keyof typeof value;
-          Object.keys(value).forEach((_key) => {
-            data[_key as k] = value[_key as k];
-          });
-          setData(data);
-        }
-        break;
-      }
-      case WizardData.THEME: {
-        if (data !== null) {
-          const theme = value as AggregatorTheme;
-          data.is_dark_mode = theme.is_dark_mode;
-          data.brand_color = theme.brand_color;
-          data.brand_color_dark = theme.brand_color_dark;
-          setData(data);
-        }
-        break;
-      }
-      case WizardData.CONTACT: {
-        if (data !== null) {
-          data.links = value as AggregatorLinks;
-          setData(data);
-        }
-        break;
-      }
-      case WizardData.TOKENS: {
-        if (data !== null) {
-          data.token_fee_program = value as TokenFeeProgramConfig[];
-          setData(data);
-        }
-        break;
-      }
-      case WizardData.WALLET: {
-        if (data !== null) {
-          data.wallets = value as AggregatorWallet;
-          setData(data);
-        }
-      }
-    }
-  };
   const [textButtonCopy, setTextButtonCopy] = useState(
     'Copy Wordpress Shortcode',
   );
 
-  const handleCopyShortcode = () => {
+  const handleCopyShortcode = useCallback((values: any) => {
+    if (!values) {
+      return;
+    }
+
     setTextButtonCopy('Copied');
     let text = '';
-    if (data.logo) {
-      text = `logo="${data.logo}"`;
+    if (values.logo) {
+      text = `logo="${values.logo}"`;
     }
-    if (data.logo_dark) {
-      text = `${text} logo_dark="${data.logo_dark}"`;
+    if (values.logo_dark) {
+      text = `${text} logo_dark="${values.logo_dark}"`;
     }
-    if (data.bsc_as_default) {
+    if (values.bsc_as_default) {
       text = `${text} bsc_as_default="true"`;
     }
-    if (data.matic_as_default) {
+    if (values.matic_as_default) {
       text = `${text} matic_as_default="true"`;
     }
-    if (data.avax_as_default) {
+    if (values.avax_as_default) {
       text = `${text} matic_as_default="true"`;
     }
-    if (data.fantom_as_default) {
+    if (values.fantom_as_default) {
       text = `${text} matic_as_default="true"`;
     }
-    if (data.is_dark_mode) {
+    if (values.is_dark_mode) {
       text = `${text} is_dark_mode="true"`;
     }
-    if (data.default_token_address) {
-      text = `${text} default_token_address_eth="${data.default_token_address}"`;
+    if (values.default_token_address) {
+      text = `${text} default_token_address_eth="${values.default_token_address}"`;
     }
-    if (data.buy_token_percentage) {
-      text = `${text} default_token_address_eth="${data.buy_token_percentage}"`;
+    if (values.buy_token_percentage) {
+      text = `${text} default_token_address_eth="${values.buy_token_percentage}"`;
     }
-    if (data.default_token_address_bsc) {
-      text = `${text} default_token_address_bsc="${data.default_token_address_bsc}"`;
+    if (values.default_token_address_bsc) {
+      text = `${text} default_token_address_bsc="${values.default_token_address_bsc}"`;
     }
-    if (data.default_token_address_matic) {
-      text = `${text} default_token_address_matic="${data.default_token_address_matic}"`;
-    }
-
-    if (data.default_token_address_avax) {
-      text = `${text} default_token_address_avax="${data.default_token_address_avax}"`;
+    if (values.default_token_address_matic) {
+      text = `${text} default_token_address_matic="${values.default_token_address_matic}"`;
     }
 
-    if (data.default_token_address_fantom) {
-      text = `${text} default_token_address_fantom="${data.default_token_address_fantom}"`;
+    if (values.default_token_address_avax) {
+      text = `${text} default_token_address_avax="${values.default_token_address_avax}"`;
     }
-    if (data.brand_color) {
-      text = `${text} brand_color="${data.brand_color}"`;
+
+    if (values.default_token_address_fantom) {
+      text = `${text} default_token_address_fantom="${values.default_token_address_fantom}"`;
     }
-    if (data.brand_color_dark) {
-      text = `${text} brand_color_dark="${data.brand_color_dark}"`;
+    if (values.brand_color) {
+      text = `${text} brand_color="${values.brand_color}"`;
     }
-    if (data.default_slippage) {
-      text = `${text} default_slippage="${data.default_slippage}"`;
+    if (values.brand_color_dark) {
+      text = `${text} brand_color_dark="${values.brand_color_dark}"`;
+    }
+    if (values.default_slippage) {
+      text = `${text} default_slippage="${values.default_slippage}"`;
     }
 
     const shortCodeToCopy = `[dexkit_aggregator ${text} ]`;
@@ -323,11 +222,38 @@ export default function VerticalLinearStepper() {
     setTimeout(() => {
       setTextButtonCopy('Copy Shortcode');
     }, 500);
+  }, []);
+
+  const _handleSubmit = (values: any) => {
+    onSendConfigCallback(values, 'AGGREGATOR');
   };
+  const showForm = useMemo(() => {
+    if (slug) {
+      return !!data;
+    } else {
+      return true;
+    }
+  }, [slug, data]);
+
+  const getInitialFormValues = useMemo(() => {
+    if (slug) {
+      return data || {};
+    } else {
+      return initConfig;
+    }
+  }, [slug, data]);
+
+  const handleBackRoute = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+  }, [history]);
 
   return (
     <div className={classes.root}>
-      <GridContainer>
+      <Grid container spacing={4}>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label='breadcrumb'>
             <Link
@@ -337,68 +263,91 @@ export default function VerticalLinearStepper() {
             </Link>
             <Typography color='textPrimary'>Wizard</Typography>
           </Breadcrumbs>
-          <Typography variant='h4' color='textPrimary'>
-            AGGREGATOR
-          </Typography>
         </Grid>
-      </GridContainer>
+        <Grid item xs={12} md={12}>
+          <Box display={'flex'} alignItems={'center'}>
+            <IconButton size='small' onClick={handleBackRoute}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant='h4' color='textPrimary'>
+              AGGREGATOR
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={12}>
+          {showForm && (
+            <Formik
+              initialValues={getInitialFormValues}
+              onSubmit={_handleSubmit}
+              validationSchema={ValidationSchemas[activeStep]}>
+              {(formik) => (
+                <Form id={'aggregator-form'}>
+                  <Stepper activeStep={activeStep} orientation='vertical'>
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                        <StepContent>
+                          {_renderStepContent(activeStep, formik)}
 
-      <Stepper activeStep={activeStep} orientation='vertical'>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              {getStepContent(
-                activeStep,
-                label,
-                {
-                  config: (data ?? {}) as ConfigFileAggregator,
-                  changeIssuerForm: updateData,
-                  validator,
-                  isValid,
-                  editable,
-                },
-                Number(chainId ?? ChainId.Mainnet),
+                          <NavigationButton
+                            ButtonBackText='Back'
+                            ButtonNextText={
+                              activeStep === steps.length - 1
+                                ? 'Finish'
+                                : 'Next'
+                            }
+                            handleBack={
+                              activeStep === 0 ? undefined : handleBack
+                            }
+                            handleNext={
+                              activeStep >= steps.length || !formik.isValid
+                                ? undefined
+                                : handleNext
+                            }
+                            classes={classes}
+                          />
+                        </StepContent>
+                      </Step>
+                    ))}
+                  </Stepper>
+                  {activeStep === steps.length && (
+                    <Paper
+                      square
+                      elevation={0}
+                      className={classes.resetContainer}>
+                      <Typography>
+                        All steps completed - you&apos;re finished
+                      </Typography>
+                      <Button onClick={handleReset} className={classes.button}>
+                        Reset
+                      </Button>
+                      <Button
+                        disabled={isLoading}
+                        variant='contained'
+                        color='primary'
+                        type='submit'
+                        className={classes.button}>
+                        {isLoading ? 'Waiting Wallet' : 'Submit'}
+                      </Button>
+                    </Paper>
+                  )}
+                  <Paper
+                    square
+                    elevation={0}
+                    className={classes.resetContainer}>
+                    <Button
+                      onClick={() => handleCopyShortcode(formik.values)}
+                      className={classes.button}
+                      color='primary'>
+                      {textButtonCopy}
+                    </Button>
+                  </Paper>
+                </Form>
               )}
-              <NavigationButton
-                ButtonBackText='Back'
-                ButtonNextText={
-                  activeStep === steps.length - 1 ? 'Finish' : 'Next'
-                }
-                handleBack={activeStep === 0 ? undefined : handleBack}
-                handleNext={
-                  activeStep >= steps.length || !isValid
-                    ? undefined
-                    : handleNext
-                }
-                classes={classes}
-              />
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-          <SubmitComponent
-            data={(data ?? {}) as ConfigFileAggregator}
-            text='Submit'
-            valid={isValid}
-            type={'AGGREGATOR'}
-          />
-        </Paper>
-      )}
-      <Paper square elevation={0} className={classes.resetContainer}>
-        <Button
-          onClick={handleCopyShortcode}
-          className={classes.button}
-          color='primary'>
-          {textButtonCopy}
-        </Button>
-      </Paper>
+            </Formik>
+          )}
+        </Grid>
+      </Grid>
     </div>
   );
 }

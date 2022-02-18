@@ -13,8 +13,7 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import {WhitelabelTypes} from 'types/myApps';
 import Aggregator from 'assets/images/aggregator.png';
-import Marketplace from 'assets/images/marketplace.png';
-import {blue, indigo} from '@material-ui/core/colors';
+import {blue} from '@material-ui/core/colors';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -203,7 +202,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
               }}
             />*/}
 
-            <Kit
+            {/*  <Kit
               key={'market'}
               icon={Marketplace}
               color={bgColor}
@@ -220,7 +219,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
                 ) => buttonAction(`/my-apps/wizard/marketplace`, 'MARKETPLACE'),
                 title: 'ADD +',
               }}
-            />
+            />*/}
           </List>
         </CardContent>
       </Card>

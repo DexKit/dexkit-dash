@@ -1,4 +1,4 @@
-import {GeneralConfigAggregator} from 'types/myApps';
+import { GeneralConfigAggregator } from 'types/myApps';
 
 type Properties = {
   isRequired: boolean;
@@ -7,7 +7,7 @@ type Properties = {
   step?: number;
 };
 
-export const Field_Properties: {[key: string]: Properties} = {
+export const Field_Properties: { [key: string]: Properties } = {
   logo: {
     isRequired: false,
   },
