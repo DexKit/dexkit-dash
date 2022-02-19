@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState, useMemo} from 'react';
 
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {
   Grid,
   Breadcrumbs,
@@ -16,65 +16,63 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RankingButton from 'modules/CoinLeagues/components/RankingLeaguesButton';
 import {
-  useRankingMostWinned,
-  useRankingMostJoined,
-  useRankingMostEarned,
-  useRankingMostProfit,
+  RankingType,
+  useRanking,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
-import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import { useIntl } from 'react-intl';
-import { ethers } from 'ethers';
-import { useWeb3 } from 'hooks/useWeb3';
-import { RoomType } from 'modules/CoinLeagues/constants/enums';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
-import { useMobile } from 'hooks/useMobile';
-
-enum Tabs {
-  MostWinner = 'Most Winner',
-  MostJoined = 'Most Joined',
-  MostEarned = 'Most Earned',
-  MostProfit = 'Most Profit',
-}
+import {useIntl} from 'react-intl';
+import {ethers} from 'ethers';
+import {useWeb3} from 'hooks/useWeb3';
+import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {useMobile} from 'hooks/useMobile';
+import RankingButtonSkeleton from 'modules/CoinLeagues/components/RankingButton/index.skeleton';
+import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
 
 export function Ranking() {
   const isMobile = useMobile();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
-  const { coinSymbol, chainId } = useLeaguesChainInfo();
-  const rankingMostWinnedQuery = useRankingMostWinned(isNFT, chainId);
-  const rankingMostJoinedQuery = useRankingMostJoined(isNFT, chainId);
-  const rankingMostEarnedQuery = useRankingMostEarned(isNFT, chainId);
-  const rankingMostProfitQuery = useRankingMostProfit(isNFT, chainId);
+  const {coinSymbol, chainId} = useLeaguesChainInfo();
+  const [value, setValue] = React.useState(RankingType.MostWinner);
+  const rankingQuery = useRanking(value, isNFT, chainId);
 
-  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
-  const { account } = useWeb3();
+  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
+  const {account} = useWeb3();
 
   const history = useHistory();
-  const { messages } = useIntl();
-
-  const [value, setValue] = React.useState(Tabs.MostWinner);
+  const {messages} = useIntl();
 
   const handleChange = useCallback(
-    (_event: React.ChangeEvent<{}>, newValue: Tabs) => {
+    (_event: React.ChangeEvent<{}>, newValue: RankingType) => {
       setValue(newValue);
     },
     [],
+  );
+
+  const userProfiles = useGameProfilesState(
+    rankingQuery.data?.players.map((p) => p.id.toLowerCase()),
   );
 
   return (
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          {!isMobile && <Grid item xs={12}>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                <IntlMessages id='app.coinLeagues.coinLeague' />
-              </Link>
-            </Breadcrumbs>
-          </Grid>}
+          {!isMobile && (
+            <Grid item xs={12}>
+              <Breadcrumbs>
+                <Link
+                  color='inherit'
+                  component={RouterLink}
+                  to={listGamesRoute}>
+                  <IntlMessages id='app.coinLeagues.coinLeague' />
+                </Link>
+              </Breadcrumbs>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box
@@ -115,13 +113,25 @@ export function Ranking() {
             onChange={handleChange}
             variant='standard'
             TabIndicatorProps={{
-              style: { display: 'none' },
+              style: {display: 'none'},
             }}
             aria-label='wallet tabs'>
-            <CustomTab value={Tabs.MostWinner} label={Tabs.MostWinner} />
-            <CustomTab value={Tabs.MostJoined} label={Tabs.MostJoined} />
-            <CustomTab value={Tabs.MostEarned} label={Tabs.MostEarned} />
-            <CustomTab value={Tabs.MostProfit} label={Tabs.MostProfit} />
+            <CustomTab
+              value={RankingType.MostWinner}
+              label={RankingType.MostWinner}
+            />
+            <CustomTab
+              value={RankingType.MostJoined}
+              label={RankingType.MostJoined}
+            />
+            <CustomTab
+              value={RankingType.MostEarned}
+              label={RankingType.MostEarned}
+            />
+            <CustomTab
+              value={RankingType.MostProfit}
+              label={RankingType.MostProfit}
+            />
           </CustomTabs>
         </Grid>
 
@@ -135,7 +145,7 @@ export function Ranking() {
             onClick={(address) => {}}
           />
         </Grid> */}
-        {value === Tabs.MostWinner && (
+        {value === RankingType.MostWinner && (
           <>
             <Grid item xs={12}>
               <Divider />
@@ -145,7 +155,14 @@ export function Ranking() {
                 <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
-                {rankingMostWinnedQuery.data?.players?.map((player, index) => (
+                {rankingQuery.loading &&
+                  Array.from(Array(10).keys()).map(() => (
+                    <Grid item xs={12}>
+                      <RankingButtonSkeleton />
+                    </Grid>
+                  ))}
+
+                {rankingQuery.data?.players?.map((player, index) => (
                   <Grid item xs={12}>
                     <RankingButton
                       position={index + 1}
@@ -154,6 +171,10 @@ export function Ranking() {
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
                       }
+                      profile={userProfiles?.profiles?.find(
+                        (p) =>
+                          p?.address.toLowerCase() === player?.id.toLowerCase(),
+                      )}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
@@ -166,7 +187,7 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => { }}
+                      onClick={(address) => {}}
                     />
                   </Grid>
                 ))}
@@ -174,7 +195,7 @@ export function Ranking() {
             </Grid>{' '}
           </>
         )}
-        {value === Tabs.MostJoined && (
+        {value === RankingType.MostJoined && (
           <>
             <Grid item xs={12}>
               <Divider />
@@ -184,7 +205,13 @@ export function Ranking() {
                 <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
-                {rankingMostJoinedQuery.data?.players?.map((player, index) => (
+                {rankingQuery.loading &&
+                  Array.from(Array(10).keys()).map(() => (
+                    <Grid item xs={12}>
+                      <RankingButtonSkeleton />
+                    </Grid>
+                  ))}
+                {rankingQuery.data?.players?.map((player, index) => (
                   <Grid item xs={12}>
                     <RankingButton
                       position={index + 1}
@@ -193,6 +220,10 @@ export function Ranking() {
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
                       }
+                      profile={userProfiles?.profiles?.find(
+                        (p) =>
+                          p?.address.toLowerCase() === player?.id.toLowerCase(),
+                      )}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
@@ -205,7 +236,7 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => { }}
+                      onClick={(address) => {}}
                     />
                   </Grid>
                 ))}
@@ -213,7 +244,7 @@ export function Ranking() {
             </Grid>{' '}
           </>
         )}
-        {value === Tabs.MostEarned && (
+        {value === RankingType.MostEarned && (
           <>
             <Grid item xs={12}>
               <Divider />
@@ -223,7 +254,13 @@ export function Ranking() {
                 Ranking
               </Typography>
               <Grid container spacing={4}>
-                {rankingMostEarnedQuery.data?.players?.map((player, index) => (
+                {rankingQuery.loading &&
+                  Array.from(Array(10).keys()).map(() => (
+                    <Grid item xs={12}>
+                      <RankingButtonSkeleton />
+                    </Grid>
+                  ))}
+                {rankingQuery.data?.players?.map((player, index) => (
                   <Grid item xs={12}>
                     <RankingButton
                       position={index + 1}
@@ -233,6 +270,10 @@ export function Ranking() {
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
                       }
+                      profile={userProfiles?.profiles?.find(
+                        (p) =>
+                          p?.address.toLowerCase() === player?.id.toLowerCase(),
+                      )}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
@@ -246,7 +287,7 @@ export function Ranking() {
                       count={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => { }}
+                      onClick={(address) => {}}
                     />
                   </Grid>
                 ))}
@@ -254,7 +295,7 @@ export function Ranking() {
             </Grid>{' '}
           </>
         )}
-        {value === Tabs.MostProfit && (
+        {value === RankingType.MostProfit && (
           <>
             <Grid item xs={12}>
               <Divider />
@@ -264,7 +305,13 @@ export function Ranking() {
                 Ranking
               </Typography>
               <Grid container spacing={4}>
-                {rankingMostProfitQuery.data?.players?.map((player, index) => (
+                {rankingQuery.loading &&
+                  Array.from(Array(10).keys()).map(() => (
+                    <Grid item xs={12}>
+                      <RankingButtonSkeleton />
+                    </Grid>
+                  ))}
+                {rankingQuery.data?.players?.map((player, index) => (
                   <Grid item xs={12}>
                     <RankingButton
                       position={index + 1}
@@ -272,6 +319,10 @@ export function Ranking() {
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
                       }
+                      profile={userProfiles?.profiles?.find(
+                        (p) =>
+                          p?.address.toLowerCase() === player?.id.toLowerCase(),
+                      )}
                       label={`Profit  ${coinSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
@@ -287,7 +338,7 @@ export function Ranking() {
                       count={Number(
                         ethers.utils.formatEther(player.EarnedMinusSpent),
                       )}
-                      onClick={(address) => { }}
+                      onClick={(address) => {}}
                     />
                   </Grid>
                 ))}

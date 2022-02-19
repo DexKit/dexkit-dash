@@ -10,7 +10,7 @@ import {
   ButtonBase,
   Paper,
 } from '@material-ui/core';
-
+import IconButton from '@material-ui/core/IconButton';
 import {Link as RouterLink} from 'react-router-dom';
 
 import {Skeleton} from '@material-ui/lab';
@@ -21,7 +21,7 @@ import MainLayout from 'shared/components/layouts/main';
 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Edit, Share} from '@material-ui/icons';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ProfileStatsPill from 'modules/CoinLeagues/components/Profile/ProfileStatsPill';
 import {
   CupStatsIcon,
@@ -55,6 +55,8 @@ import {getNormalizedUrl} from 'utils/browser';
 import {useChampionBalance} from 'modules/CoinLeagues/hooks/champions';
 import {chainIdToSlug, slugToChainId} from 'utils/nft';
 import {ChainId} from 'types/blockchain';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -94,15 +96,15 @@ export const ProfilePage: React.FC = () => {
 
   const searchParams = new URLSearchParams(history.location.search);
 
+  const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
+
   const {account} = useWeb3();
 
   const {coinSymbol, chainId} = useLeaguesChainInfo();
 
   const {address} = useParams<{address: string}>();
 
-  const playerStats = usePlayerProfileStats(address.toLowerCase());
-
-  const gameProfile = useProfileGame(address.toLowerCase());
+  const gameProfile = useProfileGame(address.trim().toLowerCase());
 
   const championsBalance = useChampionBalance({chainId, account: address});
 
@@ -114,15 +116,23 @@ export const ProfilePage: React.FC = () => {
 
   const [network, setNetwork] = useState<ChainId>(ChainId.Matic);
 
-  const handleSelectGame = useCallback((e) => {
-    setSelectedGame(e.target.value);
-  }, []);
+  const handleSelectGame = useCallback(
+    (e) => {
+      setSelectedGame(e.target.value);
+      history.replace(
+        `${COINLEAGUE_PROFILE_ROUTE}/${address}?network=${chainIdToSlug(
+          network,
+        )}&game=${coinLeagueGamesToSlug(e.target.value)}`,
+      );
+    },
+    [network, address, history],
+  );
 
   const handleNetworkChange = useCallback(
     (e) => {
       setNetwork(e.target.value);
       history.replace(
-        `/coin-league/profile/${address}?network=${chainIdToSlug(
+        `${COINLEAGUE_PROFILE_ROUTE}/${address}?network=${chainIdToSlug(
           e.target.value as ChainId,
         )}&game=${coinLeagueGamesToSlug(selectedGame)}`,
       );
@@ -156,6 +166,23 @@ export const ProfilePage: React.FC = () => {
     // eslint-disable-next-line
   }, []);
 
+  const handleBack = useCallback(
+    (ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(listGamesRoute);
+      }
+      //history.push(listGamesRoute)
+    },
+    [listGamesRoute, history],
+  );
+
+  const playerStats = usePlayerProfileStats(
+    address.trim().toLowerCase(),
+    selectedGame === CoinLeagueGames.CoinLeagueNFT,
+  );
+
   return (
     <>
       <ProfileShareDialog
@@ -172,6 +199,16 @@ export const ProfilePage: React.FC = () => {
       />
       <MainLayout>
         <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Box display={'flex'} alignItems={'center'}>
+              <IconButton onClick={handleBack}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant='h6' style={{margin: 5}}>
+                <IntlMessages id='app.coinLeagues.profile' />
+              </Typography>
+            </Box>
+          </Grid>
           <Grid item xs={12}>
             <Grid
               container
@@ -311,7 +348,7 @@ export const ProfilePage: React.FC = () => {
               spacing={4}
               alignItems='center'
               alignContent='center'>
-              {account === address ? (
+              {account?.toLowerCase() === address?.toLowerCase() ? (
                 <Grid item xs={isMobile ? true : undefined}>
                   <Button
                     component={RouterLink}
@@ -383,8 +420,11 @@ export const ProfilePage: React.FC = () => {
               <MenuItem value={CoinLeagueGames.CoinLeague}>
                 Coin League
               </MenuItem>
-              <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
-              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>
+              <MenuItem value={CoinLeagueGames.CoinLeagueNFT}>
+                Coin League NFT
+              </MenuItem>
+              {/* <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
+              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>*/}
             </Select>
           </Grid>
           <Grid item xs={12}>
@@ -398,7 +438,8 @@ export const ProfilePage: React.FC = () => {
               Statistics may change depending on the network you selected above
             </Typography>
 
-            {selectedGame === CoinLeagueGames.CoinLeague && (
+            {(selectedGame === CoinLeagueGames.CoinLeague ||
+              selectedGame === CoinLeagueGames.CoinLeagueNFT) && (
               <Box className={classes.container}>
                 <Grid
                   container
@@ -527,7 +568,10 @@ export const ProfilePage: React.FC = () => {
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <MyGamesTable address={address} />
+            <MyGamesTable
+              address={address}
+              isNFT={selectedGame === CoinLeagueGames.CoinLeagueNFT}
+            />
           </Grid>
         </Grid>
       </MainLayout>

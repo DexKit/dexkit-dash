@@ -28,7 +28,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
-import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 import {GameType} from 'types/coinsleague';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
@@ -36,7 +35,8 @@ import Badge from '@material-ui/core/Badge';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
-import CopyButton from 'shared/components/CopyButton';
+import UserProfileItem from '../UserProfileItem';
+import {GameProfile} from 'modules/CoinLeagues/utils/types';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -88,6 +88,7 @@ interface Props {
   account?: string;
   finished?: boolean;
   hideCoins?: boolean;
+  userProfiles?: GameProfile[];
 }
 
 const getIconByCoin = (
@@ -112,18 +113,10 @@ const getIconSymbol = (
   );
 };
 
-const truncHash = (hash: string): string => {
-  if (ethers.utils.isHexString(hash)) {
-    return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-  } else {
-    return hash;
-  }
-};
-
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {id, account, finished, hideCoins, type, data} = props;
+  const {id, account, finished, hideCoins, type, data, userProfiles} = props;
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
@@ -209,18 +202,26 @@ function PlayersTable(props: Props): JSX.Element {
                 ((p.endPrice - p.startPrice) / p.endPrice) * 100 * p.multiplier,
             );
           const score = scores.reduce((p, c) => p + c);
+          const profile = (userProfiles || []).find(
+            (p) => p.address.toLowerCase() === d.hash.toLowerCase(),
+          );
           return {
             ...d,
             account: d.hash,
             hash: label,
             score,
+            profile,
           };
         } else {
+          const profile = (userProfiles || []).find(
+            (p) => p.address.toLowerCase() === d.hash.toLowerCase(),
+          );
           return {
             ...d,
             account: d.hash,
             hash: label,
             score: d.score / 1000,
+            profile,
           };
         }
       });
@@ -235,14 +236,18 @@ function PlayersTable(props: Props): JSX.Element {
           ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
           : d.hash;
       }
+      const profile = (userProfiles || []).find(
+        (p) => p.address.toLowerCase() === d.hash.toLowerCase(),
+      );
       return {
         ...d,
         account: d.hash,
         hash: label,
         score: d.score / 1000,
+        profile,
       };
     });
-  }, [game, currentPrices, allFeeds, data, type, accountLabels]);
+  }, [game, currentPrices, allFeeds, data, type, accountLabels, userProfiles]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
@@ -308,14 +313,19 @@ function PlayersTable(props: Props): JSX.Element {
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <Chip className={classes.chip} label={`${i + 1}º`} />
-                      <CopyButton
+                      <UserProfileItem
+                        address={row.hash}
+                        profile={row.profile}
+                      />
+
+                      {/* <CopyButton
                         size='small'
                         copyText={row.hash}
                         tooltip='Copied!'>
                         <Typography style={{color: '#fff'}}>
                           &nbsp; {truncHash(row.hash)}
                         </Typography>
-                      </CopyButton>
+                     </CopyButton>*/}
 
                       {finished &&
                         (playerRowData.length === 2 ||

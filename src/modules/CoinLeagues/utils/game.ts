@@ -1,14 +1,14 @@
-import {BigNumber} from '@ethersproject/bignumber';
-import {ethers} from 'ethers';
-import {BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS} from '../constants';
+import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
+import { BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS } from '../constants';
 import {
   GameLevel,
   GameOrderBy,
   GameOrderByLabels,
 } from 'modules/CoinLeagues/constants/enums';
-import {gql} from 'graphql-tag';
-import {ChainId} from 'types/blockchain';
-import {CoinLeagueGames} from './types';
+import { gql } from 'graphql-tag';
+import { ChainId } from 'types/blockchain';
+import { CoinLeagueGames } from './types';
 
 
 export const isGameCreator = (address?: string) => {
@@ -93,35 +93,35 @@ export const GET_GAME_ORDER_OPTIONS = () => {
 
 export const GET_GAME_ORDER_LABELS_OPTIONS = () => {
   return [
-    {value: GameOrderByLabels.Level, label: 'Level'},
-    {value: GameOrderByLabels.Duration, label: 'Duration'},
-    {value: GameOrderByLabels.PlayersNeeded, label: 'Players Needed'},
-    {value: GameOrderByLabels.NumberOfCoins, label: 'Number Of Coins'},
+    { value: GameOrderByLabels.Level, label: 'Level' },
+    { value: GameOrderByLabels.Duration, label: 'Duration' },
+    { value: GameOrderByLabels.PlayersNeeded, label: 'Players Needed' },
+    { value: GameOrderByLabels.NumberOfCoins, label: 'Number Of Coins' },
   ];
 };
 
 export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
   switch (orderBy) {
     case GameOrderBy.HighLevel:
-      return {orderBy: 'entry', orderDirection: 'desc'};
+      return { orderBy: 'entry', orderDirection: 'desc' };
     case GameOrderBy.LowLevel:
-      return {orderBy: 'entry', orderDirection: 'asc'};
+      return { orderBy: 'entry', orderDirection: 'asc' };
     case GameOrderBy.AboutStart:
-      return {orderBy: 'startsAt', orderDirection: 'asc'};
+      return { orderBy: 'startsAt', orderDirection: 'asc' };
     case GameOrderBy.MostFull:
-      return {orderBy: 'currentPlayers', orderDirection: 'desc'};
+      return { orderBy: 'currentPlayers', orderDirection: 'desc' };
     case GameOrderBy.MostEmpty:
-      return {orderBy: 'currentPlayers', orderDirection: 'asc'};
+      return { orderBy: 'currentPlayers', orderDirection: 'asc' };
     case GameOrderBy.HighDuration:
-      return {orderBy: 'duration', orderDirection: 'desc'};
+      return { orderBy: 'duration', orderDirection: 'desc' };
     case GameOrderBy.LowerDuration:
-      return {orderBy: 'duration', orderDirection: 'asc'};
+      return { orderBy: 'duration', orderDirection: 'asc' };
     case GameOrderBy.MoreCoins:
-      return {orderBy: 'numCoins', orderDirection: 'desc'};
+      return { orderBy: 'numCoins', orderDirection: 'desc' };
     case GameOrderBy.LessCoins:
-      return {orderBy: 'numCoins', orderDirection: 'asc'};
+      return { orderBy: 'numCoins', orderDirection: 'asc' };
     default:
-      return {orderBy: 'entry', orderDirection: 'desc'};
+      return { orderBy: 'entry', orderDirection: 'desc' };
   }
 };
 
@@ -361,10 +361,12 @@ export function reduceAddress(address?: string) {
 
 export function slugToCoinLeagueGame(slug: string) {
   switch (slug) {
-    case 'coin-leagues':
+    case 'coin-league':
       return CoinLeagueGames.CoinLeague;
     case 'squid-game':
       return CoinLeagueGames.SquidGame;
+    case 'coin-league-nft':
+      return CoinLeagueGames.CoinLeagueNFT;
     case 'nft-league':
       return CoinLeagueGames.NFTLeague;
     default:
@@ -375,7 +377,9 @@ export function slugToCoinLeagueGame(slug: string) {
 export function coinLeagueGamesToSlug(game: CoinLeagueGames) {
   switch (game) {
     case CoinLeagueGames.CoinLeague:
-      return 'coin-leagues';
+      return 'coin-league';
+    case CoinLeagueGames.CoinLeagueNFT:
+      return 'coin-league-nft';
     case CoinLeagueGames.SquidGame:
       return 'squid-game';
     case CoinLeagueGames.NFTLeague:

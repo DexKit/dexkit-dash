@@ -1,5 +1,5 @@
-import {BigNumber} from 'ethers';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from 'ethers';
+import { ChainId } from 'types/blockchain';
 
 export interface CoinFeed {
   base: string;
@@ -116,6 +116,7 @@ export interface ProfileStats {
 
 export enum CoinLeagueGames {
   CoinLeague,
+  CoinLeagueNFT,
   SquidGame,
   NFTLeague,
 }

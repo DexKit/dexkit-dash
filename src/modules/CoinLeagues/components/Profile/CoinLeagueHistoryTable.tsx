@@ -63,7 +63,7 @@ export const CoinLeagueHistoryTable: React.FC = () => {
             {!isMobile && (
               <>
                 <TableCell component='th'>
-                  <strong>Rerward</strong>
+                  <strong>Reward</strong>
                 </TableCell>
                 <TableCell component='th'>
                   <strong>Date</strong>

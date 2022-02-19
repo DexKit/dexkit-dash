@@ -174,14 +174,20 @@ export const ProfileCollection: React.FC<Props> = () => {
                                 </Typography>
                               </Grid>
                               <Grid item>
-                                <Button
-                                  href='/coin-league/champions/event'
-                                  target='_blank'
-                                  rel='noopener noreferrer'
-                                  variant='outlined'
-                                  color='primary'>
-                                  <IntlMessages id='app.coinLeauge.mintChampion' />
-                                </Button>
+                                <Box
+                                  display='flex'
+                                  justifyContent='center'
+                                  alignContent='center'
+                                  alignItems='center'>
+                                  <Button
+                                    href='/coin-league/champions/event'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    variant='outlined'
+                                    color='primary'>
+                                    <IntlMessages id='app.coinLeauge.mintChampion' />
+                                  </Button>
+                                </Box>
                               </Grid>
                             </Grid>
                           </Box>
