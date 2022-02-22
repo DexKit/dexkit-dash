@@ -17,7 +17,6 @@ import {Skeleton} from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
-import {useMobile} from 'hooks/useMobile';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 
@@ -74,26 +73,6 @@ export const RankingButton = (props: RankingButtonProps) => {
   const handleToggle = useCallback(() => {
     toggler.toggle();
   }, [toggler]);
-
-  //const isMobile = useMobile();
-
-  /* const formattedAddress = useMemo(() => {
-    if (isMobile) {
-      const name = GET_BITBOY_NAME(address);
-      if (name) {
-        return name.label;
-      } else {
-        return truncateAddress(address);
-      }
-    } else {
-      const name = GET_BITBOY_NAME(address);
-      if (name) {
-        return name.label;
-      } else {
-        return address;
-      }
-    }
-  }, [address, isMobile]);*/
 
   return (
     <Paper variant='outlined'>

@@ -10,6 +10,8 @@ import {Avatar, Link} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import {getPublicIPFSPath, isIPFS} from 'utils/ipfs';
+import {useLabelAccounts} from 'hooks/useLabelAccounts';
+import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
   profileImageContainer: {
@@ -35,7 +37,7 @@ interface Props {
 
 const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   const classes = useStyles();
-
+  const accountLabels = useLabelAccounts();
   if (profile) {
     return (
       <Grid alignItems='center' alignContent='center' container spacing={4}>
@@ -62,13 +64,23 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
       </Grid>
     );
   } else {
+    let label: string | undefined;
+    const bitboyMember = GET_BITBOY_NAME(address);
+    if (bitboyMember) {
+      label = bitboyMember.label;
+    } else {
+      label =
+        accountLabels &&
+        accountLabels.find((a) => a.address === address)?.label;
+    }
+
     return (
       <Link
         color='inherit'
         component={RouterLink}
         to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
         <Typography style={{color: '#fff'}}>
-          {truncateAddress(address)}
+          {label ? label : truncateAddress(address)}
         </Typography>
       </Link>
     );

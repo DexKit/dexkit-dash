@@ -24,15 +24,14 @@ export const useRanking = (type: RankingType, isNFTGame = false, chainId = Chain
     switch (type) {
       case RankingType.MostWinner:
         return GET_RANKING_MOST_WINNED
-      case RankingType.MostWinner:
+      case RankingType.MostJoined:
         return GET_RANKING_MOST_JOINED
-      case RankingType.MostWinner:
+      case RankingType.MostEarned:
         return GET_RANKING_MOST_EARNED
-      case RankingType.MostWinner:
+      case RankingType.MostProfit:
         return GET_RANKING_MOST_PROFIT
 
     }
-    return GET_RANKING_MOST_WINNED
   }, [type])
 
 

@@ -318,15 +318,6 @@ function PlayersTable(props: Props): JSX.Element {
                         profile={row.profile}
                       />
 
-                      {/* <CopyButton
-                        size='small'
-                        copyText={row.hash}
-                        tooltip='Copied!'>
-                        <Typography style={{color: '#fff'}}>
-                          &nbsp; {truncHash(row.hash)}
-                        </Typography>
-                     </CopyButton>*/}
-
                       {finished &&
                         (playerRowData.length === 2 ||
                           playerRowData.length === 3) &&
