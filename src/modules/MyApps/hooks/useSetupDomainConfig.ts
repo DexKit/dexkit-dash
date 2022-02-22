@@ -8,15 +8,15 @@ import { onAddNotification } from "redux/actions";
 import { eip712Utils } from '@0x/order-utils';
 import { NotificationType } from 'services/notification';
 import { Notification as CustomNotification } from 'types/models/Notification';
-import { sendConfig } from "../services/config";
+import { setupDomainConfig } from "../services/config";
 
-export const useSendConfig = () => {
+export const useSetupDomainConfig = () => {
     const [isLoading, setLoading] = useState(false);
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const onSendConfigCallback = useCallback((config: any, type: string) => {
+    const onSendDomainConfigCallback = useCallback((dataSubmit: any, type: string) => {
         if (!isLoading) {
             setLoading(true);
             setTimeout(function () {
@@ -68,16 +68,17 @@ export const useSendConfig = () => {
                                 const dataToSend = {
                                     signature,
                                     type: type,
-                                    config: JSON.stringify(config),
+                                    slug: dataSubmit.slug,
+                                    domain: dataSubmit.domain,
                                     message: JSON.stringify(typedData),
                                     owner: ethAccount,
                                 };
 
-                                sendConfig(dataToSend)
+                                setupDomainConfig(dataToSend)
                                     .then((c: any) => {
                                         const notification: CustomNotification = {
-                                            title: 'Config Accepted',
-                                            body: 'Config created',
+                                            title: 'Domain Accepted',
+                                            body: 'Point CNAME in your hosting to: ',
                                         };
                                         dispatch(onAddNotification([notification]));
                                         history.push(`/my-apps/manage`);
@@ -106,5 +107,5 @@ export const useSendConfig = () => {
     }, [account, chainId, dispatch, getProvider, history, isLoading])
 
 
-    return { onSendConfigCallback, isLoading }
+    return { onSendDomainConfigCallback, isLoading }
 }

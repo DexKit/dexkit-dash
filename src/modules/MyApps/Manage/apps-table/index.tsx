@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import {
@@ -33,6 +33,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
 import {WhitelabelTypes} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
+import {useSetupDomainConfig} from 'modules/MyApps/hooks/useSetupDomainConfig';
 // import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
@@ -71,6 +72,7 @@ const AppsTable = () => {
   const [showDeployDialog, setShowDeployDialog] = useState(false);
   const {account} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
+  const {onSendDomainConfigCallback} = useSetupDomainConfig();
   const {data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -158,6 +160,13 @@ const AppsTable = () => {
       dispatch(onAddNotification([notification]));
     }
   };
+
+  const onDeployToDomainCallback = useCallback(
+    (config: any) => {
+      onSendDomainConfigCallback(config, 'AGGREGATOR');
+    },
+    [onSendDomainConfigCallback],
+  );
 
   return (
     <>
@@ -291,7 +300,7 @@ const AppsTable = () => {
                         title={`Deploy your app to your own domain, you will receive a CNAME to point to your app`}
                         dialogTitle={'Deploy to own domain?'}
                         open={showDeployDialog}
-                        onConfirm={() => {}}
+                        onConfirm={() => onDeployToDomainCallback(config)}
                         onDeny={(x) => setShowDeployDialog(x)}
                       />
                     </TableRow>
