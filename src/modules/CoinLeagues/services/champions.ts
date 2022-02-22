@@ -55,7 +55,6 @@ export function mintCoinLeaguesChampion(
 
       resolve(id);
     }).catch((err: any) => {
-      console.log(err);
       reject(err);
     });
   });
