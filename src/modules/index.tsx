@@ -20,6 +20,7 @@ import {kittygotchiConfig} from './Kittygotchi';
 import {profileConfig} from './Profile';
 
 import {settingsConfig} from './Settings';
+import {nftLeagueConfig} from './NFTLeague';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -36,6 +37,7 @@ const routeConfigs = [
   ...kittygotchiConfig,
   ...profileConfig,
   ...settingsConfig,
+  ...nftLeagueConfig,
 ];
 
 const routes = [
