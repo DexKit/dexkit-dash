@@ -68,3 +68,26 @@ export const getConfig = async (owner: string) => {
         return [];
     }
 };
+
+
+export const getDomainConfigStatus = async (domain: string) => {
+    const headers = new Headers({
+        'content-type': 'application/json',
+    });
+
+    const init: RequestInit = {
+        method: 'GET',
+        headers,
+    };
+
+    const url = `${MY_APPS_ENDPOINT}/v4/domain-status?domain=${domain}`;
+    const response = await fetch(url, init);
+
+    if (response.ok && response.status === 200) {
+        const data = (await response.json()) as ConfigResponse;
+        return data;
+    } else {
+        return [];
+    }
+};
+

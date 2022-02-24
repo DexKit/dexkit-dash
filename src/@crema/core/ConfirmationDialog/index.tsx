@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -15,6 +16,15 @@ interface ConfirmationDialogProps {
   title: string;
   dialogTitle: any;
 }
+const useStyle = makeStyles((theme: CremaTheme) => ({
+  btn: {
+    marginLeft: 8,
+    fontFamily: Fonts.MEDIUM,
+  },
+  contentText: {
+    color: theme.palette.common.white,
+  },
+}));
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   open,
@@ -23,15 +33,6 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   title,
   dialogTitle,
 }) => {
-  const useStyle = makeStyles({
-    btn: {
-      marginLeft: 8,
-      fontFamily: Fonts.MEDIUM,
-    },
-    contentText: {
-      color: grey[600],
-    },
-  });
   const classes = useStyle();
 
   return (

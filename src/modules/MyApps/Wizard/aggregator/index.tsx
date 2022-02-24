@@ -9,7 +9,14 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import {Box, Breadcrumbs, Grid, IconButton, Link} from '@material-ui/core';
+import {
+  Box,
+  Breadcrumbs,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Link,
+} from '@material-ui/core';
 import {Form, Formik} from 'formik';
 
 import {ConfigFileAggregator, GeneralConfigAggregator} from 'types/myApps';
@@ -327,6 +334,7 @@ export default function WizardAggregator(props: any) {
                         color='primary'
                         type='submit'
                         className={classes.button}>
+                        {isLoading && <CircularProgress color='inherit' />}
                         {isLoading ? 'Waiting Wallet' : 'Submit'}
                       </Button>
                     </Paper>

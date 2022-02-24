@@ -34,6 +34,9 @@ import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
 import {WhitelabelTypes} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
 import {useSetupDomainConfig} from 'modules/MyApps/hooks/useSetupDomainConfig';
+import {DeployDomainDialog} from 'modules/MyApps/components/dialogs/DeployDomain';
+import {useToggler} from 'hooks/useToggler';
+import {StatusDomainDialog} from 'modules/MyApps/components/dialogs/StatusDomainDialog';
 // import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
@@ -48,6 +51,7 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   {id: 'slug', label: 'Id', isSort: false},
   {id: 'domain', align: 'left', label: 'Domain', isSort: true},
+  {id: 'cname', align: 'left', label: 'CNAME', isSort: true},
   {id: 'type', align: 'left', label: 'Type', isSort: false},
   //  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
   {id: 'expireds', align: 'left', label: 'Status', isSort: false},
@@ -69,13 +73,17 @@ const AppsTable = () => {
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showDialog, setShowDialog] = useState(false);
+  const [selectedCname, setSelectedCname] = useState<string>();
   const [showDeployDialog, setShowDeployDialog] = useState(false);
   const {account} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
-  const {onSendDomainConfigCallback} = useSetupDomainConfig();
+  const {onSendDomainConfigCallback, isError, isLoading, isDone} =
+    useSetupDomainConfig();
   const {data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
+  const deployDomainToggler = useToggler(false);
+  const statusDomainToggler = useToggler(false);
 
   useEffect(() => {
     const apps = configs?.filter((config) => config?.active) ?? [];
@@ -163,10 +171,28 @@ const AppsTable = () => {
 
   const onDeployToDomainCallback = useCallback(
     (config: any) => {
+      deployDomainToggler.toggle();
+      setShowDeployDialog(false);
       onSendDomainConfigCallback(config, 'AGGREGATOR');
     },
-    [onSendDomainConfigCallback],
+    [onSendDomainConfigCallback, deployDomainToggler],
   );
+
+  const onValidateDomainCallback = useCallback(
+    (cname: string) => {
+      statusDomainToggler.toggle();
+      setSelectedCname(cname);
+    },
+    [onSendDomainConfigCallback, statusDomainToggler],
+  );
+
+  const handleCloseSetupDomainDialog = useCallback(() => {
+    deployDomainToggler.toggle();
+  }, [deployDomainToggler]);
+
+  const handleCloseStatusDomainDialog = useCallback(() => {
+    statusDomainToggler.toggle();
+  }, [statusDomainToggler]);
 
   return (
     <>
@@ -198,7 +224,27 @@ const AppsTable = () => {
         //     </>
         //   }
         //   >
+
         <Paper className={classes.paper}>
+          <DeployDomainDialog
+            done={isDone}
+            loading={isLoading}
+            error={isError}
+            dialogProps={{
+              open: deployDomainToggler.show,
+              onClose: handleCloseSetupDomainDialog,
+            }}
+          />
+          <StatusDomainDialog
+            done={isDone}
+            loading={isLoading}
+            error={isError}
+            cname={selectedCname}
+            dialogProps={{
+              open: statusDomainToggler.show,
+              onClose: handleCloseStatusDomainDialog,
+            }}
+          />
           <Toolbar className={classes.toolbar}>
             <Typography variant='h5'>My Apps</Typography>
           </Toolbar>
@@ -243,6 +289,22 @@ const AppsTable = () => {
                       <TableCell align='left' className={classes.tableCell}>
                         {config.domain}
                       </TableCell>
+                      <TableCell
+                        align='left'
+                        className={classes.tableCell}
+                        style={{
+                          width: '5rem',
+                        }}>
+                        {config?.cname}
+                        {!config.cname && (
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={() => setShowDeployDialog(true)}>
+                            Deploy
+                          </Button>
+                        )}
+                      </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
                         {config.type}
                       </TableCell>
@@ -255,7 +317,21 @@ const AppsTable = () => {
                           textOverflow: 'ellipsis',
                           width: '6rem',
                         }}>
-                        <Box className={classes.anchar}>{config?.active}</Box>
+                        {config?.domainStatus?.toUpperCase() !== 'PENDING' && (
+                          <Box className={classes.anchar}>
+                            {config?.domainStatus?.toUpperCase()}
+                          </Box>
+                        )}
+                        {config?.domainStatus?.toUpperCase() === 'PENDING' && (
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={() =>
+                              onValidateDomainCallback(config.cname as string)
+                            }>
+                            Pending
+                          </Button>
+                        )}
                       </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
                         <Box className={classes.badgeRoot}>
@@ -278,12 +354,6 @@ const AppsTable = () => {
                             }}>
                             <DeleteIcon />
                           </IconButton>
-                          <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={() => setShowDeployDialog(true)}>
-                            Deploy
-                          </Button>
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
@@ -298,7 +368,7 @@ const AppsTable = () => {
                       />
                       <ConfirmationDialog
                         title={`Deploy your app to your own domain, you will receive a CNAME to point to your app`}
-                        dialogTitle={'Deploy to own domain?'}
+                        dialogTitle={'Deploy to your own domain?'}
                         open={showDeployDialog}
                         onConfirm={() => onDeployToDomainCallback(config)}
                         onDeny={(x) => setShowDeployDialog(x)}

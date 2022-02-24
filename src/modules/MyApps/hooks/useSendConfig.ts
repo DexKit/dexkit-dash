@@ -12,6 +12,7 @@ import { sendConfig } from "../services/config";
 
 export const useSendConfig = () => {
     const [isLoading, setLoading] = useState(false);
+    const [isError, setError] = useState(false);
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -19,92 +20,109 @@ export const useSendConfig = () => {
     const onSendConfigCallback = useCallback((config: any, type: string) => {
         if (!isLoading) {
             setLoading(true);
-            setTimeout(function () {
+            setError(false);
 
-                try {
-                    if (account) {
-                        const ethAccount = account;
-                        const provider = new MetamaskSubprovider(getProvider() as any);
 
-                        const msgParams: EIP712TypedData = {
-                            types: {
-                                EIP712Domain: [
-                                    { name: 'name', type: 'string' },
-                                    { name: 'version', type: 'string' },
-                                    { name: 'chainId', type: 'uint256' },
-                                    { name: 'verifyingContract', type: 'address' },
-                                ],
-                                Message: [
-                                    { name: 'message', type: 'string' },
-                                    { name: 'terms', type: 'string' },
-                                ],
-                            },
-                            primaryType: 'Message',
-                            domain: {
-                                name: 'DexKit',
-                                version: '1',
-                                chainId: chainId || 1,
-                                verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
-                            },
-                            message: {
-                                message: `I want to create/edit this ${type.toLowerCase()}`,
-                                terms: 'Powered by DexKit',
-                            },
-                        };
+            try {
+                if (account) {
+                    const ethAccount = account;
+                    const provider = new MetamaskSubprovider(getProvider() as any);
 
-                        const web3Metamask = new Web3Wrapper(provider);
+                    const msgParams: EIP712TypedData = {
+                        types: {
+                            EIP712Domain: [
+                                { name: 'name', type: 'string' },
+                                { name: 'version', type: 'string' },
+                                { name: 'chainId', type: 'uint256' },
+                                { name: 'verifyingContract', type: 'address' },
+                            ],
+                            Message: [
+                                { name: 'message', type: 'string' },
+                                { name: 'terms', type: 'string' },
+                            ],
+                        },
+                        primaryType: 'Message',
+                        domain: {
+                            name: 'DexKit',
+                            version: '1',
+                            chainId: chainId || 1,
+                            verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+                        },
+                        message: {
+                            message: `I want to create/edit this ${type.toLowerCase()}`,
+                            terms: 'Powered by DexKit',
+                        },
+                    };
 
-                        const typedData = eip712Utils.createTypedData(
-                            msgParams.primaryType,
-                            msgParams.types,
-                            msgParams.message,
-                            // @ts-ignore
-                            msgParams.domain,
-                        );
+                    const web3Metamask = new Web3Wrapper(provider);
 
-                        web3Metamask
-                            .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
-                            .then((signature) => {
-                                const dataToSend = {
-                                    signature,
-                                    type: type,
-                                    config: JSON.stringify(config),
-                                    message: JSON.stringify(typedData),
-                                    owner: ethAccount,
-                                };
+                    const typedData = eip712Utils.createTypedData(
+                        msgParams.primaryType,
+                        msgParams.types,
+                        msgParams.message,
+                        // @ts-ignore
+                        msgParams.domain,
+                    );
 
-                                sendConfig(dataToSend)
-                                    .then((c: any) => {
-                                        const notification: CustomNotification = {
-                                            title: 'Config Accepted',
-                                            body: 'Config created',
-                                        };
-                                        dispatch(onAddNotification([notification]));
-                                        history.push(`/my-apps/manage`);
-                                    })
-                                    .catch(() => {
-                                        const notification: CustomNotification = {
-                                            title: 'Error',
-                                            body: 'Config error! Do you have KIT?',
-                                        };
-                                        dispatch(
-                                            onAddNotification([notification], NotificationType.ERROR),
-                                        );
-                                    });
-                            });
-                    }
-                } catch (error) {
-                    //@ts-ignore
-                    throw new Error(error.message);
+                    web3Metamask
+                        .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
+                        .then((signature) => {
+                            const dataToSend = {
+                                signature,
+                                type: type,
+                                config: JSON.stringify(config),
+                                message: JSON.stringify(typedData),
+                                owner: ethAccount,
+                            };
+
+                            sendConfig(dataToSend)
+                                .then((c: any) => {
+                                    const notification: CustomNotification = {
+                                        title: 'Config Accepted',
+                                        body: 'Config created',
+                                    };
+                                    dispatch(onAddNotification([notification]));
+                                    history.push(`/my-apps/manage`);
+                                    setLoading(false);
+                                })
+                                .catch(() => {
+                                    setError(true);
+                                    setTimeout(() => {
+                                        setError(false);
+                                    }, 5000)
+                                    const notification: CustomNotification = {
+                                        title: 'Error',
+                                        body: 'Config error! Do you have KIT?',
+                                    };
+                                    dispatch(
+                                        onAddNotification([notification], NotificationType.ERROR),
+                                    );
+                                    setLoading(false);
+                                });
+                        }).catch(() => {
+                            setError(true);
+                            setLoading(false);
+                            setTimeout(() => {
+                                setError(false);
+                            }, 5000)
+
+                        });
                 }
-
+            } catch (error) {
+                setError(true);
+                setTimeout(() => {
+                    setError(false);
+                }, 5000)
                 setLoading(false);
-            }, 2000);
+            }
+
+
+
         }
 
 
-    }, [account, chainId, dispatch, getProvider, history, isLoading])
+    }, [account, chainId, dispatch, getProvider, history, isLoading, setError])
 
 
-    return { onSendConfigCallback, isLoading }
+    return { onSendConfigCallback, isLoading, isError }
 }

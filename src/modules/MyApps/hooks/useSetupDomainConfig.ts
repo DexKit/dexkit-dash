@@ -12,6 +12,8 @@ import { setupDomainConfig } from "../services/config";
 
 export const useSetupDomainConfig = () => {
     const [isLoading, setLoading] = useState(false);
+    const [isError, setError] = useState(false);
+    const [isDone, setDone] = useState(false);
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -19,93 +21,110 @@ export const useSetupDomainConfig = () => {
     const onSendDomainConfigCallback = useCallback((dataSubmit: any, type: string) => {
         if (!isLoading) {
             setLoading(true);
-            setTimeout(function () {
+            setError(false);
+            setDone(false);
+            try {
+                if (account) {
+                    const ethAccount = account;
+                    const provider = new MetamaskSubprovider(getProvider() as any);
 
-                try {
-                    if (account) {
-                        const ethAccount = account;
-                        const provider = new MetamaskSubprovider(getProvider() as any);
+                    const msgParams: EIP712TypedData = {
+                        types: {
+                            EIP712Domain: [
+                                { name: 'name', type: 'string' },
+                                { name: 'version', type: 'string' },
+                                { name: 'chainId', type: 'uint256' },
+                                { name: 'verifyingContract', type: 'address' },
+                            ],
+                            Message: [
+                                { name: 'message', type: 'string' },
+                                { name: 'terms', type: 'string' },
+                            ],
+                        },
+                        primaryType: 'Message',
+                        domain: {
+                            name: 'DexKit',
+                            version: '1',
+                            chainId: chainId || 1,
+                            verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+                        },
+                        message: {
+                            message: `I want to create/edit this ${type.toLowerCase()}`,
+                            terms: 'Powered by DexKit',
+                        },
+                    };
 
-                        const msgParams: EIP712TypedData = {
-                            types: {
-                                EIP712Domain: [
-                                    { name: 'name', type: 'string' },
-                                    { name: 'version', type: 'string' },
-                                    { name: 'chainId', type: 'uint256' },
-                                    { name: 'verifyingContract', type: 'address' },
-                                ],
-                                Message: [
-                                    { name: 'message', type: 'string' },
-                                    { name: 'terms', type: 'string' },
-                                ],
-                            },
-                            primaryType: 'Message',
-                            domain: {
-                                name: 'DexKit',
-                                version: '1',
-                                chainId: chainId || 1,
-                                verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
-                            },
-                            message: {
-                                message: `I want to create/edit this ${type.toLowerCase()}`,
-                                terms: 'Powered by DexKit',
-                            },
-                        };
+                    const web3Metamask = new Web3Wrapper(provider);
 
-                        const web3Metamask = new Web3Wrapper(provider);
+                    const typedData = eip712Utils.createTypedData(
+                        msgParams.primaryType,
+                        msgParams.types,
+                        msgParams.message,
+                        // @ts-ignore
+                        msgParams.domain,
+                    );
 
-                        const typedData = eip712Utils.createTypedData(
-                            msgParams.primaryType,
-                            msgParams.types,
-                            msgParams.message,
-                            // @ts-ignore
-                            msgParams.domain,
-                        );
+                    web3Metamask
+                        .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
+                        .then((signature) => {
+                            const dataToSend = {
+                                signature,
+                                type: type,
+                                slug: dataSubmit.slug,
+                                domain: dataSubmit.domain,
+                                message: JSON.stringify(typedData),
+                                owner: ethAccount,
+                            };
 
-                        web3Metamask
-                            .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
-                            .then((signature) => {
-                                const dataToSend = {
-                                    signature,
-                                    type: type,
-                                    slug: dataSubmit.slug,
-                                    domain: dataSubmit.domain,
-                                    message: JSON.stringify(typedData),
-                                    owner: ethAccount,
-                                };
+                            setupDomainConfig(dataToSend)
+                                .then((c: any) => {
+                                    const notification: CustomNotification = {
+                                        title: 'Domain Accepted',
+                                        body: 'Point CNAME in your hosting to: ',
+                                    };
+                                    dispatch(onAddNotification([notification]));
+                                    history.push(`/my-apps/manage`);
+                                    setLoading(false);
+                                    setDone(true);
+                                    setTimeout(() => {
+                                        setDone(false);
+                                    }, 10000)
+                                })
+                                .catch(() => {
+                                    const notification: CustomNotification = {
+                                        title: 'Error',
+                                        body: 'Config error! Do you have KIT?',
+                                    };
+                                    dispatch(
+                                        onAddNotification([notification], NotificationType.ERROR),
+                                    );
+                                    setLoading(false);
+                                });
+                        }).catch(() => {
 
-                                setupDomainConfig(dataToSend)
-                                    .then((c: any) => {
-                                        const notification: CustomNotification = {
-                                            title: 'Domain Accepted',
-                                            body: 'Point CNAME in your hosting to: ',
-                                        };
-                                        dispatch(onAddNotification([notification]));
-                                        history.push(`/my-apps/manage`);
-                                    })
-                                    .catch(() => {
-                                        const notification: CustomNotification = {
-                                            title: 'Error',
-                                            body: 'Config error! Do you have KIT?',
-                                        };
-                                        dispatch(
-                                            onAddNotification([notification], NotificationType.ERROR),
-                                        );
-                                    });
-                            });
-                    }
-                } catch (error) {
-                    //@ts-ignore
-                    throw new Error(error.message);
+                            setError(true);
+                            setTimeout(() => {
+                                setError(false);
+                            }, 5000)
+                            setLoading(false);
+
+
+                        });
                 }
-
+            } catch (error) {
+                setError(true);
+                setTimeout(() => {
+                    setError(false);
+                }, 5000)
                 setLoading(false);
-            }, 2000);
+            }
+
+
         }
 
 
-    }, [account, chainId, dispatch, getProvider, history, isLoading])
+    }, [account, chainId, dispatch, getProvider, history, isLoading, setError])
 
 
-    return { onSendDomainConfigCallback, isLoading }
+    return { onSendDomainConfigCallback, isLoading, isError, isDone }
 }

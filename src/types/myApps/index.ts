@@ -1,5 +1,5 @@
-import {BigNumber} from '@0x/utils';
-import {Styles} from 'jss';
+import { BigNumber } from '@0x/utils';
+import { Styles } from 'jss';
 
 export type WhitelabelTypes = 'DEX' | 'MARKETPLACE' | 'AGGREGATOR';
 
@@ -7,6 +7,8 @@ export interface ConfigResponse {
   slug: string;
   config: string;
   domain: string;
+  cname?: string;
+  domainStatus?: string;
   type: WhitelabelTypes;
   active?: boolean;
 }
@@ -42,7 +44,7 @@ export interface GasInfo {
 }
 
 export interface TokenMetaData {
-  addresses: {[key: string]: string | undefined};
+  addresses: { [key: string]: string | undefined };
   symbol: string;
   decimals: number;
   name: string;
@@ -260,7 +262,7 @@ export interface AggregatorWallet {
 }
 
 type AllValues<T> = {
-  [P in keyof T]: {key: P; value: T[P]};
+  [P in keyof T]: { key: P; value: T[P] };
 }[keyof T];
 
 export interface GeneralConfigAggregator {
