@@ -41,7 +41,7 @@ export const SelectChampionDialog: React.FC<Props> = ({
 }) => {
   const {chainId} = useLeaguesChainInfo();
 
-  const myChampions = useMyChampions(chainId);
+  const myChampions = useMyChampions(chainId as number | undefined);
 
   const {messages} = useIntl();
 
