@@ -23,6 +23,17 @@ export enum GameType {
   Loser,
 }
 
+export interface Coin {
+  // Struct
+  coin_feed: string;
+  champion_id: BigNumber;
+  multiplier: BigNumber;
+  start_price: BigNumber;
+  end_price: BigNumber;
+  score: BigNumber;
+  champion_score: BigNumber;
+}
+
 export interface Game {
   id: BigNumber;
   claimed: boolean;
@@ -37,17 +48,9 @@ export interface Game {
   start_timestamp: BigNumber;
   winner: string;
   game_type: GameType;
-}
 
-export interface Coin {
-  // Struct
-  coin_feed: string;
-  champion_id: BigNumber;
-  multiplier: BigNumber;
-  start_price: BigNumber;
-  end_price: BigNumber;
-  score: BigNumber;
-  champion_score: BigNumber;
+  player1_coin: Coin;
+  player2_coin: Coin;
 }
 
 export interface GameGraph {
