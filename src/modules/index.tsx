@@ -19,6 +19,8 @@ import {onboardingConfig} from './Onboarding';
 import {kittygotchiConfig} from './Kittygotchi';
 import {profileConfig} from './Profile';
 
+import {squidLeagueConfigs} from './SquidLeague';
+
 import {settingsConfig} from './Settings';
 
 const routeConfigs = [
@@ -36,6 +38,7 @@ const routeConfigs = [
   ...kittygotchiConfig,
   ...profileConfig,
   ...settingsConfig,
+  ...squidLeagueConfigs,
 ];
 
 const routes = [
