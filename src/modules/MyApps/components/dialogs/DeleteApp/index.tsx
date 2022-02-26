@@ -16,15 +16,13 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   loading?: boolean;
-  error?: Boolean;
+  error?: boolean;
   done?: boolean;
-  cname?: string;
   dialogProps: DialogProps;
-  onValidateDomain?: () => void;
 }
 
-export const StatusDomainDialog = (props: Props) => {
-  const {dialogProps, loading, error, done, cname, onValidateDomain} = props;
+export const DeleteAppDialog = (props: Props) => {
+  const {dialogProps, loading, error, done} = props;
 
   const theme = useTheme();
 
@@ -35,26 +33,11 @@ export const StatusDomainDialog = (props: Props) => {
   }, [dialogProps]);
 
   return (
-    <Dialog {...dialogProps} onClose={handleClose} fullWidth maxWidth='sm'>
+    <Dialog {...dialogProps} onClose={handleClose} fullWidth maxWidth='xs'>
       <DialogContent>
         <Box py={4}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Typography align='center' variant='h6'>
-                <IntlMessages
-                  id='app.myapps.validateDomain'
-                  defaultMessage={
-                    'Add Follow CNAME to your domain provider to validate it'
-                  }
-                />
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography align='center' variant='h6' color='textSecondary'>
-                {cname}
-              </Typography>
-            </Grid>
-            {loading && (
+          {loading ? (
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Box
                   display='flex'
@@ -64,31 +47,27 @@ export const StatusDomainDialog = (props: Props) => {
                   <CircularProgress color='primary' size={theme.spacing(24)} />
                 </Box>
               </Grid>
-            )}
-            <Grid item xs={12}>
-              <Button
-                variant='contained'
-                onClick={onValidateDomain}
-                color='primary'
-                fullWidth>
-                <IntlMessages
-                  id='app.myapps.validateDomain'
-                  defaultMessage={'Validate Domain'}
-                />
-              </Button>
-            </Grid>
-            {!done && !error && (
               <Grid item xs={12}>
-                <Button onClick={handleClose} color='primary' fullWidth>
+                <Typography align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
+                    id='app.myapps.deleteAPP'
+                    defaultMessage={'Deletting your app'}
                   />
-                </Button>
+                </Typography>
+                <Typography
+                  align='center'
+                  variant='body1'
+                  color='textSecondary'>
+                  <IntlMessages
+                    id='app.myapps.pleaseSign'
+                    defaultMessage={
+                      'Please sign message with your wallet to delete app'
+                    }
+                  />
+                </Typography>
               </Grid>
-            )}
-          </Grid>
-
+            </Grid>
+          ) : null}
           {done ? (
             <Grid container spacing={4}>
               <Grid item xs={12}>
@@ -104,9 +83,7 @@ export const StatusDomainDialog = (props: Props) => {
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
                     id='app.myapps.submitted'
-                    defaultMessage={
-                      'Your domain is now validated and ready for use '
-                    }
+                    defaultMessage={'Your app was deleted '}
                   />
                 </Typography>
               </Grid>
@@ -135,22 +112,14 @@ export const StatusDomainDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.domainErrorSubmit'
+                    id='app.myapps.errorDeleteApp'
                     defaultMessage={
-                      'Error submitting domain, is this domain already in use?'
+                      'Error deleting your app, please contact support'
                     }
                   />
                 </Typography>
-                <Typography
-                  align='center'
-                  variant='body1'
-                  color='textSecondary'>
-                  <IntlMessages
-                    id='app.myapps.pleaseTry'
-                    defaultMessage={'Please try again'}
-                  />
-                </Typography>
               </Grid>
+
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
                   <IntlMessages

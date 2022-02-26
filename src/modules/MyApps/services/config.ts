@@ -1,7 +1,7 @@
 import { ConfigResponse } from 'types/myApps';
 import { ConfigDomainResponse } from '../utils/types';
 
-const MY_APPS_ENDPOINT = 'http://localhost:3005';
+const MY_APPS_ENDPOINT = 'https://dexkitapi-8oo4v.ondigitalocean.app';
 
 export const sendConfig = async (formData: any) => {
     const headers = new Headers({
@@ -69,6 +69,27 @@ export const getConfig = async (owner: string) => {
     }
 };
 
+export const deleteConfig = async (formData: any, owner: string, domain: string) => {
+    const headers = new Headers({
+        'content-type': 'application/json',
+    });
+
+    const init: RequestInit = {
+        method: 'DELETE',
+        headers,
+        body: JSON.stringify(formData),
+    };
+
+    const url = `${MY_APPS_ENDPOINT}/v4/config/${owner}?domain=${domain}`;
+    const response = await fetch(url, init);
+
+    if (response.ok && response.status === 200) {
+        const data = (await response.json()) as ConfigResponse[];
+        return data;
+    } else {
+        return [];
+    }
+};
 
 export const getDomainConfigStatus = async (domain: string) => {
     const headers = new Headers({

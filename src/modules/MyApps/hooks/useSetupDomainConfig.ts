@@ -9,6 +9,8 @@ import { eip712Utils } from '@0x/order-utils';
 import { NotificationType } from 'services/notification';
 import { Notification as CustomNotification } from 'types/models/Notification';
 import { setupDomainConfig } from "../services/config";
+import { useMyAppsConfig } from "hooks/myApps/useMyAppsConfig";
+import { useIntl } from "react-intl";
 
 export const useSetupDomainConfig = () => {
     const [isLoading, setLoading] = useState(false);
@@ -17,6 +19,9 @@ export const useSetupDomainConfig = () => {
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
     const history = useHistory();
+    const { refetch } = useMyAppsConfig(account);
+    const intl = useIntl();
+
 
     const onSendDomainConfigCallback = useCallback((dataSubmit: any, type: string) => {
         if (!isLoading) {
@@ -49,7 +54,7 @@ export const useSetupDomainConfig = () => {
                             verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
                         },
                         message: {
-                            message: `I want to create/edit this ${type.toLowerCase()}`,
+                            message: intl.formatMessage({ id: 'myapps.editAggregator', defaultMessage: `I want to create/edit this {type}` }, { type: type.toLowerCase() }),
                             terms: 'Powered by DexKit',
                         },
                     };
@@ -79,13 +84,14 @@ export const useSetupDomainConfig = () => {
                             setupDomainConfig(dataToSend)
                                 .then((c: any) => {
                                     const notification: CustomNotification = {
-                                        title: 'Domain Accepted',
-                                        body: 'Point CNAME in your hosting to: ',
+                                        title: intl.formatMessage({ id: 'myapps.domainAcceptedTitle', defaultMessage: 'Domain Accepted' }),
+                                        body: intl.formatMessage({ id: 'myapps.domainAcceptedBody', defaultMessage: 'Domain was added to system, now you need to add CNAME to your hosting' }),
                                     };
                                     dispatch(onAddNotification([notification]));
                                     history.push(`/my-apps/manage`);
                                     setLoading(false);
                                     setDone(true);
+                                    refetch();
                                     setTimeout(() => {
                                         setDone(false);
                                     }, 10000)
@@ -93,7 +99,7 @@ export const useSetupDomainConfig = () => {
                                 .catch(() => {
                                     const notification: CustomNotification = {
                                         title: 'Error',
-                                        body: 'Config error! Do you have KIT?',
+                                        body: intl.formatMessage({ id: 'myapps.domainConfigError', defaultMessage: 'Config error! Do you have KIT?' }),
                                     };
                                     dispatch(
                                         onAddNotification([notification], NotificationType.ERROR),

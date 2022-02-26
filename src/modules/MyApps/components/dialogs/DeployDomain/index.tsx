@@ -53,7 +53,7 @@ export const DeployDomainDialog = (props: Props) => {
                   <IntlMessages
                     id='app.myapps.submittingConfig'
                     defaultMessage={
-                      'Deploying your domain, you need after to set your cname in your domain provider'
+                      'Deploying your domain, you need after to set your cname in your domain provider. Please keep 100 KIT on Polygon, BSC or Ethereum to domain keep active'
                     }
                   />
                 </Typography>

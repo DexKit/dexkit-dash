@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import IntlMessages from '../../utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import {makeStyles} from '@material-ui/core/styles';
-import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 

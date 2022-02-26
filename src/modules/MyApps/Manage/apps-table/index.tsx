@@ -28,15 +28,20 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 
 import {stableSort, getComparator} from 'utils/table';
-import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
 import {useWeb3} from 'hooks/useWeb3';
-import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
+import {setInsufficientAmountAlert} from 'redux/actions';
 import {WhitelabelTypes} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
 import {useSetupDomainConfig} from 'modules/MyApps/hooks/useSetupDomainConfig';
 import {DeployDomainDialog} from 'modules/MyApps/components/dialogs/DeployDomain';
 import {useToggler} from 'hooks/useToggler';
 import {StatusDomainDialog} from 'modules/MyApps/components/dialogs/StatusDomainDialog';
+import {useMyAppsConfig} from 'modules/MyApps/hooks/useMyAppsConfig';
+import {useDomainConfigStatusMutation} from 'modules/MyApps/hooks/useDomainConfigStatusMutation';
+import CopyLink from 'shared/components/CopyLink';
+import {DeleteAppDialog} from 'modules/MyApps/components/dialogs/DeleteApp';
+import {useDeleteMyAppMutation} from 'modules/MyApps/hooks/useDeleteMyAppMutation';
+import {SucceededDialog} from 'modules/MyApps/components/dialogs/SucceedDialog';
 // import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
@@ -73,17 +78,24 @@ const AppsTable = () => {
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showDialog, setShowDialog] = useState(false);
+  const [selectedDomain, setSelectedDomain] = useState<string>();
   const [selectedCname, setSelectedCname] = useState<string>();
+  const [selectedConfig, setSelectedConfig] = useState<any>();
   const [showDeployDialog, setShowDeployDialog] = useState(false);
-  const {account} = useWeb3();
-  const {configs, loading} = useMyAppsConfig(account);
+  const {account, chainId} = useWeb3();
+  const {configs, loading, refetch} = useMyAppsConfig(account);
   const {onSendDomainConfigCallback, isError, isLoading, isDone} =
     useSetupDomainConfig();
+
+  const domainStatusMutation = useDomainConfigStatusMutation();
+  const deleteAppMutation = useDeleteMyAppMutation();
   const {data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
   const deployDomainToggler = useToggler(false);
   const statusDomainToggler = useToggler(false);
+  const succeededDomainToggler = useToggler(false);
+  const deleteAppToggler = useToggler(false);
 
   useEffect(() => {
     const apps = configs?.filter((config) => config?.active) ?? [];
@@ -130,7 +142,12 @@ const AppsTable = () => {
     history.push(`/my-apps/wizard/aggregator/${slug}`);
   };
 
-  const onOpenApp = (slug: string, type: WhitelabelTypes) => {
+  const onOpenApp = (slug: string, type: WhitelabelTypes, domain?: string) => {
+    if (domain) {
+      window.open(`https://${domain}`);
+      return;
+    }
+
     switch (type) {
       case 'DEX':
         window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
@@ -147,27 +164,22 @@ const AppsTable = () => {
     }
   };
 
-  const onDeleteApp = (slug: string, type: WhitelabelTypes) => {
-    const index =
-      configs?.findIndex(
-        (c) =>
-          c?.slug?.toLowerCase() === slug.toLowerCase() &&
-          c?.type?.toLowerCase() === type.toLowerCase(),
-      ) ?? -1;
-    if (index >= 0) {
-      //TODO: chamar o end-point da API
-      // const notification: Notification = {
-      //   title: `${slug} app deleted`,
-      //   body: `deleted ${slug} app successfully`,
-      //   timestamp: (new Date()).getTime(),
-      // };
-
-      const notification = new Notification(`${slug} app deleted`, {
-        body: `deleted ${slug} app successfully`,
-      });
-      dispatch(onAddNotification([notification]));
-    }
-  };
+  const onDeleteApp = useCallback(
+    (slug: string, type: WhitelabelTypes) => {
+      const index =
+        configs?.findIndex(
+          (c) =>
+            c?.slug?.toLowerCase() === slug.toLowerCase() &&
+            c?.type?.toLowerCase() === type.toLowerCase(),
+        ) ?? -1;
+      if (index >= 0 && configs && account && chainId) {
+        const config = configs[index];
+        deleteAppToggler.toggle();
+        deleteAppMutation.mutate({account, domain: config.domain, chainId});
+      }
+    },
+    [configs, deleteAppToggler, deleteAppMutation, account, chainId],
+  );
 
   const onDeployToDomainCallback = useCallback(
     (config: any) => {
@@ -178,21 +190,47 @@ const AppsTable = () => {
     [onSendDomainConfigCallback, deployDomainToggler],
   );
 
-  const onValidateDomainCallback = useCallback(
-    (cname: string) => {
+  const onOpenValidateDomainModal = useCallback(
+    (domain: string, cname: string) => {
       statusDomainToggler.toggle();
+      setSelectedDomain(domain);
       setSelectedCname(cname);
     },
-    [onSendDomainConfigCallback, statusDomainToggler],
+    [statusDomainToggler],
   );
 
+  const onOpenSucceededModal = useCallback(
+    (cname: string) => {
+      succeededDomainToggler.toggle();
+      setSelectedCname(cname);
+    },
+    [succeededDomainToggler],
+  );
+
+  const onValidateDomainCallback = useCallback(() => {
+    if (selectedDomain) {
+      domainStatusMutation.mutateAsync(selectedDomain).then(() => {
+        refetch();
+      });
+    }
+  }, [refetch, selectedDomain, domainStatusMutation]);
   const handleCloseSetupDomainDialog = useCallback(() => {
     deployDomainToggler.toggle();
   }, [deployDomainToggler]);
 
   const handleCloseStatusDomainDialog = useCallback(() => {
     statusDomainToggler.toggle();
-  }, [statusDomainToggler]);
+    domainStatusMutation.reset();
+  }, [statusDomainToggler, domainStatusMutation]);
+
+  const handleCloseDeleteAppDialog = useCallback(() => {
+    deleteAppToggler.toggle();
+    deleteAppMutation.reset();
+  }, [deleteAppToggler, deleteAppMutation]);
+
+  const handleCloseSucceededDialog = useCallback(() => {
+    succeededDomainToggler.toggle();
+  }, [succeededDomainToggler]);
 
   return (
     <>
@@ -236,15 +274,54 @@ const AppsTable = () => {
             }}
           />
           <StatusDomainDialog
-            done={isDone}
-            loading={isLoading}
-            error={isError}
+            done={domainStatusMutation.isSuccess}
+            loading={domainStatusMutation.isLoading}
+            error={domainStatusMutation.isError}
             cname={selectedCname}
+            onValidateDomain={onValidateDomainCallback}
             dialogProps={{
               open: statusDomainToggler.show,
               onClose: handleCloseStatusDomainDialog,
             }}
           />
+          <DeleteAppDialog
+            done={deleteAppMutation.isSuccess}
+            loading={deleteAppMutation.isLoading}
+            error={deleteAppMutation.isError}
+            dialogProps={{
+              open: deleteAppToggler.show,
+              onClose: handleCloseDeleteAppDialog,
+            }}
+          />
+          <SucceededDialog
+            cname={selectedCname as string}
+            dialogProps={{
+              open: succeededDomainToggler.show,
+              onClose: handleCloseSucceededDialog,
+            }}
+          />
+          {selectedConfig && (
+            <ConfirmationDialog
+              title={`Want to confirm the exclusion of the "${selectedConfig?.slug}" app?`}
+              dialogTitle={'Confirm app exclusion'}
+              open={showDialog}
+              onConfirm={() => {
+                onDeleteApp(selectedConfig?.slug, selectedConfig?.type);
+                setShowDialog(!showDialog);
+              }}
+              onDeny={(x) => setShowDialog(x)}
+            />
+          )}
+          {selectedConfig && (
+            <ConfirmationDialog
+              title={`Deploy your app to your own domain, you will receive a CNAME to point to your app. Make sure to have 100 KIT on BSC, Polygon or Ethereum on Fee Address to domain keep active.`}
+              dialogTitle={'Deploy to your own domain?'}
+              open={showDeployDialog}
+              onConfirm={() => onDeployToDomainCallback(selectedConfig)}
+              onDeny={(x) => setShowDeployDialog(x)}
+            />
+          )}
+
           <Toolbar className={classes.toolbar}>
             <Typography variant='h5'>My Apps</Typography>
           </Toolbar>
@@ -253,10 +330,11 @@ const AppsTable = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow className={classes.tableRowRoot}>
-                  {headCells.map((h) => (
+                  {headCells.map((h, k) => (
                     <TableCell
                       align={h.align}
-                      className={classes.tableCellRoot}>
+                      className={classes.tableCellRoot}
+                      key={k}>
                       {h.isSort && (
                         <TableSortLabel
                           active={orderBy === h.id}
@@ -295,12 +373,20 @@ const AppsTable = () => {
                         style={{
                           width: '5rem',
                         }}>
-                        {config?.cname}
+                        {config?.cname && (
+                          <CopyLink copyText={config?.cname} tooltip={'Copied'}>
+                            {config?.cname}
+                          </CopyLink>
+                        )}
+
                         {!config.cname && (
                           <Button
                             variant='contained'
                             color='primary'
-                            onClick={() => setShowDeployDialog(true)}>
+                            onClick={() => {
+                              setSelectedConfig(config);
+                              setShowDeployDialog(true);
+                            }}>
                             Deploy
                           </Button>
                         )}
@@ -317,17 +403,26 @@ const AppsTable = () => {
                           textOverflow: 'ellipsis',
                           width: '6rem',
                         }}>
-                        {config?.domainStatus?.toUpperCase() !== 'PENDING' && (
-                          <Box className={classes.anchar}>
-                            {config?.domainStatus?.toUpperCase()}
-                          </Box>
+                        {config?.domainStatus?.toUpperCase() ===
+                          'SUCCEEDED' && (
+                          <Button
+                            variant='contained'
+                            color='default'
+                            onClick={() =>
+                              onOpenSucceededModal(config?.cname as string)
+                            }>
+                            Succeeded
+                          </Button>
                         )}
                         {config?.domainStatus?.toUpperCase() === 'PENDING' && (
                           <Button
                             variant='contained'
                             color='primary'
                             onClick={() =>
-                              onValidateDomainCallback(config.cname as string)
+                              onOpenValidateDomainModal(
+                                config.domain as string,
+                                config?.cname as string,
+                              )
                             }>
                             Pending
                           </Button>
@@ -342,13 +437,20 @@ const AppsTable = () => {
                           </IconButton>
                           <IconButton
                             aria-label='launch'
-                            onClick={() => onOpenApp(config.slug, config.type)}>
+                            onClick={() =>
+                              onOpenApp(
+                                config.slug,
+                                config.type,
+                                config?.domain,
+                              )
+                            }>
                             <LaunchIcon />
                           </IconButton>
                           <IconButton
                             aria-label='remove'
                             onClick={($e) => {
                               $e.stopPropagation();
+                              setSelectedConfig(config);
                               setShowDialog(true);
                               //  onDeleteApp(config.slug, config.type)
                             }}>
@@ -356,23 +458,6 @@ const AppsTable = () => {
                           </IconButton>
                         </Box>
                       </TableCell>
-                      <ConfirmationDialog
-                        title={`Want to confirm the exclusion of the "${config.slug}" app?`}
-                        dialogTitle={'Confirm app exclusion'}
-                        open={showDialog}
-                        onConfirm={() => {
-                          onDeleteApp(config.slug, config.type);
-                          setShowDialog(!showDialog);
-                        }}
-                        onDeny={(x) => setShowDialog(x)}
-                      />
-                      <ConfirmationDialog
-                        title={`Deploy your app to your own domain, you will receive a CNAME to point to your app`}
-                        dialogTitle={'Deploy to your own domain?'}
-                        open={showDeployDialog}
-                        onConfirm={() => onDeployToDomainCallback(config)}
-                        onDeny={(x) => setShowDeployDialog(x)}
-                      />
                     </TableRow>
                   ))}
               </TableBody>

@@ -2,11 +2,17 @@ import { getConfig } from 'modules/MyApps/services/config';
 import { useEffect, useState } from 'react';
 import { ConfigResponse } from 'types/myApps';
 
+
+
 export const useMyAppsConfig = (owner?: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [configs, setConfigs] = useState<ConfigResponse[]>();
   const [fetch, setFetch] = useState(false);
+
+
+
+
 
   useEffect(() => {
     if (owner) {
