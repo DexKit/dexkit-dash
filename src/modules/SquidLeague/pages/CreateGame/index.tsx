@@ -9,9 +9,16 @@ import {
 } from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
 import {useFormik} from 'formik';
-import React, {useCallback} from 'react';
+import {useNotifications} from 'hooks/useNotifications';
+import {useToggler} from 'hooks/useToggler';
+import {useWeb3} from 'hooks/useWeb3';
+import CreateGameDialog from 'modules/SquidLeague/components/dialogs/CreateGameDialog';
+import {useSquidGameFactoryCallbacks} from 'modules/SquidLeague/hooks/useSquidGameFactoryCallbacks';
+import React, {useCallback, useState} from 'react';
 import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 import * as yup from 'yup';
 
@@ -34,9 +41,23 @@ interface GameParams {
 export const CreateGamePage = () => {
   const classes = useStyles();
 
-  const {messages} = useIntl();
+  const {formatMessage} = useIntl();
+  const createGameToggler = useToggler(false);
+  const {chainId} = useWeb3();
+  const {createNotification} = useNotifications();
+  const [confirmedCreateGame, setConfirmedCreatedGame] = useState(false);
+  const [transaction, setTransaction] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingCreatingGame, setLoadingCreatingGame] = useState(false);
+  const {getTransactionScannerUrl} = useChainInfo();
+  const {onCreateSquidCallback} = useSquidGameFactoryCallbacks();
 
-  const handleSubmit = useCallback(() => {}, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      createGameToggler.toggle();
+    },
+    [createGameToggler],
+  );
 
   const formik = useFormik<GameParams>({
     initialValues: {
@@ -47,8 +68,85 @@ export const CreateGamePage = () => {
     onSubmit: handleSubmit,
   });
 
+  const handleCloseCreateGameDialog = useCallback(() => {
+    createGameToggler.toggle();
+  }, [createGameToggler]);
+
+  const onConfirmCreateGameCallback = useCallback(() => {
+    if (!chainId) {
+      return;
+    }
+
+    setLoadingCreatingGame(true);
+    const onConfirm = () => {
+      setLoadingCreatingGame(false);
+      setConfirmedCreatedGame(true);
+    };
+    const onSubmit = (tx: string) => {
+      setTransaction(tx);
+      createNotification({
+        title: formatMessage({
+          id: 'squidLeague.createGameTitle',
+          defaultMessage: `Create Squid Game`,
+        }),
+        body: formatMessage({
+          id: 'squidLeague.createGameBody',
+          defaultMessage: `Create Squid Game`,
+        }),
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx),
+        urlCaption: formatMessage({
+          id: 'squidLeague.viewTx',
+          defaultMessage: 'View Tx',
+        }),
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    };
+    const onError = (error: any) => {
+      setLoadingCreatingGame(false);
+      setErrorMessage(error);
+    };
+
+    onCreateSquidCallback(
+      {
+        startTimestamp: Number(formik.values.startsAt),
+        pot: Number(formik.values.entryAmount),
+      },
+      {
+        onConfirmation: onConfirm,
+        onSubmit: onSubmit,
+        onError,
+      },
+    );
+  }, [
+    getTransactionScannerUrl,
+    chainId,
+    formik.values.startsAt,
+    formik.values.entryAmount,
+    createNotification,
+    onCreateSquidCallback,
+    formatMessage,
+  ]);
+
   return (
     <MainLayout>
+      <CreateGameDialog
+        errorMessage={errorMessage}
+        transactionHash={transaction}
+        loading={loadingCreatingGame}
+        confirmed={confirmedCreateGame}
+        onConfirm={onConfirmCreateGameCallback}
+        dialogProps={{
+          open: createGameToggler.show,
+          onClose: handleCloseCreateGameDialog,
+        }}
+      />
+
       <Grid container spacing={4}>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}>
@@ -57,10 +155,16 @@ export const CreateGamePage = () => {
               className={classes.bold}
               color='textPrimary'
               variant='subtitle1'>
-              <IntlMessages id='squidLeague.SquidLeague' />
+              <IntlMessages
+                id='squidLeague.SquidLeague'
+                defaultMessage={'Squid League'}
+              />
             </Typography>
             <Typography color='textSecondary' variant='body1'>
-              <IntlMessages id='squidLeague.SquidLeagueDescription' />
+              <IntlMessages
+                id='squidLeague.SquidLeagueDescription'
+                defaultMessage={'Join the Squid Game'}
+              />
             </Typography>
           </Box>
         </Grid>
@@ -69,17 +173,26 @@ export const CreateGamePage = () => {
             className={classes.bold}
             color='textPrimary'
             variant='subtitle1'>
-            <IntlMessages id='squidLeague.createGame' />
+            <IntlMessages
+              id='squidLeague.createGame'
+              defaultMessage={'Create Game'}
+            />
           </Typography>
           <Typography color='textSecondary' variant='body1'>
-            <IntlMessages id='squidLeague.setTheParametersOfTheGame' />
+            <IntlMessages
+              id='squidLeague.setTheParametersOfTheGame'
+              defaultMessage={'Set Game Parameters'}
+            />
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={4}>
               <TextField
-                label={messages['squidLeague.entryAmount'] as string}
+                label={formatMessage({
+                  id: 'squidLeague.entryAmount',
+                  defaultMessage: `Entry Amount`,
+                })}
                 value={formik.values.entryAmount}
                 onChange={formik.handleChange}
                 error={Boolean(formik.errors.entryAmount)}
@@ -94,7 +207,10 @@ export const CreateGamePage = () => {
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                label={messages['squidLeague.startsAt'] as string}
+                label={formatMessage({
+                  id: 'squidLeague.startsAt',
+                  defaultMessage: `Starts At`,
+                })}
                 value={formik.values.startsAt}
                 onChange={formik.handleChange}
                 error={Boolean(formik.errors.startsAt)}
@@ -115,7 +231,10 @@ export const CreateGamePage = () => {
             disabled={!formik.isValid}
             variant='contained'
             color='primary'>
-            <IntlMessages id='squidLeague.createGame' />
+            <IntlMessages
+              id='squidLeague.createGame'
+              defaultMessage={'Create Game'}
+            />
           </Button>
         </Grid>
       </Grid>

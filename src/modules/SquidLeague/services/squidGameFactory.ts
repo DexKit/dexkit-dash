@@ -1,9 +1,6 @@
-import {Interface} from '@ethersproject/abi';
-import {CallInput} from '@indexed-finance/multicall';
-import {ContractTransaction, ethers, providers} from 'ethers';
-import {getMulticallFromProvider} from 'services/multicall';
+import { ContractTransaction, ethers, providers } from 'ethers';
 import squidGameFactoryAbi from '../constants/ABI/SquidGameFactory.json';
-import {CreateSquidGameParams} from '../utils/types';
+import { CreateSquidGameParams } from '../utils/types';
 
 export const getSquidGameFactoryContract = async (
   address: string,

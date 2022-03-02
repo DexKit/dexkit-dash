@@ -1,7 +1,7 @@
-import {BigNumber} from 'ethers';
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
-import {Web3State} from 'types/blockchain';
+import { BigNumber } from 'ethers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback } from 'react';
+import { Web3State } from 'types/blockchain';
 import {
   withdraw,
   playChallenge,
@@ -17,7 +17,7 @@ interface CallbackProps {
 }
 
 export const useSquidGameCallbacks = (gameAddress: string) => {
-  const {web3State, getProvider} = useWeb3();
+  const { web3State, getProvider } = useWeb3();
 
   const onJoinGameCallback = useCallback(
     async (entry: BigNumber, callbacks?: CallbackProps) => {
@@ -32,11 +32,10 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
-        console.log(e);
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   const onPlayChallengeCallback = useCallback(
@@ -52,11 +51,10 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
-        console.log(e);
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   const onWithdrawCallback = useCallback(
@@ -75,7 +73,7 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
   const onStartChallengeCallback = useCallback(
     async (id: number, callbacks?: CallbackProps) => {
@@ -93,7 +91,7 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   const onFinishChallengeCallback = useCallback(
@@ -112,7 +110,7 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   return {
