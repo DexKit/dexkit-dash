@@ -3,12 +3,12 @@ import {ChainId} from 'types/blockchain';
 export const NFT_LEAGUE_MULTIPLIERS = [1, 10, 100, 1000];
 
 export const NFT_LEAGUE_FACTORY_ADDRESS = {
-  [ChainId.Mumbai]: '0x9565C656f26C55a18af32dab3bE8aaff1B0BbB72',
+  [ChainId.Mumbai]: '0x5cb29ddF98D3d9Ea17ecF4861Ec50980f1d020C0',
   [ChainId.Matic]: '',
   [ChainId.Binance]: '',
 };
 
-export function GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId: ChainId) {
+export function GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId?: ChainId) {
   if (
     chainId === ChainId.Mumbai ||
     chainId === ChainId.Matic ||

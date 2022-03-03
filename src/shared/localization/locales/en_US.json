@@ -1937,5 +1937,21 @@
   "nftLeague.transactionConfirmed": "Transaction confirmed",
   "nftLeague.yourTransactionWasConfirmed": "Your transaction was confimed",
   "nftLeague.viewTransaction": "View Transaction",
-  "nftLeague.goToGame": "Go to Game"
+  "nftLeague.goToGame": "Go to Game",
+  "nftLeague.joiningGame": "Joining Game",
+  "nftLeague.noChampionsYet": "No champions yet",
+  "nftLeague.id": "ID",
+  "nftLeague.entry": "Entry",
+  "nftLeague.players": "Players",
+  "nftLeague.endsIn": "Ends in",
+  "nftLeague.aborted": "Aborted",
+  "nftLeague.waiting": "Waiting",
+  "nftLeague.inProgress": "In Progress",
+  "nftLeague.ended": "Ended",
+  "nftLeague.doYouWantToStartThisGame": "do you want to start this game?",
+  "nftLeague.startGame": "Start Game",
+  "nftLeague.abort": "Abort",
+  "nftLeague.abortGame": "Abort Game",
+  "nftLeague.aborting": "Abort",
+  "nftLeague.doYouWantToAbortThisGame": "Do you want to abort this game?"
 }

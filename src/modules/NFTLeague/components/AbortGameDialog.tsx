@@ -20,8 +20,8 @@ import {useChainInfo} from 'hooks/useChainInfo';
 import {useHistory} from 'react-router';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 interface Props {
   dialogProps: DialogProps;
   errorMessage?: string;
@@ -32,7 +32,7 @@ interface Props {
   onConfirm: () => void;
 }
 
-export const JoinGameDialog: React.FC<Props> = ({
+export const AbortGameDialog: React.FC<Props> = ({
   dialogProps,
   transactionHash,
   errorMessage,
@@ -102,7 +102,7 @@ export const JoinGameDialog: React.FC<Props> = ({
           </Grid>
           <Grid item xs={12}>
             <Typography align='center' variant='h5'>
-              <IntlMessages id='nftLeague.joiningGame' />
+              <IntlMessages id='nftLeague.abortingGame' />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
               <IntlMessages id='nftLeague.pleaseWaitnforTransactionConfirmation' />
@@ -160,9 +160,9 @@ export const JoinGameDialog: React.FC<Props> = ({
   return (
     <Dialog {...dialogProps}>
       <CustomDialogTitle
-        title={messages['nftLeague.joinGame'] as string}
+        title={messages['nftLeague.abortGame'] as string}
         onClose={handleClose}
-        icon={<GroupAddIcon />}
+        icon={<HighlightOffIcon />}
       />
       <Divider />
       <DialogContent>
@@ -175,10 +175,10 @@ export const JoinGameDialog: React.FC<Props> = ({
         ) : (
           <Box py={4}>
             <Typography align='center' variant='h5'>
-              <IntlMessages id='nftLeague.createGame' />
+              <IntlMessages id='nftLeague.abortGame' />
             </Typography>
             <Typography align='center' variant='body1'>
-              <IntlMessages id='nftLeague.doYouWantToCreateAGame' />
+              <IntlMessages id='nftLeague.doYouWantToAbortThisGame' />
             </Typography>
           </Box>
         )}
@@ -200,4 +200,4 @@ export const JoinGameDialog: React.FC<Props> = ({
   );
 };
 
-export default JoinGameDialog;
+export default AbortGameDialog;

@@ -56,7 +56,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress],
   );
 
   const onCreateAndJoinGameCallback = useCallback(

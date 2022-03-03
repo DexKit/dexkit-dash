@@ -7,19 +7,32 @@ import {
   makeStyles,
   Divider,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import {useChampionMetadataQuery} from 'modules/CoinLeagues/hooks/champions';
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {getNormalizedUrl} from 'utils/browser';
 import {useModuleStyle} from '../styles';
 
 import {ReactComponent as UserSquareIcon} from '../assets/user-square.svg';
+import CoinSelect from './CoinSelect';
+import {useIntl} from 'react-intl';
+import {GET_CHAMPIONS_COINS, NFT_LEAGUE_MULTIPLIERS} from '../constants';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyle = makeStyles((theme) => ({
   coinSelectImage: {
     height: 'auto',
     width: theme.spacing(20),
+  },
+  winner: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: theme.palette.success.main,
   },
 }));
 
@@ -32,7 +45,12 @@ interface Props {
   winner?: boolean;
   state: 'waiting' | 'winner' | 'inprogress';
   account?: string;
-  onJoinGame?: () => void;
+  onJoinGame?: (multiplier: number) => void;
+  onSelectChampion?: () => void;
+  onClearChampion?: () => void;
+  isBittokenCoin?: boolean;
+  bittValue?: number;
+  onChangeBittValue?: (e: any) => void;
 }
 
 export const PlayerCoinPaper: React.FC<Props> = ({
@@ -43,17 +61,45 @@ export const PlayerCoinPaper: React.FC<Props> = ({
   currentPrice,
   state,
   account,
+  winner,
+  onSelectChampion,
+  onClearChampion,
   onJoinGame,
+  isBittokenCoin,
+  onChangeBittValue,
+  bittValue,
 }) => {
   const metadataQuery = useChampionMetadataQuery(tokenId);
 
   const classes = useStyle();
 
+  const {messages} = useIntl();
+
   const moduleClasses = useModuleStyle();
+
+  const {chainId} = useLeaguesChainInfo();
+
+  const [multiplierValue, setMultiplierValue] = useState(
+    NFT_LEAGUE_MULTIPLIERS[0],
+  );
+
+  const handleChange = useCallback((e: any) => {
+    setMultiplierValue(e.target.value);
+  }, []);
+
+  const handleJoinGame = useCallback(() => {
+    if (onJoinGame) {
+      onJoinGame(multiplierValue);
+    }
+  }, [onJoinGame, multiplierValue]);
 
   if (state === 'winner' || state === 'inprogress') {
     return (
-      <Box p={4} height='100%' component={Paper}>
+      <Box
+        p={4}
+        height='100%'
+        component={Paper}
+        className={winner ? classes.winner : undefined}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Grid
@@ -254,31 +300,93 @@ export const PlayerCoinPaper: React.FC<Props> = ({
         alignItems='center'
         alignContent='center'
         justifyContent='center'>
-        <Box>
-          <Grid
-            container
-            direction='column'
-            spacing={4}
-            alignItems='center'
-            alignContent='center'
-            justifyContent='center'>
-            <Grid item>
-              <UserSquareIcon />
-            </Grid>
-            <Grid item>
-              <Typography align='center' color='textSecondary' variant='body1'>
-                <IntlMessages id='nftLeague.waitingOpponent' />
-              </Typography>
-            </Grid>
-            {onJoinGame && (
-              <Grid item>
-                <Button
-                  onClick={onJoinGame}
-                  variant='contained'
-                  color='primary'>
-                  <IntlMessages id='nftLeague.joinGame' />
-                </Button>
-              </Grid>
+        <Box width='100%'>
+          <Grid container spacing={4}>
+            {onJoinGame ? (
+              <>
+                <Grid item xs={12}>
+                  <CoinSelect
+                    variant='outlined'
+                    tokenId={tokenId}
+                    onClear={onClearChampion}
+                    onClick={onSelectChampion}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl variant='outlined' fullWidth>
+                    <InputLabel>
+                      <IntlMessages id='nftLeague.multiplier' />
+                    </InputLabel>
+                    <Select
+                      variant='outlined'
+                      onChange={handleChange}
+                      value={multiplierValue}
+                      name='multiplier'
+                      label={messages['nftLeague.multiplier'] as string}
+                      fullWidth>
+                      {NFT_LEAGUE_MULTIPLIERS.map(
+                        (value: number, index: number) => (
+                          <MenuItem key={index} value={value}>
+                            {value}x
+                          </MenuItem>
+                        ),
+                      )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                {isBittokenCoin && (
+                  <Grid item xs={12}>
+                    <FormControl variant='outlined' fullWidth>
+                      <InputLabel>
+                        <IntlMessages id='nftLeague.coinType' />
+                      </InputLabel>
+                      <Select
+                        label={messages['nftLeague.coinType'] as string}
+                        fullWidth
+                        variant='outlined'
+                        value={bittValue}
+                        onChange={onChangeBittValue}
+                        name='rarity'>
+                        {GET_CHAMPIONS_COINS(chainId).map(
+                          (coin: string, index: number) => (
+                            <MenuItem value={index}>{coin}</MenuItem>
+                          ),
+                        )}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    disabled={tokenId === undefined}
+                    onClick={handleJoinGame}
+                    variant='contained'
+                    color='primary'>
+                    <IntlMessages id='nftLeague.joinGame' />
+                  </Button>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <UserSquareIcon />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    align='center'
+                    color='textSecondary'
+                    variant='body1'>
+                    <IntlMessages id='nftLeague.waitingOpponent' />
+                  </Typography>
+                </Grid>
+              </>
             )}
           </Grid>
         </Box>

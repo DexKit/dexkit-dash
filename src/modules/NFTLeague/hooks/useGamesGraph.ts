@@ -5,6 +5,8 @@ import {GET_ALL_GAMES} from '../services/gql';
 import {getGraphClient} from '../services/graphql';
 import {GameGraph} from '../utils/types';
 
+const GET_GAMES_NFT_LEAGUE = 'GET_GAMES_NFT_LEAGUE';
+
 export const useGamesGraph = (
   status?: GameStatus,
   first: number = 10,
@@ -12,25 +14,30 @@ export const useGamesGraph = (
 ) => {
   const {chainId} = useWeb3();
 
-  const gamesQuery = useQuery(['GET_GAMES_NFT_LEAGUE', chainId], () => {
-    const client = getGraphClient(chainId);
+  const gamesQuery = useQuery(
+    [GET_GAMES_NFT_LEAGUE, chainId, status],
+    async () => {
+      const client = getGraphClient(chainId);
 
-    if (!chainId || !client || !status) {
-      return;
-    }
+      if (!chainId || !client || !status) {
+        return;
+      }
 
-    return client.query<
-      GameGraph[],
-      {status: GameStatus; first: number; skip: number}
-    >({
-      query: GET_ALL_GAMES,
-      variables: {
-        status,
-        first,
-        skip,
-      },
-    });
-  });
+      const result = await client.query<
+        {games: GameGraph[]},
+        {status: GameStatus; first: number; skip: number}
+      >({
+        query: GET_ALL_GAMES,
+        variables: {
+          status,
+          first,
+          skip,
+        },
+      });
+
+      return result.data?.games;
+    },
+  );
 
   return gamesQuery;
 };

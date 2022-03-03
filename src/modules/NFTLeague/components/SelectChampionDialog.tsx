@@ -99,7 +99,7 @@ export const SelectChampionDialog: React.FC<Props> = ({
             <Grid item xs={12}></Grid>
             <Grid item>
               <Typography align='center' variant='h5'>
-                <IntlMessages id='app.coinLeague.noChampionsYet' />
+                <IntlMessages id='nftLeague.noChampionsYet' />
               </Typography>
               <Typography align='center' variant='body1' color='textSecondary'>
                 <IntlMessages id='nftLeague.youDontHaveAnyChampionsYou' />
@@ -112,7 +112,7 @@ export const SelectChampionDialog: React.FC<Props> = ({
                 rel='noopener noreferrer'
                 variant='outlined'
                 color='primary'>
-                <IntlMessages id='app.coinLeauge.mintChampion' />
+                <IntlMessages id='nftLeague.mintChampion' />
               </Button>
             </Grid>
           </Grid>

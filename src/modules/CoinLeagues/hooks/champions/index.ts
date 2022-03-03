@@ -325,10 +325,15 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
   const [loading, setLoading] = useState(false);
 
   const fetch = useCallback(() => {
+    console.log('FETCH');
+
     if (defaultAccount && chainId) {
+      console.log('FETCH 2');
       setLoading(true);
       if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
         let client = maticClient;
+
+        console.log('FETCH 3', chainId);
 
         if (chainId === ChainId.Mumbai) {
           client = mumbaiClient;

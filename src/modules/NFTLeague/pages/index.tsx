@@ -1,11 +1,35 @@
-import {Grid} from '@material-ui/core';
-import React from 'react';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {
+  Avatar,
+  Chip,
+  Collapse,
+  Grid,
+  Hidden,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
+import {AvatarGroup} from '@material-ui/lab';
+import React, {useState} from 'react';
 import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';
 import PageHeader from 'shared/components/v2/partials/PageHeader';
+import NFTLeagueGamesTable from '../components/NFTLeagueGamesTable';
+import {useGamesGraph} from '../hooks/useGamesGraph';
+
+import {GameStatus} from '../constants/enum';
 
 export const NFTLeagueIndex = () => {
   const {messages} = useIntl();
+
+  const [status, setStatus] = useState<GameStatus>(GameStatus.Waiting);
+
+  const games = useGamesGraph(status);
 
   return (
     <MainLayout>
@@ -20,7 +44,76 @@ export const NFTLeagueIndex = () => {
             ]}
           />
         </Grid>
-        <Grid item xs={12}></Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Grid container justifyContent='space-between'>
+                <Grid item></Grid>
+                <Grid item>
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent='center'
+                    alignItems='center'
+                    alignContent='center'>
+                    <Grid item>
+                      <Chip
+                        variant={
+                          status === GameStatus.Waiting ? 'default' : 'outlined'
+                        }
+                        color={
+                          status === GameStatus.Waiting ? 'primary' : 'default'
+                        }
+                        label={<IntlMessages id='nftLeague.waiting' />}
+                        onClick={() => setStatus(GameStatus.Waiting)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Chip
+                        variant={
+                          status === GameStatus.Started ? 'default' : 'outlined'
+                        }
+                        color={
+                          status === GameStatus.Started ? 'primary' : 'default'
+                        }
+                        label={<IntlMessages id='nftLeague.inProgress' />}
+                        onClick={() => setStatus(GameStatus.Started)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Chip
+                        variant={
+                          status === GameStatus.Aborted ? 'default' : 'outlined'
+                        }
+                        color={
+                          status === GameStatus.Aborted ? 'primary' : 'default'
+                        }
+                        onClick={() => setStatus(GameStatus.Aborted)}
+                        label={<IntlMessages id='nftLeague.aborted' />}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Chip
+                        variant={
+                          status === GameStatus.Ended ? 'default' : 'outlined'
+                        }
+                        color={
+                          status === GameStatus.Ended ? 'primary' : 'default'
+                        }
+                        onClick={() => setStatus(GameStatus.Ended)}
+                        label={<IntlMessages id='nftLeague.ended' />}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item></Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <NFTLeagueGamesTable games={games.data} />
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
     </MainLayout>
   );

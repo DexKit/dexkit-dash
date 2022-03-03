@@ -65,7 +65,7 @@ export interface GameGraph {
   players?: {
     id: string;
     player: Partial<PlayerGraph>;
-  };
+  }[];
   earning?: Partial<EarningGraph>;
 }
 

@@ -17,14 +17,6 @@ export const GET_ALL_GAMES = gql`
           id
         }
       }
-      earning {
-        id
-        player {
-          id
-        }
-        amount
-        claimed
-      }
     }
   }
 `;

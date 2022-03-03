@@ -22,14 +22,11 @@ export const getGamesData = async (
   gameIds: string[],
   provider: any,
 ): Promise<Game[]> => {
-  console.log('results', 'begin');
-
   const iface = new Interface(battleFactoryAbi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   const games: Game[] = [];
 
-  console.log('results', '2');
   for (let index = 0; index < gameIds.length; index++) {
     const id = gameIds[index];
     calls.push({
@@ -38,13 +35,9 @@ export const getGamesData = async (
       function: 'allGames',
       args: [id],
     });
-
-    console.log('results', '23');
   }
   const response = await multicall.multiCall(calls);
   const [, results] = response;
-
-  console.log('results', results);
 
   for (let index = 0; index < results.length; index++) {
     const g = results[index];
