@@ -19,11 +19,14 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import {SelectChampionListItem } from './SelectChampionItem';
+import {SelectChampionListItem} from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
-import { useMyChampions } from 'modules/CoinLeagues/hooks/champions';
-import { ChampionMetaItem, CoinLeaguesChampion } from 'modules/CoinLeagues/utils/types';
-import { Link as RouterLink } from 'react-router-dom';
+import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
+import {
+  ChampionMetaItem,
+  CoinLeaguesChampion,
+} from 'modules/CoinLeagues/utils/types';
+import {Link as RouterLink} from 'react-router-dom';
 
 interface Props extends DialogProps {
   title?: string;
@@ -33,15 +36,15 @@ interface Props extends DialogProps {
 }
 
 export const SelectChampionDialog = (props: Props) => {
-  const {onSelectChampion, onClose, chainId} =
-    props;
+  const {onSelectChampion, onClose, chainId} = props;
   // TODO: Change to Mainnet
-  const championsQuery = useMyChampions(chainId);
-  const championsData = championsQuery.data as Array<Required<CoinLeaguesChampion>>;
+  const championsQuery = useMyChampions({chainId});
+  const championsData = championsQuery.data as Array<
+    Required<CoinLeaguesChampion>
+  >;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
-
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +70,6 @@ export const SelectChampionDialog = (props: Props) => {
     }
   }, [onClose]);
 
-
-
   return (
     <Dialog
       maxWidth='sm'
@@ -82,9 +83,7 @@ export const SelectChampionDialog = (props: Props) => {
             <Box display='flex' pr={2}>
               <MoneySendIcon />
             </Box>
-            <Typography variant='body1'>
-              {'Select Champion'}
-            </Typography>
+            <Typography variant='body1'>{'Select Champion'}</Typography>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
@@ -105,7 +104,14 @@ export const SelectChampionDialog = (props: Props) => {
           />
         </Box>
         {!championsData || championsData.length === 0 ? (
-          <Typography variant='body1'>No champions found, you must hold an NFT champion to play in the NFT games - <Link  component={RouterLink} to={'/coin-league/champions/event'}> Mint here now.</Link></Typography>
+          <Typography variant='body1'>
+            No champions found, you must hold an NFT champion to play in the NFT
+            games -{' '}
+            <Link component={RouterLink} to={'/coin-league/champions/event'}>
+              {' '}
+              Mint here now.
+            </Link>
+          </Typography>
         ) : (
           <List>
             <VariableSizeList

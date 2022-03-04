@@ -1,35 +1,42 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useIntl } from 'react-intl';
-import { Box, Typography, Grid, Chip, Badge } from '@material-ui/core';
+import React, {useState, useCallback} from 'react';
+import {useIntl} from 'react-intl';
+import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import { useMyGames } from 'modules/CoinLeagues/hooks/useMyGames';
+import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
 
 import {
   CoinLeagueGameStatus,
   FilterPlayerGame,
 } from 'modules/CoinLeagues/constants/enums';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
-import { useToggler } from 'hooks/useToggler';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+import {useToggler} from 'hooks/useToggler';
 import GameFilterDrawer from '../GameFilterDrawer';
-import { useMobile } from 'hooks/useMobile';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useMobile} from 'hooks/useMobile';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import IntlMessages from '@crema/utility/IntlMessages';
 
-const MyGamesTable = ({ isNFT = false }) => {
-  const account = useDefaultAccount();
+interface Props {
+  isNFT?: boolean;
+  address?: string;
+}
+
+const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
+  const defaultAccount = useDefaultAccount();
+
+  const account = address ? address : defaultAccount;
+
   const [status, setStatus] = useState<CoinLeagueGameStatus>(
     CoinLeagueGameStatus.All,
   );
 
-
-
   const filtersState = useGamesFilters();
-  const { messages } = useIntl();
+  const {messages} = useIntl();
   const {
     query,
     currentPage,
@@ -37,12 +44,15 @@ const MyGamesTable = ({ isNFT = false }) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useMyGames({
-    accounts: account ? [account] : undefined,
-    filters: filtersState,
-    status,
-    player: account,
-  }, isNFT);
+  } = useMyGames(
+    {
+      accounts: account ? [account] : undefined,
+      filters: filtersState,
+      status,
+      player: account,
+    },
+    isNFT,
+  );
 
   const handleClickAll = useCallback(() => {
     setStatus(CoinLeagueGameStatus.All);
@@ -70,10 +80,6 @@ const MyGamesTable = ({ isNFT = false }) => {
     filterToggler.set(true);
   }, [filterToggler]);
 
-  useEffect(() => {
-    filtersState.setIsMyGames(true);
-  }, [filtersState]);
-
   const isMobile = useMobile();
 
   return (
@@ -94,7 +100,9 @@ const MyGamesTable = ({ isNFT = false }) => {
               justifyContent='space-between'
               spacing={4}>
               <Grid item>
-                <Typography variant='h5'>My Games</Typography>
+                <Typography variant='h5'>
+                  <IntlMessages id='app.coinLeague.gameHistory' />
+                </Typography>
               </Grid>
               {isMobile ? (
                 <Grid item>
@@ -103,7 +111,7 @@ const MyGamesTable = ({ isNFT = false }) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon style={{color: '#fff'}} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -180,7 +188,7 @@ const MyGamesTable = ({ isNFT = false }) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon style={{color: '#fff'}} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>

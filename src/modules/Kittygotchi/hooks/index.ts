@@ -352,6 +352,7 @@ export const useKittygotchiList = (address?: string) => {
             for (let k of result.data.tokens) {
               let item: Kittygotchi = {
                 id: k.id,
+                name: `Kitty #${k.id}`,
                 attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
                 defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
                 run: k.run ? BigNumber.from(k.run).toNumber() : 0,

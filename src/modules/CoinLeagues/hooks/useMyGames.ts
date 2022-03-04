@@ -25,14 +25,17 @@ export const useMyGames = (params: MyGamesParams, isNFT = false) => {
     setSkipRows(currentPage * rows);
   };
 
-  const query = useCoinLeagueGames({
-    player: player,
-    status,
-    accounts,
-    filters,
-    first: rowsPerPage,
-    skip: skipRows,
-  }, isNFT);
+  const query = useCoinLeagueGames(
+    {
+      player: player,
+      status,
+      accounts,
+      filters: filters ? {...filters, isMyGames: true} : filters,
+      first: rowsPerPage,
+      skip: skipRows,
+    },
+    isNFT,
+  );
 
   useEffect(() => {
     const refetchQuery = () => query.refetch();

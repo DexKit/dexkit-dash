@@ -106,7 +106,7 @@ export function ChampionsEvent() {
   } = useWeb3();
   const {chainId, coinSymbol} = useLeaguesChainInfo();
 
-  const myChampions = useMyChampions(chainId, 4);
+  const myChampions = useMyChampions({chainId, limit: 4});
 
   const championTokenHolding = useChampionTokenHolding(account);
 

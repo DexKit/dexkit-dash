@@ -21,7 +21,12 @@ import {
   CoinLeaguesChampion,
 } from 'modules/CoinLeagues/utils/types';
 
-import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
+import {
+  ApolloClient,
+  gql,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from '@apollo/client';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
@@ -317,12 +322,19 @@ const GET_MY_CHAMPIONS = gql`
   }
 `;
 
-export function useMyChampions(chainId?: number, limit: number = 100) {
-  const defaultAccount = useDefaultAccount();
+export function useMyChampions(
+  params: {chainId?: number; limit?: number; account?: string} = {limit: 100},
+) {
+  const {chainId, limit, account} = params;
+
+  const userDefaulAccount = useDefaultAccount();
+  const defaultAccount = account ? account : userDefaulAccount;
 
   const [data, setData] = useState<CoinLeaguesChampion[]>();
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
+
+  console.log(chainId);
 
   const fetch = useCallback(() => {
     console.log('FETCH');
@@ -378,6 +390,8 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
             setError(err);
             setLoading(false);
           });
+      } else {
+        setLoading(false);
       }
     }
   }, [defaultAccount, chainId, limit]);
@@ -407,4 +421,41 @@ export function useChampionsTotalSupply(chainId?: number) {
   }, [chainId]);
 
   return {totalSupply};
+}
+
+const GET_CHAMPION_BALANCE_QUERY = gql`
+  query getChampionBalance($account: ID!) {
+    owner(id: $account) {
+      balance
+    }
+  }
+`;
+
+const GET_CHAMPION_BALANCE = 'GET_CHAMPION_BALANCE';
+
+export function useChampionBalance(params: {account: string; chainId: number}) {
+  const {account, chainId} = params;
+
+  return useQuery([GET_CHAMPION_BALANCE, chainId, account], async () => {
+    // TODO: refactor this code later
+
+    let client: ApolloClient<NormalizedCacheObject>;
+
+    if (chainId === ChainId.Mumbai) {
+      client = mumbaiClient;
+    } else {
+      client = maticClient;
+    }
+
+    const result = await client.query<{owner: {balance: string}}>({
+      query: GET_CHAMPION_BALANCE_QUERY,
+      variables: {account: account?.toLocaleLowerCase()},
+    });
+
+    if (result.data.owner !== null) {
+      return parseInt(result.data.owner?.balance);
+    }
+
+    return 0;
+  });
 }

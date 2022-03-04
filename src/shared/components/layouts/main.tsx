@@ -8,7 +8,7 @@ interface Props {
 export const MainLayout = (props: Props) => {
   const {children} = props;
 
-  return <Box py={{xs: 8}}>{children}</Box>;
+  return <Box py={{xs: 4}}>{children}</Box>;
 };
 
 export default MainLayout;
