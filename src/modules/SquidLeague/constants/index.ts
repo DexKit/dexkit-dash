@@ -1,7 +1,7 @@
-import {ChainId} from 'types/blockchain';
+import { ChainId } from 'types/blockchain';
 
 export const SQUID_LEAGUE_FACTORY_ADDRESS = {
-  [ChainId.Mumbai]: '0xaF8aa1952bbB2c4AbE14C027224B44d2f683f73B',
+  [ChainId.Mumbai]: '0xC74856FD2337bB8823b3cC07AD0b97831A0235cf',
   [ChainId.Matic]: '',
   [ChainId.Binance]: '',
 };

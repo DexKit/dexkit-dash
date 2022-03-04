@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Button,
@@ -20,35 +20,87 @@ import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
 import AddIcon from '@material-ui/icons/Add';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
-import {useHistory} from 'react-router';
-import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 
 interface Props {
+  gameAddress: string;
   dialogProps: DialogProps;
-  loading: boolean;
-  errorMessage?: string;
-  transactionHash?: string;
-  onConfirm: () => void;
-  confirmed: boolean;
-  gameId?: number;
 }
 
-export const CreateGameDialog: React.FC<Props> = ({
+export const SetupGameDialog: React.FC<Props> = ({
+  gameAddress,
   dialogProps,
-  loading,
-  transactionHash,
-  onConfirm,
-  confirmed,
-  errorMessage,
-  gameId,
 }) => {
-  const history = useHistory();
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
+  const {onSetupChallengeCallback} = useSquidGameCallbacks(gameAddress);
+
+  const {formatMessage} = useIntl();
+  const [transactionHash, setTransactionHash] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [loading, setLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const {getTransactionScannerUrl} = useChainInfo();
-  const intl = useIntl();
+  const {createNotification} = useNotifications();
 
   const theme = useTheme();
+
+  const onConfirmCallback = useCallback(() => {
+    if (!chainId) {
+      return;
+    }
+    setTransactionHash('');
+
+    setLoading(true);
+    const onConfirm = () => {
+      setLoading(false);
+      setConfirmed(true);
+    };
+    const onSubmit = (tx: string) => {
+      setTransactionHash(tx);
+      createNotification({
+        title: formatMessage({
+          id: 'squidLeague.setupGameTitle',
+          defaultMessage: `Setup game on squid`,
+        }),
+        body: formatMessage({
+          id: 'squidLeague.setupGameBody',
+          defaultMessage: `Setup game on squid`,
+        }),
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx),
+        urlCaption: formatMessage({
+          id: 'squidLeague.viewTx',
+          defaultMessage: 'View Tx',
+        }),
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    };
+    const onError = (error: any) => {
+      setLoading(false);
+      setErrorMessage(error);
+      setTransactionHash('');
+    };
+
+    onSetupChallengeCallback({
+      onConfirmation: onConfirm,
+      onSubmit: onSubmit,
+      onError,
+    });
+  }, [
+    getTransactionScannerUrl,
+    chainId,
+    createNotification,
+    formatMessage,
+    onSetupChallengeCallback,
+  ]);
 
   const handleClose = useCallback(() => {
     if (onClose) {
@@ -61,10 +113,6 @@ export const CreateGameDialog: React.FC<Props> = ({
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
   }, [chainId, transactionHash, getTransactionScannerUrl]);
-
-  const handleGoToGame = useCallback(() => {
-    history.push(`${SQUIDLEAGUE_ROUTE}/${gameId}`);
-  }, [gameId, history]);
 
   const renderError = () => {
     return (
@@ -87,7 +135,7 @@ export const CreateGameDialog: React.FC<Props> = ({
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
-              {errorMessage ? JSON.stringify(errorMessage) : ''}
+              {JSON.stringify(errorMessage)}
             </Typography>
           </Grid>
         </Grid>
@@ -115,10 +163,7 @@ export const CreateGameDialog: React.FC<Props> = ({
         </Grid>
         <Grid item>
           <Typography gutterBottom align='center' variant='h5'>
-            <IntlMessages
-              id='squidLeague.transactionConfirmed'
-              defaultMessage={'Transaction confirmed'}
-            />
+            <IntlMessages id='squidLeague.transactionConfirmed' />
           </Typography>
           <Typography color='textSecondary' align='center' variant='body1'>
             <IntlMessages
@@ -127,20 +172,6 @@ export const CreateGameDialog: React.FC<Props> = ({
             />
           </Typography>
         </Grid>
-        {gameId !== undefined && (
-          <Grid item>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleGoToGame}
-              fullWidth>
-              <IntlMessages
-                id='squidLeague.goToGame'
-                defaultMessage={'Go to Game'}
-              />
-            </Button>
-          </Grid>
-        )}
         {transactionHash && (
           <Grid item>
             <Button color='primary' onClick={handleViewTransaction} fullWidth>
@@ -171,8 +202,8 @@ export const CreateGameDialog: React.FC<Props> = ({
           <Grid item xs={12}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.creatingGame'
-                defaultMessage={'Creating Game'}
+                id='squidLeague.setupGame'
+                defaultMessage={'Setup Game'}
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
@@ -200,9 +231,9 @@ export const CreateGameDialog: React.FC<Props> = ({
   return (
     <Dialog {...dialogProps}>
       <CustomDialogTitle
-        title={intl.formatMessage({
-          id: 'squidLeague.createGame',
-          defaultMessage: 'Create Game',
+        title={formatMessage({
+          id: 'squidLeague.setupGame',
+          defaultMessage: 'Setup Game',
         })}
         icon={<AddIcon />}
         onClose={handleClose}
@@ -219,14 +250,14 @@ export const CreateGameDialog: React.FC<Props> = ({
           <Box py={4}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.createGame'
-                defaultMessage='Create Game'
+                id='squidLeague.setupGame'
+                defaultMessage='Setup Game'
               />
             </Typography>
             <Typography align='center' variant='body1'>
               <IntlMessages
-                id='squidLeague.doYouWantToCreateAGame'
-                defaultMessage='Do you want to create a game?'
+                id='squidLeague.doYouWantToSetupAGame'
+                defaultMessage='Do you want to setup the game?'
               />
             </Typography>
           </Box>
@@ -236,7 +267,10 @@ export const CreateGameDialog: React.FC<Props> = ({
         <>
           <Divider />
           <DialogActions>
-            <Button onClick={onConfirm} color='primary' variant='contained'>
+            <Button
+              onClick={onConfirmCallback}
+              color='primary'
+              variant='contained'>
               <IntlMessages
                 id='squidLeague.confirm'
                 defaultMessage={'Confirm'}
@@ -252,4 +286,4 @@ export const CreateGameDialog: React.FC<Props> = ({
   );
 };
 
-export default CreateGameDialog;
+export default SetupGameDialog;

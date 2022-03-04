@@ -1,9 +1,9 @@
-import {BigNumber} from 'ethers';
-import {GameStatus} from '../constants/enum';
+import { BigNumber } from 'ethers';
+import { GameStatus } from '../constants/enum';
 
 export interface CreateSquidGameParams {
-  startTimestamp: number;
-  pot: number;
+  startTimestamp: BigNumber;
+  pot: BigNumber;
 }
 
 export interface GameRoundData {
@@ -59,4 +59,12 @@ export interface EarningGraph {
   claimed: boolean;
   at: string;
   game: string;
+}
+
+export enum GameState {
+  Joining,
+  Setup,
+  Started,
+  Finished,
+  Quit
 }

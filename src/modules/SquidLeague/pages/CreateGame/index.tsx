@@ -21,6 +21,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useChainInfo} from 'hooks/useChainInfo';
 
 import * as yup from 'yup';
+import {BigNumber, ethers} from 'ethers';
 
 const useStyles = makeStyles((theme) => ({
   bold: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const formSchema = yup.object().shape({
-  entryAmount: yup.number().min(1).max(100000).required(),
+  entryAmount: yup.number().min(0.0001).max(100000).required(),
   startsAt: yup.string().required(),
 });
 
@@ -47,13 +48,14 @@ export const CreateGamePage = () => {
   const {createNotification} = useNotifications();
   const [confirmedCreateGame, setConfirmedCreatedGame] = useState(false);
   const [transaction, setTransaction] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loadingCreatingGame, setLoadingCreatingGame] = useState(false);
   const {getTransactionScannerUrl} = useChainInfo();
   const {onCreateSquidCallback} = useSquidGameFactoryCallbacks();
 
   const handleSubmit = useCallback(
     (values) => {
+      console.log(values);
       createGameToggler.toggle();
     },
     [createGameToggler],
@@ -61,7 +63,7 @@ export const CreateGamePage = () => {
 
   const formik = useFormik<GameParams>({
     initialValues: {
-      entryAmount: 1,
+      entryAmount: 0.0001,
       startsAt: '',
     },
     validationSchema: formSchema,
@@ -111,11 +113,13 @@ export const CreateGamePage = () => {
       setLoadingCreatingGame(false);
       setErrorMessage(error);
     };
-
+    console.log(formik.values);
     onCreateSquidCallback(
       {
-        startTimestamp: Number(formik.values.startsAt),
-        pot: Number(formik.values.entryAmount),
+        startTimestamp: BigNumber.from(
+          Math.floor(new Date(formik.values.startsAt).getTime() / 1000),
+        ),
+        pot: ethers.utils.parseEther(String(formik.values.entryAmount)),
       },
       {
         onConfirmation: onConfirm,
@@ -126,8 +130,7 @@ export const CreateGamePage = () => {
   }, [
     getTransactionScannerUrl,
     chainId,
-    formik.values.startsAt,
-    formik.values.entryAmount,
+    formik.values,
     createNotification,
     onCreateSquidCallback,
     formatMessage,
@@ -227,7 +230,7 @@ export const CreateGamePage = () => {
         </Grid>
         <Grid item xs={12}>
           <Button
-            type='submit'
+            onClick={handleSubmit}
             disabled={!formik.isValid}
             variant='contained'
             color='primary'>

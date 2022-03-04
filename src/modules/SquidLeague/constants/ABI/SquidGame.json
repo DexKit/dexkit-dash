@@ -479,68 +479,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "challengeResult",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "coin",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "feed",
-        "type": "address"
-      },
-      {
-        "internalType": "int256",
-        "name": "start_price",
-        "type": "int256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "start_timestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "duration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "int256",
-        "name": "end_price",
-        "type": "int256"
-      },
-      {
-        "internalType": "int256",
-        "name": "score",
-        "type": "int256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "game_type",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "computeEndGame",
     "outputs": [],
@@ -549,22 +487,22 @@
   },
   {
     "inputs": [],
-    "name": "endTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "finishChallenge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "finishChallenge",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "gameState",
+    "outputs": [
+      {
+        "internalType": "enum SquidGameMumbai.ChallengeState",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -607,6 +545,19 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentRoundPriceFeed",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
       }
     ],
     "stateMutability": "view",
@@ -746,19 +697,6 @@
     "name": "startChallenge",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "startTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

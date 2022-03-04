@@ -1,9 +1,9 @@
-import {Interface} from '@ethersproject/abi';
-import {CallInput} from '@indexed-finance/multicall';
-import {BigNumber, ContractTransaction, ethers, providers} from 'ethers';
-import {getMulticallFromProvider} from 'services/multicall';
+import { Interface } from '@ethersproject/abi';
+import { CallInput } from '@indexed-finance/multicall';
+import { BigNumber, ContractTransaction, ethers, providers } from 'ethers';
+import { getMulticallFromProvider } from 'services/multicall';
 import squidGameAbi from '../constants/ABI/SquidGame.json';
-import {GameRoundData} from '../utils/types';
+import { GameRoundData, GameState } from '../utils/types';
 
 export const getSquidGameContract = async (address: string, provider: any) => {
   const pr = new providers.Web3Provider(provider).getSigner();
@@ -56,32 +56,77 @@ export const finishChallenge = async (gameAddress: string, provider: any) => {
   ).finishChallenge() as Promise<ContractTransaction>;
 };
 
-export const getGameRoundData = async (
+
+export const getGameData = async (
   gameAddress: string,
-  currentRound: number,
   provider: any,
-): Promise<GameRoundData> => {
+): Promise<{ round: BigNumber, pot: BigNumber, gameState: GameState }> => {
   const iface = new Interface(squidGameAbi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   calls.push({
     interface: iface,
     target: gameAddress,
-    function: 'CoinRound',
-    args: [currentRound],
+    function: 'getCurrentRound',
   });
 
   calls.push({
     interface: iface,
     target: gameAddress,
-    function: 'getCurrentPlayers',
-    args: [currentRound],
+    function: 'pot',
   });
+
+  calls.push({
+    interface: iface,
+    target: gameAddress,
+    function: 'gameState',
+  });
+
+
   const response = await multicall.multiCall(calls);
   const [, results] = response;
 
   return {
-    ...results[0],
-    total_players: results[1],
+    round: results[0] as BigNumber,
+    pot: results[1] as BigNumber,
+    gameState: results[2] as GameState,
   };
+
+};
+
+export const getGameRoundData = async (
+  gameAddress: string,
+  currentRound: number,
+  provider: any,
+): Promise<GameRoundData> => {
+  const iface = new Interface(squidGameAbi);
+  try {
+    const multicall = await getMulticallFromProvider(provider);
+    const calls: CallInput[] = [];
+    console.log(currentRound);
+    calls.push({
+      interface: iface,
+      target: gameAddress,
+      function: 'CoinRound',
+      args: [currentRound],
+    });
+
+    calls.push({
+      interface: iface,
+      target: gameAddress,
+      function: 'getCurrentPlayersAtRound',
+      args: [currentRound],
+    });
+    const response = await multicall.multiCall(calls);
+    const [, results] = response;
+    console.log(results);
+
+    return {
+      ...results[0],
+      total_players: results[1] || BigNumber.from(0),
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error('stupid error');
+  }
 };

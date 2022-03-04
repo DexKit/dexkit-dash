@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Button,
@@ -20,33 +20,34 @@ import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
 import AddIcon from '@material-ui/icons/Add';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
-import {useHistory} from 'react-router';
-import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
+import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
 interface Props {
   dialogProps: DialogProps;
-  loading: boolean;
-  errorMessage?: string;
-  transactionHash?: string;
-  onConfirm: () => void;
-  confirmed: boolean;
-  gameId?: number;
+  play: boolean;
+  gameAddress: string;
 }
 
 export const PlayGameDialog: React.FC<Props> = ({
   dialogProps,
-  loading,
-  transactionHash,
-  onConfirm,
-  confirmed,
-  errorMessage,
-  gameId,
+  play,
+  gameAddress,
 }) => {
-  const history = useHistory();
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
-  const intl = useIntl();
+
+  const {onPlayChallengeCallback} = useSquidGameCallbacks(gameAddress);
+
+  const {formatMessage} = useIntl();
+  const [transactionHash, setTransactionHash] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [loading, setLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+
+  const {createNotification} = useNotifications();
 
   const theme = useTheme();
 
@@ -62,9 +63,65 @@ export const PlayGameDialog: React.FC<Props> = ({
     }
   }, [chainId, transactionHash, getTransactionScannerUrl]);
 
-  const handleGoToGame = useCallback(() => {
-    history.push(`${SQUIDLEAGUE_ROUTE}/${gameId}`);
-  }, [gameId, history]);
+  const onConfirm = useCallback(() => {
+    if (!chainId) {
+      return;
+    }
+    setTransactionHash('');
+
+    setLoading(true);
+    const onConfirm = () => {
+      setLoading(false);
+      setConfirmed(true);
+    };
+    const onSubmit = (tx: string) => {
+      setTransactionHash(tx);
+      createNotification({
+        title: formatMessage({
+          id: 'squidLeague.createGameTitle',
+          defaultMessage: `Played game on squid`,
+        }),
+        body: formatMessage({
+          id: 'squidLeague.createGameBody',
+          defaultMessage: `Played game on squid`,
+        }),
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx),
+        urlCaption: formatMessage({
+          id: 'squidLeague.viewTx',
+          defaultMessage: 'View Tx',
+        }),
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    };
+    const onError = (error: any) => {
+      setLoading(false);
+      console.log(error);
+      setErrorMessage('Error Submitting Transaction');
+      setTimeout(() => {
+        setErrorMessage(undefined);
+      }, 2000);
+      setTransactionHash('');
+    };
+
+    onPlayChallengeCallback(play, {
+      onConfirmation: onConfirm,
+      onSubmit: onSubmit,
+      onError,
+    });
+  }, [
+    getTransactionScannerUrl,
+    chainId,
+    play,
+    createNotification,
+    onPlayChallengeCallback,
+    formatMessage,
+  ]);
 
   const renderError = () => {
     return (
@@ -87,7 +144,7 @@ export const PlayGameDialog: React.FC<Props> = ({
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
-              {errorMessage}
+              {errorMessage ? JSON.stringify(errorMessage) : ''}
             </Typography>
           </Grid>
         </Grid>
@@ -124,20 +181,7 @@ export const PlayGameDialog: React.FC<Props> = ({
             />
           </Typography>
         </Grid>
-        {gameId !== undefined && (
-          <Grid item>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleGoToGame}
-              fullWidth>
-              <IntlMessages
-                id='squidLeague.goToGame'
-                defaultMessage={'Go to Game'}
-              />
-            </Button>
-          </Grid>
-        )}
+        )
         {transactionHash && (
           <Grid item>
             <Button color='primary' onClick={handleViewTransaction} fullWidth>
@@ -197,7 +241,7 @@ export const PlayGameDialog: React.FC<Props> = ({
   return (
     <Dialog {...dialogProps}>
       <CustomDialogTitle
-        title={intl.formatMessage({
+        title={formatMessage({
           id: 'squidLeague.playGame',
           defaultMessage: 'Play Game',
         })}
@@ -217,13 +261,13 @@ export const PlayGameDialog: React.FC<Props> = ({
             <Typography align='center' variant='h5'>
               <IntlMessages
                 id='squidLeague.playGame'
-                defaultMessage='Play Game'
+                defaultMessage='Play Game on Squid'
               />
             </Typography>
             <Typography align='center' variant='body1'>
               <IntlMessages
                 id='squidLeague.doYouWantToPlayAGame'
-                defaultMessage='Do you want to play a game?'
+                defaultMessage='Do you want to play on this challenge? '
               />
             </Typography>
           </Box>

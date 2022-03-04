@@ -8,6 +8,7 @@ import {
   finishChallenge,
   joinGame,
   startChallenge,
+  setupChallenge,
 } from '../services/squidGame';
 
 interface CallbackProps {
@@ -65,7 +66,6 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
       const provider = getProvider();
       try {
         const tx = await withdraw(gameAddress, provider);
-        await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -76,14 +76,13 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
     [web3State, gameAddress, getProvider],
   );
   const onStartChallengeCallback = useCallback(
-    async (id: number, callbacks?: CallbackProps) => {
+    async (callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done) {
         return;
       }
       const provider = getProvider();
       try {
         const tx = await startChallenge(gameAddress, provider);
-        await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -95,14 +94,32 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
   );
 
   const onFinishChallengeCallback = useCallback(
-    async (id: number, callbacks?: CallbackProps) => {
+    async (callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done) {
         return;
       }
       const provider = getProvider();
       try {
         const tx = await finishChallenge(gameAddress, provider);
+        callbacks?.onSubmit(tx.hash);
         await tx.wait();
+        callbacks?.onConfirmation(tx.hash);
+      } catch (e) {
+        callbacks?.onError(e);
+      }
+    },
+    [web3State, gameAddress, getProvider],
+  );
+
+
+  const onSetupChallengeCallback = useCallback(
+    async (callbacks?: CallbackProps) => {
+      if (web3State !== Web3State.Done) {
+        return;
+      }
+      const provider = getProvider();
+      try {
+        const tx = await setupChallenge(gameAddress, provider);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -119,5 +136,6 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
     onPlayChallengeCallback,
     onFinishChallengeCallback,
     onStartChallengeCallback,
+    onSetupChallengeCallback
   };
 };

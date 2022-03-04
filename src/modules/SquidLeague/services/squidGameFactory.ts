@@ -20,3 +20,12 @@ export const createSquid = async (
     params.pot,
   ) as Promise<ContractTransaction>;
 };
+
+export const getGameAddress = async (
+  gameId: string,
+  gameFactoryAddress: string,
+  provider: any,
+) => {
+
+  return (await (await getSquidGameFactoryContract(gameFactoryAddress, provider)).allGames(gameId)) as Promise<string>;
+};

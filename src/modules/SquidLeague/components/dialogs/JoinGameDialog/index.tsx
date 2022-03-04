@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Button,
@@ -20,33 +20,29 @@ import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
 import AddIcon from '@material-ui/icons/Add';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
-import {useHistory} from 'react-router';
-import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
+import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useNotifications} from 'hooks/useNotifications';
+import {ethers} from 'ethers';
 
 interface Props {
   dialogProps: DialogProps;
-  loading: boolean;
-  errorMessage?: string;
-  transactionHash?: string;
-  onConfirm: () => void;
-  confirmed: boolean;
-  gameId?: number;
+  gameAddress: string;
 }
 
-export const JoinGameDialog: React.FC<Props> = ({
-  dialogProps,
-  loading,
-  transactionHash,
-  onConfirm,
-  confirmed,
-  errorMessage,
-  gameId,
-}) => {
-  const history = useHistory();
+export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
-  const intl = useIntl();
+  const {onJoinGameCallback} = useSquidGameCallbacks(gameAddress);
+
+  const {formatMessage} = useIntl();
+  const [transactionHash, setTransactionHash] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+
+  const {createNotification} = useNotifications();
 
   const theme = useTheme();
 
@@ -60,11 +56,62 @@ export const JoinGameDialog: React.FC<Props> = ({
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
-  const handleGoToGame = useCallback(() => {
-    history.push(`${SQUIDLEAGUE_ROUTE}/${gameId}`);
-  }, [gameId, history]);
+  const onConfirm = useCallback(() => {
+    if (!chainId) {
+      return;
+    }
+    setTransactionHash('');
+
+    setLoading(true);
+    const onConfirm = () => {
+      setLoading(false);
+      setConfirmed(true);
+    };
+    const onSubmit = (tx: string) => {
+      setTransactionHash(tx);
+      createNotification({
+        title: formatMessage({
+          id: 'squidLeague.joinGameTitle',
+          defaultMessage: `Join game on squid`,
+        }),
+        body: formatMessage({
+          id: 'squidLeague.joinGameBody',
+          defaultMessage: `Join game on squid`,
+        }),
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx),
+        urlCaption: formatMessage({
+          id: 'squidLeague.viewTx',
+          defaultMessage: 'View Tx',
+        }),
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    };
+    const onError = (error: any) => {
+      setLoading(false);
+      setErrorMessage('Error Submitting Transaction');
+      setTransactionHash('');
+    };
+
+    onJoinGameCallback(ethers.utils.parseEther('0.01'), {
+      onConfirmation: onConfirm,
+      onSubmit: onSubmit,
+      onError,
+    });
+  }, [
+    getTransactionScannerUrl,
+    chainId,
+    createNotification,
+    onJoinGameCallback,
+    formatMessage,
+  ]);
 
   const renderError = () => {
     return (
@@ -87,7 +134,7 @@ export const JoinGameDialog: React.FC<Props> = ({
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
-              {errorMessage}
+              {JSON.stringify(errorMessage)}
             </Typography>
           </Grid>
         </Grid>
@@ -124,20 +171,6 @@ export const JoinGameDialog: React.FC<Props> = ({
             />
           </Typography>
         </Grid>
-        {gameId !== undefined && (
-          <Grid item>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleGoToGame}
-              fullWidth>
-              <IntlMessages
-                id='squidLeague.goToGame'
-                defaultMessage={'Go to Game'}
-              />
-            </Button>
-          </Grid>
-        )}
         {transactionHash && (
           <Grid item>
             <Button color='primary' onClick={handleViewTransaction} fullWidth>
@@ -197,7 +230,7 @@ export const JoinGameDialog: React.FC<Props> = ({
   return (
     <Dialog {...dialogProps}>
       <CustomDialogTitle
-        title={intl.formatMessage({
+        title={formatMessage({
           id: 'squidLeague.joinGame',
           defaultMessage: 'Join Game',
         })}

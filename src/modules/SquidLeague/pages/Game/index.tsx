@@ -17,13 +17,16 @@ import {useParams} from 'react-router';
 
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import {useChainInfo} from 'hooks/useChainInfo';
-import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 import PlayGameDialog from 'modules/SquidLeague/components/dialogs/PlayGameDialog';
 import {useToggler} from 'hooks/useToggler';
-import {useWeb3} from 'hooks/useWeb3';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useNotifications} from 'hooks/useNotifications';
+
+import JoinGameDialog from 'modules/SquidLeague/components/dialogs/JoinGameDialog';
+import StartGameDialog from 'modules/SquidLeague/components/dialogs/StartGameDialog';
+import EndGameDialog from 'modules/SquidLeague/components/dialogs/EndGameDialog';
+import SetupGameDialog from 'modules/SquidLeague/components/dialogs/SetupGameDialog';
+import {useGameAddress} from 'modules/SquidLeague/hooks/useGameAddress';
+import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
+import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
 
 interface Params {
   id: string;
@@ -39,79 +42,26 @@ const useStyles = makeStyles((theme) => ({
 
 export const Game = () => {
   const {id} = useParams<Params>();
-  const {onPlayChallengeCallback} = useSquidGameCallbacks(id);
-  const {chainId} = useWeb3();
+  const gameAddressQuery = useGameAddress(id);
+  const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
+  const gameDataRoundQuery = useOnChainCurrentRoundGame(
+    gameDataQuery.data?.round,
+    gameAddressQuery.data,
+  );
   const playGameToggler = useToggler(false);
-  const [confirmedPlayGame, setConfirmedPlayGame] = useState(false);
+  const joinGameToggler = useToggler(false);
+  const setupGameToggler = useToggler(false);
+  const startGameToggler = useToggler(false);
+  const endGameToggler = useToggler(false);
   const [userPlay, setUserPlay] = useState(false);
-  const [transaction, setTransaction] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loadingPlayingGame, setLoadingPlayingGame] = useState(false);
-  const {getTransactionScannerUrl} = useChainInfo();
-  const {createNotification} = useNotifications();
-
   const {formatMessage} = useIntl();
 
   const classes = useStyles();
 
   const handleClosePlayGameDialog = useCallback(() => {
     playGameToggler.toggle();
+    setUserPlay(false);
   }, [playGameToggler]);
-
-  const onConfirmPlayGameCallback = useCallback(() => {
-    if (!chainId) {
-      return;
-    }
-
-    setLoadingPlayingGame(true);
-    const onConfirm = () => {
-      setLoadingPlayingGame(false);
-      setConfirmedPlayGame(true);
-    };
-    const onSubmit = (tx: string) => {
-      setTransaction(tx);
-      createNotification({
-        title: formatMessage({
-          id: 'squidLeague.createGameTitle',
-          defaultMessage: `Played game on squid`,
-        }),
-        body: formatMessage({
-          id: 'squidLeague.createGameBody',
-          defaultMessage: `Played game on squid`,
-        }),
-        timestamp: Date.now(),
-        url: getTransactionScannerUrl(chainId, tx),
-        urlCaption: formatMessage({
-          id: 'squidLeague.viewTx',
-          defaultMessage: 'View Tx',
-        }),
-        type: NotificationType.TRANSACTION,
-        metadata: {
-          chainId: chainId,
-          transactionHash: tx,
-          status: 'pending',
-        } as TxNotificationMetadata,
-      });
-    };
-    const onError = (error: any) => {
-      setLoadingPlayingGame(false);
-      setErrorMessage(error);
-    };
-
-    onPlayChallengeCallback(userPlay, {
-      onConfirmation: onConfirm,
-      onSubmit: onSubmit,
-      onError,
-    });
-  }, [
-    getTransactionScannerUrl,
-    chainId,
-    userPlay,
-
-    createNotification,
-    onPlayChallengeCallback,
-    formatMessage,
-  ]);
 
   const openPlayModal = useCallback(
     (play: boolean) => {
@@ -121,19 +71,80 @@ export const Game = () => {
     [playGameToggler],
   );
 
+  const handleCloseStartGameDialog = useCallback(() => {
+    startGameToggler.toggle();
+  }, [startGameToggler]);
+
+  const handleCloseEndGameDialog = useCallback(() => {
+    endGameToggler.toggle();
+  }, [endGameToggler]);
+
+  const handleCloseSetupGameDialog = useCallback(() => {
+    setupGameToggler.toggle();
+  }, [setupGameToggler]);
+
+  const handleCloseJoinGameDialog = useCallback(() => {
+    joinGameToggler.toggle();
+  }, [joinGameToggler]);
+
   return (
     <MainLayout>
-      <PlayGameDialog
-        errorMessage={errorMessage}
-        transactionHash={transaction}
-        loading={loadingPlayingGame}
-        confirmed={confirmedPlayGame}
-        onConfirm={onConfirmPlayGameCallback}
-        dialogProps={{
-          open: playGameToggler.show,
-          onClose: handleClosePlayGameDialog,
-        }}
-      />
+      {gameAddressQuery.data && (
+        <PlayGameDialog
+          play={userPlay}
+          gameAddress={gameAddressQuery.data}
+          dialogProps={{
+            open: playGameToggler.show,
+            maxWidth: 'sm',
+            fullWidth: true,
+            onClose: handleClosePlayGameDialog,
+          }}
+        />
+      )}
+      {gameAddressQuery.data && (
+        <JoinGameDialog
+          gameAddress={gameAddressQuery.data}
+          dialogProps={{
+            open: joinGameToggler.show,
+            maxWidth: 'sm',
+            fullWidth: true,
+            onClose: handleCloseJoinGameDialog,
+          }}
+        />
+      )}
+      {gameAddressQuery.data && (
+        <StartGameDialog
+          gameAddress={gameAddressQuery.data}
+          dialogProps={{
+            open: startGameToggler.show,
+            maxWidth: 'sm',
+            fullWidth: true,
+            onClose: handleCloseStartGameDialog,
+          }}
+        />
+      )}
+      {gameAddressQuery.data && (
+        <EndGameDialog
+          gameAddress={gameAddressQuery.data}
+          dialogProps={{
+            open: endGameToggler.show,
+            maxWidth: 'sm',
+            fullWidth: true,
+            onClose: handleCloseEndGameDialog,
+          }}
+        />
+      )}
+      {gameAddressQuery.data && (
+        <SetupGameDialog
+          gameAddress={gameAddressQuery.data}
+          dialogProps={{
+            open: setupGameToggler.show,
+            maxWidth: 'sm',
+            fullWidth: true,
+            onClose: handleCloseSetupGameDialog,
+          }}
+        />
+      )}
       <Grid container spacing={4}>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}>
@@ -141,7 +152,8 @@ export const Game = () => {
             <IntlMessages
               id='squidLeague.gameInformation'
               defaultMessage={'Squid League'}
-            />
+            />{' '}
+            #{id}
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -166,7 +178,7 @@ export const Game = () => {
                     id='squidLeague.round'
                     defaultMessage={'Round'}
                   />{' '}
-                  01
+                  {gameDataQuery.data?.round.toNumber()}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -196,7 +208,7 @@ export const Game = () => {
                                   />
                                 </Typography>
                                 <Typography variant='h5' color='textPrimary'>
-                                  10:34:02
+                                  {gameDataRoundQuery.data?.start_timestamp.toString()}
                                 </Typography>
                               </Box>
                               <Box>Icon</Box>
@@ -222,7 +234,7 @@ export const Game = () => {
                                   />
                                 </Typography>
                                 <Typography variant='h5' color='textPrimary'>
-                                  11:23
+                                  {gameDataRoundQuery.data?.duration?.toString()}
                                 </Typography>
                               </Box>
                               <Box>Icon</Box>
@@ -292,14 +304,56 @@ export const Game = () => {
                               />
                             </Button>
                           </Grid>
-                          <Grid item xs={12}>
+                          <Grid item xs={4}>
                             <Button
-                              disabled
                               fullWidth
                               startIcon={<ArrowDownwardIcon />}
                               variant='outlined'
+                              onClick={() => startGameToggler.toggle()}
                               color='primary'>
-                              <IntlMessages id='squidLeague.down' />
+                              <IntlMessages
+                                id='squidLeague.startGame'
+                                defaultMessage={'Start Game'}
+                              />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Button
+                              fullWidth
+                              onClick={() => endGameToggler.toggle()}
+                              startIcon={<ArrowDownwardIcon />}
+                              variant='outlined'
+                              color='primary'>
+                              <IntlMessages
+                                id='squidLeague.endGame'
+                                defaultMessage={'End Game'}
+                              />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Button
+                              fullWidth
+                              onClick={() => setupGameToggler.toggle()}
+                              startIcon={<ArrowDownwardIcon />}
+                              variant='outlined'
+                              color='primary'>
+                              <IntlMessages
+                                id='squidLeague.setupGame'
+                                defaultMessage={'Setup Game'}
+                              />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button
+                              fullWidth
+                              startIcon={<ArrowDownwardIcon />}
+                              variant='outlined'
+                              onClick={() => joinGameToggler.toggle()}
+                              color='primary'>
+                              <IntlMessages
+                                id='squidLeague.joinGame'
+                                defaultMessage={'Join Game'}
+                              />
                             </Button>
                           </Grid>
                         </Grid>
@@ -323,7 +377,8 @@ export const Game = () => {
                                 alignContent='center'
                                 justifyContent='space-between'>
                                 <Typography variant='body1' color='textPrimary'>
-                                  0.00 USD
+                                  {gameDataRoundQuery.data?.start_price.toString()}{' '}
+                                  USD
                                 </Typography>
                                 <Typography
                                   variant='body1'
@@ -345,7 +400,8 @@ export const Game = () => {
                                 alignContent='center'
                                 justifyContent='space-between'>
                                 <Typography variant='body1' color='textPrimary'>
-                                  0.00 USD
+                                  {gameDataRoundQuery.data?.end_price.toString()}{' '}
+                                  USD
                                 </Typography>
                                 <Typography
                                   variant='body1'
@@ -437,7 +493,7 @@ export const Game = () => {
         <Grid item xs={12}>
           <Typography variant='subtitle1' color='textPrimary'>
             <IntlMessages id='squidLeague.players' defaultMessage={'Players'} />{' '}
-            (1.2)
+            {gameDataRoundQuery.data?.total_players.toString()}
           </Typography>
           <Typography variant='body2' color='textSecondary'>
             <IntlMessages
