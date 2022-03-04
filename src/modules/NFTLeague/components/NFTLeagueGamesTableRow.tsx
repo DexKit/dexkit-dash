@@ -11,6 +11,8 @@ import {
   Collapse,
   Grid,
   Typography,
+  ButtonBase,
+  makeStyles,
 } from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
@@ -25,12 +27,20 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {ethers} from 'ethers';
 import moment from 'moment';
 
+const useStyles = makeStyles((theme) => ({
+  avatarButton: {
+    borderRadius: '50%',
+  },
+}));
+
 interface Props {
   game: GameGraph;
 }
 
 export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
   const [collapse, setCollapse] = useState(false);
+
+  const classes = useStyles();
 
   const handleToggle = useCallback(() => {
     setCollapse((value) => !value);
@@ -59,7 +69,12 @@ export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
         <TableCell>
           <AvatarGroup>
             {game.players?.map((player, index: number) => (
-              <Avatar key={index} title={player.player.id} />
+              <ButtonBase
+                component={RouterLink}
+                to={``}
+                className={classes.avatarButton}>
+                <Avatar key={index} title={player.id} />
+              </ButtonBase>
             ))}
           </AvatarGroup>
         </TableCell>

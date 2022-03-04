@@ -1,4 +1,4 @@
-import {BigNumber, ContractReceipt, ethers} from 'ethers';
+import {BigNumber, ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback} from 'react';
 import {Web3State} from 'types/blockchain';
@@ -56,7 +56,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, gameAddress],
+    [web3State, gameAddress, getProvider],
   );
 
   const onCreateAndJoinGameCallback = useCallback(
@@ -108,7 +108,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, gameAddress],
+    [web3State, gameAddress, getProvider],
   );
 
   const onClaimCallback = useCallback(
@@ -127,7 +127,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, gameAddress],
+    [web3State, gameAddress, getProvider],
   );
   const onStartGameCallback = useCallback(
     async (id: number, callbacks?: CallbackProps) => {
@@ -145,7 +145,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   const onEndGameCallback = useCallback(
@@ -164,7 +164,7 @@ export const useBattleFactoryCallbacks = (gameAddress: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, gameAddress, getProvider],
   );
 
   return {

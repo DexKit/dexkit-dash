@@ -1,20 +1,5 @@
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Avatar,
-  Chip,
-  Collapse,
-  Grid,
-  Hidden,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
-import {AvatarGroup} from '@material-ui/lab';
+import {Chip, Grid} from '@material-ui/core';
 import React, {useState} from 'react';
 import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';

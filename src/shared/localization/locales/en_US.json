@@ -1994,6 +1994,9 @@
   "nftLeague.startGame": "Start Game",
   "nftLeague.abort": "Abort",
   "nftLeague.abortGame": "Abort Game",
-  "nftLeague.aborting": "Abort",
-  "nftLeague.doYouWantToAbortThisGame": "Do you want to abort this game?"
+  "nftLeague.abortingGame": "Aborting",
+  "nftLeague.doYouWantToAbortThisGame": "Do you want to abort this game?",
+  "nftLeague.endGame": "End game",
+  "nftLeague.endingGame": "Ending game",
+  "nftLeague.doYouWantToEndThisGame": "Do you want to end this game?"
 }

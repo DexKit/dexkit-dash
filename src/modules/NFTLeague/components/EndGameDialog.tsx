@@ -1,59 +1,51 @@
-import React from 'react';
-import IntlMessages from '@crema/utility/IntlMessages';
+import React, {useCallback} from 'react';
+
 import {
+  Box,
   Button,
-  DialogActions,
+  CircularProgress,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogProps,
-  Box,
-  Grid,
-  CircularProgress,
-  useTheme,
-  Typography,
   Divider,
+  Grid,
+  Typography,
+  useTheme,
 } from '@material-ui/core';
-import {useChainInfo} from 'hooks/useChainInfo';
+import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
+import {useChainInfo} from 'hooks/useChainInfo';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
-import AddIcon from '@material-ui/icons/Add';
-import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
-import {useHistory} from 'react-router';
+
+import {Stop as StopIcon} from '@material-ui/icons';
 
 interface Props {
   dialogProps: DialogProps;
-  loading: boolean;
   errorMessage?: string;
   transactionHash?: string;
-  onConfirm: () => void;
-  confirmed: boolean;
   gameId?: number;
+  loading?: boolean;
+  confirmed?: boolean;
+  onConfirm: () => void;
 }
 
-export const CreateGameDialog: React.FC<Props> = ({
+export const EndGameDialog: React.FC<Props> = ({
   dialogProps,
-  loading,
   transactionHash,
+  errorMessage,
+  loading,
   onConfirm,
   confirmed,
-  errorMessage,
-  gameId,
 }) => {
-  const history = useHistory();
   const {onClose} = dialogProps;
+
+  const theme = useTheme();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
-
-  const theme = useTheme();
-
-  const handleClose = useCallback(() => {
-    if (onClose) {
-      onClose({}, 'backdropClick');
-    }
-  }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
     if (chainId && transactionHash) {
@@ -61,9 +53,11 @@ export const CreateGameDialog: React.FC<Props> = ({
     }
   }, [chainId, transactionHash, getTransactionScannerUrl]);
 
-  const handleGoToGame = useCallback(() => {
-    history.push(`/nft-league/${gameId}`);
-  }, [gameId, history]);
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose({}, 'backdropClick');
+    }
+  }, [onClose]);
 
   const renderError = () => {
     return (
@@ -86,6 +80,39 @@ export const CreateGameDialog: React.FC<Props> = ({
               {errorMessage}
             </Typography>
           </Grid>
+        </Grid>
+      </Box>
+    );
+  };
+
+  const renderLoading = () => {
+    return (
+      <Box py={4}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'>
+              <CircularProgress color='primary' size={theme.spacing(24)} />
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography align='center' variant='h5'>
+              <IntlMessages id='nftLeague.endingGame' />
+            </Typography>
+            <Typography align='center' variant='body1' color='textSecondary'>
+              <IntlMessages id='nftLeague.pleaseWaitnforTransactionConfirmation' />
+            </Typography>
+          </Grid>
+          {transactionHash ? (
+            <Grid item xs={12}>
+              <Button color='primary' onClick={handleViewTransaction} fullWidth>
+                <IntlMessages id='nftLeague.viewTransaction' />
+              </Button>
+            </Grid>
+          ) : null}
         </Grid>
       </Box>
     );
@@ -117,17 +144,6 @@ export const CreateGameDialog: React.FC<Props> = ({
             <IntlMessages id='nftLeague.yourTransactionWasConfirmed' />
           </Typography>
         </Grid>
-        {gameId !== undefined && (
-          <Grid item>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleGoToGame}
-              fullWidth>
-              <IntlMessages id='nftLeague.goToGame' />
-            </Button>
-          </Grid>
-        )}
         {transactionHash && (
           <Grid item>
             <Button color='primary' onClick={handleViewTransaction} fullWidth>
@@ -139,45 +155,12 @@ export const CreateGameDialog: React.FC<Props> = ({
     );
   };
 
-  const renderLoading = () => {
-    return (
-      <Box py={4}>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <Box
-              display='flex'
-              alignItems='center'
-              alignContent='center'
-              justifyContent='center'>
-              <CircularProgress color='primary' size={theme.spacing(24)} />
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography align='center' variant='h5'>
-              <IntlMessages id='nftLeague.creatingGame' />
-            </Typography>
-            <Typography align='center' variant='body1' color='textSecondary'>
-              <IntlMessages id='nftLeague.pleaseWaitnforTransactionConfirmation' />
-            </Typography>
-          </Grid>
-          {transactionHash ? (
-            <Grid item xs={12}>
-              <Button color='primary' onClick={handleViewTransaction} fullWidth>
-                <IntlMessages id='nftLeague.viewTransaction' />
-              </Button>
-            </Grid>
-          ) : null}
-        </Grid>
-      </Box>
-    );
-  };
-
   return (
     <Dialog {...dialogProps}>
       <CustomDialogTitle
-        title={messages['nftLeague.createGame'] as string}
-        icon={<AddIcon />}
+        title={messages['nftLeague.endGame'] as string}
         onClose={handleClose}
+        icon={<StopIcon />}
       />
       <Divider />
       <DialogContent>
@@ -190,10 +173,10 @@ export const CreateGameDialog: React.FC<Props> = ({
         ) : (
           <Box py={4}>
             <Typography align='center' variant='h5'>
-              <IntlMessages id='nftLeague.createGame' />
+              <IntlMessages id='nftLeague.endGame' />
             </Typography>
             <Typography align='center' variant='body1'>
-              <IntlMessages id='nftLeague.doYouWantToCreateAGame' />
+              <IntlMessages id='nftLeague.doYouWantToEndThisGame' />
             </Typography>
           </Box>
         )}
@@ -215,4 +198,4 @@ export const CreateGameDialog: React.FC<Props> = ({
   );
 };
 
-export default CreateGameDialog;
+export default EndGameDialog;

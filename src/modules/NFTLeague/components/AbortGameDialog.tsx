@@ -17,7 +17,6 @@ import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
 import {useChainInfo} from 'hooks/useChainInfo';
-import {useHistory} from 'react-router';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
 
@@ -44,7 +43,6 @@ export const AbortGameDialog: React.FC<Props> = ({
   const {onClose} = dialogProps;
 
   const theme = useTheme();
-  const history = useHistory();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
@@ -53,7 +51,7 @@ export const AbortGameDialog: React.FC<Props> = ({
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   const handleClose = useCallback(() => {
     if (onClose) {

@@ -11,10 +11,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Link,
 } from '@material-ui/core';
+import {Link as RouterLink} from 'react-router-dom';
+
 import {Skeleton} from '@material-ui/lab';
 import {useChampionMetadataQuery} from 'modules/CoinLeagues/hooks/champions';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {getNormalizedUrl} from 'utils/browser';
 import {useModuleStyle} from '../styles';
 
@@ -23,6 +26,10 @@ import CoinSelect from './CoinSelect';
 import {useIntl} from 'react-intl';
 import {GET_CHAMPIONS_COINS, NFT_LEAGUE_MULTIPLIERS} from '../constants';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {ethers} from 'ethers';
+import {useCoinFeed} from '../hooks/useCoinFeed';
+import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {truncateAddress} from 'utils';
 
 const useStyle = makeStyles((theme) => ({
   coinSelectImage: {
@@ -39,9 +46,9 @@ const useStyle = makeStyles((theme) => ({
 interface Props {
   tokenId?: string;
   score?: number;
-  multiplier?: number;
-  initialPrice?: number;
-  currentPrice?: number;
+  multiplier?: ethers.BigNumber;
+  initialPrice?: ethers.BigNumber;
+  coinFeedAddress?: string;
   winner?: boolean;
   state: 'waiting' | 'winner' | 'inprogress';
   account?: string;
@@ -55,10 +62,9 @@ interface Props {
 
 export const PlayerCoinPaper: React.FC<Props> = ({
   tokenId,
-  score,
   multiplier,
   initialPrice,
-  currentPrice,
+  coinFeedAddress,
   state,
   account,
   winner,
@@ -71,6 +77,8 @@ export const PlayerCoinPaper: React.FC<Props> = ({
 }) => {
   const metadataQuery = useChampionMetadataQuery(tokenId);
 
+  const profile = useProfileGame(account);
+
   const classes = useStyle();
 
   const {messages} = useIntl();
@@ -78,6 +86,8 @@ export const PlayerCoinPaper: React.FC<Props> = ({
   const moduleClasses = useModuleStyle();
 
   const {chainId} = useLeaguesChainInfo();
+
+  const coinFeed = useCoinFeed(coinFeedAddress);
 
   const [multiplierValue, setMultiplierValue] = useState(
     NFT_LEAGUE_MULTIPLIERS[0],
@@ -93,6 +103,23 @@ export const PlayerCoinPaper: React.FC<Props> = ({
     }
   }, [onJoinGame, multiplierValue]);
 
+  const score = useMemo<number>(() => {
+    if (
+      coinFeed.data !== undefined &&
+      initialPrice !== undefined &&
+      multiplier !== undefined
+    ) {
+      const diff =
+        ((coinFeed.data.toNumber() - initialPrice.toNumber()) /
+          coinFeed.data.toNumber()) *
+        multiplier.toNumber();
+
+      return diff;
+    }
+
+    return 0;
+  }, [coinFeed.data, initialPrice, multiplier]);
+
   if (state === 'winner' || state === 'inprogress') {
     return (
       <Box
@@ -102,11 +129,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
         className={winner ? classes.winner : undefined}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <Grid
-              container
-              alignItems='center'
-              alignContent='center'
-              spacing={4}>
+            <Grid container spacing={4}>
               <Grid item>
                 <Box display='flex' alignItems='center' alignContent='center'>
                   {metadataQuery?.isLoading || !metadataQuery?.data?.image ? (
@@ -130,6 +153,15 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                   alignContent='center'
                   spacing={2}>
                   <Grid item xs={12}>
+                    <Typography variant='body2'>
+                      <Link
+                        component={RouterLink}
+                        to={`/coin-league/profile/${account}`}>
+                        {profile.data?.username
+                          ? profile.data?.username
+                          : truncateAddress(account)}
+                      </Link>
+                    </Typography>
                     <Typography
                       className={moduleClasses.boldText}
                       color='textPrimary'
@@ -237,7 +269,12 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       color='textPrimary'
                       className={moduleClasses.boldText}
                       variant='body1'>
-                      {initialPrice} USD
+                      {initialPrice !== undefined ? (
+                        ethers.utils.formatUnits(initialPrice, 8)
+                      ) : (
+                        <Skeleton />
+                      )}{' '}
+                      USD
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
                       <IntlMessages id='nftLeague.initialPrice' />
@@ -257,7 +294,15 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       color='textPrimary'
                       className={moduleClasses.boldText}
                       variant='body1'>
-                      {currentPrice} USD
+                      {coinFeed.data === undefined || coinFeed.isLoading ? (
+                        <Skeleton />
+                      ) : (
+                        ethers.utils.formatUnits(
+                          (coinFeed.data as ethers.BigNumber) || 0,
+                          8,
+                        )
+                      )}{' '}
+                      USD
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
                       <IntlMessages id='nftLeague.currentPrice' />
@@ -277,7 +322,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       color='textPrimary'
                       className={moduleClasses.boldText}
                       variant='body1'>
-                      {multiplier}x
+                      {multiplier?.toNumber()}x
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
                       <IntlMessages id='nftLeague.multiplier' />

@@ -129,6 +129,8 @@ export const endGame = async (
   id: number,
   provider: any,
 ) => {
+  console.log('ENDING', id);
+
   return (await getBattleFactoryContract(gameAddress, provider)).endGame(
     id,
   ) as Promise<ContractTransaction>;

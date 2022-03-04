@@ -5,7 +5,6 @@ import {useParams} from 'react-router';
 import MainLayout from 'shared/components/layouts/main';
 import PageHeader from 'shared/components/v2/partials/PageHeader';
 import GameInProgress from '../components/GameInProgress';
-import {useGameOnChain} from '../hooks/useGameOnChain';
 
 interface Params {
   id: string;

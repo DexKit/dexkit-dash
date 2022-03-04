@@ -192,7 +192,7 @@ export const NFTLeagueCreateGamePage = () => {
         },
       },
     );
-  }, [battleFactory, formik.values, createGameToggler]);
+  }, [battleFactory, formik.values]);
 
   const handleOpenSelectToken = useCallback(() => {
     selectTokenToggler.set(true);
@@ -308,6 +308,7 @@ export const NFTLeagueCreateGamePage = () => {
                         type='number'
                         name='duration'
                         error={Boolean(formik.errors.duration)}>
+                        <MenuItem value={MINUTE}>1 Minute</MenuItem>
                         <MenuItem value={HOUR}>1 Hour</MenuItem>
                         <MenuItem value={FOUR_HOURS}>4 Hours</MenuItem>
                         <MenuItem value={EIGHT_HOURS}>8 Hours</MenuItem>

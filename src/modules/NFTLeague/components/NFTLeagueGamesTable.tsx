@@ -10,10 +10,6 @@ import {
   TableCell,
   Hidden,
   TableBody,
-  Avatar,
-  IconButton,
-  Collapse,
-  Grid,
 } from '@material-ui/core';
 import {GameGraph} from '../utils/types';
 import NFTLeagueGamesTableRow from './NFTLeagueGamesTableRow';

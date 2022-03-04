@@ -9,14 +9,14 @@ import {
   Hidden,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useModuleStyle} from '../styles';
 import {PlayerCoinPaper} from './PlayerCoinPaper';
 
 import {ReactComponent as FlashIcon} from '../assets/flash.svg';
 import {useWeb3} from 'hooks/useWeb3';
 import {useGameOnChain} from '../hooks/useGameOnChain';
-import {Game, GameType} from '../utils/types';
+import {GameType} from '../utils/types';
 import {ethers} from 'ethers';
 import JoinGameDialog from './JoinGameDialog';
 import {useToggler} from 'hooks/useToggler';
@@ -31,34 +31,29 @@ import {SelectChampionDialog} from './SelectChampionDialog';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {padNumber} from 'utils/number';
+
+import StopIcon from '@material-ui/icons/Stop';
+
 import moment from 'moment';
-import {startGame} from '../services/battleFactory';
 import {useStartGame} from '../hooks/useStartGame';
 import StartGameDialog from './StartGameDialog';
 import {useAbortGame} from '../hooks/useAbortGame';
 import AbortGameDialog from './AbortGameDialog';
+import {useEndGame} from '../hooks/useEndGame';
+import EndGameDialog from './EndGameDialog';
 
 interface Props {
   id: string;
-  finalPrize?: number;
-  endsIn?: string;
-  gameType?: 'bull' | 'bear';
-  tokenSymbol?: string;
 }
 
-export const GameInProgress: React.FC<Props> = ({
-  id,
-  finalPrize,
-  tokenSymbol,
-}) => {
+export const GameInProgress: React.FC<Props> = ({id}) => {
   const classes = useModuleStyle();
 
-  const {chainId} = useLeaguesChainInfo();
+  const {chainId, coinSymbol} = useLeaguesChainInfo();
 
   const startGameMutation = useStartGame(chainId);
-
   const abortGameMutation = useAbortGame(chainId);
+  const endGameMutation = useEndGame(chainId);
 
   const {account} = useWeb3();
 
@@ -76,13 +71,14 @@ export const GameInProgress: React.FC<Props> = ({
 
   const [transactionHash, setTransactionHash] = useState<string>();
 
-  const {data, error, isLoading} = useGameOnChain(id);
+  const {data} = useGameOnChain(id);
 
   const joinGameToggler = useToggler();
 
   const selectTokenToggler = useToggler();
   const startGameToggler = useToggler();
   const abortGameToggler = useToggler();
+  const endGameToggler = useToggler();
 
   const battleFactory = useBattleFactoryCallbacks(
     GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
@@ -112,7 +108,7 @@ export const GameInProgress: React.FC<Props> = ({
     startGameToggler.set(false);
 
     startGameMutation.reset();
-  }, [startGameToggler]);
+  }, [startGameToggler, startGameMutation]);
 
   const handleConfirmJoinGame = useCallback(() => {
     setLoading(true);
@@ -145,7 +141,7 @@ export const GameInProgress: React.FC<Props> = ({
         },
       );
     }
-  }, [battleFactory, data, selectedMultiplier, selectedToken]);
+  }, [battleFactory, data, selectedMultiplier, selectedToken, bittValue, id]);
 
   const handleCloseDialog = useCallback(() => {
     selectTokenToggler.set(false);
@@ -198,6 +194,19 @@ export const GameInProgress: React.FC<Props> = ({
   const handleAbortGame = useCallback(() => {
     abortGameToggler.set(true);
   }, [abortGameToggler]);
+
+  const handleCloseEndGame = useCallback(() => {
+    endGameToggler.set(false);
+    endGameMutation.reset();
+  }, [endGameToggler, endGameMutation]);
+
+  const handleConfirmEndGame = useCallback(() => {
+    endGameMutation.mutate(parseInt(id));
+  }, [endGameMutation, id]);
+
+  const handleEndGame = useCallback(() => {
+    endGameToggler.set(true);
+  }, [endGameToggler]);
 
   return (
     <>
@@ -252,6 +261,22 @@ export const GameInProgress: React.FC<Props> = ({
         />
       )}
 
+      {endGameToggler.show && (
+        <EndGameDialog
+          dialogProps={{
+            open: endGameToggler.show,
+            onClose: handleCloseEndGame,
+            fullWidth: true,
+            maxWidth: 'sm',
+          }}
+          onConfirm={handleConfirmEndGame}
+          loading={endGameMutation.isLoading}
+          transactionHash={endGameMutation.hash}
+          confirmed={endGameMutation.confirmed}
+          gameId={parseInt(id)}
+          errorMessage={(endGameMutation.error as Error)?.message || undefined}
+        />
+      )}
       <JoinGameDialog
         dialogProps={{
           open: joinGameToggler.show,
@@ -302,7 +327,8 @@ export const GameInProgress: React.FC<Props> = ({
                             ? ethers.utils.formatEther(
                                 data.entry.mul(2).mul(90).div(100),
                               )
-                            : null}
+                            : null}{' '}
+                          {coinSymbol}
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -367,25 +393,41 @@ export const GameInProgress: React.FC<Props> = ({
                   <Grid item>
                     <Grid container spacing={4}>
                       <Grid item>
-                        <Button
-                          onClick={handleStartGame}
-                          startIcon={<PlayCircleOutlineIcon />}
-                          variant='contained'
-                          color='primary'
-                          size='large'>
-                          <IntlMessages id='nftLeague.startGame' />
-                        </Button>
+                        {data?.started && (
+                          <Button
+                            disabled={data?.finished}
+                            onClick={handleEndGame}
+                            startIcon={<StopIcon />}
+                            variant='contained'
+                            color='primary'
+                            size='large'>
+                            <IntlMessages id='nftLeague.endGame' />
+                          </Button>
+                        )}
+
+                        {!data?.started && (
+                          <Button
+                            onClick={handleStartGame}
+                            startIcon={<PlayCircleOutlineIcon />}
+                            variant='contained'
+                            color='primary'
+                            size='large'>
+                            <IntlMessages id='nftLeague.startGame' />
+                          </Button>
+                        )}
                       </Grid>
-                      <Grid item>
-                        <Button
-                          fullWidth
-                          onClick={handleAbortGame}
-                          startIcon={<HighlightOffIcon />}
-                          variant='outlined'
-                          size='large'>
-                          <IntlMessages id='nftLeague.abort' />
-                        </Button>
-                      </Grid>
+                      {data?.player2 === ethers.constants.AddressZero && (
+                        <Grid item>
+                          <Button
+                            fullWidth
+                            onClick={handleAbortGame}
+                            startIcon={<HighlightOffIcon />}
+                            variant='outlined'
+                            size='large'>
+                            <IntlMessages id='nftLeague.abort' />
+                          </Button>
+                        </Grid>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -399,11 +441,12 @@ export const GameInProgress: React.FC<Props> = ({
               <PlayerCoinPaper
                 state='inprogress'
                 tokenId={data?.player1_coin.champion_id.toString()}
-                initialPrice={data?.player1_coin.start_price.toNumber()}
-                currentPrice={data?.player1_coin.end_price.toNumber()}
-                multiplier={data?.player1_coin.multiplier.toNumber()}
+                initialPrice={data?.player1_coin.start_price}
+                coinFeedAddress={data?.player1_coin.coin_feed}
+                multiplier={data?.player1_coin.multiplier}
                 score={data?.player1_coin.score.toNumber()}
                 winner={data?.winner === data?.player1}
+                account={data?.player1}
               />
             </Grid>
             <Grid item xs={12} sm={2}>
@@ -426,6 +469,7 @@ export const GameInProgress: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={5}>
               <PlayerCoinPaper
+                account={data?.player2}
                 state={
                   data?.player2 === ethers.constants.AddressZero
                     ? 'waiting'
@@ -438,11 +482,10 @@ export const GameInProgress: React.FC<Props> = ({
                     ? data?.player2_coin.champion_id.toString()
                     : selectedToken
                 }
-                initialPrice={data?.player2_coin.start_price.toNumber()}
-                currentPrice={data?.player2_coin.end_price.toNumber()}
-                multiplier={data?.player2_coin.multiplier.toNumber()}
+                initialPrice={data?.player2_coin.start_price}
+                coinFeedAddress={data?.player2_coin.coin_feed}
+                multiplier={data?.player2_coin.multiplier}
                 score={data?.player2_coin.score.toNumber()}
-                account={account}
                 winner={data?.winner === data?.player2}
                 isBittokenCoin={isBittokenCoin}
                 onChangeBittValue={handleChangeBittValue}

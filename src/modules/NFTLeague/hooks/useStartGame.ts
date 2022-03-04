@@ -12,11 +12,6 @@ export function useStartGame(chainId?: ChainId) {
 
   const [confirmed, setConfirmed] = useState(false);
 
-  const reset = useCallback(() => {
-    setConfirmed(false);
-    setHash(undefined);
-  }, []);
-
   const query = useMutation((id: number) => {
     return startGame(
       GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
@@ -34,6 +29,12 @@ export function useStartGame(chainId?: ChainId) {
       return tx;
     });
   });
+
+  const reset = useCallback(() => {
+    setConfirmed(false);
+    setHash(undefined);
+    query.reset();
+  }, [query]);
 
   return {...query, hash, confirmed, reset};
 }
