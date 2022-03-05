@@ -117,6 +117,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `${COINLEAGUENFT_ROUTE}`,
         },
         {
+          id: 'coinleague.myprofile',
+          title: 'NFT Room',
+          messageId: 'sidebar.app.profile',
+          type: 'item',
+          customIcon: true,
+          icon: 'profile',
+          url: `${COINLEAGUENFT_ROUTE}`,
+        },
+        {
           id: 'discover-games',
           title: 'Discover Games',
           messageId: 'sidebar.discover-games',
