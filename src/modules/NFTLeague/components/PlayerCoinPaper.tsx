@@ -48,6 +48,7 @@ interface Props {
   score?: number;
   multiplier?: ethers.BigNumber;
   initialPrice?: ethers.BigNumber;
+  endPrice?: ethers.BigNumber;
   coinFeedAddress?: string;
   winner?: boolean;
   state: 'waiting' | 'winner' | 'inprogress';
@@ -64,8 +65,10 @@ export const PlayerCoinPaper: React.FC<Props> = ({
   tokenId,
   multiplier,
   initialPrice,
+  endPrice,
   coinFeedAddress,
   state,
+  score,
   account,
   winner,
   onSelectChampion,
@@ -103,7 +106,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
     }
   }, [onJoinGame, multiplierValue]);
 
-  const score = useMemo<number>(() => {
+  const currPlayerScore = useMemo<number>(() => {
     if (
       coinFeed.data !== undefined &&
       initialPrice !== undefined &&
@@ -244,7 +247,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                   color='textPrimary'
                   className={moduleClasses.boldText}
                   variant='body1'>
-                  {score}
+                  {state === 'winner' ? score : currPlayerScore}
                 </Typography>
                 <Typography color='textPrimary' variant='body1'>
                   <IntlMessages id='nftLeague.score' />
@@ -294,7 +297,9 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       color='textPrimary'
                       className={moduleClasses.boldText}
                       variant='body1'>
-                      {coinFeed.data === undefined || coinFeed.isLoading ? (
+                      {state === 'winner' ? (
+                        ethers.utils.formatUnits(endPrice || 0, 8)
+                      ) : coinFeed.data === undefined || coinFeed.isLoading ? (
                         <Skeleton />
                       ) : (
                         ethers.utils.formatUnits(
@@ -305,7 +310,11 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       USD
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
-                      <IntlMessages id='nftLeague.currentPrice' />
+                      {endPrice !== undefined ? (
+                        <IntlMessages id='nftLeague.endPrice' />
+                      ) : (
+                        <IntlMessages id='nftLeague.currentPrice' />
+                      )}
                     </Typography>
                   </Box>
                 </Paper>

@@ -147,9 +147,9 @@ export const abortGame = async (
   id: number,
   provider: any,
 ) => {
-  return (await getBattleFactoryContract(gameAddress, provider)).abortGame(
-    id,
-  ) as Promise<ContractTransaction>;
+  return (
+    await getBattleFactoryContract(gameAddress, provider)
+  ).abortGameAndWithraw(id) as Promise<ContractTransaction>;
 };
 
 export const withdraw = async (

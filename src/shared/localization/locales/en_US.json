@@ -1998,5 +1998,12 @@
   "nftLeague.doYouWantToAbortThisGame": "Do you want to abort this game?",
   "nftLeague.endGame": "End game",
   "nftLeague.endingGame": "Ending game",
-  "nftLeague.doYouWantToEndThisGame": "Do you want to end this game?"
+  "nftLeague.doYouWantToEndThisGame": "Do you want to end this game?",
+  "nftLeague.startingGame": "Starting game",
+  "nftLeague.endPrice": "End price",
+  "nftLeague.status": "Status",
+  "nftLeague.startingNFTLeagueGame": "Starting NFT League Game",
+  "nftLeague.abortingNFTLeagueGame": "Aborting NFT League Game",
+  "nftLeague.endingNFTLeagueGame": "Ending NFT League Game",
+  "nftLeague.creatingNFTLeagueGame": "Creating NFT League Game"
 }

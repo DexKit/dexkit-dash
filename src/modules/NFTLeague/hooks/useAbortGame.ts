@@ -15,27 +15,32 @@ export function useAbortGame(
 
   const [confirmed, setConfirmed] = useState(false);
 
-  const query = useMutation((id: number) => {
-    return abortGame(
-      GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
-      id,
-      getProvider(),
-    ).then(async (tx) => {
-      setHash(tx.hash);
+  const handleMutation = useCallback(
+    (id: number) => {
+      return abortGame(
+        GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
+        id,
+        getProvider(),
+      ).then(async (tx) => {
+        setHash(tx.hash);
 
-      if (onSubmit) {
-        onSubmit(tx.hash);
-      }
+        if (onSubmit) {
+          onSubmit(tx.hash);
+        }
 
-      const receipt = await tx.wait();
+        const receipt = await tx.wait();
 
-      if (receipt.confirmations > 0) {
-        setConfirmed(true);
-      }
+        if (receipt.confirmations > 0) {
+          setConfirmed(true);
+        }
 
-      return tx;
-    });
-  });
+        return tx;
+      });
+    },
+    [onSubmit, chainId, getProvider],
+  );
+
+  const query = useMutation(handleMutation);
 
   const reset = useCallback(() => {
     setConfirmed(false);

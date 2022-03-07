@@ -7,9 +7,10 @@ import {
   Button,
   Divider,
   Hidden,
+  Chip,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useModuleStyle} from '../styles';
 import {PlayerCoinPaper} from './PlayerCoinPaper';
 
@@ -41,6 +42,11 @@ import {useAbortGame} from '../hooks/useAbortGame';
 import AbortGameDialog from './AbortGameDialog';
 import {useEndGame} from '../hooks/useEndGame';
 import EndGameDialog from './EndGameDialog';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useChainInfo} from 'hooks/useChainInfo';
+import {useIntl} from 'react-intl';
+import {ChainId} from 'types/blockchain';
 
 interface Props {
   id: string;
@@ -49,11 +55,73 @@ interface Props {
 export const GameInProgress: React.FC<Props> = ({id}) => {
   const classes = useModuleStyle();
 
+  const {createNotification} = useNotifications();
+
+  const {messages} = useIntl();
+
+  const {getTransactionScannerUrl} = useChainInfo();
   const {chainId, coinSymbol} = useLeaguesChainInfo();
 
-  const startGameMutation = useStartGame(chainId);
-  const abortGameMutation = useAbortGame(chainId);
-  const endGameMutation = useEndGame(chainId);
+  const handleSubmitStartMutation = useCallback(
+    (hash: string) => {
+      createNotification({
+        title: messages['nftLeague.startingNFTLeagueGame'] as string,
+        body: messages['nftLeague.startingGame'] as string,
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId as ChainId, hash),
+        urlCaption: messages['nftLeague.viewTransaction'] as string,
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: hash,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    },
+    [messages, createNotification, getTransactionScannerUrl, chainId],
+  );
+
+  const handleSubmitAbortMutation = useCallback(
+    (hash: string) => {
+      createNotification({
+        title: messages['nftLeague.abortingNFTLeagueGame'] as string,
+        body: messages['nftLeague.abortingGame'] as string,
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId as ChainId, hash),
+        urlCaption: messages['nftLeague.viewTransaction'] as string,
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: hash,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    },
+    [messages, createNotification, getTransactionScannerUrl, chainId],
+  );
+
+  const handleSubmitEndMutation = useCallback(
+    (hash: string) => {
+      createNotification({
+        title: messages['nftLeague.endingNFTLeagueGame'] as string,
+        body: messages['nftLeague.endingGame'] as string,
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId as ChainId, hash),
+        urlCaption: messages['nftLeague.viewTransaction'] as string,
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: hash,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+    },
+    [messages, createNotification, getTransactionScannerUrl, chainId],
+  );
+
+  const startGameMutation = useStartGame(chainId, handleSubmitStartMutation);
+  const abortGameMutation = useAbortGame(chainId, handleSubmitAbortMutation);
+  const endGameMutation = useEndGame(chainId, handleSubmitEndMutation);
 
   const {account} = useWeb3();
 
@@ -61,7 +129,9 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
 
   const [isBittokenCoin, setIsBittokenCoin] = useState(false);
   const [bittValue, setBittValue] = useState(0);
-  const [selectedToken, setSelectedToken] = useState<string | undefined>('24');
+  const [selectedToken, setSelectedToken] = useState<string | undefined>(
+    process.env.NODE_ENV === 'development' ? '24' : undefined,
+  );
   const [selectedMultiplier, setSelectedMultiplier] = useState(
     NFT_LEAGUE_MULTIPLIERS[0],
   );
@@ -208,6 +278,24 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
     endGameToggler.set(true);
   }, [endGameToggler]);
 
+  const canFinhishGame = useMemo(() => {
+    if (data?.finished === true || data?.started === false) {
+      return false;
+    }
+
+    if (data?.start_timestamp && data?.duration) {
+      const endTimestap = moment.unix(
+        data?.start_timestamp.add(data?.duration).toNumber(),
+      );
+
+      if (moment().isAfter(endTimestap)) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [data]);
+
   return (
     <>
       {selectTokenToggler.show && (
@@ -219,7 +307,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
             maxWidth: 'lg',
           }}
           onSelect={handleSelect}
-          address=''
+          address={account}
         />
       )}
 
@@ -317,6 +405,31 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                       </Grid>
                       <Grid item>
                         <Typography color='textSecondary' variant='body2'>
+                          <IntlMessages id='nftLeague.status' />
+                        </Typography>
+                        <Typography
+                          className={classes.boldText}
+                          color='textPrimary'
+                          variant='subtitle1'>
+                          <Chip
+                            size='small'
+                            label={
+                              data?.started === false &&
+                              data?.player2 === ethers.constants.AddressZero ? (
+                                <IntlMessages id='nftLeague.waitingOpponent' />
+                              ) : data?.aborted === true ? (
+                                <IntlMessages id='nftLeague.aborted' />
+                              ) : data?.finished === true ? (
+                                <IntlMessages id='nftLeague.ended' />
+                              ) : (
+                                <IntlMessages id='nftLeague.inProgress' />
+                              )
+                            }
+                          />
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography color='textSecondary' variant='body2'>
                           <IntlMessages id='nftLeague.finalPrize' />
                         </Typography>
                         <Typography
@@ -393,7 +506,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                   <Grid item>
                     <Grid container spacing={4}>
                       <Grid item>
-                        {data?.started && (
+                        {canFinhishGame && (
                           <Button
                             disabled={data?.finished}
                             onClick={handleEndGame}
@@ -405,29 +518,32 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                           </Button>
                         )}
 
-                        {!data?.started && (
-                          <Button
-                            onClick={handleStartGame}
-                            startIcon={<PlayCircleOutlineIcon />}
-                            variant='contained'
-                            color='primary'
-                            size='large'>
-                            <IntlMessages id='nftLeague.startGame' />
-                          </Button>
-                        )}
+                        {data?.started === false &&
+                          data?.finished === false &&
+                          data?.player2 !== ethers.constants.AddressZero && (
+                            <Button
+                              onClick={handleStartGame}
+                              startIcon={<PlayCircleOutlineIcon />}
+                              variant='contained'
+                              color='primary'
+                              size='large'>
+                              <IntlMessages id='nftLeague.startGame' />
+                            </Button>
+                          )}
                       </Grid>
-                      {data?.player2 === ethers.constants.AddressZero && (
-                        <Grid item>
-                          <Button
-                            fullWidth
-                            onClick={handleAbortGame}
-                            startIcon={<HighlightOffIcon />}
-                            variant='outlined'
-                            size='large'>
-                            <IntlMessages id='nftLeague.abort' />
-                          </Button>
-                        </Grid>
-                      )}
+                      {data?.player2 === ethers.constants.AddressZero &&
+                        data?.aborted === false && (
+                          <Grid item>
+                            <Button
+                              fullWidth
+                              onClick={handleAbortGame}
+                              startIcon={<HighlightOffIcon />}
+                              variant='outlined'
+                              size='large'>
+                              <IntlMessages id='nftLeague.abort' />
+                            </Button>
+                          </Grid>
+                        )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -439,11 +555,16 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
           <Grid container spacing={4}>
             <Grid item xs={12} sm={5}>
               <PlayerCoinPaper
-                state='inprogress'
+                state={
+                  data?.winner !== ethers.constants.AddressZero
+                    ? 'winner'
+                    : 'inprogress'
+                }
                 tokenId={data?.player1_coin.champion_id.toString()}
                 initialPrice={data?.player1_coin.start_price}
                 coinFeedAddress={data?.player1_coin.coin_feed}
                 multiplier={data?.player1_coin.multiplier}
+                endPrice={data?.player1_coin.end_price}
                 score={data?.player1_coin.score.toNumber()}
                 winner={data?.winner === data?.player1}
                 account={data?.player1}
@@ -484,9 +605,13 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                 }
                 initialPrice={data?.player2_coin.start_price}
                 coinFeedAddress={data?.player2_coin.coin_feed}
+                endPrice={data?.player2_coin.end_price}
                 multiplier={data?.player2_coin.multiplier}
                 score={data?.player2_coin.score.toNumber()}
-                winner={data?.winner === data?.player2}
+                winner={
+                  data?.player2 !== ethers.constants.AddressZero &&
+                  data?.winner === data?.player2
+                }
                 isBittokenCoin={isBittokenCoin}
                 onChangeBittValue={handleChangeBittValue}
                 bittValue={bittValue}

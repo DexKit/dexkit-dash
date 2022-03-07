@@ -5,30 +5,42 @@ import {ChainId} from 'types/blockchain';
 import {GET_NFT_LEAGUE_FACTORY_ADDRESS} from '../constants';
 import {startGame} from '../services/battleFactory';
 
-export function useStartGame(chainId?: ChainId) {
+export function useStartGame(
+  chainId?: ChainId,
+  onSubmit?: (hash: string) => void,
+) {
   const {getProvider} = useWeb3();
 
   const [hash, setHash] = useState<string>();
 
   const [confirmed, setConfirmed] = useState(false);
 
-  const query = useMutation((id: number) => {
-    return startGame(
-      GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
-      id,
-      getProvider(),
-    ).then(async (tx) => {
-      setHash(tx.hash);
+  const mutationCallback = useCallback(
+    (id: number) => {
+      return startGame(
+        GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId),
+        id,
+        getProvider(),
+      ).then(async (tx) => {
+        if (onSubmit) {
+          onSubmit(tx.hash);
+        }
 
-      const receipt = await tx.wait();
+        setHash(tx.hash);
 
-      if (receipt.confirmations > 0) {
-        setConfirmed(true);
-      }
+        const receipt = await tx.wait();
 
-      return tx;
-    });
-  });
+        if (receipt.confirmations > 0) {
+          setConfirmed(true);
+        }
+
+        return tx;
+      });
+    },
+    [chainId, onSubmit, getProvider],
+  );
+
+  const query = useMutation(mutationCallback);
 
   const reset = useCallback(() => {
     setConfirmed(false);

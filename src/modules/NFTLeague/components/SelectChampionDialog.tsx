@@ -31,7 +31,7 @@ interface Props {
     image: string;
     rarity?: number;
   }) => void;
-  address: string;
+  address?: string;
 }
 
 export const SelectChampionDialog: React.FC<Props> = ({
@@ -41,7 +41,7 @@ export const SelectChampionDialog: React.FC<Props> = ({
 }) => {
   const {chainId} = useLeaguesChainInfo();
 
-  const myChampions = useMyChampions({chainId});
+  const myChampions = useMyChampions({chainId, account: address});
 
   const {messages} = useIntl();
 

@@ -36,6 +36,11 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {ethers} from 'ethers';
 import {Alert} from '@material-ui/lab';
 import CreateGameDialog from '../components/CreateGameDialog';
+import {useWeb3} from 'hooks/useWeb3';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {ChainId} from 'types/blockchain';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const BULL = 0;
 const BEAR = 1;
@@ -71,6 +76,12 @@ export const NFTLeagueCreateGamePage = () => {
   const classes = useModuleStyle();
 
   const {chainId} = useLeaguesChainInfo();
+
+  const {createNotification} = useNotifications();
+
+  const {getTransactionScannerUrl} = useChainInfo();
+
+  const {account} = useWeb3();
 
   const theme = useTheme();
 
@@ -189,10 +200,30 @@ export const NFTLeagueCreateGamePage = () => {
         },
         onSubmit: (hash: string) => {
           setTransactionHash(hash);
+          createNotification({
+            title: messages['nftLeague.creatingNFTLeagueGame'] as string,
+            body: messages['nftLeague.creatingGame'] as string,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId as ChainId, hash),
+            urlCaption: messages['nftLeague.viewTransaction'] as string,
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: hash,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
         },
       },
     );
-  }, [battleFactory, formik.values]);
+  }, [
+    chainId,
+    battleFactory,
+    formik.values,
+    createNotification,
+    messages,
+    getTransactionScannerUrl,
+  ]);
 
   const handleOpenSelectToken = useCallback(() => {
     selectTokenToggler.set(true);
@@ -239,7 +270,7 @@ export const NFTLeagueCreateGamePage = () => {
           maxWidth: 'lg',
         }}
         onSelect={handleSelect}
-        address=''
+        address={account}
       />
       <MainLayout>
         <Grid container spacing={4}>
