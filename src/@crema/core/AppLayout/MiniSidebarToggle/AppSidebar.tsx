@@ -143,7 +143,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                       alignItems='center'
                       alignContent='center'
                       justifyContent='center'>
-                      <IconButton onClick={handleToggleDrawer}>
+                      <IconButton size='small' onClick={handleToggleDrawer}>
                         <CloseIcon />
                       </IconButton>
                     </Box>

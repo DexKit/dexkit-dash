@@ -40,11 +40,11 @@ interface TradeToolsSectionProps {
   isTrade?: boolean;
 }
 
-const StyledMenu = withStyles({
+const StyledMenu = withStyles((theme) => ({
   paper: {
-    border: '1px solid #d3d4d5',
+    border: `1px solid ${theme.palette.divider}`,
   },
-})((props: MenuProps) => (
+}))((props: MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
@@ -120,14 +120,13 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
-  },[setAnchorEl]);
+  }, [setAnchorEl]);
 
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
   }, [accountsModal]);
 
   const classes = useStyles();
-
 
   const theme = useTheme();
 
@@ -190,7 +189,10 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <RoundedIconButton onClick={onTrade}>
                 <BitcoinConvertWhiteIcon className={classes.icon} />
               </RoundedIconButton>
-              <Typography variant='caption'> <IntlMessages id='app.dashboard.trade' /></Typography>
+              <Typography variant='caption'>
+                {' '}
+                <IntlMessages id='app.dashboard.trade' />
+              </Typography>
             </Box>
           </Box>
         ) : null}

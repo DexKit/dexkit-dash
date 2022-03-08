@@ -135,17 +135,23 @@ const MarketForm: React.FC<Props> = (props) => {
     if (disableSelect) {
       if (disableSelect === 'to') {
         setDisableSelect('from');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('from')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('from');
         }
       } else {
         setDisableSelect('to');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('to')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('to');
         }
       }
     }
-  }, [tokenFrom, tokenTo, onChangeToken, onSwitchTokensCallback, onChangeDisableReceiveCallback]);
+  }, [
+    tokenFrom,
+    tokenTo,
+    onChangeToken,
+    onSwitchTokensCallback,
+    onChangeDisableReceiveCallback,
+  ]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
     tokenTo?.address || tokenTo?.symbol,
@@ -528,7 +534,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <Box>
                     <Accordion
                       style={{
-                        backgroundColor: creamaTheme.palette.sidebar.bgColor,
+                        backgroundColor: creamaTheme.palette.background.paper,
                       }}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}

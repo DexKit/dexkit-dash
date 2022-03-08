@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       '& .nav-item-text': {
         fontFamily: Fonts.REGULAR,
         fontSize: 16,
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
 
         [theme.breakpoints.up('xl')]: {
           fontSize: 18,
@@ -49,11 +49,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       },
 
       '& .nav-item-icon': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
       },
 
       '& .nav-item-icon-arrow': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
       },
 
       '&.open, &:hover, &:focus': {

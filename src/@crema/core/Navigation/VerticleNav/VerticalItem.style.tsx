@@ -71,10 +71,10 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         },
       },
       '& .nav-item-icon': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
       },
       '& .nav-item-text': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
         fontSize: 18,
       },
     },

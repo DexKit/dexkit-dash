@@ -3,8 +3,8 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   avatar: {
-    border: ' 1px solid #525C75',
-    backgroundColor: '#2E3243',
+    borderColor: theme.palette.divider,
+    backgroundColor: theme.palette.background.paper,
     width: theme.spacing(12),
     height: theme.spacing(12),
   },
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   search: {
     position: 'relative',
-    borderRadius: theme.overrides.MuiCard.root.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   badgeRoot: {
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#252836',
+    backgroundColor: theme.palette.background.paper,
   },
   switchNetworkButton: {
     borderRadius: theme.shape.borderRadius,

@@ -8,22 +8,18 @@ import {
   Avatar,
   Box,
   makeStyles,
+  Button,
+  ButtonProps,
 } from '@material-ui/core';
 import {truncateAddress} from 'utils';
 
 const CustomButtom = withStyles((theme) => ({
-  root: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    textTransform: 'uppercase',
-    padding: theme.spacing(4),
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: 'rgba(82, 92, 117, 0.5)',
-    border: '1px solid #525C75',
+  label: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    display: 'block',
   },
-}))(ButtonBase);
+}))(Button);
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -33,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props extends ButtonBaseProps {
+interface Props extends ButtonProps {
   account: {label?: string; address: string};
 }
 
@@ -43,7 +39,7 @@ export function AccountSelect(props: Props) {
   const classes = useStyles();
 
   return (
-    <CustomButtom {...props}>
+    <CustomButtom variant='outlined' fullWidth {...props}>
       <Box display='flex' alignItems='center' alignContent='center'>
         <Box mr={2}>
           <Avatar className={classes.icon} />

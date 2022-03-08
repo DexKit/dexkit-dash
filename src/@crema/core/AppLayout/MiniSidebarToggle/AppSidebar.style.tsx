@@ -1,12 +1,11 @@
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, Theme} from '@material-ui/core';
 import {ThemeMode} from '../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: CremaTheme) => {
+const useStyles = makeStyles((theme: Theme) => {
   return {
     avatar: {
-      border: ' 1px solid #525C75',
-      backgroundColor: '#2E3243',
+      backgroundColor: theme.palette.background.default,
       width: theme.spacing(12),
       height: theme.spacing(12),
     },
@@ -165,7 +164,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     sidebarBg: {
       backgroundColor: (props: {themeMode: ThemeMode}) =>
         props.themeMode === ThemeMode.SEMI_DARK
-          ? theme.palette.sidebar.bgColor
+          ? theme.palette.background.paper
           : props.themeMode === ThemeMode.LIGHT
           ? 'white'
           : '#313541',
