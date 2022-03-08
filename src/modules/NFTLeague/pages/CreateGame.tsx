@@ -276,7 +276,7 @@ export const NFTLeagueCreateGamePage = () => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <PageHeader
-              backUri='/'
+              backUri='/nft-league'
               title={messages['nftLeague.createGame'] as string}
               breadcrumbs={[
                 {caption: 'Wallet', uri: '/'},

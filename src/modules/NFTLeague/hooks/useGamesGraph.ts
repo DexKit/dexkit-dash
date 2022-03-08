@@ -1,7 +1,7 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useQuery} from 'react-query';
 import {GameStatus} from '../constants/enum';
-import {GET_ALL_GAMES} from '../services/gql';
+import {GET_NFT_LEAGUE_QUERY} from '../services/gql';
 import {getGraphClient} from '../services/graphql';
 import {GameGraph} from '../utils/types';
 
@@ -15,19 +15,19 @@ export const useGamesGraph = (
   const {chainId} = useWeb3();
 
   const gamesQuery = useQuery(
-    [GET_GAMES_NFT_LEAGUE, chainId, status],
+    [GET_GAMES_NFT_LEAGUE, chainId, status, first, skip],
     async () => {
       const client = getGraphClient(chainId);
 
-      if (!chainId || !client || !status) {
+      if (!chainId || !client) {
         return;
       }
 
       const result = await client.query<
         {games: GameGraph[]},
-        {status: GameStatus; first: number; skip: number}
+        {status?: GameStatus; first: number; skip: number}
       >({
-        query: GET_ALL_GAMES,
+        query: GET_NFT_LEAGUE_QUERY(status),
         variables: {
           status,
           first,

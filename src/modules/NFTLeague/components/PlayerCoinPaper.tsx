@@ -310,7 +310,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       USD
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
-                      {endPrice !== undefined ? (
+                      {state === 'winner' ? (
                         <IntlMessages id='nftLeague.endPrice' />
                       ) : (
                         <IntlMessages id='nftLeague.currentPrice' />

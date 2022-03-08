@@ -5,16 +5,15 @@ import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';
 import PageHeader from 'shared/components/v2/partials/PageHeader';
 import NFTLeagueGamesTable from '../components/NFTLeagueGamesTable';
-import {useGamesGraph} from '../hooks/useGamesGraph';
 
 import {GameStatus} from '../constants/enum';
 
 export const NFTLeagueIndex = () => {
   const {messages} = useIntl();
 
-  const [status, setStatus] = useState<GameStatus>(GameStatus.Waiting);
-
-  const games = useGamesGraph(status);
+  const [status, setStatus] = useState<GameStatus | undefined>(
+    GameStatus.Waiting,
+  );
 
   return (
     <MainLayout>
@@ -41,6 +40,14 @@ export const NFTLeagueIndex = () => {
                     justifyContent='center'
                     alignItems='center'
                     alignContent='center'>
+                    <Grid item>
+                      <Chip
+                        variant={status === undefined ? 'default' : 'outlined'}
+                        color={status === undefined ? 'primary' : 'default'}
+                        label={<IntlMessages id='nftLeague.all' />}
+                        onClick={() => setStatus(undefined)}
+                      />
+                    </Grid>
                     <Grid item>
                       <Chip
                         variant={
@@ -95,7 +102,7 @@ export const NFTLeagueIndex = () => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <NFTLeagueGamesTable games={games.data} />
+              <NFTLeagueGamesTable filters={{status}} />
             </Grid>
           </Grid>
         </Grid>

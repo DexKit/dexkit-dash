@@ -71,7 +71,7 @@ export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
             {game.players?.map((player, index: number) => (
               <ButtonBase
                 component={RouterLink}
-                to={``}
+                to={`/coin-league/profile/${player.id}`}
                 className={classes.avatarButton}>
                 <Avatar key={index} title={player.id} />
               </ButtonBase>
