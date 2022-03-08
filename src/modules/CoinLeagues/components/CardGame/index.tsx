@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     color: theme.palette.text.primary,
     borderRadius: 6,
-    background: theme.palette.background.paper,
+    background: '#2e3243',
     padding: theme.spacing(2),
   },
   containerPrize: {
