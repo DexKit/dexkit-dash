@@ -50,7 +50,13 @@
     "type": "event"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "allGames",
     "outputs": [
       {
@@ -69,7 +75,11 @@
         "name": "start_timestamp",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "pot", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "pot",
+        "type": "uint256"
+      }
     ],
     "name": "createSquid",
     "outputs": [
@@ -85,7 +95,13 @@
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -97,8 +113,25 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "totalGames",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],

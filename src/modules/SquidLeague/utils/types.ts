@@ -15,6 +15,24 @@ export interface GameRoundData {
   score: BigNumber;
   game_type: BigNumber;
   total_players: BigNumber;
+  playerJoinedCurrentRound: boolean;
+  playerPlayCurrentRound: boolean;
+  challengeResultCurrentRound: boolean;
+  playerCurrentRoundChallengeResult: boolean;
+  playerJoinedPastRound: boolean;
+  feedPriceCurrentRound: BigNumber;
+}
+
+
+export interface GameData {
+  round: BigNumber;
+  pot: BigNumber;
+  gameState: GameState;
+  playerJoined: boolean;
+  joinedPlayers: BigNumber;
+  startTimestamp: BigNumber;
+  endTimestamp: BigNumber;
+  lastChallengeTimestamp: BigNumber
 }
 
 export interface GameGraph {

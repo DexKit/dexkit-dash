@@ -30,14 +30,14 @@ interface Props {
   onRefetchCallback?: any;
 }
 
-export const SetupGameDialog: React.FC<Props> = ({
+export const WithdrawGameDialog: React.FC<Props> = ({
   gameAddress,
   dialogProps,
   onRefetchCallback,
 }) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
-  const {onSetupChallengeCallback} = useSquidGameCallbacks(gameAddress);
+  const {onWithdrawCallback} = useSquidGameCallbacks(gameAddress);
 
   const {formatMessage} = useIntl();
   const [transactionHash, setTransactionHash] = useState('');
@@ -67,12 +67,12 @@ export const SetupGameDialog: React.FC<Props> = ({
       setTransactionHash(tx);
       createNotification({
         title: formatMessage({
-          id: 'squidLeague.setupGameTitle',
-          defaultMessage: `Setup game on squid`,
+          id: 'squidLeague.withdrawGameTitle',
+          defaultMessage: `Withdraw prize on squid`,
         }),
         body: formatMessage({
-          id: 'squidLeague.setupGameBody',
-          defaultMessage: `Setup game on squid`,
+          id: 'squidLeague.withdrawGameBody',
+          defaultMessage: `Withdraw prize on squid`,
         }),
         timestamp: Date.now(),
         url: getTransactionScannerUrl(chainId, tx),
@@ -97,7 +97,7 @@ export const SetupGameDialog: React.FC<Props> = ({
       }, 3000);
     };
 
-    onSetupChallengeCallback({
+    onWithdrawCallback({
       onConfirmation: onConfirm,
       onSubmit: onSubmit,
       onError,
@@ -107,8 +107,7 @@ export const SetupGameDialog: React.FC<Props> = ({
     chainId,
     createNotification,
     formatMessage,
-    onRefetchCallback,
-    onSetupChallengeCallback,
+    onWithdrawCallback,
   ]);
 
   const handleClose = useCallback(() => {
@@ -214,8 +213,8 @@ export const SetupGameDialog: React.FC<Props> = ({
           <Grid item xs={12}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.setupGame'
-                defaultMessage={'Setup Game'}
+                id='squidLeague.withdrawGamePrize'
+                defaultMessage={'Withdraw game prize'}
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
@@ -244,8 +243,8 @@ export const SetupGameDialog: React.FC<Props> = ({
     <Dialog {...dialogProps}>
       <CustomDialogTitle
         title={formatMessage({
-          id: 'squidLeague.setupGame',
-          defaultMessage: 'Setup Game',
+          id: 'squidLeague.withdrawGamePrize',
+          defaultMessage: 'Withdraw game prize',
         })}
         icon={<AddIcon />}
         onClose={handleClose}
@@ -262,14 +261,14 @@ export const SetupGameDialog: React.FC<Props> = ({
           <Box py={4}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.setupGame'
-                defaultMessage='Setup Game'
+                id='squidLeague.withdrawGamePrize'
+                defaultMessage='Withdraw game prize'
               />
             </Typography>
             <Typography align='center' variant='body1'>
               <IntlMessages
-                id='squidLeague.doYouWantToSetupAGame'
-                defaultMessage='Do you want to setup the game?'
+                id='squidLeague.doYouWantToWithdrawGame'
+                defaultMessage='Do you want to withdraw prize from game?'
               />
             </Typography>
           </Box>
@@ -298,4 +297,4 @@ export const SetupGameDialog: React.FC<Props> = ({
   );
 };
 
-export default SetupGameDialog;
+export default WithdrawGameDialog;

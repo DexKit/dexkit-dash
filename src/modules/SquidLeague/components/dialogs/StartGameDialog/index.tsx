@@ -27,11 +27,13 @@ import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallb
 interface Props {
   gameAddress: string;
   dialogProps: DialogProps;
+  onRefetchCallback?: any;
 }
 
 export const StartGameDialog: React.FC<Props> = ({
   gameAddress,
   dialogProps,
+  onRefetchCallback,
 }) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
@@ -39,7 +41,7 @@ export const StartGameDialog: React.FC<Props> = ({
 
   const {formatMessage} = useIntl();
   const [transactionHash, setTransactionHash] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<undefined | string>();
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const {getTransactionScannerUrl} = useChainInfo();
@@ -57,17 +59,20 @@ export const StartGameDialog: React.FC<Props> = ({
     const onConfirm = () => {
       setLoading(false);
       setConfirmed(true);
+      if (onRefetchCallback) {
+        onRefetchCallback();
+      }
     };
     const onSubmit = (tx: string) => {
       setTransactionHash(tx);
       createNotification({
         title: formatMessage({
-          id: 'squidLeague.setupGameTitle',
-          defaultMessage: `Setup game on squid`,
+          id: 'squidLeague.startGameTitle',
+          defaultMessage: `Start game on squid`,
         }),
         body: formatMessage({
-          id: 'squidLeague.setupGameBody',
-          defaultMessage: `Setup game on squid`,
+          id: 'squidLeague.startGameBody',
+          defaultMessage: `Started game on squid`,
         }),
         timestamp: Date.now(),
         url: getTransactionScannerUrl(chainId, tx),
@@ -87,6 +92,9 @@ export const StartGameDialog: React.FC<Props> = ({
       setLoading(false);
       setErrorMessage(error);
       setTransactionHash('');
+      setTimeout(() => {
+        setErrorMessage(undefined);
+      }, 3000);
     };
 
     onStartChallengeCallback({
@@ -100,6 +108,7 @@ export const StartGameDialog: React.FC<Props> = ({
     createNotification,
     formatMessage,
     onStartChallengeCallback,
+    onRefetchCallback,
   ]);
 
   const handleClose = useCallback(() => {
@@ -163,7 +172,10 @@ export const StartGameDialog: React.FC<Props> = ({
         </Grid>
         <Grid item>
           <Typography gutterBottom align='center' variant='h5'>
-            <IntlMessages id='squidLeague.transactionConfirmed' />
+            <IntlMessages
+              id='squidLeague.transactionConfirmed'
+              defaultMessage={'Transaction confirmed'}
+            />
           </Typography>
           <Typography color='textSecondary' align='center' variant='body1'>
             <IntlMessages
@@ -202,8 +214,8 @@ export const StartGameDialog: React.FC<Props> = ({
           <Grid item xs={12}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.setupGame'
-                defaultMessage={'Setup Game'}
+                id='squidLeague.startGame'
+                defaultMessage={'Start Game'}
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>

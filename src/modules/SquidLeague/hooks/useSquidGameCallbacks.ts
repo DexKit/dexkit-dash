@@ -59,7 +59,7 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
   );
 
   const onWithdrawCallback = useCallback(
-    async (id: number, callbacks?: CallbackProps) => {
+    async (callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done) {
         return;
       }

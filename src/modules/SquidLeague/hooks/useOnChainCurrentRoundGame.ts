@@ -18,8 +18,7 @@ export const useOnChainCurrentRoundGame = (currentRound?: BigNumber, gameAddress
 
       const provider = getProvider();
       const ethersProvider = new providers.Web3Provider(provider)
-      console.log(currentRound.toNumber())
-      return getGameRoundData(gameAddress, currentRound.toNumber(), ethersProvider);
+      return getGameRoundData(gameAddress, currentRound.toNumber(), ethersProvider, account);
     },
   );
 

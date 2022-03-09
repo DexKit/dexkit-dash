@@ -14,11 +14,10 @@ export const useOnChainGameData = (gameAddress?: string) => {
       if (!account || web3State !== Web3State.Done || !chainId || !gameAddress) {
         return;
       }
-      console.log(gameAddress);
       const provider = getProvider();
       const ethersProvider = new providers.Web3Provider(provider)
 
-      return getGameData(gameAddress, ethersProvider);
+      return getGameData(gameAddress, ethersProvider, account);
     },
   );
 

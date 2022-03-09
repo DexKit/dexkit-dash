@@ -27,16 +27,21 @@ import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallb
 interface Props {
   gameAddress: string;
   dialogProps: DialogProps;
+  onRefetchCallback?: any;
 }
 
-export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
+export const EndGameDialog: React.FC<Props> = ({
+  gameAddress,
+  dialogProps,
+  onRefetchCallback,
+}) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
   const {onFinishChallengeCallback} = useSquidGameCallbacks(gameAddress);
 
   const {formatMessage} = useIntl();
   const [transactionHash, setTransactionHash] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<undefined | string>();
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const {getTransactionScannerUrl} = useChainInfo();
@@ -54,6 +59,9 @@ export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
     const onConfirm = () => {
       setLoading(false);
       setConfirmed(true);
+      if (onRefetchCallback) {
+        onRefetchCallback();
+      }
     };
     const onSubmit = (tx: string) => {
       setTransactionHash(tx);
@@ -84,6 +92,9 @@ export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
       setLoading(false);
       setErrorMessage(error);
       setTransactionHash('');
+      setTimeout(() => {
+        setErrorMessage(undefined);
+      }, 3000);
     };
 
     onFinishChallengeCallback({
@@ -96,6 +107,7 @@ export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
     chainId,
     createNotification,
     formatMessage,
+    onRefetchCallback,
     onFinishChallengeCallback,
   ]);
 
@@ -199,8 +211,8 @@ export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
           <Grid item xs={12}>
             <Typography align='center' variant='h5'>
               <IntlMessages
-                id='squidLeague.playGame'
-                defaultMessage={'Play Game'}
+                id='squidLeague.endGame'
+                defaultMessage={'End Game'}
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>
@@ -229,8 +241,8 @@ export const EndGameDialog: React.FC<Props> = ({gameAddress, dialogProps}) => {
     <Dialog {...dialogProps}>
       <CustomDialogTitle
         title={formatMessage({
-          id: 'squidLeague.playGame',
-          defaultMessage: 'Play Game',
+          id: 'squidLeague.endGame',
+          defaultMessage: 'End Game',
         })}
         icon={<AddIcon />}
         onClose={handleClose}

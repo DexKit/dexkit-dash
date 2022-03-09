@@ -29,3 +29,12 @@ export const getGameAddress = async (
 
   return (await (await getSquidGameFactoryContract(gameFactoryAddress, provider)).allGames(gameId)) as Promise<string>;
 };
+
+
+export const getLastGameId = async (
+  gameFactoryAddress: string,
+  provider: any,
+) => {
+
+  return (await (await getSquidGameFactoryContract(gameFactoryAddress, provider)).totalGames()) as Promise<number>;
+};

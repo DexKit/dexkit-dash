@@ -28,12 +28,14 @@ interface Props {
   dialogProps: DialogProps;
   play: boolean;
   gameAddress: string;
+  onRefetchCallback?: any;
 }
 
 export const PlayGameDialog: React.FC<Props> = ({
   dialogProps,
   play,
   gameAddress,
+  onRefetchCallback,
 }) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
@@ -73,16 +75,19 @@ export const PlayGameDialog: React.FC<Props> = ({
     const onConfirm = () => {
       setLoading(false);
       setConfirmed(true);
+      if (onRefetchCallback) {
+        onRefetchCallback();
+      }
     };
     const onSubmit = (tx: string) => {
       setTransactionHash(tx);
       createNotification({
         title: formatMessage({
-          id: 'squidLeague.createGameTitle',
+          id: 'squidLeague.playedGameTitle',
           defaultMessage: `Played game on squid`,
         }),
         body: formatMessage({
-          id: 'squidLeague.createGameBody',
+          id: 'squidLeague.playedGameBody',
           defaultMessage: `Played game on squid`,
         }),
         timestamp: Date.now(),
@@ -120,6 +125,7 @@ export const PlayGameDialog: React.FC<Props> = ({
     play,
     createNotification,
     onPlayChallengeCallback,
+    onRefetchCallback,
     formatMessage,
   ]);
 
@@ -181,7 +187,6 @@ export const PlayGameDialog: React.FC<Props> = ({
             />
           </Typography>
         </Grid>
-        )
         {transactionHash && (
           <Grid item>
             <Button color='primary' onClick={handleViewTransaction} fullWidth>

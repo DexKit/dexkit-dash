@@ -23,14 +23,21 @@ import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import {ethers} from 'ethers';
+import {BigNumber} from 'ethers';
 
 interface Props {
   dialogProps: DialogProps;
   gameAddress: string;
+  pot?: BigNumber;
+  onRefetchCallback?: any;
 }
 
-export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
+export const JoinGameDialog: React.FC<Props> = ({
+  dialogProps,
+  gameAddress,
+  pot,
+  onRefetchCallback,
+}) => {
   const {onClose} = dialogProps;
   const {chainId} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
@@ -38,7 +45,7 @@ export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
 
   const {formatMessage} = useIntl();
   const [transactionHash, setTransactionHash] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
@@ -59,15 +66,19 @@ export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
   }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   const onConfirm = useCallback(() => {
-    if (!chainId) {
+    if (!chainId || !pot) {
       return;
     }
     setTransactionHash('');
+    setErrorMessage(undefined);
 
     setLoading(true);
     const onConfirm = () => {
       setLoading(false);
       setConfirmed(true);
+      if (onRefetchCallback) {
+        onRefetchCallback();
+      }
     };
     const onSubmit = (tx: string) => {
       setTransactionHash(tx);
@@ -98,9 +109,12 @@ export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
       setLoading(false);
       setErrorMessage('Error Submitting Transaction');
       setTransactionHash('');
+      setTimeout(() => {
+        setErrorMessage(undefined);
+      }, 3000);
     };
 
-    onJoinGameCallback(ethers.utils.parseEther('0.01'), {
+    onJoinGameCallback(pot, {
       onConfirmation: onConfirm,
       onSubmit: onSubmit,
       onError,
@@ -108,8 +122,10 @@ export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
   }, [
     getTransactionScannerUrl,
     chainId,
+    pot,
     createNotification,
     onJoinGameCallback,
+    onRefetchCallback,
     formatMessage,
   ]);
 
@@ -162,7 +178,10 @@ export const JoinGameDialog: React.FC<Props> = ({dialogProps, gameAddress}) => {
         </Grid>
         <Grid item>
           <Typography gutterBottom align='center' variant='h5'>
-            <IntlMessages id='squidLeague.transactionConfirmed' />
+            <IntlMessages
+              id='squidLeague.transactionConfirmed'
+              defaultMessage={'Transaction Confirmed'}
+            />
           </Typography>
           <Typography color='textSecondary' align='center' variant='body1'>
             <IntlMessages

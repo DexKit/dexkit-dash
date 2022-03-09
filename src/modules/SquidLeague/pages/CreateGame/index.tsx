@@ -113,7 +113,7 @@ export const CreateGamePage = () => {
       setLoadingCreatingGame(false);
       setErrorMessage(error);
     };
-    console.log(formik.values);
+
     onCreateSquidCallback(
       {
         startTimestamp: BigNumber.from(
