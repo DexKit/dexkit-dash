@@ -173,7 +173,7 @@ export const ProfileCollection: React.FC<Props> = () => {
                                   <IntlMessages id='app.coinLeague.youDontHaveAnyChampionsYou' />
                                 </Typography>
                               </Grid>
-                              <Grid item>
+                              {/*  <Grid item>
                                 <Box
                                   display='flex'
                                   justifyContent='center'
@@ -186,6 +186,25 @@ export const ProfileCollection: React.FC<Props> = () => {
                                     variant='outlined'
                                     color='primary'>
                                     <IntlMessages id='app.coinLeauge.mintChampion' />
+                                  </Button>
+                                </Box>
+                            </Grid>*/}
+                              <Grid item>
+                                <Box
+                                  display='flex'
+                                  justifyContent='center'
+                                  alignContent='center'
+                                  alignItems='center'>
+                                  <Button
+                                    href='https://opensea.io/collection/coinleaguechampions'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    variant='outlined'
+                                    color='primary'>
+                                    <IntlMessages
+                                      id='app.coinLeague.buyOnOpenSea'
+                                      defaultMessage={'Buy Champion on OpenSea'}
+                                    />
                                   </Button>
                                 </Box>
                               </Grid>

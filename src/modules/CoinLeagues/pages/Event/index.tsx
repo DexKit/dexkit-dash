@@ -481,45 +481,103 @@ export function ChampionsEvent() {
                   </Paper>
                 </Grid>
               ) : (
-                <Grid container spacing={4}>
-                  <Grid item xs={12}>
-                    <Paper>
-                      <Box p={4}>
-                        <Grid
-                          container
-                          direction='column'
-                          alignItems='center'
-                          alignContent='center'
-                          justifyContent='center'
-                          spacing={4}>
-                          <Grid item>
-                            <Typography
-                              align='center'
-                              gutterBottom
-                              variant='h5'>
-                              <IntlMessages id='app.coinLeague.comingSoon' />
-                            </Typography>
-                            <Typography
-                              align='center'
-                              color='textSecondary'
-                              variant='body1'>
-                              <IntlMessages id='app.coinLeague.coinLeagueChampionsAreComingSoonToBSC' />
-                            </Typography>
-                          </Grid>
+                <>
+                  {chainId === ChainId.Binance && (
+                    <Grid container spacing={4}>
+                      <Grid item xs={12}>
+                        <Paper>
+                          <Box p={4}>
+                            <Grid
+                              container
+                              direction='column'
+                              alignItems='center'
+                              alignContent='center'
+                              justifyContent='center'
+                              spacing={4}>
+                              <Grid item>
+                                <Typography
+                                  align='center'
+                                  gutterBottom
+                                  variant='h5'>
+                                  <IntlMessages id='app.coinLeague.comingSoon' />
+                                </Typography>
+                                <Typography
+                                  align='center'
+                                  color='textSecondary'
+                                  variant='body1'>
+                                  <IntlMessages id='app.coinLeague.coinLeagueChampionsAreComingSoonToBSC' />
+                                </Typography>
+                              </Grid>
 
-                          <Grid item>
-                            <Button
-                              color='primary'
-                              variant='contained'
-                              onClick={handleSwitchToMatic}>
-                              <IntlMessages id='app.coinLeague.switchToMaticNetwork' />
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Paper>
-                  </Grid>
-                </Grid>
+                              <Grid item>
+                                <Button
+                                  color='primary'
+                                  variant='contained'
+                                  onClick={handleSwitchToMatic}>
+                                  <IntlMessages id='app.coinLeague.switchToMaticNetwork' />
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  )}
+                  {chainId === ChainId.Matic && (
+                    <Grid container spacing={4}>
+                      <Grid item xs={12}>
+                        <Paper>
+                          <Box p={4}>
+                            <Grid
+                              container
+                              direction='column'
+                              alignItems='center'
+                              alignContent='center'
+                              justifyContent='center'
+                              spacing={4}>
+                              <Grid item>
+                                <Typography
+                                  align='center'
+                                  gutterBottom
+                                  variant='h5'>
+                                  <IntlMessages
+                                    id='app.coinLeague.mintingHalted'
+                                    defaultMessage={'Minting Halted'}
+                                  />
+                                </Typography>
+                                <Typography
+                                  align='center'
+                                  color='textSecondary'
+                                  variant='body1'>
+                                  <IntlMessages
+                                    id='app.coinLeague.coinLeagueChampionsMintingHalted'
+                                    defaultMessage={
+                                      'Minting Halted on Polygon Network, you can get a champion on secondary market'
+                                    }
+                                  />
+                                </Typography>
+                              </Grid>
+
+                              <Grid item>
+                                <Button
+                                  href='https://opensea.io/collection/coinleaguechampions'
+                                  target='_blank'
+                                  rel='noopener noreferrer'
+                                  variant='outlined'
+                                  color='primary'>
+                                  <IntlMessages
+                                    id='app.coinLeague.buyOnOpenSea'
+                                    defaultMessage={'Buy Champion on OpenSea'}
+                                  />
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  )}
+                </>
               )}
               {IS_CHAMPIONS_NETWORK_ENABLED(web3ChainId) ? (
                 <Grid item xs={12}>

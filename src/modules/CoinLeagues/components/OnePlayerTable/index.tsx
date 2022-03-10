@@ -341,7 +341,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score,
             profile,
           };
@@ -349,7 +349,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score: d.score / 1000,
             profile,
           };
@@ -369,7 +369,7 @@ function OnePlayerTable(props: Props): JSX.Element {
       return {
         ...d,
         account: d.hash,
-        hash: label,
+        label: label,
         score: d.score / 1000,
         profile,
       };
@@ -463,7 +463,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                     {/*data && <Chip className={classes.chip} label={`${1}º`} />*/}
                     {isBalanceVisible ? (
                       <UserProfileItem
-                        address={playerData.hash}
+                        address={playerData.account}
                         profile={playerData.profile}
                       />
                     ) : (
