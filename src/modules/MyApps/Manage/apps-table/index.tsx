@@ -314,7 +314,7 @@ const AppsTable = () => {
           )}
           {selectedConfig && (
             <ConfirmationDialog
-              title={`Deploy your app to your own domain, you will receive a CNAME to point to your app. Make sure to have 100 KIT on BSC, Polygon or Ethereum on Fee Address to domain keep active.`}
+              title={`Deploy your app to your own domain, you will receive a CNAME to point to your app. Make sure to have 100 KIT on BSC, Polygon or Ethereum on your Fee Address to domain keep active.`}
               dialogTitle={'Deploy to your own domain?'}
               open={showDeployDialog}
               onConfirm={() => onDeployToDomainCallback(selectedConfig)}

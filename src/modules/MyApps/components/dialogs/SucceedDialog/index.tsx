@@ -32,7 +32,7 @@ export const SucceededDialog = (props: Props) => {
             <Grid item xs={12}>
               <Typography align='center' variant='h6'>
                 <IntlMessages
-                  id='app.myapps.infosucceedeed'
+                  id='myapps.infosucceded'
                   defaultMessage={
                     'Your app was added to our system, if your app is not being served on your domain, make sure you setup correctly your CNAME, contact support if error persists'
                   }

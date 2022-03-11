@@ -15,6 +15,7 @@ import Alert from '@material-ui/lab/Alert';
 //import ErrorView from 'modules/Common/ErrorView';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
+
 // import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
@@ -42,7 +43,10 @@ const MyApps: React.FC = () => {
             color='text.primary'
             fontWeight={Fonts.BOLD}
             ml={2}>
-            Manage APPs
+            <IntlMessages
+              id='myapps.manage-title'
+              defaultMessage={'Manage APPs'}
+            />
           </Box>
           <AboutDialog />
         </Box>
@@ -55,8 +59,12 @@ const MyApps: React.FC = () => {
             </Alert>*/}
           {insufficientAmountAlert && (
             <Alert severity='warning'>
-              You don't have the amount of sufficient kit to keep run your apps,
-              which can cause them to be automatically deactivated.
+              <IntlMessages
+                id='myapps.alertNoFunds'
+                defaultMessage={
+                  "You don't have the amount of sufficient kit to keep run your apps, which can cause them to be automatically deactivated."
+                }
+              />
             </Alert>
           )}
         </Box>

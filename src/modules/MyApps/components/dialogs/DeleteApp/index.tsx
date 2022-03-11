@@ -50,8 +50,8 @@ export const DeleteAppDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.deleteAPP'
-                    defaultMessage={'Deletting your app'}
+                    id='myapps.deleteAPP'
+                    defaultMessage={'Deleting your app'}
                   />
                 </Typography>
                 <Typography
@@ -59,7 +59,7 @@ export const DeleteAppDialog = (props: Props) => {
                   variant='body1'
                   color='textSecondary'>
                   <IntlMessages
-                    id='app.myapps.pleaseSign'
+                    id='myapps.pleaseSignDelete'
                     defaultMessage={
                       'Please sign message with your wallet to delete app'
                     }
@@ -82,18 +82,15 @@ export const DeleteAppDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.submitted'
-                    defaultMessage={'Your app was deleted '}
+                    id='myapps.submittedDeleteApp'
+                    defaultMessage={'Your app was deleted'}
                   />
                 </Typography>
               </Grid>
 
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             </Grid>
@@ -112,7 +109,7 @@ export const DeleteAppDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.errorDeleteApp'
+                    id='myapps.errorDeleteApp'
                     defaultMessage={
                       'Error deleting your app, please contact support'
                     }
@@ -122,10 +119,7 @@ export const DeleteAppDialog = (props: Props) => {
 
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             </Grid>

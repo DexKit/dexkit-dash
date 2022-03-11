@@ -42,7 +42,7 @@ export const StatusDomainDialog = (props: Props) => {
             <Grid item xs={12}>
               <Typography align='center' variant='h6'>
                 <IntlMessages
-                  id='app.myapps.validateDomain'
+                  id='myapps.validateDomain'
                   defaultMessage={
                     'Add Follow CNAME to your domain provider to validate it'
                   }
@@ -72,7 +72,7 @@ export const StatusDomainDialog = (props: Props) => {
                 color='primary'
                 fullWidth>
                 <IntlMessages
-                  id='app.myapps.validateDomain'
+                  id='myapps.validateDomain'
                   defaultMessage={'Validate Domain'}
                 />
               </Button>
@@ -80,10 +80,7 @@ export const StatusDomainDialog = (props: Props) => {
             {!done && !error && (
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             )}
@@ -103,9 +100,9 @@ export const StatusDomainDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.submitted'
+                    id='myapps.submitted'
                     defaultMessage={
-                      'Your domain is now validated and ready for use '
+                      'Your domain is now validated and ready for use'
                     }
                   />
                 </Typography>
@@ -113,10 +110,7 @@ export const StatusDomainDialog = (props: Props) => {
 
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             </Grid>
@@ -135,7 +129,7 @@ export const StatusDomainDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.domainErrorSubmit'
+                    id='myapps.domainErrorSubmit'
                     defaultMessage={
                       'Error submitting domain, is this domain already in use?'
                     }
@@ -146,17 +140,14 @@ export const StatusDomainDialog = (props: Props) => {
                   variant='body1'
                   color='textSecondary'>
                   <IntlMessages
-                    id='app.myapps.pleaseTry'
+                    id='myapps.pleaseTry'
                     defaultMessage={'Please try again'}
                   />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             </Grid>

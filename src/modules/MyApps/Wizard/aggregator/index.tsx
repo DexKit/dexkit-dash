@@ -22,7 +22,7 @@ import {Form, Formik} from 'formik';
 import {ConfigFileAggregator, GeneralConfigAggregator} from 'types/myApps';
 
 import {NavigationButton} from '../shared/Buttons/navigationButton';
-
+import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
@@ -266,9 +266,12 @@ export default function WizardAggregator(props: any) {
             <Link
               color='inherit'
               onClick={() => history.push('/my-apps/manage')}>
-              My Apps
+              <IntlMessages id={'myapps.myapps'} defaultMessage={'My Apps'} />
             </Link>
-            <Typography color='textPrimary'>Wizard</Typography>
+            <Typography color='textPrimary'>
+              {' '}
+              <IntlMessages id={'myapps.wizard'} defaultMessage={'Wizard'} />
+            </Typography>
           </Breadcrumbs>
         </Grid>
         <Grid item xs={12} md={12}>
@@ -277,7 +280,10 @@ export default function WizardAggregator(props: any) {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant='h4' color='textPrimary'>
-              AGGREGATOR
+              <IntlMessages
+                id={'myapps.aggregator'}
+                defaultMessage={'Aggregator'}
+              />
             </Typography>
           </Box>
         </Grid>
@@ -323,10 +329,18 @@ export default function WizardAggregator(props: any) {
                       elevation={0}
                       className={classes.resetContainer}>
                       <Typography>
-                        All steps completed - you&apos;re finished
+                        <IntlMessages
+                          id={'myapps.allStepsCompleted'}
+                          defaultMessage={
+                            ' All steps completed - you are finished'
+                          }
+                        />
                       </Typography>
                       <Button onClick={handleReset} className={classes.button}>
-                        Reset
+                        <IntlMessages
+                          id={'myapps.reset'}
+                          defaultMessage={'Reset'}
+                        />
                       </Button>
                       <Button
                         disabled={isLoading}

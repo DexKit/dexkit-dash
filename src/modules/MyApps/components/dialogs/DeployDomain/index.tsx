@@ -51,7 +51,7 @@ export const DeployDomainDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.submittingConfig'
+                    id='myapps.submittingConfig'
                     defaultMessage={
                       'Deploying your domain, you need after to set your cname in your domain provider. Please keep 100 KIT on Polygon, BSC or Ethereum to domain keep active'
                     }
@@ -62,7 +62,7 @@ export const DeployDomainDialog = (props: Props) => {
                   variant='body1'
                   color='textSecondary'>
                   <IntlMessages
-                    id='app.myapps.pleaseSign'
+                    id='myapps.pleaseSign'
                     defaultMessage={
                       'Please sign message with your wallet to set config'
                     }
@@ -85,7 +85,7 @@ export const DeployDomainDialog = (props: Props) => {
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
                   <IntlMessages
-                    id='app.myapps.submitted'
+                    id='myapps.submitted'
                     defaultMessage={'Your domain is now with pending status '}
                   />
                 </Typography>
@@ -94,7 +94,7 @@ export const DeployDomainDialog = (props: Props) => {
                 <Grid item xs={12}>
                   <Typography align='center' variant='h6'>
                     <IntlMessages
-                      id='app.myapps.pointCname'
+                      id='myapps.pointCname'
                       defaultMessage={
                         'Please add this CNAME {cname} record in your hosting provider'
                       }
@@ -106,10 +106,7 @@ export const DeployDomainDialog = (props: Props) => {
 
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  <IntlMessages
-                    id='app.myapps.close'
-                    defaultMessage={'Close'}
-                  />
+                  <IntlMessages id='myapps.close' defaultMessage={'Close'} />
                 </Button>
               </Grid>
             </Grid>
