@@ -117,7 +117,16 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `${COINLEAGUENFT_ROUTE}`,
         },
         {
-          id: 'coinleague-discover',
+          id: 'coinleague.myprofile',
+          title: 'Profile',
+          messageId: 'sidebar.app.profile',
+          type: 'item',
+          customIcon: true,
+          icon: 'profile',
+          url: `${COINSLEAGUE_ROUTE}/profile`,
+        },
+        {
+          id: 'discover-games',
           title: 'Discover Games',
           messageId: 'sidebar.discover-games',
           type: 'item',
@@ -143,7 +152,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
-        {
+        /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
           messageId: 'sidebar.app.mint-nft',
@@ -151,7 +160,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
-        },
+        },*/
         {
           id: 'howtoplay',
           title: 'How to Play',

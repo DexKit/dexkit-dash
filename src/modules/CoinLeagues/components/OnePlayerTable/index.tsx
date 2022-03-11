@@ -33,7 +33,6 @@ import {
 } from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
-import {ethers} from 'ethers';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GameType} from 'types/coinsleague';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
@@ -44,7 +43,9 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
-import { getTransactionScannerUrl } from 'utils/blockchain';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import UserProfileItem from '../UserProfileItem';
+import {GameProfile} from 'modules/CoinLeagues/utils/types';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -95,6 +96,7 @@ interface Props {
   winner?: any;
   account?: string;
   type?: GameType;
+  profile?: GameProfile;
 }
 
 const getIconByCoin = (
@@ -119,18 +121,10 @@ const getIconSymbol = (
   );
 };
 
-const truncHash = (hash: string): string => {
-  if (ethers.utils.isHexString(hash)) {
-    return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-  } else {
-    return hash;
-  }
-};
-
 const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
-  const {id, account, winner, data, type} = props;
+  const {id, account, winner, data, type, profile} = props;
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
@@ -243,7 +237,7 @@ function OnePlayerTable(props: Props): JSX.Element {
       onClaimCallback,
       chainId,
       createNotification,
-      messages
+      messages,
     ],
   );
 
@@ -347,15 +341,17 @@ function OnePlayerTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score,
+            profile,
           };
         } else {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score: d.score / 1000,
+            profile,
           };
         }
       });
@@ -373,11 +369,12 @@ function OnePlayerTable(props: Props): JSX.Element {
       return {
         ...d,
         account: d.hash,
-        hash: label,
+        label: label,
         score: d.score / 1000,
+        profile,
       };
     });
-  }, [props, game, currentPrices, allFeeds, type, accountLabels]);
+  }, [props, game, currentPrices, allFeeds, type, accountLabels, profile]);
 
   // We need to this to calculate the monster of score in real time
   const playerData = useMemo(() => {
@@ -464,13 +461,16 @@ function OnePlayerTable(props: Props): JSX.Element {
                     />
 
                     {/*data && <Chip className={classes.chip} label={`${1}º`} />*/}
-
-                    <Typography style={{color: '#fff'}}>
-                      &nbsp;{' '}
-                      {isBalanceVisible
-                        ? truncHash(playerData?.hash)
-                        : '*****...****'}
-                    </Typography>
+                    {isBalanceVisible ? (
+                      <UserProfileItem
+                        address={playerData.account}
+                        profile={playerData.profile}
+                      />
+                    ) : (
+                      <Typography style={{color: '#fff'}}>
+                        &nbsp; *****...****
+                      </Typography>
+                    )}
                   </Box>
                 </TableCell>
 

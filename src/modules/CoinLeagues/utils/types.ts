@@ -1,4 +1,5 @@
-import {BigNumber} from 'ethers';
+import { BigNumber } from 'ethers';
+import { ChainId } from 'types/blockchain';
 
 export interface CoinFeed {
   base: string;
@@ -78,6 +79,18 @@ export interface GameMetadata {
   description: string;
   creator: string;
 }
+
+export interface GameProfile {
+  id: string;
+  address: string;
+  username: string;
+  profileImage: string;
+  coverImage: string;
+  tokenAddress: string;
+  tokenId: string;
+  chainId: ChainId;
+}
+
 export interface MultiplierInterface {
   playerAddress: string;
   kitBalance: BigNumber;
@@ -89,4 +102,25 @@ export interface MultiplierInterface {
   rarity: BigNumber;
   championId: BigNumber;
   isChampionsMultiplier: boolean;
+}
+
+export interface ProfileStats {
+  totalWinnedGames: string;
+  totalFirstWinnedGames: string;
+  totalSecondWinnedGames: string;
+  totalThirdWinnedGames: string;
+  totalJoinedGames: string;
+  totalEarned: string;
+  totalSpent: string;
+}
+
+export enum CoinLeagueGames {
+  CoinLeague,
+  CoinLeagueNFT,
+  SquidGame,
+  NFTLeague,
+}
+
+export interface ProfileContextState {
+  profiles: GameProfile[];
 }

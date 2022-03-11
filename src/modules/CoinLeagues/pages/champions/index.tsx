@@ -21,16 +21,16 @@ import {NFTEmptyStateImage} from 'shared/components/Icons';
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
 
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 export const ChampionsIndex = () => {
   const history = useHistory();
-  const { chainId } = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
 
   const emtpyArrayRef = useRef(new Array(8).fill(null));
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const myChampions = useMyChampions(chainId);
+  const myChampions = useMyChampions({chainId});
 
   const handleClearError = useCallback(() => {
     setErrorMessage(undefined);

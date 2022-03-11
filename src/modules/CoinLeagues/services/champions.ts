@@ -1,10 +1,10 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 import axios from 'axios';
 import championsAbi from '../constants/ABI/coinLeagueChampions.json';
-import {getEventCurrentRound, getEventHoldingAmount} from '../utils/champions';
+import { getEventCurrentRound, getEventHoldingAmount } from '../utils/champions';
 
-import {ChampionMetadata, ChampionsEventRound} from '../utils/types';
-import {ChainId} from 'types/blockchain';
+import { ChampionMetadata, ChampionsEventRound } from '../utils/types';
+import { ChainId } from 'types/blockchain';
 
 const RandomnessRequestAbi =
   'event RandomnessRequest(bytes32 keyHash, uint256 seed, bytes32 indexed jobID, address sender, uint256 fee, bytes32 requestID)';
@@ -16,6 +16,11 @@ export function mintCoinLeaguesChampion(
   onTransaction?: (hash: string) => void,
 ) {
   return new Promise<string>((resolve, reject) => {
+    if (chainId === ChainId.Matic) {
+      throw new Error('Mint on Matic is halted for now');
+    }
+
+
     let contract = new ethers.Contract(
       address,
       championsAbi,
@@ -24,7 +29,7 @@ export function mintCoinLeaguesChampion(
 
     let round = getEventCurrentRound();
 
-    let transactionParam = {value: getEventHoldingAmount(chainId)};
+    let transactionParam = { value: getEventHoldingAmount(chainId) };
 
     let tx = null;
 
@@ -55,7 +60,6 @@ export function mintCoinLeaguesChampion(
 
       resolve(id);
     }).catch((err: any) => {
-      console.log(err);
       reject(err);
     });
   });
@@ -87,7 +91,7 @@ export const getChampionMetadata = (tokenId: string, chainId?: number) => {
 
 export const getChampionsTotalSupply = (chainId?: number) => {
   return axios
-    .get<{totalSupply: number}>(
+    .get<{ totalSupply: number }>(
       `${getChampionApiEndpoint(chainId)}/total-supply`,
     )
     .then((response) => response.data);
