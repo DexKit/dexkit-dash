@@ -146,6 +146,8 @@ export const CreateGamePage = () => {
         onConfirm={onConfirmCreateGameCallback}
         dialogProps={{
           open: createGameToggler.show,
+          maxWidth: 'sm',
+          fullWidth: true,
           onClose: handleCloseCreateGameDialog,
         }}
       />

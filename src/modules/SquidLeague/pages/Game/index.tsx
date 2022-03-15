@@ -2,6 +2,7 @@ import React from 'react';
 
 import {useParams} from 'react-router';
 
+//import GameLayout from './index.layout';
 import GameLayout from './index.layout';
 
 interface Params {

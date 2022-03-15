@@ -105,6 +105,7 @@ export const WithdrawGameDialog: React.FC<Props> = ({
   }, [
     getTransactionScannerUrl,
     chainId,
+    onRefetchCallback,
     createNotification,
     formatMessage,
     onWithdrawCallback,

@@ -206,6 +206,12 @@ export const getGameRoundData = async (
       args: [],
     });
 
+    calls.push({
+      interface: iface,
+      target: gameAddress,
+      function: 'getCurrentPlayersAtRound',
+      args: [currentRound > 0 ? currentRound - 1 : currentRound],
+    });
 
 
 
@@ -220,7 +226,8 @@ export const getGameRoundData = async (
       challengeResultCurrentRound: results[4],
       playerCurrentRoundChallengeResult: results[5],
       playerJoinedPastRound: results[6],
-      feedPriceCurrentRound: results[7]
+      feedPriceCurrentRound: results[7],
+      totalPlayersPastRound: results[8],
     };
   } catch (e) {
     console.log(e);

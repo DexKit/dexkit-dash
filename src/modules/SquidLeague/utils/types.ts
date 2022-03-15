@@ -21,6 +21,7 @@ export interface GameRoundData {
   playerCurrentRoundChallengeResult: boolean;
   playerJoinedPastRound: boolean;
   feedPriceCurrentRound: BigNumber;
+  totalPlayersPastRound: BigNumber;
 }
 
 
