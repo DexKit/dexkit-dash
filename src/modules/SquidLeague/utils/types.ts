@@ -33,7 +33,8 @@ export interface GameData {
   joinedPlayers: BigNumber;
   startTimestamp: BigNumber;
   endTimestamp: BigNumber;
-  lastChallengeTimestamp: BigNumber
+  lastChallengeTimestamp: BigNumber;
+  playerWithdraw: boolean;
 }
 
 export interface GameGraph {

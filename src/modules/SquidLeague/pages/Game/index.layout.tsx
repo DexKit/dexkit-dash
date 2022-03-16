@@ -33,6 +33,8 @@ import {isSupportedBlockchain} from 'modules/SquidLeague/utils/blockchain';
 import WithdrawGameCard from 'modules/SquidLeague/components/WithdrawGameCard';
 import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {PlayersCard} from 'modules/SquidLeague/components/PlayersCard';
+import {getGameURL} from 'modules/SquidLeague/utils/url';
+import CopyLink from 'shared/components/CopyLink';
 
 interface Params {
   id: string;
@@ -70,9 +72,11 @@ export const GameLayout = (props: Params) => {
     return gameState === GameState.Finished;
   }, [gameState]);
 
+  const roundNumber = gameDataQuery.data?.round.toNumber();
+
   const isWithdrawState = useMemo(() => {
-    return gameDataQuery.data?.round.toNumber() === MAX_ROUNDS;
-  }, [gameState]);
+    return roundNumber === MAX_ROUNDS;
+  }, [roundNumber]);
 
   const joinStartTimestamp = gameDataQuery.data?.startTimestamp;
 
@@ -222,11 +226,25 @@ export const GameLayout = (props: Params) => {
               id: 'squidLeague.url',
               defaultMessage: 'url',
             })}
+            disabled
+            value={getGameURL(id)}
             variant='outlined'
             fullWidth
           />
           <Box pt={2}>
-            <Button
+            <CopyLink tooltip='Copied' copyText={getGameURL(id)}>
+              <Button
+                startIcon={<ArrowDownwardIcon />}
+                variant='outlined'
+                color='primary'>
+                <IntlMessages
+                  id='squidLeague.copyLink'
+                  defaultMessage={'Copy Link'}
+                />
+              </Button>
+            </CopyLink>
+
+            {/*<Button
               startIcon={<ArrowDownwardIcon />}
               variant='outlined'
               color='primary'>
@@ -234,7 +252,7 @@ export const GameLayout = (props: Params) => {
                 id='squidLeague.copyLink'
                 defaultMessage={'Copy Link'}
               />
-            </Button>
+          </Button>*/}
           </Box>
         </Grid>
         <Grid item xs={12}>

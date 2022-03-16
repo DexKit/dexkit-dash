@@ -7,4 +7,4 @@ export const SQUID_LEAGUE_FACTORY_ADDRESS = {
 };
 
 
-export const MAX_ROUNDS = 6;
+export const MAX_ROUNDS = 2;

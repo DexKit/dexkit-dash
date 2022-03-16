@@ -1,8 +1,9 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {Grid, Button} from '@material-ui/core';
+import {Grid, Button, Paper, Box, Typography} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
-
+import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
+import {ReactComponent as PlayersIcon} from 'assets/images/vuesax/twotone/profile-2-user.svg';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 import {useToggler} from 'hooks/useToggler';
@@ -13,6 +14,8 @@ import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
 import WithdrawGameDialog from 'modules/SquidLeague/components/dialogs/WithdrawGameDialog';
 import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {useChainInfo} from 'hooks/useChainInfo';
+import {ethers} from 'ethers';
+import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
 
 interface Params {
   id: string;
@@ -23,21 +26,45 @@ export const WithdrawGameCard = (props: Params) => {
 
   const gameAddressQuery = useGameAddress(id);
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
-
+  const gameDataRoundQuery = useOnChainCurrentRoundGame(
+    gameDataQuery.data?.round,
+    gameAddressQuery.data,
+  );
+  const {tokenSymbol} = useChainInfo();
   const withdrawGameToggler = useToggler(false);
 
   const handleCloseWithdrawGameDialog = useCallback(() => {
     withdrawGameToggler.toggle();
   }, [withdrawGameToggler]);
 
-  const gameState = gameDataQuery.data?.gameState;
   const round = gameDataQuery.data?.round;
   const canWeWithdrawGame = useMemo(() => {
     if (round) {
       return round.toNumber() === MAX_ROUNDS;
     }
     return false;
-  }, [gameState, round]);
+  }, [round]);
+
+  const pot = gameDataQuery.data?.pot;
+  const joinedPlayers = gameDataQuery.data?.joinedPlayers;
+  const winners = gameDataRoundQuery.data?.totalPlayersPastRound;
+  const totalPotPerPlayer = useMemo(() => {
+    if (pot && joinedPlayers && winners) {
+      return ethers.utils.formatEther(pot.mul(joinedPlayers).div(winners));
+    } else {
+      return null;
+    }
+  }, [pot, joinedPlayers, winners]);
+
+  const totalWinners = useMemo(() => {
+    if (winners) {
+      return winners.toString();
+    } else {
+      return null;
+    }
+  }, [winners]);
+
+  const alreadyClaimed = gameDataQuery.data?.playerWithdraw;
 
   return (
     <Grid item xs={12}>
@@ -61,6 +88,62 @@ export const WithdrawGameCard = (props: Params) => {
         justifyContent='center'>
         <Grid item xs={12} sm={4}>
           <Grid container spacing={4}>
+            <Grid item xs={12} sm={6}>
+              <Paper variant='outlined'>
+                <Box p={2}>
+                  <Box
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    alignContent='center'>
+                    <Box>
+                      <Typography color='textSecondary' variant='caption'>
+                        <IntlMessages
+                          id='squidLeague.winners'
+                          defaultMessage={'Winners'}
+                        />
+                      </Typography>
+                      <Typography variant='h5' color='textPrimary'>
+                        {totalWinners}{' '}
+                        <IntlMessages
+                          id='squidLeague.players'
+                          defaultMessage={'Players'}
+                        />
+                      </Typography>
+                    </Box>
+                    <Box display={'flex'} justifyContent={'center'}>
+                      <PlayersIcon />
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Paper variant='outlined'>
+                <Box p={2}>
+                  <Box
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    alignContent='center'>
+                    <Box>
+                      <Typography color='textSecondary' variant='caption'>
+                        <IntlMessages
+                          id='squidLeague.finalPrizePerPlayer'
+                          defaultMessage={'Final Prize per Player'}
+                        />
+                      </Typography>
+                      <Typography variant='h5' color='textPrimary'>
+                        {totalPotPerPlayer} {tokenSymbol}
+                      </Typography>
+                    </Box>
+                    <Box display={'flex'} justifyContent={'center'}>
+                      <CupIcon />
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
             {canWeWithdrawGame && (
               <Grid item xs={12}>
                 <Grid container spacing={4}>
@@ -69,12 +152,20 @@ export const WithdrawGameCard = (props: Params) => {
                       fullWidth
                       onClick={() => withdrawGameToggler.toggle()}
                       startIcon={<ArrowDownwardIcon />}
+                      disabled={alreadyClaimed}
                       variant='outlined'
                       color='primary'>
-                      <IntlMessages
-                        id='squidLeague.getPrize'
-                        defaultMessage={'Get Prize'}
-                      />
+                      {alreadyClaimed ? (
+                        <IntlMessages
+                          id='squidLeague.alreadyClaimed'
+                          defaultMessage={'Already Claimed'}
+                        />
+                      ) : (
+                        <IntlMessages
+                          id='squidLeague.getPrize'
+                          defaultMessage={'Get Prize'}
+                        />
+                      )}
                     </Button>
                   </Grid>
                 </Grid>

@@ -116,6 +116,13 @@ export const getGameData = async (
       function: 'lastChallengeTimestamp'
     });
 
+    calls.push({
+      interface: iface,
+      target: gameAddress,
+      function: 'PlayerWithdraw',
+      args: [account ? account : ZERO_ADDRESS],
+    });
+
 
     const response = await multicall.multiCall(calls);
     const [, results] = response;
@@ -129,6 +136,7 @@ export const getGameData = async (
       startTimestamp: results[5] as BigNumber,
       endTimestamp: results[6] as BigNumber,
       lastChallengeTimestamp: results[7] as BigNumber,
+      playerWithdraw: results[8] as boolean
     };
   } catch (e) {
     console.log(e);

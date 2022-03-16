@@ -20,6 +20,7 @@ import {JoinGameStateSkeleton} from 'modules/SquidLeague/pages/Game/JoinGameStat
 import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 
 import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
+
 import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Params {
