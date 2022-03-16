@@ -17,12 +17,18 @@ import {GameState} from 'modules/SquidLeague/utils/types';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {JoinGameStateSkeleton} from 'modules/SquidLeague/pages/Game/JoinGameState.skeleton';
 
+import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
+
+import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
+import {useChainInfo} from 'hooks/useChainInfo';
+
 interface Params {
   id: string;
 }
 
 export const JoinGameCard = (props: Params) => {
   const {id} = props;
+  const {tokenSymbol} = useChainInfo();
   const gameAddressQuery = useGameAddress(id);
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
   const gameDataRoundQuery = useOnChainCurrentRoundGame(
@@ -30,7 +36,6 @@ export const JoinGameCard = (props: Params) => {
     gameAddressQuery.data,
   );
   const joinGameToggler = useToggler(false);
-  const setupGameToggler = useToggler(false);
 
   const handleCloseJoinGameDialog = useCallback(() => {
     joinGameToggler.toggle();
@@ -109,7 +114,9 @@ export const JoinGameCard = (props: Params) => {
                             )}
                           </Typography>
                         </Box>
-                        <Box>Icon</Box>
+                        <Box display={'flex'} justifyContent={'center'}>
+                          <TimerIcon />
+                        </Box>
                       </Box>
                     </Box>
                   </Paper>
@@ -130,10 +137,12 @@ export const JoinGameCard = (props: Params) => {
                             />
                           </Typography>
                           <Typography variant='h5' color='textPrimary'>
-                            {entry} MATIC
+                            {entry} {tokenSymbol}
                           </Typography>
                         </Box>
-                        <Box>Icon</Box>
+                        <Box display={'flex'} justifyContent={'center'}>
+                          <CupIcon />
+                        </Box>
                       </Box>
                     </Box>
                   </Paper>

@@ -20,6 +20,10 @@ import {Skeleton} from '@material-ui/lab';
 
 import {MaticPriceFeeds} from 'modules/CoinLeagues/constants/PriceFeeds/matic';
 
+import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
+
+import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
+
 const useStyles = makeStyles((theme) => ({
   coinImage: {
     borderRadius: '50%',
@@ -118,7 +122,9 @@ export const GameLayoutSkeleton = () => {
                               </Box>
                               <Box>
                                 {' '}
-                                <Skeleton> Icon</Skeleton>
+                                <Box display={'flex'} justifyContent={'center'}>
+                                  <TimerIcon />
+                                </Box>
                               </Box>
                             </Box>
                           </Box>
@@ -149,7 +155,9 @@ export const GameLayoutSkeleton = () => {
                                 </Typography>
                               </Box>
                               <Box>
-                                <Skeleton>Icon</Skeleton>
+                                <Box display={'flex'} justifyContent={'center'}>
+                                  <CupIcon />
+                                </Box>
                               </Box>
                             </Box>
                           </Box>
@@ -210,7 +218,9 @@ export const GameLayoutSkeleton = () => {
                               </Box>
                               <Box>
                                 {' '}
-                                <Skeleton> Icon</Skeleton>
+                                <Box display={'flex'} justifyContent={'center'}>
+                                  <TimerIcon />
+                                </Box>
                               </Box>
                             </Box>
                           </Box>
@@ -241,7 +251,9 @@ export const GameLayoutSkeleton = () => {
                                 </Typography>
                               </Box>
                               <Box>
-                                <Skeleton>Icon</Skeleton>
+                                <Box display={'flex'} justifyContent={'center'}>
+                                  <TimerIcon />
+                                </Box>
                               </Box>
                             </Box>
                           </Box>
@@ -501,9 +513,10 @@ export const GameLayoutSkeleton = () => {
                                       <Skeleton> 00.00.00</Skeleton>
                                     </Typography>
                                   </Box>
-                                  <Box>
-                                    {' '}
-                                    <Skeleton> Icon</Skeleton>
+                                  <Box
+                                    display={'flex'}
+                                    justifyContent={'center'}>
+                                    <TimerIcon />
                                   </Box>
                                 </Box>
                               </Box>

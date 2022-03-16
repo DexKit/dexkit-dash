@@ -1,5 +1,5 @@
-import {ApolloClient, InMemoryCache} from '@apollo/client';
-import {ChainId} from 'types/blockchain';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ChainId } from 'types/blockchain';
 
 export const getGraphClient = (chainId?: ChainId) => {
   if (chainId === ChainId.Mumbai) {
@@ -9,7 +9,7 @@ export const getGraphClient = (chainId?: ChainId) => {
 };
 
 export const mumbaiClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/joaocampos89/squidgame-mumba',
+  uri: 'https://api.thegraph.com/subgraphs/name/joaocampos89/squidgame-mumbai',
   cache: new InMemoryCache(),
   headers: {
     'User-Agent':

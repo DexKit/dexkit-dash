@@ -28,12 +28,17 @@ import SetupStartEndGameCard from 'modules/SquidLeague/components/SetupStartEndG
 import SetupGameDialog from 'modules/SquidLeague/components/dialogs/SetupGameDialog';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
 import {useWeb3} from 'hooks/useWeb3';
+import {Empty} from 'shared/components/Empty';
+import {isSupportedBlockchain} from 'modules/SquidLeague/utils/blockchain';
+import WithdrawGameCard from 'modules/SquidLeague/components/WithdrawGameCard';
+import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
+import {PlayersCard} from 'modules/SquidLeague/components/PlayersCard';
 
 interface Params {
   id: string;
 }
 
-export const GameLayout2 = (props: Params) => {
+export const GameLayout = (props: Params) => {
   const {id} = props;
   const gameAddressQuery = useGameAddress(id);
   const {chainId} = useWeb3();
@@ -63,6 +68,10 @@ export const GameLayout2 = (props: Params) => {
 
   const isFinishGameState = useMemo(() => {
     return gameState === GameState.Finished;
+  }, [gameState]);
+
+  const isWithdrawState = useMemo(() => {
+    return gameDataQuery.data?.round.toNumber() === MAX_ROUNDS;
   }, [gameState]);
 
   const joinStartTimestamp = gameDataQuery.data?.startTimestamp;
@@ -97,7 +106,13 @@ export const GameLayout2 = (props: Params) => {
       }
     }
     return false;
-  }, [joinStartTimestamp, isJoinGameState, lastChallengeTimestamp, chainId]);
+  }, [
+    joinStartTimestamp,
+    isJoinGameState,
+    lastChallengeTimestamp,
+    chainId,
+    isFinishGameState,
+  ]);
 
   return (
     <MainLayout>
@@ -114,7 +129,6 @@ export const GameLayout2 = (props: Params) => {
         />
       )}
       <Grid container spacing={4}>
-        <Grid item xs={12}></Grid>
         <Grid item xs={12}>
           <Typography color='textPrimary' variant='subtitle1'>
             <IntlMessages
@@ -146,13 +160,24 @@ export const GameLayout2 = (props: Params) => {
                     id='squidLeague.round'
                     defaultMessage={'Round'}
                   />{' '}
-                  {gameDataQuery.data?.round.toNumber()}
+                  {gameDataQuery.data?.round
+                    ? gameDataQuery.data?.round.toNumber() + 1
+                    : null}
                 </Typography>
               </Grid>
+              <Grid item xs={12}>
+                {!isSupportedBlockchain(chainId) && (
+                  <Empty
+                    title='Network not Supported'
+                    message='Please switch to supported networks: Mumbai'
+                  />
+                )}
+              </Grid>
+
               {isJoinGameState && <JoinGameCard id={id} />}
-              {(isSetupGameState ||
-                isFinishGameState ||
-                isStartedGameState) && <SetupStartEndGameCard id={id} />}
+              {(isSetupGameState || isFinishGameState || isStartedGameState) &&
+                !isWithdrawState && <SetupStartEndGameCard id={id} />}
+              {isWithdrawState && <WithdrawGameCard id={id} />}
               {canWeSetupChallenge && (
                 <Grid item xs={12}>
                   <Grid container spacing={4}>
@@ -200,6 +225,17 @@ export const GameLayout2 = (props: Params) => {
             variant='outlined'
             fullWidth
           />
+          <Box pt={2}>
+            <Button
+              startIcon={<ArrowDownwardIcon />}
+              variant='outlined'
+              color='primary'>
+              <IntlMessages
+                id='squidLeague.copyLink'
+                defaultMessage={'Copy Link'}
+              />
+            </Button>
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -211,7 +247,8 @@ export const GameLayout2 = (props: Params) => {
                 id='squidLeague.players'
                 defaultMessage={'Players'}
               />{' '}
-              {gameDataRoundQuery.data?.totalPlayersPastRound.toString()}
+              {gameDataRoundQuery.data?.totalPlayersPastRound.toString()}/
+              {gameDataQuery.data?.joinedPlayers.toString()}
             </Typography>
             <Typography variant='body2' color='textSecondary'>
               <IntlMessages
@@ -219,6 +256,7 @@ export const GameLayout2 = (props: Params) => {
                 defaultMessage={'Points are counted hourly'}
               />
             </Typography>
+            <PlayersCard id={id} />
           </Grid>
         )}
         {isJoinGameState && (
@@ -236,6 +274,7 @@ export const GameLayout2 = (props: Params) => {
                 defaultMessage={'Points are counted hourly'}
               />
             </Typography>
+            <PlayersCard id={id} />
           </Grid>
         )}
       </Grid>
@@ -243,4 +282,4 @@ export const GameLayout2 = (props: Params) => {
   );
 };
 
-export default GameLayout2;
+export default GameLayout;

@@ -29,6 +29,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
+import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 
 interface Params {
   id: string;
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 export const SetupStartEndGameCard = (props: Params) => {
   const {id} = props;
   const {chainId} = useWeb3();
+
   const gameAddressQuery = useGameAddress(id);
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
   const gameDataRoundQuery = useOnChainCurrentRoundGame(
@@ -260,7 +262,9 @@ export const SetupStartEndGameCard = (props: Params) => {
                           )}
                         </Typography>
                       </Box>
-                      <Box>Icon</Box>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        <TimerIcon />
+                      </Box>
                     </Box>
                   </Box>
                 </Paper>
@@ -296,7 +300,9 @@ export const SetupStartEndGameCard = (props: Params) => {
                           )}
                         </Typography>
                       </Box>
-                      <Box>Icon</Box>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        <TimerIcon />
+                      </Box>
                     </Box>
                   </Box>
                 </Paper>
@@ -545,7 +551,9 @@ export const SetupStartEndGameCard = (props: Params) => {
                               )}
                             </Typography>
                           </Box>
-                          <Box>Icon</Box>
+                          <Box display={'flex'} justifyContent={'center'}>
+                            <TimerIcon />
+                          </Box>
                         </Box>
                       </Box>
                     </Paper>

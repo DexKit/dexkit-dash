@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const GET_ALL_GAMES = gql`
   query GetAllGames($status: String!, $first: Int!, $skip: Int!) {
@@ -27,8 +27,8 @@ export const GET_ALL_GAMES = gql`
  * TODO: Players have no limit on players, we likely need to pass first, skip to it, the same for earning field
  */
 export const GET_GAME = gql`
-  query GetGame($id) {
-    game($id) {
+  query GetGame($id: String, $first: Int!, $skip: Int!) {
+    game(id: $id) {
       id
       intId
       status
@@ -46,19 +46,31 @@ export const GET_GAME = gql`
       createdBy
       duration
       entry
-      players {
+      players(first: $first, skip: $skip) {
         id
         player {
           id
         }
       }
-      earning {
+      earning(first: $first, skip: $skip) {
         id
         player {
           id
         }
         amount
         claimed
+      }
+    }
+  }
+`;
+
+export const GET_PLAYERS_FROM_GAME = gql`
+  query GetPlayersFromGame($id: String, $first: Int!, $skip: Int! ) {
+    game(id: $id) {
+      players(first: $first, skip: $skip ) {
+        player {
+          id
+        }
       }
     }
   }

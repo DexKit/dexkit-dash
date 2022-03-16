@@ -20,14 +20,12 @@ import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
 import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
 import {GameState} from 'modules/SquidLeague/utils/types';
 
-import {ChainId} from 'types/blockchain';
 import {MaticPriceFeeds} from 'modules/CoinLeagues/constants/PriceFeeds/matic';
-import {MumbaiPriceFeeds} from 'modules/CoinLeagues/constants';
 import {useWeb3} from 'hooks/useWeb3';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
-
+import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 import {Skeleton} from '@material-ui/lab';
 
 interface Params {
@@ -201,7 +199,9 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                           </Skeleton>
                         </Typography>
                       </Box>
-                      <Box>Icon</Box>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        <TimerIcon />
+                      </Box>
                     </Box>
                   </Box>
                 </Paper>
@@ -242,7 +242,9 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                           </Skeleton>
                         </Typography>
                       </Box>
-                      <Box>Icon</Box>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        <TimerIcon />
+                      </Box>
                     </Box>
                   </Box>
                 </Paper>
@@ -542,7 +544,9 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                               </Skeleton>
                             </Typography>
                           </Box>
-                          <Box>Icon</Box>
+                          <Box display={'flex'} justifyContent={'center'}>
+                            <TimerIcon />
+                          </Box>
                         </Box>
                       </Box>
                     </Paper>

@@ -61,6 +61,14 @@ export interface GameGraph {
   earning?: Partial<EarningGraph>;
 }
 
+export interface PlayersGameGraph {
+  players?: Array<{
+    player: {
+      id: string
+    }
+  }>;
+}
+
 export interface PlayerGraph {
   id: string;
   playCurrentRound: boolean;

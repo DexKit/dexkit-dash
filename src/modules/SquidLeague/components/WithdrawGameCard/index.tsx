@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {Grid, Button, makeStyles} from '@material-ui/core';
+import {Grid, Button} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
@@ -9,11 +9,10 @@ import {useToggler} from 'hooks/useToggler';
 
 import {useGameAddress} from 'modules/SquidLeague/hooks/useGameAddress';
 import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
-import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
-
-import {GameState} from 'modules/SquidLeague/utils/types';
 
 import WithdrawGameDialog from 'modules/SquidLeague/components/dialogs/WithdrawGameDialog';
+import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Params {
   id: string;
@@ -24,10 +23,6 @@ export const WithdrawGameCard = (props: Params) => {
 
   const gameAddressQuery = useGameAddress(id);
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
-  const gameDataRoundQuery = useOnChainCurrentRoundGame(
-    gameDataQuery.data?.round,
-    gameAddressQuery.data,
-  );
 
   const withdrawGameToggler = useToggler(false);
 
@@ -39,7 +34,7 @@ export const WithdrawGameCard = (props: Params) => {
   const round = gameDataQuery.data?.round;
   const canWeWithdrawGame = useMemo(() => {
     if (round) {
-      return gameState === GameState.Finished && round.toNumber() === 6;
+      return round.toNumber() === MAX_ROUNDS;
     }
     return false;
   }, [gameState, round]);
@@ -77,7 +72,7 @@ export const WithdrawGameCard = (props: Params) => {
                       variant='outlined'
                       color='primary'>
                       <IntlMessages
-                        id='squidLeague.endGame'
+                        id='squidLeague.getPrize'
                         defaultMessage={'Get Prize'}
                       />
                     </Button>
