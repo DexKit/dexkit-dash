@@ -18,7 +18,7 @@ export const useSendConfig = () => {
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
     const history = useHistory();
-    const intl = useIntl();
+    const { formatMessage } = useIntl();
 
 
     const onSendConfigCallback = useCallback((config: any, type: string) => {
@@ -53,7 +53,7 @@ export const useSendConfig = () => {
                             verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
                         },
                         message: {
-                            message: intl.formatMessage({ id: 'myapps.editAggregator', defaultMessage: `I want to create/edit this {type}` }, { type: type.toLowerCase() }),
+                            message: formatMessage({ id: 'myapps.editAggregator', defaultMessage: `I want to create/edit this {type}` }, { type: type.toLowerCase() }),
                             terms: 'Powered by DexKit',
                         },
                     };
@@ -82,8 +82,8 @@ export const useSendConfig = () => {
                             sendConfig(dataToSend)
                                 .then((c: any) => {
                                     const notification: CustomNotification = {
-                                        title: intl.formatMessage({ id: 'myapps.configAcceptedTitle', defaultMessage: 'Config Accepted' }),
-                                        body: intl.formatMessage({ id: 'myapps.configAcceptedBody', defaultMessage: 'Config Created', }),
+                                        title: formatMessage({ id: 'myapps.configAcceptedTitle', defaultMessage: 'Config Accepted' }),
+                                        body: formatMessage({ id: 'myapps.configAcceptedBody', defaultMessage: 'Config Created', }),
                                     };
                                     dispatch(onAddNotification([notification]));
                                     history.push(`/my-apps/manage`);
@@ -96,7 +96,7 @@ export const useSendConfig = () => {
                                     }, 5000)
                                     const notification: CustomNotification = {
                                         title: 'Error',
-                                        body: intl.formatMessage({ id: 'myapps.domainConfigError', defaultMessage: 'Config error! Do you have KIT?' }),
+                                        body: formatMessage({ id: 'myapps.domainConfigError', defaultMessage: 'Config error! Do you have KIT?' }),
                                     };
                                     dispatch(
                                         onAddNotification([notification], NotificationType.ERROR),
@@ -125,7 +125,7 @@ export const useSendConfig = () => {
         }
 
 
-    }, [account, chainId, dispatch, getProvider, history, isLoading, setError])
+    }, [account, chainId, dispatch, getProvider, history, isLoading, setError, formatMessage])
 
 
     return { onSendConfigCallback, isLoading, isError }

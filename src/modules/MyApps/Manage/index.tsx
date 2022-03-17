@@ -16,6 +16,7 @@ import Alert from '@material-ui/lab/Alert';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
 
+
 // import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 

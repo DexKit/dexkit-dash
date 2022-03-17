@@ -42,8 +42,9 @@ import CopyLink from 'shared/components/CopyLink';
 import {DeleteAppDialog} from 'modules/MyApps/components/dialogs/DeleteApp';
 import {useDeleteMyAppMutation} from 'modules/MyApps/hooks/useDeleteMyAppMutation';
 import {SucceededDialog} from 'modules/MyApps/components/dialogs/SucceedDialog';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 // import { Notification } from 'types/models/Notification';
-
+import IntlMessages from '@crema/utility/IntlMessages';
 type Order = 'asc' | 'desc';
 
 interface HeadCell {
@@ -234,7 +235,7 @@ const AppsTable = () => {
 
   return (
     <>
-      {configs && configs.length > 0 ? (
+      {configs && configs.length > 0 && account ? (
         // <Box pt={{ xl: 4 }} clone>
         //   <GridContainer>
         //     <Grid item xs={12} md={12}>
@@ -498,7 +499,15 @@ const AppsTable = () => {
               justifyContent: 'center',
               padding: '60px 0px',
             }}>
-            <Typography>You don't have Apps yet </Typography>
+            {account ? (
+              <Typography>You don't have Apps yet </Typography>
+            ) : (
+              <Button
+                variant={'contained'}
+                onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
+                <IntlMessages id='common.connectWallet' />{' '}
+              </Button>
+            )}
           </Grid>
         </Paper>
       )}
