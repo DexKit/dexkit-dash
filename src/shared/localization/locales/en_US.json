@@ -1,4 +1,5 @@
 {
+  "common.connectWallet": "Connect Wallet",
   "coinLeagues.page.event.round.description": "In this round users will be able to create 4400 champions.",
   "coinLeagues.page.gameEnter.captain.choose": "Choose your Captain",
   "coinLeagues.page.gameEnter.captain.chooseCurrency": "Choose Captain Currency",
@@ -1939,5 +1940,23 @@
   "app.onBoarding.address": "Address",
   "app.onBoarding.eMail": "E-mail",
   "app.wallet.networkIsNotSupported": "is not supported",
-  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x does not support this network yet. Please, switch to Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom or Celo to trade in our app."
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x does not support this network yet. Please, switch to Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom or Celo to trade in our app.",
+  "myapps.manageTitle": "Manage APPs",
+  "myapps.manage-title": "Manage APPs",
+  "myapps.alertNoFunds": "You don't have the amount of sufficient kit to keep run your apps, which can cause them to be automatically deactivated.",
+  "myapps.infosucceded": "Your app was added to our system, if your app is not being served on your domain, make sure you setup correctly your CNAME, contact support if error persists",
+  "myapps.close": "Close",
+  "myapps.pleaseTry": "Please try again",
+  "myapps.domainErrorSubmit": "Error submitting domain, is this domain already in use?",
+  "myapps.submitted": "Your domain is now validated and ready for use",
+  "myapps.validateDomain": "Validate Domain",
+  "myapps.validateDomainCname": "Add Follow CNAME to your domain provider to validate it",
+  "myapps.pointCname": "Please add this CNAME {cname} record in your hosting provider",
+  "myapps.submittedDeployDomain": "Your domain is now with pending status",
+  "myapps.pleaseSignDeploy": "Please sign message with your wallet to set config",
+  "myapps.submittingConfigDeployDomain": "Deploying your domain, you need after to set your cname in your domain provider. Please keep 100 KIT on Polygon, BSC or Ethereum to domain keep active",
+  "myapps.deleteAPP": "Deleting your app",
+  "myapps.pleaseSignDelete": "Please sign message with your wallet to delete app",
+  "myapps.submittedDeleteApp": "Your app was deleted",
+  "myapps.errorDeleteApp": "Error deleting your app, please contact support"
 }

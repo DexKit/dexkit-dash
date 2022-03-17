@@ -4,9 +4,14 @@ export const wizardConfigs = [
   {
     routes: [
       {
+        path: '/my-apps/wizard/aggregator/:slug',
+        component: React.lazy(() => import('./aggregator')),
+      },
+      {
         path: '/my-apps/wizard/aggregator',
         component: React.lazy(() => import('./aggregator')),
       },
+
       {
         path: '/my-apps/wizard/exchange',
         component: React.lazy(() => import('./exchange')),

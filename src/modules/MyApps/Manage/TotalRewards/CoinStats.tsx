@@ -12,24 +12,13 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 const useStyles = makeStyles((theme: CremaTheme) => ({
   statsCard: {
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
-    // padding: 10,
     padding: 0,
   },
   root: {
     height: 50,
     width: 50,
-    // height: 30,
-    // width: 30,
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
     backgroundColor: (props: {bgColor: string}) => props.bgColor,
-    // [theme.breakpoints.up('md')]: {
-    //   height: 45,
-    //   width: 45,
-    // },
-    // [theme.breakpoints.up('xl')]: {
-    //   height: 70,
-    //   width: 70,
-    // },
   },
 }));
 

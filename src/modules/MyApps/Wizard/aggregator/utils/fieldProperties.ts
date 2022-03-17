@@ -1,4 +1,4 @@
-import {GeneralConfigAggregator} from 'types/myApps';
+import { GeneralConfigAggregator } from 'types/myApps';
 
 type Properties = {
   isRequired: boolean;
@@ -7,18 +7,33 @@ type Properties = {
   step?: number;
 };
 
-export const Field_Properties: {[key: string]: Properties} = {
+export const Field_Properties: { [key: string]: Properties } = {
   logo: {
     isRequired: false,
   },
   logo_dark: {
     isRequired: false,
   },
+  default_token_address: {
+    isRequired: false,
+  },
+  default_token_address_matic: {
+    isRequired: false,
+  },
+  default_token_address_bsc: {
+    isRequired: false,
+  },
+  default_token_address_avax: {
+    isRequired: false,
+  },
+  default_token_address_fantom: {
+    isRequired: false,
+  },
   buyTokenPercentage: {
     isRequired: true,
     min: 0.0,
-    max: 0.005,
-    step: 0.0001,
+    max: 5,
+    step: 0.01,
   },
   default_slippage: {
     isRequired: true,

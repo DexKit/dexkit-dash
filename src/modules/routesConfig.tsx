@@ -190,7 +190,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /*{
+    {
       id: 'myapps',
       title: 'My Apps',
       messageId: 'sidebar.myapps',
@@ -206,7 +206,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/my-apps/manage',
         },
       ],
-    },*/
+    },
     {
       id: 'affiliate',
       title: 'Affiliates',

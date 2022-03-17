@@ -1,5 +1,5 @@
-import {BigNumber} from '@0x/utils';
-import {Styles} from 'jss';
+import { BigNumber } from '@0x/utils';
+import { Styles } from 'jss';
 
 export type WhitelabelTypes = 'DEX' | 'MARKETPLACE' | 'AGGREGATOR';
 
@@ -7,6 +7,8 @@ export interface ConfigResponse {
   slug: string;
   config: string;
   domain: string;
+  cname?: string;
+  domainStatus?: string;
   type: WhitelabelTypes;
   active?: boolean;
 }
@@ -42,7 +44,7 @@ export interface GasInfo {
 }
 
 export interface TokenMetaData {
-  addresses: {[key: string]: string | undefined};
+  addresses: { [key: string]: string | undefined };
   symbol: string;
   decimals: number;
   name: string;
@@ -260,7 +262,7 @@ export interface AggregatorWallet {
 }
 
 type AllValues<T> = {
-  [P in keyof T]: {key: P; value: T[P]};
+  [P in keyof T]: { key: P; value: T[P] };
 }[keyof T];
 
 export interface GeneralConfigAggregator {
@@ -276,6 +278,8 @@ export interface GeneralConfigAggregator {
   support_bsc?: boolean;
   bsc_as_default?: boolean;
   matic_as_default?: boolean;
+  avax_as_default?: boolean;
+  fantom_as_default?: boolean;
   fee_waive_for_default_token?: boolean;
   hide_powered_by_dexkit?: boolean;
   default_token_list?: string;
@@ -283,7 +287,10 @@ export interface GeneralConfigAggregator {
   default_token_address?: string;
   default_token_address_bsc?: string;
   default_token_address_matic?: string;
+  default_token_address_avax?: string;
+  default_token_address_fantom?: string;
   default_slippage?: number;
+  buy_token_percentage?: number;
 }
 
 export interface ConfigFileAggregator extends GeneralConfigAggregator {
