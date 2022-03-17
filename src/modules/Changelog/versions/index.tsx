@@ -41,8 +41,28 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls='panelv0.0.6.16'
-          id='panelv0.0.6.16-header'>
+          aria-controls='panelv0.0.6.18'
+          id='panelv0.0.6.18-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.18- 10-02-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Improve loading on fresh wallets
+            </Typography>
+          </Box>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Bug fix's</Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.17'
+          id='panelv0.0.6.17-header'>
           <Typography className={classes.heading}>
             v0.0.6.17- 03-02-2021{' '}
           </Typography>
@@ -160,8 +180,8 @@ const Changelog = () => {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls='panelv0.0.6.11'
-          id='panelv0.0.6.11-header'>
+          aria-controls='panelv0.0.6.12'
+          id='panelv0.0.6.12-header'>
           <Typography className={classes.heading}>
             v0.0.6.12 - 2-12-2021{' '}
           </Typography>

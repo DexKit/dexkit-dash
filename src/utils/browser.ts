@@ -49,7 +49,7 @@ export function getNormalizedUrl(url: string) {
   let fetchUrl = url;
 
   if (isIpfsUrl(url)) {
-    let path = url.substring(6, url.length);
+    let path = url.substring('ipfs://'.length, url.length);
     fetchUrl = `${IPFS_GATEWAY}${path}`;
   }
 
@@ -57,13 +57,25 @@ export function getNormalizedUrl(url: string) {
 }
 
 export function isMetamaskWallet() {
-  return window.ethereum && window?.ethereum?.isMetaMask;
+  if (
+    typeof window !== 'undefined' &&
+    window?.ethereum &&
+    typeof window?.ethereum?.isMetamask !== 'undefined'
+  ) {
+    return window.ethereum.isMetamask;
+  }
+
+  return false;
 }
 
 export function isTrustWallet() {
-  return (
-    window.ethereum &&
-    window?.ethereum?.isTrust !== undefined &&
-    window?.ethereum?.isTrust
-  );
+  if (
+    typeof window !== 'undefined' &&
+    window?.ethereum &&
+    typeof window?.ethereum?.isTrust !== 'undefined'
+  ) {
+    return window.ethereum.isTrust;
+  }
+
+  return false;
 }
