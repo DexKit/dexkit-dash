@@ -18,7 +18,7 @@ export const CustomDialogTitle: React.FC<Props> = ({title, icon, onClose}) => {
             alignItems='center'
             alignContent='center'
             mr={2}>
-                {icon}
+            {icon}
           </Box>
           <Typography variant='body1'>{title}</Typography>
         </Box>

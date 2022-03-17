@@ -41,43 +41,36 @@ function CardTimer(props: {time: number}) {
   );
 }
 
+function CardTimerUnstyled(props: {time: number}) {
+  const time = props.time;
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time - hours * 3600) / 60);
+  const seconds = time - hours * 3600 - minutes * 60;
+
+  return (
+    <span>
+      {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
+    </span>
+  );
+}
+
 function CountdownStartsAt(props: Props): JSX.Element {
-  const classes = useStyles();
-  const {game, refetch } = useCoinLeagues(props.id);
+  const {game, refetch} = useCoinLeagues(props.id);
   const startTimestamp = game?.start_timestamp.toNumber();
 
   const endTime = useMemo(() => {
-    if (game  && startTimestamp) {
+    if (game && startTimestamp) {
       return new Date(startTimestamp * 1000);
     }
     return new Date();
-  }, [ startTimestamp, game]);
+  }, [startTimestamp, game]);
 
   const count = useCountdown(endTime, {
     interval: 1000,
     onEnd: () => refetch(),
   });
- 
 
-  /*const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
-
-  return (
-    <Container className={classes.container}>
-      <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-             <IntlMessages id='app.coinLeagues.countdownToStart' />
-          </Typography>
-          <Typography variant='h4' style={{color: '#fff'}}>
-            <CardTimer time={count} />
-          </Typography>
-        </Grid>
-      </Grid>
-    </Container>
-  );
+  return <CardTimerUnstyled time={count} />;
 }
 
 export default CountdownStartsAt;

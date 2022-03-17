@@ -37,7 +37,7 @@ interface Props {
 
 const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   const classes = useStyles();
-  const accountLabels = useLabelAccounts();
+
   if (profile) {
     return (
       <Grid alignItems='center' alignContent='center' container spacing={4}>
@@ -58,7 +58,7 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
             color='inherit'
             component={RouterLink}
             to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
-            <Typography style={{color: '#fff'}}>{profile.username}</Typography>
+            <Typography color='inherit'>{profile.username}</Typography>
           </Link>
         </Grid>
       </Grid>
@@ -66,12 +66,9 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   } else {
     let label: string | undefined;
     const bitboyMember = GET_BITBOY_NAME(address);
+
     if (bitboyMember) {
       label = bitboyMember.label;
-    } else {
-      label =
-        accountLabels &&
-        accountLabels.find((a) => a.address === address)?.label;
     }
 
     return (
@@ -79,8 +76,8 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
         color='inherit'
         component={RouterLink}
         to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
-        <Typography style={{color: '#fff'}}>
-          {label ? label : truncateAddress(address)}
+        <Typography color='inherit'>
+          {label !== undefined ? label : truncateAddress(address)}
         </Typography>
       </Link>
     );

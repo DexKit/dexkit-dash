@@ -34,11 +34,9 @@ function CardTimer(props: {time: number}) {
   const minutes = Math.floor((time - hours * 3600) / 60);
   const seconds = time - hours * 3600 - minutes * 60;
   return (
-    <Grid item>
-      <Typography variant='h6'>
-        {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
-      </Typography>
-    </Grid>
+    <>
+      {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
+    </>
   );
 }
 
@@ -65,26 +63,13 @@ function Countdown(props: Props): JSX.Element {
     interval: 10000,
     onDown: () => refetchCurrentFeeds(),
   });
-  
+
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(props.prizePool);*/
 
-  return (
-    <Container className={classes.container}>
-      <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            <IntlMessages id='app.coinLeagues.countdown' />
-          </Typography>
-          <Typography variant='h5' style={{color: '#fff'}}>
-            <CardTimer time={count} />
-          </Typography>
-        </Grid>
-      </Grid>
-    </Container>
-  );
+  return <CardTimer time={count} />;
 }
 
 export default Countdown;

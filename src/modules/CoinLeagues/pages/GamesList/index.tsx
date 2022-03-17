@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -8,78 +8,58 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
-import { useIntl } from 'react-intl';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useIntl} from 'react-intl';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import { SupportedNetworkType } from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
-import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
-import { makeStyles } from '@material-ui/core/styles';
 
-import { Empty } from 'shared/components/Empty';
+import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
-import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
+import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
 import {
   COINLEAGUENFT_ROUTE,
   HOME_ROUTE,
   LOGIN_WALLET_ROUTE,
 } from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
-import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
-import ContainedInput from 'shared/components/ContainedInput';
-import { Search } from '@material-ui/icons';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
-import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import { ShareButton } from 'shared/components/ShareButton';
+import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
-import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGame from 'modules/CoinLeagues/components/CardGame';
-import { GamesEnded } from 'modules/CoinLeagues/components/GamesEnded';
-import { GameLevel, GameOrderBy } from 'modules/CoinLeagues/constants/enums';
+import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
+import {GameLevel, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
-import { useToggler } from 'hooks/useToggler';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
-import { useMobile } from 'hooks/useMobile';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    padding: theme.spacing(2),
-    backgroundColor: '#1F1D2B',
-  },
-  chip: {
-    color: '#fff',
-    background: '#1F1D2B',
-    border: '2px solid #2e3243',
-  },
-  createGame: {
-    padding: theme.spacing(3),
-  },
-  tabs: {
-    maxWidth: '450px',
-  },
-}));
+import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {useMobile} from 'hooks/useMobile';
+import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
+import {TextField} from '@material-ui/core';
 
 enum Tabs {
   History = 'History',
@@ -87,15 +67,13 @@ enum Tabs {
 }
 
 const GamesList = () => {
-  const classes = useStyles();
   const history = useHistory();
-  const { messages } = useIntl();
-  const { pathname } = useLocation();
-  const { account } = useWeb3();
-  const { coinSymbol } = useLeaguesChainInfo();
+  const {messages} = useIntl();
+  const {pathname} = useLocation();
+  const {account} = useWeb3();
+  const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
   const isMobile = useMobile();
-
 
   useDiscord();
 
@@ -139,7 +117,7 @@ const GamesList = () => {
     filters: filtersState,
   });
 
-  const { listGamesRoute, activeGamesRoute, enterGameRoute } =
+  const {listGamesRoute, activeGamesRoute, enterGameRoute} =
     useCoinLeaguesFactoryRoutes();
 
   const waitingGamesData = waitingGamesQuery?.data?.games;
@@ -276,6 +254,10 @@ const GamesList = () => {
     filterToggler.set(true);
   }, [filterToggler]);
 
+  const handleShowCreateGameModal = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   return (
     <>
       <GameFilterDrawer
@@ -290,22 +272,24 @@ const GamesList = () => {
           <TickerTapeTV />
         </Grid>
 
-        {!isMobile && <Grid item xs={12}>
-          <Breadcrumbs>
-            <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages id='app.coinLeagues.dashboard' />
-            </Link>
-            <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages id='app.coinLeagues.games' />
-            </Link>
-          </Breadcrumbs>
-        </Grid>}
+        {!isMobile && (
+          <Grid item xs={12}>
+            <Breadcrumbs>
+              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
+                <IntlMessages id='app.coinLeagues.dashboard' />
+              </Link>
+              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
+                <IntlMessages id='app.coinLeagues.games' />
+              </Link>
+            </Breadcrumbs>
+          </Grid>
+        )}
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'banner'}
             />
           </Grid>
@@ -354,14 +338,14 @@ const GamesList = () => {
           <Grid item xs={12} sm={8}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
             />
           </Grid>
         </Hidden>
 
         <Grid item xs={6}>
-          <Typography variant='h6' style={{ margin: 5 }}>
+          <Typography variant='h6' style={{margin: 5}}>
             <IntlMessages id='app.coinLeagues.gamesInProgress' />:{' '}
             {gamesInProgress?.length || 0}
           </Typography>
@@ -385,7 +369,7 @@ const GamesList = () => {
               </Grid>
             ))}
             {isLoadingStarted &&
-              [1, 2, 3].map((v, i) => (
+              new Array(3).fill(null).map((v, i) => (
                 <Grid item xs={12} sm={6} md={4} lg={2} xl={2} key={i}>
                   <SmallCardGameSkeleton />
                 </Grid>
@@ -406,15 +390,14 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container alignItems={'center'} spacing={2}>
+          <Grid container alignItems='center' spacing={2}>
             <Grid item xs={12} sm={6}>
               <CustomTabs
                 value={value}
-                className={classes.tabs}
                 onChange={handleChange}
                 variant='standard'
                 TabIndicatorProps={{
-                  style: { display: 'none' },
+                  style: {display: 'none'},
                 }}
                 aria-label='wallet tabs'>
                 <CustomTab value={Tabs.Games} label={Tabs.Games} />
@@ -423,15 +406,18 @@ const GamesList = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <ContainedInput
+              <TextField
                 value={search}
                 onChange={handleSearch}
                 placeholder='Search'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <Search />
-                  </InputAdornment>
-                }
+                variant='outlined'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
               />
             </Grid>
@@ -439,13 +425,7 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button
-            className={classes.createGame}
-            fullWidth
-            variant={'contained'}
-            onClick={() => setOpen(true)}>
-            {'CREATE GAME'}
-          </Button>
+          <CreateGameButton onClick={handleShowCreateGameModal} />
         </Grid>
 
         <Grid item xs={12}>
@@ -454,7 +434,7 @@ const GamesList = () => {
             alignContent='center'
             alignItems='center'
             justifyContent='space-between'
-            spacing={2}>
+            spacing={4}>
             <Grid item>
               {value === Tabs.Games ? (
                 <Typography variant='h6'>
@@ -476,15 +456,15 @@ const GamesList = () => {
                 </Typography>
               )}
             </Grid>*/}
-            <Grid item>
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
                   <Chip
                     onClick={handleSelectAll}
                     color={
                       !filtersState.isBitboy &&
-                        !filtersState.isMyGames &&
-                        !filtersState.isJackpot
+                      !filtersState.isMyGames &&
+                      !filtersState.isJackpot
                         ? 'primary'
                         : 'default'
                     }
@@ -518,18 +498,13 @@ const GamesList = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              {/* <GameOrderByDropdown
-                onSelectGameOrder={(value) => setOrderByGame(value)}
-              /> */}
-
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid
                 alignItems='center'
                 alignContent='center'
-                justifyContent='center'
                 container
                 spacing={2}>
-                <Grid item>
+                <Grid item xs={isMobile}>
                   <GameOrderBySelect
                     value={filtersState.orderByGame}
                     onChange={handleChangeOrderBy}
@@ -541,7 +516,7 @@ const GamesList = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon style={{color: '#fff'}} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -554,14 +529,14 @@ const GamesList = () => {
           <Grid item xs={12}>
             <Grid container spacing={4}>
               {gamesToJoin?.map((g, id) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
+                <Grid item xs={12} sm={4} key={id}>
                   <CardGame game={g} id={g.id} onClick={onClickEnterGame} />
                 </Grid>
               ))}
               {isLoadingCreated &&
-                [1, 2, 3].map((v, i) => (
-                  <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                    <CardGameSkeleton />
+                new Array(3).fill(null).map((v, i) => (
+                  <Grid item xs={12} sm={4} key={i}>
+                    <CardGame loading />
                   </Grid>
                 ))}
               {!isLoadingCreated && !gamesToJoin?.length && (

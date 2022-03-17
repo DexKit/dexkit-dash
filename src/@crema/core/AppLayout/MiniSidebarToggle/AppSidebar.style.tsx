@@ -1,6 +1,5 @@
 import {makeStyles, Theme} from '@material-ui/core';
 import {ThemeMode} from '../../../../shared/constants/AppEnums';
-import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

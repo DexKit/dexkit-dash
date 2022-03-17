@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Box,
   Card,
@@ -24,12 +24,12 @@ import {
 } from '@material-ui/core';
 
 import AssetCard from '../../components/detail/AssetCard';
-import { useHistory, useLocation, useParams } from 'react-router';
+import {useHistory, useLocation, useParams} from 'react-router';
 import AssetsSkeleton from '../../components/wallet/AssetsSkeleton';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import CollectionListSkeleton from '../../components/wallet/CollectionListSkeleton';
 import useIsMounted from 'hooks/useIsMounted';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -40,40 +40,41 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import _ from 'lodash';
 import CollectionsList from '../../components/wallet/CollectionsList';
 import FloatActionBar from '../../components/wallet/FloatActionBar';
-import { truncateTokenAddress } from 'utils';
+import {truncateTokenAddress} from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
-import { getWindowUrl } from 'utils/browser';
-import { useWeb3 } from 'hooks/useWeb3';
-import { getChainId, RINKEBY_NETWORK } from 'utils/opensea';
+import {getWindowUrl} from 'utils/browser';
+import {useWeb3} from 'hooks/useWeb3';
+import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import axios from 'axios';
-import { useMyAssets } from 'modules/NFTWallet/hooks/wallet';
-import { Actions } from 'modules/NFTWallet/components/wallet/ActionSelect';
+import {useMyAssets} from 'modules/NFTWallet/hooks/wallet';
+import {Actions} from 'modules/NFTWallet/components/wallet/ActionSelect';
 
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-import { ReactComponent as ConnectivityImage } from 'assets/images/state/connectivity-01.svg';
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { NFTEmptyStateImage } from 'shared/components/Icons';
-import { useMobile } from 'hooks/useMobile';
+import {NFTEmptyStateImage} from 'shared/components/Icons';
+import {useMobile} from 'hooks/useMobile';
 
 function useCollections() {
-  const { getProvider } = useWeb3();
+  const {getProvider} = useWeb3();
 
   const getCollections = useCallback(
     async (owner: string, query: string) => {
       const provider = getProvider();
       const chainId = await getChainId(provider);
 
-      const url = `https://${chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-        }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
+      const url = `https://${
+        chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
 
       return axios.get(url, {
-        headers: { 'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY },
+        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
       });
     },
     [getProvider],
@@ -113,13 +114,13 @@ export default () => {
   const isUpXs = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
   const history = useHistory();
-  const { messages } = useIntl();
-  const { address }: RouteParams = useParams();
-  const { getAssets } = useMyAssets();
-  const { getCollections } = useCollections();
+  const {messages} = useIntl();
+  const {address}: RouteParams = useParams();
+  const {getAssets} = useMyAssets();
+  const {getCollections} = useCollections();
   const isMobile = useMobile();
 
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
 
   const [collectionLoading, setCollectionLoading] = useState(false);
 
@@ -241,7 +242,7 @@ export default () => {
         (value) =>
           value.tokenId?.toLowerCase() === asset?.token_id?.toLowerCase() &&
           value.tokenAddress?.toLowerCase() ===
-          asset?.asset_contract?.address?.toLowerCase(),
+            asset?.asset_contract?.address?.toLowerCase(),
       );
     },
     [selectedAssets],
@@ -435,7 +436,7 @@ export default () => {
     history.push('/wallet');
   }, []);
 
-  const { state } = useLocation<{ action: string; asset: any }>();
+  const {state} = useLocation<{action: string; asset: any}>();
 
   useEffect(() => {
     if (state) {
@@ -443,7 +444,7 @@ export default () => {
         setAction(Actions.CREATE_BUNDLE);
         setSelectActive(true);
         setSelectedAssets([state.asset]);
-        history.replace({ state: {} });
+        history.replace({state: {}});
       }
     }
   }, [state]);
@@ -453,16 +454,18 @@ export default () => {
       <Box>
         <Box mb={2}>
           <Grid container spacing={2}>
-            {!isMobile && <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link to='/' color='textPrimary' component={RouterLink}>
-                  {messages['nfts.walletBreadcrumbDashboard'].toString()}
-                </Link>
-                <Link color='textSecondary'>
-                  {messages['nfts.walletActiveName'].toString()}
-                </Link>
-              </Breadcrumbs>
-            </Grid>}
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link to='/' color='textPrimary' component={RouterLink}>
+                    {messages['nfts.walletBreadcrumbDashboard'].toString()}
+                  </Link>
+                  <Link color='textSecondary'>
+                    {messages['nfts.walletActiveName'].toString()}
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box mr={2}>
@@ -475,8 +478,8 @@ export default () => {
                     {isWalletOwner(address, userAddress)
                       ? messages['nfts.walletTitle'].toString()
                       : isUpXs
-                        ? address
-                        : truncateTokenAddress(address)}
+                      ? address
+                      : truncateTokenAddress(address)}
                   </Typography>
                 </Box>
                 <CopyButton
@@ -611,7 +614,7 @@ export default () => {
                     spacing={2}>
                     <Grid item>
                       {assets?.length > 0 ? (
-                        <Box pt={{ xs: 2 }} textAlign={!isUpXs ? 'center' : null}>
+                        <Box pt={{xs: 2}} textAlign={!isUpXs ? 'center' : null}>
                           <Typography variant='h5'>
                             {assets?.length || 0}{' '}
                             {(assets || []).length > 1 ? (

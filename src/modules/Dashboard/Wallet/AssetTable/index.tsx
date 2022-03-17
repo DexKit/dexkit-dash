@@ -28,7 +28,6 @@ import Badge from '@material-ui/core/Badge';
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import Close from '@material-ui/icons/Close';
-import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
