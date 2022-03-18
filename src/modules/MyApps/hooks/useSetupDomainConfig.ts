@@ -3,7 +3,6 @@ import { Web3Wrapper } from "@0x/web3-wrapper";
 import { useWeb3 } from "hooks/useWeb3";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 import { onAddNotification } from "redux/actions";
 import { eip712Utils } from '@0x/order-utils';
 import { NotificationType } from 'services/notification';
@@ -18,7 +17,6 @@ export const useSetupDomainConfig = () => {
     const [isDone, setDone] = useState(false);
     const { account, chainId, getProvider } = useWeb3();
     const dispatch = useDispatch();
-    const history = useHistory();
     const { refetch } = useMyAppsConfig(account);
     const { formatMessage } = useIntl();
 
@@ -88,7 +86,6 @@ export const useSetupDomainConfig = () => {
                                         body: formatMessage({ id: 'myapps.domainAcceptedBody', defaultMessage: 'Domain was added to system, now you need to add CNAME to your hosting' }),
                                     };
                                     dispatch(onAddNotification([notification]));
-                                    history.push(`/my-apps/manage`);
                                     setLoading(false);
                                     setDone(true);
                                     refetch();
@@ -129,7 +126,7 @@ export const useSetupDomainConfig = () => {
         }
 
 
-    }, [account, chainId, dispatch, getProvider, history, isLoading, setError, formatMessage, refetch])
+    }, [account, chainId, dispatch, getProvider, isLoading, setError, formatMessage, refetch])
 
 
     return { onSendDomainConfigCallback, isLoading, isError, isDone }

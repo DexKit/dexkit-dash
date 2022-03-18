@@ -10,10 +10,12 @@ import { onAddNotification } from "redux/actions";
 import { NotificationType } from 'services/notification';
 import { Notification as CustomNotification } from 'types/models/Notification';
 import { useIntl } from "react-intl";
+import { useMyAppsConfig } from "./useMyAppsConfig";
 
 export const useDeleteMyAppMutation = () => {
-    const { getProvider } = useWeb3();
+    const { getProvider, account } = useWeb3();
     const dispatch = useDispatch();
+    const { refetch } = useMyAppsConfig(account);
     const intl = useIntl();
     return useMutation(({ domain, account, chainId }: { account: string, domain: string, chainId: ChainId }) => {
         const ethAccount = account;
@@ -73,6 +75,7 @@ export const useDeleteMyAppMutation = () => {
                             body: intl.formatMessage({ id: 'myapps.deleteSuccessBody', defaultMessage: 'App was deleted' }),
                         };
                         dispatch(onAddNotification([notification]));
+                        refetch();
 
 
                     })
