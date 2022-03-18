@@ -565,7 +565,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                 coinFeedAddress={data?.player1_coin.coin_feed}
                 multiplier={data?.player1_coin.multiplier}
                 endPrice={data?.player1_coin.end_price}
-                score={data?.player1_coin.score.toNumber()}
+                score={data?.player1_coin.champion_score.toNumber()}
                 winner={data?.winner === data?.player1}
                 account={data?.player1}
               />
@@ -607,7 +607,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                 coinFeedAddress={data?.player2_coin.coin_feed}
                 endPrice={data?.player2_coin.end_price}
                 multiplier={data?.player2_coin.multiplier}
-                score={data?.player2_coin.score.toNumber()}
+                score={data?.player2_coin.champion_score.toNumber()}
                 winner={
                   data?.player2 !== ethers.constants.AddressZero &&
                   data?.winner === data?.player2

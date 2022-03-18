@@ -1,9 +1,9 @@
-import {ChainId} from 'types/blockchain';
+import { ChainId } from 'types/blockchain';
 
 export const NFT_LEAGUE_MULTIPLIERS = [1, 10, 100, 1000];
 
 export const NFT_LEAGUE_FACTORY_ADDRESS = {
-  [ChainId.Mumbai]: '0x45e6E5723a1534581cfC2d899e0E70A0268e040F',
+  [ChainId.Mumbai]: '0x31540461C134895d0f07a44241C9BD65a71926CF',
   [ChainId.Matic]: '',
   [ChainId.Binance]: '',
 };
