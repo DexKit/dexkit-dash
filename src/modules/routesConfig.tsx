@@ -1,4 +1,4 @@
-import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+// import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 export interface IconProps {
   src: string;
@@ -92,7 +92,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    {
+    /*  {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',
@@ -151,8 +151,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
-        },
-        /*{
+        },*/
+    /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
           messageId: 'sidebar.app.mint-nft',
@@ -161,7 +161,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
         },*/
-        {
+    /*  {
           id: 'coinleague.how-to-play',
           title: 'How To Play',
           messageId: 'sidebar.howToPlay',
@@ -189,7 +189,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `${COINSLEAGUE_ROUTE}/trading-analysis`,
         },
       ],
-    },
+    },*/
     {
       id: 'myapps',
       title: 'My Apps',

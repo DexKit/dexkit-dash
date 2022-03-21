@@ -44,7 +44,7 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.19'
           id='panelv0.0.6.19-header'>
           <Typography className={classes.heading}>
-            v0.0.6.19- 18-03-2022{' '}
+            v0.0.6.19 - 21-03-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>

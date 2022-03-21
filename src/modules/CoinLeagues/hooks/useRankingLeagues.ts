@@ -1,12 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import { ChainId } from 'types/blockchain';
-import { POLL_INTERVAL_GAMES } from '../constants';
+import { BLOCK_TIMESTAMP_COMPETION, Months, POLL_INTERVAL_GAMES } from '../constants';
 import {
   GET_RANKING_MOST_EARNED,
   GET_RANKING_MOST_JOINED,
   GET_RANKING_MOST_WINNED,
   GET_RANKING_MOST_PROFIT,
+  GET_RANKING_MOST_JOINED_PAST,
 } from '../services/gql/ranking';
 import { getGraphClient } from '../services/graphql';
 import { PlayerGraph } from '../utils/types';
@@ -41,6 +42,53 @@ export const useRanking = (type: RankingType, isNFTGame = false, chainId = Chain
   });
 
   return query;
+
+
+}
+
+export const useRankingCompetion = (type: RankingType, isNFTGame = false, chainId = ChainId.Matic) => {
+
+  const queryString = useMemo(() => {
+    switch (type) {
+      case RankingType.MostWinner:
+        return GET_RANKING_MOST_WINNED
+      case RankingType.MostJoined:
+        return GET_RANKING_MOST_JOINED
+      case RankingType.MostEarned:
+        return GET_RANKING_MOST_EARNED
+      case RankingType.MostProfit:
+        return GET_RANKING_MOST_PROFIT
+
+    }
+  }, [type])
+
+  const queryStringPast = useMemo(() => {
+    switch (type) {
+      case RankingType.MostWinner:
+        return GET_RANKING_MOST_WINNED
+      case RankingType.MostJoined:
+        return GET_RANKING_MOST_JOINED_PAST
+      case RankingType.MostEarned:
+        return GET_RANKING_MOST_EARNED
+      case RankingType.MostProfit:
+        return GET_RANKING_MOST_PROFIT
+
+    }
+  }, [type])
+
+
+  const query = useQuery<{ players: PlayerGraph[] }>(queryString, {
+    client: getGraphClient(isNFTGame, chainId),
+    pollInterval: POLL_INTERVAL_GAMES,
+  });
+
+  const queryPast = useQuery<{ players: PlayerGraph[] }>(queryStringPast, {
+    client: getGraphClient(isNFTGame, chainId),
+    pollInterval: POLL_INTERVAL_GAMES,
+    variables: {block: BLOCK_TIMESTAMP_COMPETION[Months.February][chainId]}
+  });
+
+  return {query, queryPast};
 
 
 }
