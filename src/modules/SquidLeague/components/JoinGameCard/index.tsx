@@ -15,13 +15,13 @@ import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCu
 import {ethers} from 'ethers';
 import {GameState} from 'modules/SquidLeague/utils/types';
 import Countdown from 'modules/SquidLeague/components/Countdown';
-import {JoinGameStateSkeleton} from 'modules/SquidLeague/pages/Game/JoinGameState.skeleton';
 
 import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 
 import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
 
 import {useChainInfo} from 'hooks/useChainInfo';
+import {JoinGameStateSkeleton} from './JoinGameState.skeleton';
 
 interface Params {
   id: string;

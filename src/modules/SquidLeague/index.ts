@@ -1,5 +1,5 @@
 import React from 'react';
-import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
+import { SQUIDLEAGUE_ROUTE } from 'shared/constants/routes';
 
 export const squidLeagueConfigs = [
   {
@@ -7,6 +7,10 @@ export const squidLeagueConfigs = [
       {
         path: `${SQUIDLEAGUE_ROUTE}/create`,
         component: React.lazy(() => import('./pages/CreateGame')),
+      },
+      {
+        path: `${SQUIDLEAGUE_ROUTE}/explore`,
+        component: React.lazy(() => import('./pages/Explore')),
       },
       {
         path: `${SQUIDLEAGUE_ROUTE}/:id`,

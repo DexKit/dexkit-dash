@@ -1,37 +1,27 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useQuery} from 'react-query';
-import {GameStatus} from '../constants/enum';
 
-import {GET_ALL_GAMES} from '../services/gql';
+import {GET_GAME} from '../services/gql';
 import {getGraphClient} from '../services/graphql';
 import {GameGraph} from '../utils/types';
 
-export const useGamesGraph = (
-  status?: GameStatus,
-  first: number = 10,
-  skip: number = 0,
-) => {
+export const useGameGraph = (id: string) => {
   const {chainId} = useWeb3();
 
-  const gamesQuery = useQuery(['GET_GAMES_SQUID_LEAGUE', chainId], () => {
+  const gameQuery = useQuery(['GET_GAME_SQUID_LEAGUE', chainId, id], () => {
     const client = getGraphClient(chainId);
 
-    if (!chainId || !client || !status) {
+    if (!chainId || !client) {
       return;
     }
 
-    return client.query<
-      GameGraph[],
-      {status: GameStatus; first: number; skip: number}
-    >({
-      query: GET_ALL_GAMES,
+    return client.query<GameGraph, {id: string}>({
+      query: GET_GAME,
       variables: {
-        status,
-        first,
-        skip,
+        id,
       },
     });
   });
 
-  return gamesQuery;
+  return gameQuery;
 };
