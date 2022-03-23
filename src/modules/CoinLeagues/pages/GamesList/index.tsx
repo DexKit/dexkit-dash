@@ -358,7 +358,7 @@ const GamesList = () => {
             <Button
               variant={'contained'}
               onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-              Connect Wallet{' '}
+              <IntlMessages id='common.connectWallet' />:{' '}
             </Button>
           )}
         </Grid>

@@ -49,6 +49,7 @@ export const CREATOR_PRIZES_ADDRESSES = [
   '0xA27e256CDD086eF88953b941582bB651582c1454',
   '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f',
   '0xD50E4D1E0b49eb64a6bF2f48731c035E8948D219',
+  '0xA5bdC63A85f889076C17177290BD90Ebd2140966',
 ];
 
 export const BITBOY_TEAM = [
@@ -649,6 +650,8 @@ export const PriceFeeds = {
 };
 
 export const CHAMPIONS: {[key: number]: string} = {
+  // We are holding for now the minting to improve secondary market
+  // [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Binance]: '',
   [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
@@ -728,8 +731,25 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 //export const GAME_METADATA_API = 'http://localhost:4001';
 
 export const GAME_METADATA_API =
-  process.env.NODE_ENV === 'production'
-    ? 'http://localhost:4001'
+  process.env.NODE_ENV === 'development'
+    ? //'http://localhost:4001'
+      'https://coinleague-app-api-yxwk6.ondigitalocean.app'
     : process.env.REACT_APP_PROFILE_API;
 
 export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;
+
+export enum Months {
+  February = 'February',
+  March = 'March',
+  // March = 3,
+}
+
+export const BLOCK_TIMESTAMP_COMPETION: {
+  [key: string]: {[key: number]: number};
+} = {
+  [Months.March]: {
+    [ChainId.Mumbai]: 0,
+    [ChainId.Matic]: 25464624,
+    [ChainId.Binance]: 0,
+  },
+};

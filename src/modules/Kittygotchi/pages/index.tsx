@@ -279,7 +279,7 @@ export const KittygotchiIndex = () => {
               <Alert severity='info'>
                 <Typography variant='body2'>
                   <IntlMessages id='app.kittygotchi.connectTo' /> Binance Smart
-                  Chain or Polygon{' '}
+                  Chain or Polygon{' '} or ETH
                   <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>

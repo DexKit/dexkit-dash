@@ -370,7 +370,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score,
             profile,
           };
@@ -378,7 +378,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score: d.score / 1000,
             profile,
           };
@@ -398,7 +398,7 @@ function OnePlayerTable(props: Props): JSX.Element {
       return {
         ...d,
         account: d.hash,
-        hash: label,
+        label: label,
         score: d.score / 1000,
         profile,
       };

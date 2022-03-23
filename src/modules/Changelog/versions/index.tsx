@@ -41,10 +41,32 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.19'
+          id='panelv0.0.6.19-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.19 - 21-03-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Kittygotchi traits and support on ETH
+            </Typography>
+          </Box>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Manage Page to deploy easily aggregators
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.18'
           id='panelv0.0.6.18-header'>
           <Typography className={classes.heading}>
-            v0.0.6.18- 10-02-2021{' '}
+            v0.0.6.18- 10-02-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -64,7 +86,7 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.17'
           id='panelv0.0.6.17-header'>
           <Typography className={classes.heading}>
-            v0.0.6.17- 03-02-2021{' '}
+            v0.0.6.17- 03-02-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -79,7 +101,7 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.16'
           id='panelv0.0.6.16-header'>
           <Typography className={classes.heading}>
-            v0.0.6.16 - 02-02-2021{' '}
+            v0.0.6.16 - 02-02-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -104,7 +126,7 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.15'
           id='panelv0.0.6.15-header'>
           <Typography className={classes.heading}>
-            v0.0.6.15 - 28-01-2021{' '}
+            v0.0.6.15 - 28-01-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -150,7 +172,7 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.14'
           id='panelv0.0.6.14-header'>
           <Typography className={classes.heading}>
-            v0.0.6.14 - 10-01-2021{' '}
+            v0.0.6.14 - 10-01-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>

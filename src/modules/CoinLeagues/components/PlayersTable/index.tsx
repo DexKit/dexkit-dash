@@ -228,7 +228,7 @@ function PlayersTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score: d.score / 1000,
             profile,
           };
@@ -251,7 +251,7 @@ function PlayersTable(props: Props): JSX.Element {
       return {
         ...d,
         account: d.hash,
-        hash: label,
+        label: label,
         score: d.score / 1000,
         profile,
       };
@@ -403,7 +403,7 @@ function PlayersTable(props: Props): JSX.Element {
                                 overlap='circular'
                                 badgeContent={
                                   !loadingMultiplier &&
-                                  multiplier(row.hash).toFixed(3)
+                                  multiplier(row.account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}

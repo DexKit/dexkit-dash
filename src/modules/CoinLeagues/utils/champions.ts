@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 import {
   EARLY_ACCESS_BITT_AMOUNT,
   EARLY_ACCESS_KIT_AMOUNT,
@@ -11,8 +11,8 @@ import {
   THIRD_ROUND_DATE,
   CHAMPIONS,
 } from '../constants';
-import {ChampionsEventRound} from './types';
-import {ChainId} from 'types/blockchain';
+import { ChampionsEventRound } from './types';
+import { ChainId } from 'types/blockchain';
 
 export function getEventCurrentRound(): ChampionsEventRound {
   return ChampionsEventRound.FIRST;
@@ -243,11 +243,11 @@ export function IS_CHAMPIONS_NETWORK_ENABLED(chainId?: number): boolean {
     return false;
   }
 
-  if (chainId === ChainId.Binance) {
+  if (chainId === ChainId.Binance || chainId === ChainId.Matic) {
     return false;
   }
 
-  if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+  if (chainId === ChainId.Mumbai) {
     return true;
   }
 
