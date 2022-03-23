@@ -4,7 +4,7 @@ export const NFT_LEAGUE_MULTIPLIERS = [1, 10, 100, 1000];
 
 export const NFT_LEAGUE_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0x31540461C134895d0f07a44241C9BD65a71926CF',
-  [ChainId.Matic]: '',
+  [ChainId.Matic]: '0xbc1F616f4fb303151496d215B67D1dE443EA7e9b',
   [ChainId.Binance]: '',
 };
 
@@ -32,7 +32,15 @@ export const CHAMPIONS_COINS = {
     'Doge',
   ],
   [ChainId.Binance]: [],
-  [ChainId.Matic]: [],
+  [ChainId.Matic]: [
+    'Bittoken',
+    'Bitcoin',
+    'Ethereum',
+    'ChainLink',
+    'Polkadot',
+    'Uniswap',
+    'Cardano',
+    'Doge',],
 };
 
 export function GET_CHAMPIONS_COINS(chainId: ChainId) {
