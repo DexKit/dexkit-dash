@@ -1,20 +1,25 @@
-import {ApolloClient, InMemoryCache} from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ChainId } from 'types/blockchain';
 
-export const getGraphClient = (isNFTGame: boolean, chainId?: ChainId,  ) => {
-  if(isNFTGame){
+export const getGraphClient = (isNFTGame: boolean, chainId?: ChainId,) => {
+  if (isNFTGame) {
     return nftClient
   }
 
-  if(chainId === ChainId.Binance){
+  if (chainId === ChainId.Binance) {
     return bscClient;
   }
   return client;
 }
 
+export const GET_GRAPHQL_CLIEN_URL_MAIN_ROOM = {
+  [ChainId.Matic]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguesv2',
+  [ChainId.Binance]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguebsc'
+}
+
 
 export const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguesv2',
+  uri: GET_GRAPHQL_CLIEN_URL_MAIN_ROOM[ChainId.Matic],
   cache: new InMemoryCache(),
   headers: {
     'User-Agent':
@@ -23,7 +28,7 @@ export const client = new ApolloClient({
 });
 
 export const bscClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguebsc',
+  uri: GET_GRAPHQL_CLIEN_URL_MAIN_ROOM[ChainId.Binance],
   cache: new InMemoryCache(),
   headers: {
     'User-Agent':
