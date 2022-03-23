@@ -23,7 +23,7 @@ export const GET_RANKING_MOST_WINNED = gql`
 export const GET_RANKING_MOST_JOINED = gql`
   {
     players(
-      first: 100
+      first: 500
       orderBy: totalJoinedGames
       orderDirection: desc
       where: {totalJoinedGames_gt: 0}
@@ -40,14 +40,65 @@ export const GET_RANKING_MOST_JOINED = gql`
   }
 `;
 
-export const GET_RANKING_MOST_JOINED_PAST = gql`
+export const GET_RANKING_MOST_JOINED_COMPETITION = gql`
   query GetMostJoinedPast($block: Int){
     players(
-      first: 100
+      first: 500
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+    pastPlayers: players(
+      first: 500
       orderBy: totalJoinedGames
       orderDirection: desc
       where: {totalJoinedGames_gt: 0}
       block: {number: $block }
+    ) {
+      id
+      totalWinnedGames
+      pastTotalJoinedGames: totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+  }
+`;
+
+export const GET_RANKING_MOST_JOINED_COMPETITION_STRING = `
+  query GetMostJoinedPast($fromBlock: Int){
+    players(
+      first: 500
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+    pastPlayers: players(
+      first: 500
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+      block: {number: $fromBlock }
     ) {
       id
       totalWinnedGames
@@ -60,6 +111,44 @@ export const GET_RANKING_MOST_JOINED_PAST = gql`
     }
   }
 `;
+
+export const GET_RANKING_MOST_JOINED_COMPETITION_BETWEEN_MONTHS_STRING = `
+  query GetMostJoinedPast($tillBlock: Int, $fromBlock: Int){
+    players(
+      first: 500
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+      block: {number: $tillBlock }
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+    pastPlayers: players(
+      first: 500
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+      block: {number: $fromBlock }
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+  }
+`;
+
 
 export const GET_RANKING_MOST_EARNED = gql`
   {
