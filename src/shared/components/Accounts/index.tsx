@@ -2,7 +2,13 @@ import React, {useCallback, useState, useRef} from 'react';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
-import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Snackbar,
+  CircularProgress,
+  TextField,
+} from '@material-ui/core';
 
 import {useTheme} from '@material-ui/core/styles';
 
@@ -35,7 +41,7 @@ import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circl
 import ContainedInput from 'shared/components/ContainedInput';
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
-import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 const Accounts = () => {
   const theme = useTheme();
@@ -249,7 +255,7 @@ const Accounts = () => {
       if (index > -1) {
         newAccounts.splice(index, 1);
         setSelectedAccounts(newAccounts);
-        if(newAccounts.length === 0){
+        if (newAccounts.length === 0) {
           history.push(LOGIN_WALLET_ROUTE);
         }
       }
@@ -272,7 +278,8 @@ const Accounts = () => {
                 container
                 spacing={2}>
                 <Grid item xs>
-                  <ContainedInput
+                  <TextField
+                    variant='outlined'
                     placeholder='Address'
                     fullWidth
                     ref={(ref: any) => {

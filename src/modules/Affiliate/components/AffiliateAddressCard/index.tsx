@@ -4,30 +4,32 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import MoneyIcon from '@material-ui/icons/MonetizationOn';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import {truncateAddress} from 'utils';
+import {isAddress} from 'utils/ethers';
 
 interface Props {
-  total: number;
+  address?: string;
 }
 
-function AffiliateTotalCard(props: Props) {
-  const {usdFormatter} = useUSDFormatter();
-
+function AffiliateAddressCard({address}: Props) {
   return (
     <Box p={2} component={Paper}>
       <Grid container spacing={4} alignItems='center'>
         <Grid item>
-          <MoneyIcon style={{fontSize: 50}} />
+          <AccountBalanceWalletIcon style={{fontSize: 50}} />
         </Grid>
         <Grid item xs>
           <Typography gutterBottom variant='caption' color='textSecondary'>
-            <IntlMessages id='app.affiliate.total' />
+            <IntlMessages
+              id='app.affiliate.address'
+              defaultMessage='Affiliate Address'
+            />
           </Typography>
           <Typography variant='h5'>
-            {usdFormatter.format(props.total)}
+            {isAddress(address) ? truncateAddress(address) : address}
           </Typography>
         </Grid>
       </Grid>
@@ -35,4 +37,4 @@ function AffiliateTotalCard(props: Props) {
   );
 }
 
-export default AffiliateTotalCard;
+export default AffiliateAddressCard;

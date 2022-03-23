@@ -46,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     display: 'block',
     width: '100%',
-    '&:disabled': {
-      backgroundColor: theme.palette.action.disabledBackground,
-    },
   },
 }));
 
@@ -71,7 +68,7 @@ export const SelectCoinListItem = (props: Props) => {
             </Box>
           </Grid>
           <Grid item xs>
-            <Typography align='left' variant='body1'>
+            <Typography align='left' variant='body1' color='inherit'>
               {coin.base.toUpperCase()} / {coin.quote.toUpperCase()}
             </Typography>
             <Typography align='left' variant='body2' color='textSecondary'>

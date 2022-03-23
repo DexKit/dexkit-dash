@@ -60,6 +60,7 @@ import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
 import {TextField} from '@material-ui/core';
+import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
 
 enum Tabs {
   History = 'History',
@@ -258,8 +259,35 @@ const GamesList = () => {
     setOpen(true);
   }, []);
 
+  const shareDialogToggler = useToggler();
+
+  const [shareSelectedId, setShareSelectedId] = useState<string>();
+
+  const handleShareGame = useCallback(
+    (id) => {
+      setShareSelectedId(id);
+      shareDialogToggler.set(true);
+    },
+    [shareDialogToggler],
+  );
+
+  const handleCloseShareDialog = useCallback(() => {
+    setShareSelectedId(undefined);
+    shareDialogToggler.set(false);
+  }, [shareDialogToggler]);
+
   return (
     <>
+      <CoinLeagueShareDialog
+        dialogProps={{
+          open: shareDialogToggler.show,
+          onClose: handleCloseShareDialog,
+          fullWidth: true,
+          maxWidth: 'sm',
+          fullScreen: isMobile,
+        }}
+        id={shareSelectedId}
+      />
       <GameFilterDrawer
         show={filterToggler.show}
         onClose={filterToggler.toggle}
@@ -470,6 +498,7 @@ const GamesList = () => {
                     }
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -478,6 +507,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -486,6 +516,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleBitBoy}
                     color={filtersState.isBitboy ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -494,6 +525,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleJackpot}
                     color={filtersState.isJackpot ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
               </Grid>
@@ -530,7 +562,12 @@ const GamesList = () => {
             <Grid container spacing={4}>
               {gamesToJoin?.map((g, id) => (
                 <Grid item xs={12} sm={4} key={id}>
-                  <CardGame game={g} id={g.id} onClick={onClickEnterGame} />
+                  <CardGame
+                    game={g}
+                    id={g.id}
+                    onClick={onClickEnterGame}
+                    onShare={handleShareGame}
+                  />
                 </Grid>
               ))}
               {isLoadingCreated &&

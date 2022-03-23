@@ -48,6 +48,7 @@ export const CREATOR_PRIZES_ADDRESSES = [
   '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
   '0xA27e256CDD086eF88953b941582bB651582c1454',
   '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f',
+  '0xD50E4D1E0b49eb64a6bF2f48731c035E8948D219',
 ];
 
 export const BITBOY_TEAM = [
@@ -727,9 +728,8 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 //export const GAME_METADATA_API = 'http://localhost:4001';
 
 export const GAME_METADATA_API =
-  process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'production'
     ? 'http://localhost:4001'
     : process.env.REACT_APP_PROFILE_API;
 
 export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;
-

@@ -3,6 +3,8 @@ import {useTheme} from '@material-ui/core/styles';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import {Divider, DialogActions, Button} from '@material-ui/core';
+
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -39,8 +41,16 @@ function isSelected(
     quote: string;
   }[],
 ) {
-  if (selectedCoins) {
-    return selectedCoins?.indexOf(item) > -1;
+  if (selectedCoins !== undefined && selectedCoins?.length >= 1) {
+    return (
+      selectedCoins?.findIndex((another) => {
+        const addr = item.address.toLowerCase();
+
+        const selectedAddr = another.address.toLowerCase();
+
+        return addr === selectedAddr;
+      }) > -1
+    );
   }
 
   return false;
@@ -49,9 +59,10 @@ function isSelected(
 interface Props extends DialogProps {
   title?: string;
   chainId: ChainId.Matic | ChainId.Mumbai | ChainId.Binance;
-  selectedCoins?: CoinFeed[];
   captainCoin?: CoinFeed;
+  selectedCoins?: CoinFeed[];
   onSelectCoin: (coin: CoinFeed, isCaptainCoin: boolean) => void;
+  onSelectCoins?: (coins: CoinFeed[]) => void;
   isCaptainCoin: boolean;
   maxSelectedCoins?: number;
 }
@@ -59,14 +70,18 @@ interface Props extends DialogProps {
 export const SelectCoinLeagueDialog = (props: Props) => {
   const {
     onSelectCoin,
+    onSelectCoins,
     onClose,
     chainId,
-    selectedCoins,
     isCaptainCoin,
+    selectedCoins,
     maxSelectedCoins,
     captainCoin,
   } = props;
   // TODO: Change to Mainnet
+
+  const [currSelectedCoins, setCurrSelectedCoins] = useState<CoinFeed[]>([]);
+
   const coins = PriceFeeds[chainId];
   const theme = useTheme();
   const {messages} = useIntl();
@@ -80,14 +95,22 @@ export const SelectCoinLeagueDialog = (props: Props) => {
           coin.baseName.toLowerCase().startsWith(filterText?.toLowerCase()) ||
           coin.base.toLowerCase().startsWith(filterText?.toLowerCase()),
       )
-      .filter((coin) => {
-        if (!isCaptainCoin) {
-          return captainCoin !== coin;
-        } else {
-          return selectedCoins?.indexOf(coin) === -1;
+      .filter((coin: CoinFeed) => {
+        if (isCaptainCoin && selectedCoins) {
+          const index = selectedCoins.indexOf(coin);
+
+          console.log('index', index);
+
+          if (index > -1) {
+            return false;
+          }
+
+          return true;
         }
+
+        return coin !== captainCoin;
       });
-  }, [filterText, selectedCoins, coins, captainCoin]);
+  }, [isCaptainCoin, filterText, String(selectedCoins), coins, captainCoin]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,18 +123,38 @@ export const SelectCoinLeagueDialog = (props: Props) => {
   const handleSelectCoin = useCallback(
     (coin: CoinFeed) => {
       setFilterText('');
-      onSelectCoin(coin, isCaptainCoin);
+
+      const index = currSelectedCoins.indexOf(coin);
+
+      if (index > -1) {
+        const newArr = [...currSelectedCoins];
+
+        newArr.splice(index, 1);
+
+        setCurrSelectedCoins(newArr);
+      } else {
+        setCurrSelectedCoins((value) => [...value, coin]);
+      }
     },
-    [onSelectCoin, isCaptainCoin],
+    [onSelectCoin, String(currSelectedCoins)],
   );
 
   const handleClose = useCallback(() => {
     setFilterText('');
 
+    setCurrSelectedCoins([]);
+
     if (onClose) {
       onClose({}, 'escapeKeyDown');
     }
   }, [onClose]);
+
+  const handleSave = useCallback(() => {
+    if (onSelectCoins) {
+      onSelectCoins(currSelectedCoins);
+      setCurrSelectedCoins([]);
+    }
+  }, [onSelectCoins, String(currSelectedCoins)]);
 
   return (
     <Dialog
@@ -129,7 +172,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             <Typography variant='body1'>
               {isCaptainCoin
                 ? messages['app.coinLeagues.selectCaptainCoin']
-                : messages['app.coinLeagues.selectCoin']}
+                : `${messages['app.coinLeagues.selectCoin']} - ${currSelectedCoins.length}/${maxSelectedCoins}`}
             </Typography>
           </Box>
           <IconButton onClick={handleClose}>
@@ -137,7 +180,8 @@ export const SelectCoinLeagueDialog = (props: Props) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
+      <Divider />
+      <DialogContent>
         <Box mb={4} p={2}>
           <TextField
             autoComplete='off'
@@ -168,11 +212,10 @@ export const SelectCoinLeagueDialog = (props: Props) => {
                   onClick={handleSelectCoin}
                   coin={data[index]}
                   key={index}
-                  selected={isSelected(data[index], selectedCoins)}
+                  selected={isSelected(data[index], currSelectedCoins)}
                   disabled={
-                    !isSelected(data[index], selectedCoins)
-                      ? selectedCoins?.length === maxSelectedCoins
-                      : false
+                    !isSelected(data[index], currSelectedCoins) &&
+                    currSelectedCoins?.length === maxSelectedCoins
                   }
                 />
               )}
@@ -180,6 +223,22 @@ export const SelectCoinLeagueDialog = (props: Props) => {
           </List>
         )}
       </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button
+          disabled={
+            maxSelectedCoins !== undefined &&
+            currSelectedCoins.length < maxSelectedCoins
+          }
+          onClick={handleSave}
+          variant='contained'
+          color='primary'>
+          <IntlMessages id='coinLeague.save' defaultMessage='Save' />
+        </Button>
+        <Button variant='outlined' color='primary' onClick={handleClose}>
+          <IntlMessages id='coinLeague.cancel' defaultMessage='Cancel' />
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

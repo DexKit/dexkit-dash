@@ -1,3 +1,4 @@
+import React from 'react';
 import {useCallback, useState} from 'react';
 import {Game} from 'types/coinsleague';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
@@ -6,6 +7,10 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useIntl} from 'react-intl';
+import {useSnackbar} from 'notistack';
+import {Button} from '@material-ui/core';
+import {useChainInfo} from 'hooks/useChainInfo';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 export function useGameJoin({
   game,
@@ -14,10 +19,15 @@ export function useGameJoin({
   game?: Game;
   onConfirm?: () => void;
 }) {
-  const {messages} = useIntl();
+  const {getScannerUrl} = useChainInfo();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const {messages, formatMessage} = useIntl();
   const [error, setError] = useState<Error>();
   const [transactionHash, setTransactionHash] = useState<string>();
   const [confirmed, setConfirmed] = useState<boolean>();
+
+  const {enqueueSnackbar} = useSnackbar();
 
   const {chainId} = useLeaguesChainInfo();
 
@@ -31,6 +41,13 @@ export function useGameJoin({
     setError(undefined);
   }, []);
 
+  const handleViewTransaction = useCallback(
+    (chainId: number, hash: string) => {
+      window.open(`${getScannerUrl(chainId)}/tx/${hash}`, '_blank');
+    },
+    [getScannerUrl],
+  );
+
   const join = useCallback(
     (
       coins: string[],
@@ -41,15 +58,44 @@ export function useGameJoin({
       championId?: any,
     ) => {
       if (game?.amount_to_play && chainId) {
+        setIsLoading(true);
+
         const onSubmitTx = (hash: string) => {
           setTransactionHash(hash);
 
+          enqueueSnackbar(
+            formatMessage({
+              id: 'coinLeague.transactionCreated',
+              defaultMessage: 'Transaction created',
+            }),
+            {
+              variant: 'success',
+              autoHideDuration: 5000,
+              action: (
+                <Button onClick={() => handleViewTransaction(chainId, hash)}>
+                  <IntlMessages id='coinLeague.view' defaultMessage='View' />
+                </Button>
+              ),
+            },
+          );
+
           createNotification({
-            title: isNFTGame ? '' : (messages['coinLeague.joinGame'] as string), // isNFTGame
-            body: `${messages['coinLeague.joiningGame'] as string} ${game.id}`,
+            title: isNFTGame
+              ? ''
+              : (formatMessage({
+                  id: 'coinLeague.joinGame',
+                  defaultMessage: 'Join Game',
+                }) as string), // isNFTGame
+            body: `${formatMessage({
+              id: 'coinLeague.joiningGame',
+              defaultMessage: 'Joining Game',
+            })} ${game.id}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, hash),
-            urlCaption: messages['coinLeague.viewTransaction'] as string,
+            urlCaption: formatMessage({
+              id: 'coinLeague.viewTransaction',
+              defaultMessage: 'View Transaction',
+            }),
             type: NotificationType.TRANSACTION,
             metadata: {
               chainId: chainId,
@@ -64,10 +110,12 @@ export function useGameJoin({
             onConfirm();
           }
           setConfirmed(true);
+          setIsLoading(false);
         };
 
         const onError = (error: Error) => {
           setError(error);
+          setIsLoading(false);
         };
 
         onJoinGameCallback(
@@ -87,5 +135,5 @@ export function useGameJoin({
     [game, onJoinGameCallback, chainId, createNotification, onConfirm],
   );
 
-  return {reset, join, transactionHash, confirmed, error};
+  return {isLoading, reset, join, transactionHash, confirmed, error};
 }

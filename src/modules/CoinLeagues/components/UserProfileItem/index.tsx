@@ -12,6 +12,7 @@ import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import {getPublicIPFSPath, isIPFS} from 'utils/ipfs';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {isAddress} from 'utils/ethers';
 
 const useStyles = makeStyles((theme) => ({
   profileImageContainer: {
@@ -38,7 +39,7 @@ interface Props {
 const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   const classes = useStyles();
 
-  if (profile) {
+  if (profile !== undefined) {
     return (
       <Grid alignItems='center' alignContent='center' container spacing={4}>
         <Grid item>
@@ -77,7 +78,11 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
         component={RouterLink}
         to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
         <Typography color='inherit'>
-          {label !== undefined ? label : truncateAddress(address)}
+          {label !== undefined
+            ? label
+            : isAddress(address)
+            ? truncateAddress(address)
+            : address}
         </Typography>
       </Link>
     );

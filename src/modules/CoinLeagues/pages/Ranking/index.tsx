@@ -251,7 +251,10 @@ export function Ranking() {
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom variant='h6'>
-                Ranking
+                <IntlMessages
+                  id='coinLeague.ranking'
+                  defaultMessage='Ranking'
+                />
               </Typography>
               <Grid container spacing={4}>
                 {rankingQuery.loading &&

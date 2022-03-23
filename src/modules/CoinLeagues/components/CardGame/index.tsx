@@ -27,7 +27,7 @@ import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import {Share as ShareIcon} from '@material-ui/icons';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, useIntl} from 'react-intl';
 
 import {ReactComponent as CoinIcon} from '../../assets/coin.svg';
 import {ReactComponent as ProfileTwoUserIcon} from '../../assets/profile-2user.svg';
@@ -79,12 +79,21 @@ interface Props {
   id?: string;
   game?: GameGraph;
   onClick?: (address: string) => void;
+  onShare?: (id?: string) => void;
   btnMessage?: string;
   loading?: boolean;
 }
 
-const CardGame: React.FC<Props> = ({game, onClick, btnMessage, loading}) => {
+const CardGame: React.FC<Props> = ({
+  game,
+  onClick,
+  btnMessage,
+  loading,
+  onShare,
+}) => {
   const classes = useStyles();
+
+  const {formatMessage} = useIntl();
 
   const theme = useTheme();
 
@@ -164,7 +173,13 @@ const CardGame: React.FC<Props> = ({game, onClick, btnMessage, loading}) => {
   );
 
   return (
-    <Paper>
+    <Paper
+      variant={game?.title ? 'outlined' : 'elevation'}
+      style={
+        game?.title
+          ? {borderColor: theme.palette.primary.main, borderWidth: 2}
+          : undefined
+      }>
       <Box px={4} py={2} bgcolor={alpha(theme.palette.background.default, 0.6)}>
         {game?.title ? (
           <Box
@@ -195,7 +210,13 @@ const CardGame: React.FC<Props> = ({game, onClick, btnMessage, loading}) => {
               {loading ? <Skeleton /> : <>#{game?.intId}</>}{' '}
             </Typography>
             {!loading && (
-              <Button startIcon={<ShareIcon />}>
+              <Button
+                onClick={() => {
+                  if (onShare) {
+                    onShare(game?.intId);
+                  }
+                }}
+                startIcon={<ShareIcon />}>
                 <FormattedMessage
                   id='coinLeague.share'
                   defaultMessage='Share'
@@ -343,30 +364,53 @@ const CardGame: React.FC<Props> = ({game, onClick, btnMessage, loading}) => {
       {!loading && (
         <Box p={4} bgcolor={alpha(theme.palette.background.default, 0.6)}>
           <Grid container spacing={4}>
-            {countdown && countdown === 0 && (
+            {!game?.startedAt && (
               <Grid item xs={12}>
                 <Box className={classes.timer}>
-                  <IntlMessages
-                    id='coinLeague.startsIn'
-                    defaultMessage='Starts in'
-                  />
-                  : <CardTimer time={50000} />
+                  <Typography
+                    style={
+                      countdown !== undefined && countdown > 0
+                        ? {color: theme.palette.primary.main}
+                        : {color: theme.palette.success.main}
+                    }
+                    variant='body1'
+                    align='center'>
+                    {countdown !== undefined && countdown > 0 ? (
+                      <>
+                        <IntlMessages
+                          id='coinLeague.startsIn'
+                          defaultMessage='Starts in'
+                        />
+                        : <CardTimer time={countdown} />
+                      </>
+                    ) : (
+                      <IntlMessages
+                        id='coinLeague.readyToPlay'
+                        defaultMessage='Ready to Play'
+                      />
+                    )}
+                  </Typography>
                 </Box>
               </Grid>
             )}
             <Grid item xs={12}>
               <JoinGameButton color='primary' onClick={onClickEnter}>
                 <Box>
-                  {btnMessage || (
-                    <Typography
-                      style={{textTransform: 'uppercase', fontWeight: 500}}
-                      variant='body1'>
+                  <Typography
+                    style={{textTransform: 'uppercase', fontWeight: 500}}
+                    variant='body1'>
+                    {game?.startedAt ? (
+                      formatMessage({
+                        id: 'app.coinLeagues.viewGame',
+                        defaultMessage: 'View Game',
+                      })
+                    ) : (
                       <IntlMessages
                         id='app.coinLeagues.joinGame'
                         defaultMessage='Join Game'
                       />
-                    </Typography>
-                  )}
+                    )}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography

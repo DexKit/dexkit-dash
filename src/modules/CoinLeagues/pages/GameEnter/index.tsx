@@ -54,19 +54,12 @@ import {
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
 import {ChainId, SupportedNetworkType} from 'types/blockchain';
-import {EndGameButton} from 'modules/CoinLeagues/components/EndGame';
-import {StartGame} from 'modules/CoinLeagues/components/StartGame';
-import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
 import CountdownStartsAt from 'modules/CoinLeagues/components/CountdownStartsAt';
-import {useNotifications} from 'hooks/useNotifications';
-
 import {CopyButton} from 'shared/components/CopyButton';
-import {ArrowForward, FileCopy} from '@material-ui/icons';
+import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
-import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -75,7 +68,6 @@ import {
   useCoinLeaguesFactoryRoutes,
   useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
@@ -93,19 +85,19 @@ import {
 import {useTokensMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMetadataModal';
 import {useGameMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
-import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 import ViewGameMetadataModal from 'modules/CoinLeagues/components/ViewGameMetadataModal';
 import RemoveGameMetadataModal from 'modules/CoinLeagues/components/RemoveGameMetadataModal';
-import {getTransactionScannerUrl} from 'utils/blockchain';
+
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
 import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeagues/utils/time';
-import moment from 'moment';
+
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import GameActionsPaper from 'modules/CoinLeagues/components/v2/GameActionsPaper';
+import GameActions from 'modules/CoinLeagues/components/v2/GameActions';
 import {useGameJoin} from 'modules/CoinLeagues/hooks/v2/useGameJoin';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -154,6 +146,8 @@ function GameEnter(props: Props) {
   const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
 
+  const isBalanceVisible = useIsBalanceVisible();
+
   const [maxSelectedCoins, setMaxSelectedCoins] = useState<number>();
 
   const {search} = useLocation();
@@ -184,16 +178,19 @@ function GameEnter(props: Props) {
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
+  const handleRefetch = useCallback(() => refetch(), [refetch]);
+
   const onOpenSelectDialog = useCallback(
     (ev: any) => {
       setOpen(true);
-      setMaxSelectedCoins(game?.num_coins?.toNumber());
+      setMaxSelectedCoins((game?.num_coins?.toNumber() || 0) - 1);
     },
     [game],
   );
 
   const onOpenSelectCaptainDialog = useCallback((ev: any) => {
     setIsChaptainCoin(true);
+    setMaxSelectedCoins(1);
     setOpen(true);
   }, []);
 
@@ -271,6 +268,20 @@ function GameEnter(props: Props) {
     setOpenChampionDialog(false);
   }, []);
 
+  const onSelectCoins = useCallback(
+    (coins: CoinFeed[]) => {
+      if (isCaptainCoin) {
+        setCaptainCoin(coins[0]);
+        setIsChaptainCoin(false);
+      } else {
+        setSelectedCoins(coins);
+      }
+
+      setOpen(false);
+    },
+    [isCaptainCoin],
+  );
+
   const onSelectCoin = useCallback(
     (coin: CoinFeed, isCaptain: boolean) => {
       if (isCaptain) {
@@ -334,7 +345,11 @@ function GameEnter(props: Props) {
   const affiliateField = query.get(AFFILIATE_FIELD);
   const amountToPlay = game?.amount_to_play;
 
-  const gameJoin = useGameJoin({game});
+  const handleJoinConfirm = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const gameJoin = useGameJoin({game, onConfirm: handleJoinConfirm});
 
   const onEnterGame = useCallback(() => {
     if (amountToPlay && captainCoin && chainId) {
@@ -482,8 +497,15 @@ function GameEnter(props: Props) {
           //@ts-ignore
           chainId={chainId}
           open={open}
-          selectedCoins={selectedCoins.concat(captainCoin ? captainCoin : [])}
+          selectedCoins={
+            isCaptainCoin && captainCoin !== undefined
+              ? [captainCoin]
+              : selectedCoins !== undefined
+              ? selectedCoins
+              : []
+          }
           onSelectCoin={onSelectCoin}
+          onSelectCoins={onSelectCoins}
           onClose={onCloseSelectDialog}
           isCaptainCoin={isCaptainCoin}
           maxSelectedCoins={maxSelectedCoins}
@@ -628,34 +650,24 @@ function GameEnter(props: Props) {
                       />
                     </Typography>
                     <Box>
-                      {finished && (
-                        <Chip
-                          size='small'
-                          label={messages['app.coinLeagues.ended']}
-                          color='primary'
-                        />
-                      )}
-                      {aborted && (
-                        <Chip
-                          size='small'
-                          label={messages['app.coinLeagues.aborted']}
-                          color='primary'
-                        />
-                      )}
-                      {started && !finished && !aborted && (
-                        <Chip
-                          size='small'
-                          label={messages['app.coinLeagues.started'] as string}
-                          color='primary'
-                        />
-                      )}
-                      {!started && !finished && !aborted && (
-                        <Chip
-                          size='small'
-                          label={messages['coinLeague.waiting'] as string}
-                          color='primary'
-                        />
-                      )}
+                      <Typography variant='subtitle1'>
+                        {game === undefined ? (
+                          <Skeleton />
+                        ) : (
+                          <>
+                            {finished && messages['app.coinLeagues.ended']}
+                            {aborted && messages['app.coinLeagues.aborted']}
+                            {started &&
+                              !finished &&
+                              !aborted &&
+                              (messages['app.coinLeagues.started'] as string)}
+                            {!started &&
+                              !finished &&
+                              !aborted &&
+                              (messages['coinLeague.waiting'] as string)}
+                          </>
+                        )}
+                      </Typography>
                     </Box>
                   </Grid>
 
@@ -809,30 +821,44 @@ function GameEnter(props: Props) {
               </Box>
             </Paper>
           </Grid>
-          <Grid item>
-            <Box display={'flex'} alignItems={'center'}>
-              {gameMetaQuery.data && (
-                <IconButton
-                  onClick={() => setOpenShowGameMetadataModal(true)}
-                  className={classes.crownIconContainer}>
-                  <CrownIcon />
-                </IconButton>
-              )}
-
-              {isGameMetadataEditor && (
-                <IconButton
-                  onClick={() => setOpenUpdateGameMetadataModal(true)}>
-                  <EditIcon />
-                </IconButton>
-              )}
-              {gameMetaQuery.data && isGameMetadataEditor && (
-                <IconButton
-                  onClick={() => setOpenRemoveGameMetadataModal(true)}>
-                  <DeleteIcon />
-                </IconButton>
-              )}
-            </Box>
-          </Grid>
+          {!game?.finished && (
+            <Grid item xs={12}>
+              <GameActions
+                onEditMetadata={
+                  isGameMetadataEditor
+                    ? () => setOpenUpdateGameMetadataModal(true)
+                    : undefined
+                }
+                onShowMetadata={
+                  gameMetaQuery.data
+                    ? () => setOpenShowGameMetadataModal(true)
+                    : undefined
+                }
+                onRemoveMetadata={
+                  gameMetaQuery.data && isGameMetadataEditor
+                    ? () => setOpenRemoveGameMetadataModal(true)
+                    : undefined
+                }
+                canEnterGame={
+                  game &&
+                  !player &&
+                  !isLoading &&
+                  !gameFull &&
+                  !started &&
+                  !aborted &&
+                  IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                  amountToPlay &&
+                  captainCoin &&
+                  sufficientFunds &&
+                  selectedCoins.length === (game?.num_coins.toNumber() || 0) - 1
+                }
+                game={game}
+                onEnterGame={onEnterGame}
+                onRefetch={handleRefetch}
+                enterLoading={gameJoin.isLoading}
+              />
+            </Grid>
+          )}
           {game &&
             !player &&
             !isLoading &&
@@ -964,9 +990,9 @@ function GameEnter(props: Props) {
           )}
           {players && (
             <Grid item xs={12}>
-              <Grid container>
+              <Grid container spacing={4}>
                 <Grid item xs={12}>
-                  <Typography variant='h6' style={{margin: 5}}>
+                  <Typography variant='subtitle1'>
                     <IntlMessages id='app.coinLeagues.players' />
                   </Typography>
                 </Grid>
@@ -983,7 +1009,7 @@ function GameEnter(props: Props) {
                     type={game?.game_type}
                     id={id as string}
                     finished={finished}
-                    hideCoins={!started}
+                    hideCoins={!started || !isBalanceVisible}
                     account={account}
                     winner={winner}
                     userProfiles={userProfiles.profiles}
@@ -992,13 +1018,7 @@ function GameEnter(props: Props) {
               </Grid>
             </Grid>
           )}
-
-          {!gameFull && !started && (
-            <Grid item xs={12}>
-              <WaitingPlayers />
-            </Grid>
-          )}
-          {isLoading && (
+          {isLoading ? (
             <Grid item xs={12}>
               <Grid container>
                 <Grid item xs={12}>
@@ -1011,35 +1031,16 @@ function GameEnter(props: Props) {
                 <Grid item xs={12}>
                   <PlayersTableSkeleton players={5} />
                 </Grid>
-                {game && !gameFull && !started && (
-                  <Grid item xs={12}>
-                    <WaitingPlayers />
-                  </Grid>
-                )}
               </Grid>
             </Grid>
-          )}
-
-          {!game?.finished && (
-            <Grid item xs={12}>
-              <GameActionsPaper
-                canEnterGame={
-                  game &&
-                  !player &&
-                  !isLoading &&
-                  !gameFull &&
-                  !started &&
-                  !aborted &&
-                  IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                  amountToPlay &&
-                  captainCoin &&
-                  sufficientFunds &&
-                  selectedCoins.length === (game?.num_coins.toNumber() || 0) - 1
-                }
-                game={game}
-                onEnterGame={onEnterGame}
-              />
-            </Grid>
+          ) : (
+            game &&
+            !gameFull &&
+            !started && (
+              <Grid item xs={12}>
+                <WaitingPlayers />
+              </Grid>
+            )
           )}
         </Grid>
       </Box>

@@ -3,7 +3,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {CircularProgress, Divider, useTheme} from '@material-ui/core';
+import {CircularProgress, Divider, Tab, useTheme} from '@material-ui/core';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -57,6 +57,7 @@ import ViewCoinListItem from '../ViewCoinsModal/ViewCoinItem';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {Alert} from '@material-ui/lab';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -140,6 +141,8 @@ function OnePlayerTable(props: Props): JSX.Element {
   const {messages} = useIntl();
   const {chainId} = useWeb3();
   const theme = useTheme();
+
+  const isMobile = useMobile();
 
   const [expanded, setExpanded] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -302,7 +305,9 @@ function OnePlayerTable(props: Props): JSX.Element {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
         let label;
+
         const bitboyMember = GET_BITBOY_NAME(d.hash);
+
         if (bitboyMember) {
           label = bitboyMember.label;
         } else {
@@ -310,6 +315,7 @@ function OnePlayerTable(props: Props): JSX.Element {
             ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
             : d.hash;
         }
+
         const currentFeedPrice = currentPrices?.filter((f) =>
           d.coins
             .concat(d.captainCoin ? d.captainCoin : [])
@@ -360,7 +366,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores && scores.reduce((p, c) => p + c);
+          const score = scores.length > 0 ? scores.reduce((p, c) => p + c) : 0;
           return {
             ...d,
             account: d.hash,
@@ -476,14 +482,6 @@ function OnePlayerTable(props: Props): JSX.Element {
 
   return (
     <>
-      <ViewCoinLeagueDialog
-        open={openViewDialog}
-        onClose={onCloseViewCoinsDialog}
-        coins={playerData?.coins || []}
-        captainCoin={playerData?.captainCoin}
-        id={id}
-        playerAddress={playerData?.hash}
-      />
       <Paper>
         <Box p={4}>
           <Grid container spacing={4}>
@@ -503,7 +501,9 @@ function OnePlayerTable(props: Props): JSX.Element {
                 alignContent='center'>
                 <Grid item>
                   <Chip
-                    className={classes.chip}
+                    variant='outlined'
+                    size='small'
+                    style={{color: theme.palette.primary.main}}
                     label={
                       isBalanceVisible
                         ? `${(playerData?.place || 0) + 1}º`
@@ -529,29 +529,56 @@ function OnePlayerTable(props: Props): JSX.Element {
               <Grid item xs={12}>
                 <Grid container spacing={4} justifyContent='space-between'>
                   <Grid item>
-                    {playerData.coins?.length > 0 && (
-                      <AvatarGroup max={10} spacing={17}>
-                        {chainId &&
-                          IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                          playerData?.coins.map((coin) =>
-                            isBalanceVisible ? (
-                              <Avatar
-                                className={classes.chip}
-                                src={getIconByCoin(coin, chainId)}
-                                style={{height: 35, width: 35}}>
-                                {getIconSymbol(coin, chainId)}
-                              </Avatar>
-                            ) : (
-                              <Badge color={'primary'} overlap='circular'>
+                    {playerData.coins?.length > 0 &&
+                      (isMobile ? (
+                        <AvatarGroup max={10} spacing={17}>
+                          {chainId &&
+                            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                            playerData?.coins.map((coin) =>
+                              isBalanceVisible ? (
                                 <Avatar
                                   className={classes.chip}
-                                  style={{height: 35, width: 35}}
-                                />
-                              </Badge>
-                            ),
-                          )}
-                      </AvatarGroup>
-                    )}
+                                  src={getIconByCoin(coin, chainId)}
+                                  style={{height: 35, width: 35}}>
+                                  {getIconSymbol(coin, chainId)}
+                                </Avatar>
+                              ) : (
+                                <Badge color={'primary'} overlap='circular'>
+                                  <Avatar
+                                    className={classes.chip}
+                                    style={{height: 35, width: 35}}
+                                  />
+                                </Badge>
+                              ),
+                            )}
+                        </AvatarGroup>
+                      ) : (
+                        <Grid container spacing={3}>
+                          {chainId &&
+                            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                            playerData?.coins.map((coin) =>
+                              isBalanceVisible ? (
+                                <Grid item>
+                                  <Avatar
+                                    className={classes.chip}
+                                    src={getIconByCoin(coin, chainId)}
+                                    style={{height: 35, width: 35}}>
+                                    {getIconSymbol(coin, chainId)}
+                                  </Avatar>
+                                </Grid>
+                              ) : (
+                                <Grid item>
+                                  <Badge color='primary' overlap='circular'>
+                                    <Avatar
+                                      className={classes.chip}
+                                      style={{height: 35, width: 35}}
+                                    />
+                                  </Badge>
+                                </Grid>
+                              ),
+                            )}
+                        </Grid>
+                      ))}
                   </Grid>
                   <Grid item>
                     {isBalanceVisible ? (
@@ -576,28 +603,61 @@ function OnePlayerTable(props: Props): JSX.Element {
             )}
             {expanded && (
               <Grid item xs={12}>
-                <List disablePadding>
-                  {allCoins?.map((coin, index) => (
-                    <ViewCoinListItem
-                      coin={coin.coin}
-                      feedOnchain={coin.feed}
-                      currentPrice={coin.currentFeed}
-                      started={gameStarted}
-                      key={index}
-                      isCaptain={coin.isCaptain}
-                      playerAddress={playerData?.hash}
-                      multipliers={multiplier}
-                      tooltipMessage={tooltipMessage}
-                    />
-                  ))}
-                </List>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.coin'
+                            defaultMessage='Coin'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.startPrice'
+                            defaultMessage='Start Price'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.endPrice'
+                            defaultMessage='End Price'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.score'
+                            defaultMessage='Score'
+                          />
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {allCoins?.map((coin, index) => (
+                        <ViewCoinListItem
+                          coin={coin.coin}
+                          feedOnchain={coin.feed}
+                          currentPrice={coin.currentFeed}
+                          started={gameStarted}
+                          key={index}
+                          isCaptain={coin.isCaptain}
+                          playerAddress={playerData?.hash}
+                          multipliers={multiplier}
+                          tooltipMessage={tooltipMessage}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Grid>
             )}
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
+
             {(canClaim || claimed || canWithdraw) && (
               <>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
                 <Grid item xs={12}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
@@ -621,21 +681,6 @@ function OnePlayerTable(props: Props): JSX.Element {
                           justifyContent='center'
                           alignContent='center'
                           alignItems='center'>
-                          <Grid item xs={12}>
-                            {tx && (
-                              <Button onClick={goToExplorer}>
-                                {submitState === SubmitState.Submitted ? (
-                                  <IntlMessages id='app.coinLeagues.submittedTx' />
-                                ) : submitState === SubmitState.Error ? (
-                                  <IntlMessages id='app.coinLeagues.txError' />
-                                ) : submitState === SubmitState.Confirmed ? (
-                                  <IntlMessages id='app.coinLeagues.confirmedTx' />
-                                ) : (
-                                  ''
-                                )}
-                              </Button>
-                            )}
-                          </Grid>
                           {submitState === SubmitState.Error && (
                             <Grid item xs={12}>
                               <Alert
@@ -649,7 +694,14 @@ function OnePlayerTable(props: Props): JSX.Element {
                             <Button
                               onClick={onClaimGame}
                               fullWidth
-                              startIcon={<CircularProgress />}
+                              startIcon={
+                                submitState !== SubmitState.None ? (
+                                  <CircularProgress
+                                    color='inherit'
+                                    size='1rem'
+                                  />
+                                ) : undefined
+                              }
                               disabled={submitState !== SubmitState.None}
                               variant='contained'
                               color='primary'>

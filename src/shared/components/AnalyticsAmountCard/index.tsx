@@ -19,7 +19,6 @@ const useStyles = makeStyles(() => ({
   paper: {
     textAlign: 'left',
     borderRadius: 6,
-    backgroundColor: '#2E3243',
   },
   caption: {
     whiteSpace: 'nowrap',
