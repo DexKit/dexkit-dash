@@ -58,6 +58,7 @@ import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -109,6 +110,8 @@ interface Props {
   winner?: any;
   account?: string;
   profile?: GameProfile;
+  prizePool?: number;
+  currentPlayers?: number;
 }
 
 const getIconByCoin = (
@@ -136,11 +139,17 @@ const getIconSymbol = (
 const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
-  const {id, account, winner, data, type, profile} = props;
+  const {id, account, winner, data, type, profile, prizePool, currentPlayers} =
+    props;
+
+  console.log(currentPlayers);
+
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
   const theme = useTheme();
+
+  const {coinSymbol} = useLeaguesChainInfo();
 
   const isMobile = useMobile();
 
@@ -670,8 +679,46 @@ function OnePlayerTable(props: Props): JSX.Element {
                       <Typography variant='body2' color='textSecondary'>
                         <IntlMessages
                           id='coinLeague.congratulationsYourWonInFirstPlace'
-                          defaultMessage='Congratulations, you won in 1° place'
+                          defaultMessage={`Congratulations, you won in ${
+                            (playerData?.place || 0) + 1
+                          }° place`}
                         />
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant='caption' color='textSecondary'>
+                        {(playerData?.place || 0) + 1}th{' '}
+                        <IntlMessages
+                          id='coinLeauge.place'
+                          defaultMessage='Place'
+                        />
+                      </Typography>
+                      <Typography variant='h5'>
+                        {currentPlayers === 2 ? (
+                          <>
+                            {(prizePool || 0) * 0.9} {coinSymbol}
+                          </>
+                        ) : (
+                          <>
+                            {playerData?.place === 0 && (
+                              <>
+                                {(prizePool || 0) * 0.6} {coinSymbol}
+                              </>
+                            )}
+
+                            {playerData?.place === 1 && (
+                              <>
+                                {(prizePool || 0) * 0.3} {coinSymbol}
+                              </>
+                            )}
+
+                            {playerData?.place === 2 && (
+                              <>
+                                {(prizePool || 0) * 0.1} {coinSymbol}
+                              </>
+                            )}
+                          </>
+                        )}
                       </Typography>
                     </Grid>
                     {canClaim && (
@@ -690,6 +737,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                               </Alert>
                             </Grid>
                           )}
+
                           <Grid item xs={12}>
                             <Button
                               onClick={onClaimGame}
@@ -773,7 +821,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                 </Grid>
                 {claimed && (
                   <Grid item xs={12}>
-                    <Button variant='contained' disabled fullWidth>
+                    <Button variant='contained' disabled>
                       <IntlMessages id='app.coinLeagues.claimed' />
                     </Button>
                   </Grid>

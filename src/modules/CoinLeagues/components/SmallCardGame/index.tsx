@@ -20,6 +20,8 @@ import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {Skeleton} from '@material-ui/lab';
 
+import {Share as ShareIcon} from '@material-ui/icons';
+
 import {ReactComponent as CoinIcon} from '../../assets/coin.svg';
 import {ReactComponent as ProfileTwoUserIcon} from '../../assets/profile-2user.svg';
 import {ReactComponent as ReceiveSquareIcon} from '../../assets/receive-square.svg';
@@ -53,14 +55,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  game: GameGraph;
+  game?: GameGraph;
   btnMessage?: string;
-  onClick: any;
+  onClick?: any;
+  onShare?: (id?: string) => void;
   loading?: boolean;
 }
 
-function SmallCardGame(props: Props): JSX.Element {
-  const {game, onClick, loading} = props;
+function SmallCardGame({
+  game,
+  onClick,
+  loading,
+  onShare,
+  btnMessage,
+}: Props): JSX.Element {
   const {chainId, coinSymbol} = useLeaguesChainInfo();
   const classes = useStyles();
   const [countdown, setCountdown] = useState<number>();
@@ -68,12 +76,14 @@ function SmallCardGame(props: Props): JSX.Element {
     style: 'currency',
     currency: 'USD',
   }).format(props.prizePool);*/
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game?.entry || '0'), chainId);
 
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.currentPlayers)),
+    BigNumber.from(game?.entry || 0).mul(
+      BigNumber.from(game?.currentPlayers || 0),
+    ),
   );
-  const entryAmount = ethers.utils.formatEther(game.entry);
+  const entryAmount = ethers.utils.formatEther(game?.entry || '0');
 
   const entriesIn = strPad(Number(game?.currentPlayers) || 0);
   const entriesOut = strPad(Number(game?.numPlayers) || 0);
@@ -96,9 +106,9 @@ function SmallCardGame(props: Props): JSX.Element {
 
   useInterval(
     () => {
-      const time = Number(game.duration);
+      const time = Number(game?.duration || 0);
       const startTime =
-        Math.round(new Date().getTime() / 1000) - Number(game.startedAt || 0);
+        Math.round(new Date().getTime() / 1000) - Number(game?.startedAt || 0);
       setCountdown(time - startTime);
     },
     1000,
@@ -107,19 +117,37 @@ function SmallCardGame(props: Props): JSX.Element {
 
   const onClickEnter = useCallback(
     (_ev: any): void => {
-      onClick(game.intId);
+      onClick(game?.intId);
     },
-    [game.intId, onClick],
+    [game?.intId, onClick],
   );
 
   const theme = useTheme();
 
   return (
     <Paper>
-      <Box px={4} py={2} bgcolor={alpha(theme.palette.background.default, 0.6)}>
+      <Box
+        px={4}
+        py={2}
+        display='flex'
+        alignItems='center'
+        alignContent='center'
+        justifyContent='space-between'
+        bgcolor={alpha(theme.palette.background.default, 0.6)}>
         <Typography variant='subtitle2'>
           {loading ? <Skeleton /> : <>#{game?.intId}</>}{' '}
         </Typography>
+        {!loading && (
+          <Button
+            onClick={() => {
+              if (onShare) {
+                onShare(game?.intId);
+              }
+            }}
+            startIcon={<ShareIcon />}>
+            <IntlMessages id='coinLeague.share' defaultMessage='Share' />
+          </Button>
+        )}
       </Box>
       <Box p={4}>
         <Grid container spacing={2}>
@@ -163,8 +191,8 @@ function SmallCardGame(props: Props): JSX.Element {
                   color='textSecondary'
                   gutterBottom>
                   <IntlMessages
-                    id='app.coinLeagues.style'
-                    defaultMessage='Style'
+                    id='app.coinLeagues.gameType'
+                    defaultMessage='Game Type'
                   />
                 </Typography>
               </Grid>
@@ -272,7 +300,7 @@ function SmallCardGame(props: Props): JSX.Element {
               color='primary'
               fullWidth
               onClick={onClickEnter}>
-              {props.btnMessage || <IntlMessages id='app.coinLeagues.view' />}
+              {btnMessage || <IntlMessages id='app.coinLeagues.view' />}
             </Button>
           </Grid>
         </Grid>

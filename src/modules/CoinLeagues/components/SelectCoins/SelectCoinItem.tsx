@@ -4,10 +4,6 @@ import {
   useTheme,
   Grid,
   Typography,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction,
   Radio,
   ButtonBase,
 } from '@material-ui/core';

@@ -985,6 +985,8 @@ function GameEnter(props: Props) {
                 account={account}
                 winner={winner}
                 profile={userProfile}
+                prizePool={prizePool}
+                currentPlayers={game?.players.length}
               />
             </Grid>
           )}

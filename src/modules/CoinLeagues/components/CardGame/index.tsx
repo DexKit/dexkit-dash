@@ -268,8 +268,8 @@ const CardGame: React.FC<Props> = ({
                   color='textSecondary'
                   gutterBottom>
                   <IntlMessages
-                    id='app.coinLeagues.style'
-                    defaultMessage='Style'
+                    id='app.coinLeagues.gameType'
+                    defaultMessage='Game Type'
                   />
                 </Typography>
               </Grid>

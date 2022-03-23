@@ -7,7 +7,6 @@ import Box from '@material-ui/core/Box';
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 
 import {makeStyles} from '@material-ui/core/styles';
-import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';

@@ -393,13 +393,18 @@ const GamesList = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.slice(0, 6).map((g, id) => (
               <Grid item xs={12} sm={4} md={4} lg={3} xl={2} key={id}>
-                <SmallCardGame game={g} key={id} onClick={onClickEnterGame} />
+                <SmallCardGame
+                  game={g}
+                  key={id}
+                  onClick={onClickEnterGame}
+                  onShare={handleShareGame}
+                />
               </Grid>
             ))}
             {isLoadingStarted &&
-              new Array(3).fill(null).map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={2} xl={2} key={i}>
-                  <SmallCardGameSkeleton />
+              new Array(4).fill(null).map((v, i) => (
+                <Grid item xs={12} sm={3} key={i}>
+                  <SmallCardGame loading />
                 </Grid>
               ))}
             {!isLoadingStarted && !gamesInProgress?.length && (
@@ -418,7 +423,7 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container alignItems='center' spacing={2}>
+          <Grid container alignItems='center' spacing={4}>
             <Grid item xs={12} sm={6}>
               <CustomTabs
                 value={value}
