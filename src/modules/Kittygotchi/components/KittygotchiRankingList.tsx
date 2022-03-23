@@ -53,7 +53,7 @@ export const KittygotchiRankingList: React.FC<Props> = ({
     <List disablePadding>
       {loading ? (
         <>
-          {new Array(5).fill(null).map((_, index: number) => (
+          {new Array(10).fill(null).map((_, index: number) => (
             <ListItem key={index}>
               <ListItemText primary={<Skeleton />} secondary={<Skeleton />} />
               <ListItemSecondaryAction>

@@ -305,7 +305,6 @@ export const KittyDetail: React.FC = () => {
 
   const startOwnerChecker = useCallback(() => {
     let interval = setInterval(async () => {
-      console.log('chama');
       let contractAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
       if (account && chainId) {

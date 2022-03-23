@@ -1,4 +1,5 @@
 {
+  "common.connectWallet": "Conectar billetera",
   "affiliate.page.title": "Página de afiliados",
 
   "button.click_me": "Haz click en mi",
@@ -1558,7 +1559,7 @@
   "app.kittygotchi.kittygotchiUpdated": "Kittygotchi actualizado",
   "app.kittygotchi.kittygotchiUpdatedSuccessfully": "Kittygotchi actualizado satisfactoriamente",
   "app.kittygotchi.dialog.close": "Cerrar",
-  "app.kittygotchi.connectToPolgyonAlert": "Conectar a la red Polygon(MATIC) para actualizar un Kittygotchi",
+  "app.kittygotchi.connectToPolgyonAlert": "Conectar a la red Polygon(MATIC) ou BSC ou ETH para actualizar un Kittygotchi",
   "coinleague.affiliate.page.title": "Afiliado de Coin League",
   "coinleague.affiliate.history": "Historial de afiliado",
   "coinleague.affiliate.game": "Juego",
@@ -1925,6 +1926,7 @@
   "app.wallet.signMessage": "Firmar mensaje",
   "app.wallet.theMessageYouAreSigning": "El mensaje que estás firmando:",
   "app.kittygotchi.top5Ranking": "Los mejores 5",
+  "app.kittygotchi.top10Ranking": "Los mejores 10",
   "app.kittygotchi.oopsAnErrorOccurred": "Oops, ha ocurrido un error",
   "app.kittygotchi.openSeaIsNotSupported": "OpenSea no está soportado",
   "app.kittygotchi.notEnoughtKitties": "Sin gatitos suficientes",

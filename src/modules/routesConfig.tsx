@@ -152,7 +152,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
-        /*{
+    /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
           messageId: 'sidebar.app.mint-nft',
@@ -190,7 +190,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /*{
+   /* {
       id: 'myapps',
       title: 'My Apps',
       messageId: 'sidebar.myapps',
