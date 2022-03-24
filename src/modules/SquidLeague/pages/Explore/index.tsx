@@ -11,9 +11,7 @@ import {GameStatus} from '../../constants/enum';
 export const ExploreGames = () => {
   //const {formatMessage} = useIntl();
 
-  const [status, setStatus] = useState<GameStatus | undefined>(
-    GameStatus.Joining,
-  );
+  const [status, setStatus] = useState<GameStatus | undefined>();
 
   return (
     <MainLayout>

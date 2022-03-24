@@ -31,7 +31,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Empty} from 'shared/components/Empty';
 import {isSupportedBlockchain} from 'modules/SquidLeague/utils/blockchain';
 import WithdrawGameCard from 'modules/SquidLeague/components/WithdrawGameCard';
-import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
+import {GET_MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {PlayersCard} from 'modules/SquidLeague/components/PlayersCard';
 import {getGameURL} from 'modules/SquidLeague/utils/url';
 import CopyLink from 'shared/components/CopyLink';
@@ -75,8 +75,8 @@ export const GameLayout = (props: Params) => {
   const roundNumber = gameDataQuery.data?.round.toNumber();
 
   const isWithdrawState = useMemo(() => {
-    return roundNumber === MAX_ROUNDS;
-  }, [roundNumber]);
+    return roundNumber === GET_MAX_ROUNDS(chainId);
+  }, [roundNumber, chainId]);
 
   const joinStartTimestamp = gameDataQuery.data?.startTimestamp;
 
@@ -84,6 +84,8 @@ export const GameLayout = (props: Params) => {
     setupGameToggler.toggle();
   }, [setupGameToggler]);
   const lastChallengeTimestamp = gameDataQuery.data?.lastChallengeTimestamp;
+
+  const round = gameDataQuery.data?.round;
   // Can we setup challenge
   const canWeSetupChallenge = useMemo(() => {
     if (isJoinGameState && joinStartTimestamp) {
@@ -97,7 +99,9 @@ export const GameLayout = (props: Params) => {
       !isJoinGameState &&
       isFinishGameState &&
       chainId &&
-      lastChallengeTimestamp
+      lastChallengeTimestamp &&
+      round &&
+      !(round?.toNumber() === GET_MAX_ROUNDS(chainId))
     ) {
       const actualDate = new Date();
       const challengeTimestamp = getLastChallengeTimestamp(
@@ -116,7 +120,19 @@ export const GameLayout = (props: Params) => {
     lastChallengeTimestamp,
     chainId,
     isFinishGameState,
+    round,
   ]);
+
+  const formatRound = useMemo(() => {
+    if (round) {
+      if (isFinishGameState && round.toNumber() === GET_MAX_ROUNDS(chainId)) {
+        return 'Final';
+      } else {
+        return round.toNumber() + 1;
+      }
+    }
+    return null;
+  }, [isFinishGameState, chainId, round]);
 
   return (
     <MainLayout>
@@ -164,9 +180,7 @@ export const GameLayout = (props: Params) => {
                     id='squidLeague.round'
                     defaultMessage={'Round'}
                   />{' '}
-                  {gameDataQuery.data?.round
-                    ? gameDataQuery.data?.round.toNumber() + 1
-                    : null}
+                  {formatRound}
                 </Typography>
               </Grid>
               <Grid item xs={12}>

@@ -12,10 +12,11 @@ import {useGameAddress} from 'modules/SquidLeague/hooks/useGameAddress';
 import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
 
 import WithdrawGameDialog from 'modules/SquidLeague/components/dialogs/WithdrawGameDialog';
-import {MAX_ROUNDS} from 'modules/SquidLeague/constants';
+import {GET_MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {ethers} from 'ethers';
 import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
+import {useWeb3} from 'hooks/useWeb3';
 
 interface Params {
   id: string;
@@ -25,12 +26,14 @@ export const WithdrawGameCard = (props: Params) => {
   const {id} = props;
 
   const gameAddressQuery = useGameAddress(id);
+
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
   const gameDataRoundQuery = useOnChainCurrentRoundGame(
     gameDataQuery.data?.round,
     gameAddressQuery.data,
   );
   const {tokenSymbol} = useChainInfo();
+  const {chainId} = useWeb3();
   const withdrawGameToggler = useToggler(false);
 
   const handleCloseWithdrawGameDialog = useCallback(() => {
@@ -40,10 +43,10 @@ export const WithdrawGameCard = (props: Params) => {
   const round = gameDataQuery.data?.round;
   const canWeWithdrawGame = useMemo(() => {
     if (round) {
-      return round.toNumber() === MAX_ROUNDS;
+      return round.toNumber() === GET_MAX_ROUNDS(chainId);
     }
     return false;
-  }, [round]);
+  }, [round, chainId]);
 
   const pot = gameDataQuery.data?.pot;
   const joinedPlayers = gameDataQuery.data?.joinedPlayers;

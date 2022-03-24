@@ -6,5 +6,10 @@ export const SQUID_LEAGUE_FACTORY_ADDRESS = {
   [ChainId.Binance]: '',
 };
 
-
-export const MAX_ROUNDS = 2;
+export const GET_MAX_ROUNDS = (chainId?: ChainId) => {
+  if (chainId === ChainId.Mumbai) {
+    return 2;
+  } else {
+    return 6;
+  }
+}

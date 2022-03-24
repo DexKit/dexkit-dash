@@ -27,6 +27,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import {useGamesGraph} from 'modules/SquidLeague/hooks/useGamesGraph';
 import {GameGraph} from 'modules/SquidLeague/utils/types';
 import {GameStatus} from 'modules/SquidLeague/constants/enum';
+import {Empty} from 'shared/components/Empty';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -128,42 +129,58 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
     [],
   );
 
-  const {data} = useGamesGraph(filters.status, rowsPerPage, page * rowsPerPage);
+  const {data, isLoading} = useGamesGraph(
+    filters.status,
+    rowsPerPage,
+    page * rowsPerPage,
+  );
 
   const renderRows = useCallback(() => {
-    if (data !== undefined) {
+    if (data?.data?.games?.length) {
       return data?.data?.games?.map((game: GameGraph) => (
         <GamesTableRow game={game} />
       ));
     }
+    if (isLoading) {
+      return new Array(6).fill(null).map((_, index: number) => (
+        <TableRow key={index}>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <Hidden smDown>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+          </Hidden>
+          <Hidden smUp>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+          </Hidden>
+        </TableRow>
+      ));
+    }
 
-    return new Array(6).fill(null).map((_, index: number) => (
-      <TableRow key={index}>
+    return (
+      <TableRow>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
         <TableCell>
-          <Skeleton />
+          <Empty title={'No Games'} message={'No games to display'} />
         </TableCell>
-        <TableCell>
-          <Skeleton />
-        </TableCell>
-        <TableCell>
-          <Skeleton />
-        </TableCell>
-        <Hidden smDown>
-          <TableCell>
-            <Skeleton />
-          </TableCell>
-          <TableCell>
-            <Skeleton />
-          </TableCell>
-        </Hidden>
-        <Hidden smUp>
-          <TableCell>
-            <Skeleton />
-          </TableCell>
-        </Hidden>
+        <TableCell></TableCell>
       </TableRow>
-    ));
-  }, [data]);
+    );
+  }, [data, isLoading]);
 
   return (
     <TableContainer component={Paper}>
@@ -185,7 +202,10 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
                 />
               </TableCell>
               <TableCell component='th'>
-                <IntlMessages id='nftLeague.endsIn' />
+                <IntlMessages
+                  id='squidLeague.endsIn'
+                  defaultMessage={'Ends In'}
+                />
               </TableCell>
             </Hidden>
             <Hidden smUp>

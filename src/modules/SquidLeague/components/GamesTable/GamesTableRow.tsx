@@ -38,8 +38,10 @@ export const GamesTableRow: React.FC<Props> = ({game}) => {
     <>
       <TableRow>
         <TableCell>
-          <Link component={RouterLink} to={`${SQUIDLEAGUE_ROUTE}/${game.id}`}>
-            {game.id}
+          <Link
+            component={RouterLink}
+            to={`${SQUIDLEAGUE_ROUTE}/${game.intId}`}>
+            {game.intId}
           </Link>
         </TableCell>
         <TableCell>{ethers.utils.formatEther(game.entry)} MATIC</TableCell>
