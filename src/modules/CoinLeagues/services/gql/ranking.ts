@@ -1,4 +1,4 @@
-import {gql} from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
 export const GET_RANKING_MOST_WINNED = gql`
   {
@@ -27,6 +27,27 @@ export const GET_RANKING_MOST_JOINED = gql`
       orderBy: totalJoinedGames
       orderDirection: desc
       where: {totalJoinedGames_gt: 0}
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
+    }
+  }
+`;
+
+export const GET_RANKING_MOST_JOINED_PAST = gql`
+  query GetMostJoinedPast($block: Int){
+    players(
+      first: 100
+      orderBy: totalJoinedGames
+      orderDirection: desc
+      where: {totalJoinedGames_gt: 0}
+      block: {number: $block }
     ) {
       id
       totalWinnedGames

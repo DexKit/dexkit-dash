@@ -38,7 +38,7 @@ export class ProviderWrapper {
         });
 
         this._eventEmitter?.on('cancel', () => {
-          reject({message: 'Rejected by the user'});
+          reject({ message: 'Rejected by the user' });
         });
       });
     } else if (args.method === 'eth_signTypedData_v4') {

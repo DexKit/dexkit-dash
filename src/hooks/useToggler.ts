@@ -12,5 +12,9 @@ export function useToggler(defaultState: boolean = false) {
     set((value) => !value);
   }, []);
 
-  return {show, toggle, set};
+  const handleToggle = useCallback(() => {
+    toggle();
+  }, [toggle]);
+
+  return {show, toggle, set, handleToggle};
 }

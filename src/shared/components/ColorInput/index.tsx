@@ -13,13 +13,14 @@ const useStyles = makeStyles((theme: CremaTheme) =>
 );
 
 interface ColorInputProps {
+  name?: string;
   value?: Color;
   onChange?: ColorChangeHandler;
   disabled?: boolean;
 }
 
 export const ColorInput: React.FC<ColorInputProps> = (props) => {
-  const {value, onChange, disabled} = props;
+  const {value, onChange, disabled, name} = props;
   const classes = useStyles();
   const initColor: Color = value ?? '#FFFFFF';
   const [color, setColor] = React.useState<Color>(initColor);
@@ -29,6 +30,7 @@ export const ColorInput: React.FC<ColorInputProps> = (props) => {
         <TextField
           value={value ?? '#FFFF'}
           type='color'
+          name={name}
           fullWidth
           variant='outlined'
           disabled

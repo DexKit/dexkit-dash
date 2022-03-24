@@ -41,11 +41,16 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 2,
   },
   traitSelectorWrapper: {
-    overflowY: 'hidden',
-    overflowX: 'scroll',
-    flexWrap: 'nowrap',
-    '&::-webkit-scrollbar': {
-      display: 'none',
+    [theme.breakpoints.down('sm')]: {
+      overflowY: 'hidden',
+      overflowX: 'scroll',
+      flexWrap: 'nowrap',
+      '&::-webkit-scrollbar': {
+        display: 'none',
+      },
+    },
+    [theme.breakpoints.up('sm')]: {
+      overflowX: 'scroll',
     },
   },
 }));

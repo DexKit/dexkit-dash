@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   Box,
@@ -17,12 +17,12 @@ import {Skeleton} from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
-import {useMobile} from 'hooks/useMobile';
-import {truncateAddress} from 'utils';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
-import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import UserProfileItem from '../UserProfileItem';
+import {GameProfile} from 'modules/CoinLeagues/utils/types';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -44,6 +44,7 @@ interface RankingButtonProps {
   onClick: (address: string) => void;
   address: string;
   position: number;
+  profile?: GameProfile;
   src?: string;
   count?: number;
   joinsCount?: number;
@@ -61,7 +62,7 @@ export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
   const {coinSymbol} = useLeaguesChainInfo();
 
-  const {address, featured, position, label, count} = props;
+  const {address, featured, position, label, count, profile} = props;
 
   const toggler = useToggler();
 
@@ -73,29 +74,9 @@ export const RankingButton = (props: RankingButtonProps) => {
     toggler.toggle();
   }, [toggler]);
 
-  const isMobile = useMobile();
-
-  const formattedAddress = useMemo(() => {
-    if (isMobile) {
-      const name = GET_BITBOY_NAME(address);
-      if (name) {
-        return name.label;
-      } else {
-        return truncateAddress(address);
-      }
-    } else {
-      const name = GET_BITBOY_NAME(address);
-      if (name) {
-        return name.label;
-      } else {
-        return address;
-      }
-    }
-  }, [address, isMobile]);
-
   return (
     <Paper variant='outlined'>
-      <ButtonBase onClick={handleToggle} className={classes.button} >
+      <ButtonBase onClick={handleToggle} className={classes.button}>
         <Box p={4}>
           <Grid
             container
@@ -111,9 +92,13 @@ export const RankingButton = (props: RankingButtonProps) => {
               />
             </Grid>
             <Grid item xs>
-              <Typography align='left' variant='body1'>
-                {formattedAddress}
-              </Typography>
+              <Box
+                display='flex'
+                alignItems='left'
+                alignContent='left'
+                justifyContent='left'>
+                <UserProfileItem address={address} profile={profile} />
+              </Box>
             </Grid>
             <Grid item>
               <Box
@@ -196,7 +181,7 @@ export const RankingButton = (props: RankingButtonProps) => {
             </Grid>
             <Grid item>
               <Typography variant={'body1'} className={classes.paragraphMargin}>
-                 {coinSymbol} Profit: {props?.EarnedMinusSpent}
+                {coinSymbol} Profit: {props?.EarnedMinusSpent}
               </Typography>
             </Grid>
           </Grid>

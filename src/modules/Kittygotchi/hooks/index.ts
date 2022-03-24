@@ -1,11 +1,11 @@
-import {BigNumber, ethers, providers} from 'ethers';
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useState} from 'react';
-import {useQuery} from 'react-query';
-import {ChainId, Web3State} from 'types/blockchain';
-import {Kittygotchi} from 'types/kittygotchi';
-import {Token} from 'types/app';
+import { BigNumber, ethers, providers } from 'ethers';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback, useState } from 'react';
+import { useQuery } from 'react-query';
+import { ChainId, Web3State } from 'types/blockchain';
+import { Kittygotchi } from 'types/kittygotchi';
+import { Token } from 'types/app';
 
 import {
   getImageFromTrait,
@@ -26,13 +26,13 @@ import {
   update,
 } from '../services/kittygotchi';
 
-import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
-import {getTokenMetadata} from 'services/nfts';
-import {getNormalizedUrl} from 'utils/browser';
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { getTokenMetadata } from 'services/nfts';
+import { getNormalizedUrl } from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
-import {GET_DEXKIT} from 'shared/constants/tokens';
-import {getTokenBalances} from 'services/multicall';
-import {KittygotchiTraitItem} from '../types';
+import { GET_DEXKIT } from 'shared/constants/tokens';
+import { getTokenBalances } from 'services/multicall';
+import { KittygotchiTraitItem } from '../types';
 
 const GET_MY_KITTYGOTCHIES = gql`
   query QueryKittygotchies($owner: String!) {
@@ -75,6 +75,9 @@ const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
 const THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchibsc';
 
+const THEGRAPH_KITTYGOTCHI_ETH_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchieth';
+
 const clientMumbai = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,
   cache: new InMemoryCache(),
@@ -87,6 +90,11 @@ const clientMatic = new ApolloClient({
 
 const clientBsc = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+const clientEth = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_ETH_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
@@ -110,16 +118,18 @@ export function useGraphqlClient() {
       return clientBsc;
     } else if (chainId === ChainId.Matic) {
       return clientMatic;
+    } else if (chainId === ChainId.Mainnet) {
+      return clientEth;
     }
 
     return undefined;
   }, []);
 
-  return {getClient};
+  return { getClient };
 }
 
 export function useKittygotchi(id?: string) {
-  const {chainId, web3State} = useWeb3();
+  const { chainId, web3State } = useWeb3();
 
   const provider = useNetworkProvider(undefined, chainId);
 
@@ -157,7 +167,7 @@ export function useKittygotchi(id?: string) {
 }
 
 export function useKittygotchiFeed() {
-  const {chainId, web3State, getProvider} = useWeb3();
+  const { chainId, web3State, getProvider } = useWeb3();
 
   const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
@@ -190,11 +200,11 @@ export function useKittygotchiFeed() {
     [web3State, chainId],
   );
 
-  return {onFeedCallback};
+  return { onFeedCallback };
 }
 
 export function useKittygotchiMint() {
-  const {chainId, web3State, getProvider} = useWeb3();
+  const { chainId, web3State, getProvider } = useWeb3();
 
   const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
@@ -256,7 +266,7 @@ export function useKittygotchiMint() {
     [web3State, chainId, kittyAddress],
   );
 
-  return {onMintCallback};
+  return { onMintCallback };
 }
 
 interface UpdaterParams {
@@ -270,7 +280,7 @@ interface UpdaterParams {
 }
 
 export function useKittygotchiUpdate() {
-  const {chainId, web3State, getProvider, account} = useWeb3();
+  const { chainId, web3State, getProvider, account } = useWeb3();
 
   const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
@@ -286,7 +296,7 @@ export function useKittygotchiUpdate() {
         return;
       }
       try {
-        const {sig, messageSigned} = await signUpdate(getProvider(), chainId);
+        const { sig, messageSigned } = await signUpdate(getProvider(), chainId);
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit();
         }
@@ -318,16 +328,16 @@ export function useKittygotchiUpdate() {
     [web3State, chainId, account],
   );
 
-  return {onUpdateKittyCallback};
+  return { onUpdateKittyCallback };
 }
 
 export const useKittygotchiList = (address?: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Kittygotchi[]>();
   const [error, setError] = useState<any>();
-  const {chainId} = useWeb3();
+  const { chainId } = useWeb3();
 
-  const {getClient} = useGraphqlClient();
+  const { getClient } = useGraphqlClient();
 
   const get = useCallback(
     async (address?: string) => {
@@ -342,9 +352,9 @@ export const useKittygotchiList = (address?: string) => {
         setIsLoading(true);
 
         client
-          ?.query<{tokens: any[]}>({
+          ?.query<{ tokens: any[] }>({
             query: GET_MY_KITTYGOTCHIES,
-            variables: {owner: address?.toLowerCase()},
+            variables: { owner: address?.toLowerCase() },
           })
           .then(async (result: any) => {
             let data: Kittygotchi[] = [];
@@ -352,6 +362,7 @@ export const useKittygotchiList = (address?: string) => {
             for (let k of result.data.tokens) {
               let item: Kittygotchi = {
                 id: k.id,
+                name: `Kitty #${k.id}`,
                 attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
                 defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
                 run: k.run ? BigNumber.from(k.run).toNumber() : 0,
@@ -384,15 +395,15 @@ export const useKittygotchiList = (address?: string) => {
     [chainId],
   );
 
-  return {get, data, error, isLoading};
+  return { get, data, error, isLoading };
 };
 
 export const useKittygotchiV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Kittygotchi>();
   const [error, setError] = useState<any>();
-  const {getClient} = useGraphqlClient();
-  const {chainId} = useWeb3();
+  const { getClient } = useGraphqlClient();
+  const { chainId } = useWeb3();
 
   const get = useCallback(
     async (id?: string) => {
@@ -405,9 +416,9 @@ export const useKittygotchiV2 = () => {
       setIsLoading(true);
 
       return client
-        ?.query<{token: any}>({
+        ?.query<{ token: any }>({
           query: GET_KITTYGOTCHI,
-          variables: {id: id?.toLowerCase()},
+          variables: { id: id?.toLowerCase() },
         })
         .then(async (result: any) => {
           let resultData = result.data.token;
@@ -463,14 +474,14 @@ export const useKittygotchiV2 = () => {
     [chainId],
   );
 
-  return {get, data, error, isLoading};
+  return { get, data, error, isLoading };
 };
 
 export const useKittygotchiOnChain = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Kittygotchi>();
   const [error, setError] = useState<any>();
-  const {chainId, getProvider} = useWeb3();
+  const { chainId, getProvider } = useWeb3();
 
   const clear = useCallback(() => {
     setData(undefined);
@@ -529,11 +540,11 @@ export const useKittygotchiOnChain = () => {
     [chainId, getProvider],
   );
 
-  return {get, data, error, isLoading, clear};
+  return { get, data, error, isLoading, clear };
 };
 
 export const useKitHolding = (account?: string) => {
-  const {chainId, getProvider} = useWeb3();
+  const { chainId, getProvider } = useWeb3();
 
   const networkProvider = useNetworkProvider(undefined, chainId);
 
@@ -621,49 +632,49 @@ export function useKittygotchiStyleEdit() {
 
   const handleSelectCloth = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, cloth: item.value});
+      setValues({ ...values, cloth: item.value });
     },
     [values],
   );
 
   const handleSelectBody = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, body: item.value});
+      setValues({ ...values, body: item.value });
     },
     [values],
   );
 
   const handleSelectEyes = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, eyes: item.value});
+      setValues({ ...values, eyes: item.value });
     },
     [values],
   );
 
   const handleSelectNose = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, nose: item.value});
+      setValues({ ...values, nose: item.value });
     },
     [values],
   );
 
   const handleSelectEars = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, ears: item.value});
+      setValues({ ...values, ears: item.value });
     },
     [values],
   );
 
   const handleSelectAccessory = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, accessory: item.value});
+      setValues({ ...values, accessory: item.value });
     },
     [values],
   );
 
   const handleSelectMouth = useCallback(
     (item: KittygotchiTraitItem) => {
-      setValues({...values, mouth: item.value});
+      setValues({ ...values, mouth: item.value });
     },
     [values],
   );
@@ -681,7 +692,7 @@ export function useKittygotchiStyleEdit() {
   }, [values]);
 
   const fromTraits = useCallback(
-    (traits: {value: string; trait_type: string}[]) => {
+    (traits: { value: string; trait_type: string }[]) => {
       let newValues: KittyValues = {};
 
       for (let t of traits) {
@@ -785,7 +796,7 @@ export function useKittygotchiStyleEdit() {
 }
 
 export function useKittygotchiMetadata(chainId: number, tokenId: string) {
-  const {data} = useQuery([tokenId, chainId]);
+  const { data } = useQuery([tokenId, chainId]);
   return {};
 }
 
@@ -811,20 +822,20 @@ export const GET_KITTYGOTCHI_RANKING = gql`
 export function useKittygotchiRanking(
   chainId?: number,
   offset: number = 0,
-  limit: number = 5,
+  limit: number = 10,
 ) {
-  const {getClient} = useGraphqlClient();
+  const { getClient } = useGraphqlClient();
 
-  const {data, isLoading, error} = useQuery(
+  const { data, isLoading, error } = useQuery(
     [chainId, offset, limit, getClient],
     async () => {
       if (chainId) {
         const client = getClient(chainId);
 
         const result = (
-          await client?.query<{tokens: any[]}>({
+          await client?.query<{ tokens: any[] }>({
             query: GET_KITTYGOTCHI_RANKING,
-            variables: {offset, limit},
+            variables: { offset, limit },
           })
         )?.data.tokens;
 
@@ -841,5 +852,5 @@ export function useKittygotchiRanking(
     },
   );
 
-  return {results: data || [], isLoading, error};
+  return { results: data || [], isLoading, error };
 }
