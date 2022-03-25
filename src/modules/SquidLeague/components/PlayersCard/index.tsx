@@ -9,7 +9,6 @@ interface Props {
 export const PlayersCard = (props: Props) => {
   const {id} = props;
   const query = usePlayersGamesGraph(id);
-  console.log(query.data?.data.players);
 
   return (
     <>

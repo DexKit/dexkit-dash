@@ -30,6 +30,7 @@ import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
 import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
+import {PlayingType} from 'modules/SquidLeague/constants/enum';
 
 interface Params {
   id: string;
@@ -130,6 +131,7 @@ export const SetupStartEndGameCard = (props: Params) => {
     }
     return false;
   }, [isStartedGameState, startTimestampRound, durationTimestampRound]);
+
 
   const canWeStartGame = useMemo(() => {
     if (isSetupGameState && startTimestampRound) {
@@ -375,8 +377,8 @@ export const SetupStartEndGameCard = (props: Params) => {
                         />
                       </Button>
                     </Grid>
-                    {(playerPlayRound === false ||
-                      playerPlayRound === true) && (
+                    {(playerPlayRound === PlayingType.Up ||
+                      playerPlayRound === PlayingType.Down) && (
                       <Grid item xs={12}>
                         <Box display={'flex'} justifyContent={'center'}>
                           <Typography variant='subtitle1' color='textPrimary'>

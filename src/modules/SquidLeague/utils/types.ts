@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers';
-import { GameStatus } from '../constants/enum';
+import { GameStatus, PlayingType } from '../constants/enum';
 
 export interface CreateSquidGameParams {
   startTimestamp: BigNumber;
@@ -16,8 +16,8 @@ export interface GameRoundData {
   game_type: BigNumber;
   total_players: BigNumber;
   playerJoinedCurrentRound: boolean;
-  playerPlayCurrentRound: boolean;
-  challengeResultCurrentRound: boolean;
+  playerPlayCurrentRound: PlayingType;
+  challengeResultCurrentRound: PlayingType;
   playerCurrentRoundChallengeResult: boolean;
   playerJoinedPastRound: boolean;
   feedPriceCurrentRound: BigNumber;
@@ -72,7 +72,7 @@ export interface PlayersGameGraph {
 
 export interface PlayerGraph {
   id: string;
-  playCurrentRound: boolean;
+  playCurrentRound: PlayingType;
   totalFinishedGames: string;
   totalJoinedGames: string;
   totalEarned: string;

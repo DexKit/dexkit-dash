@@ -4,6 +4,7 @@ import { BigNumber, ContractTransaction, ethers, providers } from 'ethers';
 import { getMulticallFromProvider } from 'services/multicall';
 import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import squidGameAbi from '../constants/ABI/SquidGame.json';
+import { PlayingType } from '../constants/enum';
 import { GameRoundData, GameState, GameData } from '../utils/types';
 
 export const getSquidGameContract = async (address: string, provider: any) => {
@@ -23,7 +24,7 @@ export const joinGame = async (
 
 export const playChallenge = async (
   gameAddress: string,
-  play: boolean,
+  play: PlayingType,
   provider: any,
 ) => {
   return (await getSquidGameContract(gameAddress, provider)).playChallenge(

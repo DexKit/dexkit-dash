@@ -16,6 +16,7 @@ import {MumbaiPriceFeeds} from 'modules/CoinLeagues/constants';
 import {useWeb3} from 'hooks/useWeb3';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';
+import {PlayingType} from 'modules/SquidLeague/constants/enum';
 
 interface Props {
   round: BigNumber;
@@ -222,8 +223,8 @@ export const RoundGameCard = (props: Props) => {
                               />
                             </Grid>
 
-                            {(playerPlayRound === false ||
-                              playerPlayRound === true) && (
+                            {(playerPlayRound === PlayingType.Up ||
+                              playerPlayRound === PlayingType.Down) && (
                               <Grid item xs={12}>
                                 <Box display={'flex'} justifyContent={'center'}>
                                   <Typography

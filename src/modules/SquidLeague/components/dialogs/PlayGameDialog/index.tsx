@@ -23,6 +23,7 @@ import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {PlayingType} from 'modules/SquidLeague/constants/enum';
 
 interface Props {
   dialogProps: DialogProps;
@@ -106,15 +107,15 @@ export const PlayGameDialog: React.FC<Props> = ({
     };
     const onError = (error: any) => {
       setLoading(false);
-      console.log(error);
       setErrorMessage('Error Submitting Transaction');
       setTimeout(() => {
         setErrorMessage(undefined);
       }, 2000);
       setTransactionHash('');
     };
+    const playType = play === true ? PlayingType.Up : PlayingType.Down;
 
-    onPlayChallengeCallback(play, {
+    onPlayChallengeCallback(playType, {
       onConfirmation: onConfirm,
       onSubmit: onSubmit,
       onError,

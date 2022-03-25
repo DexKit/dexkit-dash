@@ -27,10 +27,20 @@ const GamesList = () => {
         </MainLayout>
       )}
 
-      {typeof lastGameIdQuery.data !== undefined &&
-        isSupportedBlockchain(chainId) && (
-          <GameLayout id={String(lastGameIdQuery.data)} />
-        )}
+      {lastGameIdQuery.isError && (
+        <MainLayout>
+          <Paper>
+            <Empty
+              title='Squid League: Error '
+              message='Error fetching game, please reload page'
+            />
+          </Paper>
+        </MainLayout>
+      )}
+
+      {lastGameIdQuery.isSuccess && isSupportedBlockchain(chainId) && (
+        <GameLayout id={String(lastGameIdQuery.data)} />
+      )}
     </>
   );
 };

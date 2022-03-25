@@ -304,7 +304,6 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                         disabled={!canWePlayChallenge}
                         startIcon={<ArrowUpwardIcon />}
                         variant='contained'
-                        onClick={() => openPlayModal(true)}
                         color='primary'>
                         <Skeleton>
                           {' '}
@@ -321,7 +320,6 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                         disabled={!canWePlayChallenge}
                         startIcon={<ArrowDownwardIcon />}
                         variant='outlined'
-                        onClick={() => openPlayModal(false)}
                         color='primary'>
                         <Skeleton>
                           {' '}
@@ -332,8 +330,7 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                         </Skeleton>
                       </Button>
                     </Grid>
-                    {(playerPlayRound === false ||
-                      playerPlayRound === true) && (
+                    {
                       <Grid item xs={12}>
                         <Box display={'flex'} justifyContent={'center'}>
                           <Typography variant='subtitle1' color='textPrimary'>
@@ -348,7 +345,7 @@ export const SetupStartEndGameSkeleton = (props: Params) => {
                           </Typography>
                         </Box>
                       </Grid>
-                    )}
+                    }
                   </Grid>
                 </Grid>
               )}

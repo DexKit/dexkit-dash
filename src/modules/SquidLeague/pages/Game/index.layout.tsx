@@ -55,6 +55,7 @@ export const GameLayout = (props: Params) => {
   const {formatMessage} = useIntl();
 
   const gameState = gameDataQuery.data?.gameState;
+  const isPlayerJoined = gameDataQuery.data?.playerJoined;
 
   const isJoinGameState = useMemo(() => {
     return gameState === GameState.Joining;
@@ -191,6 +192,18 @@ export const GameLayout = (props: Params) => {
                   />
                 )}
               </Grid>
+              {!isJoinGameState && !isPlayerJoined && (
+                <Grid item xs={12}>
+                  <Box display={'flex'} justifyContent={'center'}>
+                    <Typography variant='subtitle1' color='primary'>
+                      <IntlMessages
+                        id='squidLeague.notJoinedGame'
+                        defaultMessage={'You not joined this game'}
+                      />
+                    </Typography>
+                  </Box>
+                </Grid>
+              )}
 
               {isJoinGameState && <JoinGameCard id={id} />}
               {(isSetupGameState || isFinishGameState || isStartedGameState) &&

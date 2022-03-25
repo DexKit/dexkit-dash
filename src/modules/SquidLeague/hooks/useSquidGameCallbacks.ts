@@ -2,6 +2,7 @@ import { BigNumber } from 'ethers';
 import { useWeb3 } from 'hooks/useWeb3';
 import { useCallback } from 'react';
 import { Web3State } from 'types/blockchain';
+import { PlayingType } from '../constants/enum';
 import {
   withdraw,
   playChallenge,
@@ -40,10 +41,15 @@ export const useSquidGameCallbacks = (gameAddress: string) => {
   );
 
   const onPlayChallengeCallback = useCallback(
-    async (play: boolean, callbacks?: CallbackProps) => {
+    async (play: PlayingType, callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done) {
         return;
       }
+
+      if(play === PlayingType.NotPlayed){
+        throw new Error('You must play up or down');
+      }
+
       const provider = getProvider();
       try {
         const tx = await playChallenge(gameAddress, play, provider);

@@ -41,12 +41,15 @@ export const WithdrawGameCard = (props: Params) => {
   }, [withdrawGameToggler]);
 
   const round = gameDataQuery.data?.round;
+  const playerCanWithdraw =
+    gameDataRoundQuery.data?.playerCurrentRoundChallengeResult;
+  console.log(playerCanWithdraw);
   const canWeWithdrawGame = useMemo(() => {
-    if (round) {
-      return round.toNumber() === GET_MAX_ROUNDS(chainId);
+    if (round && playerCanWithdraw) {
+      return round.toNumber() === GET_MAX_ROUNDS(chainId) && playerCanWithdraw;
     }
     return false;
-  }, [round, chainId]);
+  }, [round, chainId, playerCanWithdraw]);
 
   const pot = gameDataQuery.data?.pot;
   const joinedPlayers = gameDataQuery.data?.joinedPlayers;

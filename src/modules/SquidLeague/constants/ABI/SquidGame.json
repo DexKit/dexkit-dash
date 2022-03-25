@@ -38,9 +38,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
+        "internalType": "enum SquidGame.PlayingType",
         "name": "result",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "name": "ChallengeFinished",
@@ -188,9 +188,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
+        "internalType": "enum SquidGame.PlayingType",
         "name": "play",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "name": "PlayerJoinedRound",
@@ -382,9 +382,9 @@
     "name": "PlayersPlay",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "enum SquidGame.PlayingType",
         "name": "",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -497,9 +497,9 @@
     "name": "challengeResult",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "enum SquidGame.PlayingType",
         "name": "",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -537,7 +537,7 @@
     "name": "gameState",
     "outputs": [
       {
-        "internalType": "enum SquidGameMumbai.ChallengeState",
+        "internalType": "enum SquidGame.ChallengeState",
         "name": "",
         "type": "uint8"
       }
@@ -708,9 +708,9 @@
   {
     "inputs": [
       {
-        "internalType": "bool",
+        "internalType": "enum SquidGame.PlayingType",
         "name": "play",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "name": "playChallenge",

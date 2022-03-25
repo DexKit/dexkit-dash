@@ -5,3 +5,9 @@ export enum GameStatus {
   Finished = 'Finished',
   Quit = 'Quit',
 }
+
+export enum PlayingType {
+  NotPlayed,
+  Up,
+  Down
+}

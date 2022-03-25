@@ -222,6 +222,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'user.octagon',
           url: '/squid-league',
         },
+        {
+          id: 'squidLeague-explore',
+          title: 'Explore',
+          messageId: 'sidebar.protocols.explore',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.octagon',
+          url: '/squid-league/explore',
+        },
       ],
     },
     {
