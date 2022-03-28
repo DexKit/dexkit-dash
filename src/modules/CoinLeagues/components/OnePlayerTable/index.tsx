@@ -702,19 +702,19 @@ function OnePlayerTable(props: Props): JSX.Element {
                           <>
                             {playerData?.place === 0 && (
                               <>
-                                {(prizePool || 0) * 0.6} {coinSymbol}
+                                {(prizePool || 0) * 0.6 * 0.9} {coinSymbol}
                               </>
                             )}
 
                             {playerData?.place === 1 && (
                               <>
-                                {(prizePool || 0) * 0.3} {coinSymbol}
+                                {(prizePool || 0) * 0.3 * 0.9} {coinSymbol}
                               </>
                             )}
 
                             {playerData?.place === 2 && (
                               <>
-                                {(prizePool || 0) * 0.1} {coinSymbol}
+                                {(prizePool || 0) * 0.1 * 0.9} {coinSymbol}
                               </>
                             )}
                           </>
@@ -741,7 +741,6 @@ function OnePlayerTable(props: Props): JSX.Element {
                           <Grid item xs={12}>
                             <Button
                               onClick={onClaimGame}
-                              fullWidth
                               startIcon={
                                 submitState !== SubmitState.None ? (
                                   <CircularProgress

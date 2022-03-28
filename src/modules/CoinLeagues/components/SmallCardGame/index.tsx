@@ -124,8 +124,16 @@ function SmallCardGame({
 
   const theme = useTheme();
 
+  console.log('small', game?.title);
+
   return (
-    <Paper>
+    <Paper
+      variant={game?.title ? 'outlined' : 'elevation'}
+      style={
+        game?.title
+          ? {borderColor: theme.palette.primary.main, borderWidth: 2}
+          : undefined
+      }>
       <Box
         px={4}
         py={2}
