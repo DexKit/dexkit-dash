@@ -47,6 +47,9 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {useIntl} from 'react-intl';
 import {ChainId} from 'types/blockchain';
+import Countdown from 'shared/components/Countdown';
+
+import humanizeDuration from 'humanize-duration';
 
 interface Props {
   id: string;
@@ -393,7 +396,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                   <Grid item>
                     <Grid container spacing={4}>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
+                        <Typography color='textSecondary' variant='caption'>
                           <IntlMessages id='nftLeague.id' />
                         </Typography>
                         <Typography
@@ -404,7 +407,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
+                        <Typography color='textSecondary' variant='caption'>
                           <IntlMessages id='nftLeague.status' />
                         </Typography>
                         <Typography
@@ -429,7 +432,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
+                        <Typography color='textSecondary' variant='caption'>
                           <IntlMessages id='nftLeague.finalPrize' />
                         </Typography>
                         <Typography
@@ -445,42 +448,63 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
-                          <IntlMessages id='nftLeague.startsAt' />
+                        <Typography color='textSecondary' variant='caption'>
+                          <IntlMessages
+                            id='nftLeague.startsIn'
+                            defaultMessage='Starts in'
+                          />
                         </Typography>
                         <Typography
                           className={classes.boldText}
                           color='textPrimary'
                           variant='subtitle1'>
                           {data !== undefined ? (
-                            moment
-                              .unix(data?.start_timestamp.toNumber())
-                              .format('DD/MM/YYYY HH:mm:ss')
+                            <Countdown
+                              startTimestamp={data?.start_timestamp.toNumber()}
+                            />
                           ) : (
                             <Skeleton />
                           )}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
-                          <IntlMessages id='nftLeague.gameEndsIn' />
+                        <Typography color='textSecondary' variant='caption'>
+                          {data?.started ? (
+                            <IntlMessages
+                              id='nftLeague.gameEndsIn'
+                              defaultMessage='Ends in'
+                            />
+                          ) : (
+                            <IntlMessages
+                              id='nftLeague.gameDuration'
+                              defaultMessage='Game Duration'
+                            />
+                          )}
                         </Typography>
                         <Typography
                           className={classes.boldText}
                           color='textPrimary'
                           variant='subtitle1'>
                           {data !== undefined ? (
-                            moment
-                              .unix(data?.start_timestamp.toNumber())
-                              .add(data?.duration.toNumber(), 'seconds')
-                              .format('DD/MM/YYYY HH:mm:ss')
+                            data?.started ? (
+                              <Countdown
+                                startTimestamp={data?.start_timestamp.toNumber()}
+                                duration={data?.duration.toNumber()}
+                              />
+                            ) : (
+                              <>
+                                {humanizeDuration(
+                                  data?.duration?.toNumber() * 1000 || 0,
+                                )}
+                              </>
+                            )
                           ) : (
                             <Skeleton />
                           )}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
+                        <Typography color='textSecondary' variant='caption'>
                           <IntlMessages id='nftLeague.gameType' />
                         </Typography>
                         <Typography

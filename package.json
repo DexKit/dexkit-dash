@@ -76,6 +76,7 @@
     "formik": "^2.1.4",
     "graphql": "^15.3.0",
     "history": "4.7.2",
+    "humanize-duration": "^3.27.1",
     "immutable": "3.8.1",
     "install": "^0.13.0",
     "intl-messageformat": "^9.4.4",
