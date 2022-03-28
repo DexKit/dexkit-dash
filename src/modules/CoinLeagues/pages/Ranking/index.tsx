@@ -8,6 +8,7 @@ import {
   IconButton,
   Typography,
   Divider,
+  Hidden,
 } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
@@ -87,9 +88,39 @@ export function Ranking() {
               <Typography variant='h5'>
                 <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
-              <Box p={2}>
-                <FormControl>
+              {!isMobile && (
+                <>
+                  <Box p={2}>
+                    <FormControl>
+                      <Select
+                        variant='outlined'
+                        value={room}
+                        onChange={(e) => setRoom(e.target.value as RoomType)}
+                        renderValue={(value) => <> {value}</>}>
+                        <MenuItem value={RoomType.Main}>
+                          {RoomType.Main}{' '}
+                        </MenuItem>
+                        <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <Box p={2}>
+                    <ChainSelect />
+                  </Box>
+                </>
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <Grid container spacing={4}>
+        {isMobile && (
+          <Grid item xs={12}>
+            <Grid container spacing={4}>
+              <Grid item xs={6}>
+                <FormControl fullWidth>
                   <Select
+                    fullWidth
                     variant='outlined'
                     value={room}
                     onChange={(e) => setRoom(e.target.value as RoomType)}
@@ -98,15 +129,13 @@ export function Ranking() {
                     <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
                   </Select>
                 </FormControl>
-              </Box>
-              <Box p={2}>
-                <ChainSelect />
-              </Box>
-            </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <ChainSelect fullWidth />
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-      <Grid container spacing={4}>
+        )}
         <Grid item xs={12} sm={8}>
           <CustomTabs
             value={value}

@@ -166,7 +166,7 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
   }, [data]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>

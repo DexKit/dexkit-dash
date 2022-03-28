@@ -31,8 +31,7 @@ export const NFTLeagueIndex = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Grid container justifyContent='space-between'>
-                <Grid item></Grid>
+              <Grid container justifyContent='center'>
                 <Grid item>
                   <Grid
                     container
@@ -42,7 +41,8 @@ export const NFTLeagueIndex = () => {
                     alignContent='center'>
                     <Grid item>
                       <Chip
-                        variant={status === undefined ? 'default' : 'outlined'}
+                        size='small'
+                        variant='outlined'
                         color={status === undefined ? 'primary' : 'default'}
                         label={<IntlMessages id='nftLeague.all' />}
                         onClick={() => setStatus(undefined)}
@@ -50,9 +50,8 @@ export const NFTLeagueIndex = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Waiting ? 'default' : 'outlined'
-                        }
+                        size='small'
+                        variant='outlined'
                         color={
                           status === GameStatus.Waiting ? 'primary' : 'default'
                         }
@@ -62,9 +61,8 @@ export const NFTLeagueIndex = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Started ? 'default' : 'outlined'
-                        }
+                        size='small'
+                        variant='outlined'
                         color={
                           status === GameStatus.Started ? 'primary' : 'default'
                         }
@@ -74,9 +72,8 @@ export const NFTLeagueIndex = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Aborted ? 'default' : 'outlined'
-                        }
+                        size='small'
+                        variant='outlined'
                         color={
                           status === GameStatus.Aborted ? 'primary' : 'default'
                         }
@@ -86,9 +83,8 @@ export const NFTLeagueIndex = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Ended ? 'default' : 'outlined'
-                        }
+                        size='small'
+                        variant='outlined'
                         color={
                           status === GameStatus.Ended ? 'primary' : 'default'
                         }
@@ -98,7 +94,6 @@ export const NFTLeagueIndex = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item></Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>

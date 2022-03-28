@@ -26,6 +26,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {ethers} from 'ethers';
 import moment from 'moment';
+import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 
 const useStyles = makeStyles((theme) => ({
   avatarButton: {
@@ -71,7 +72,7 @@ export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
             {game.players?.map((player, index: number) => (
               <ButtonBase
                 component={RouterLink}
-                to={`/coin-league/profile/${player.id}`}
+                to={`${COINLEAGUE_PROFILE_ROUTE}/${player.id}`}
                 className={classes.avatarButton}>
                 <Avatar key={index} title={player.id} />
               </ButtonBase>
