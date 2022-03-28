@@ -71,7 +71,9 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
     } else {
       label =
         accountLabels &&
-        accountLabels.find((a) => a.address === address)?.label;
+        accountLabels.find(
+          (a) => a.address.toLowerCase() === address.toLowerCase(),
+        )?.label;
     }
 
     return (

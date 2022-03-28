@@ -92,7 +92,7 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Manage APPs page
+          Manage APPs
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>

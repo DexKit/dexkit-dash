@@ -219,7 +219,7 @@ function PlayersTable(props: Props): JSX.Element {
           return {
             ...d,
             account: d.hash,
-            hash: label,
+            label: label,
             score: d.score / 1000,
             profile,
           };
@@ -242,7 +242,7 @@ function PlayersTable(props: Props): JSX.Element {
       return {
         ...d,
         account: d.hash,
-        hash: label,
+        label: label,
         score: d.score / 1000,
         profile,
       };
@@ -314,7 +314,7 @@ function PlayersTable(props: Props): JSX.Element {
                     <Box display={'flex'} alignItems={'center'}>
                       <Chip className={classes.chip} label={`${i + 1}º`} />
                       <UserProfileItem
-                        address={row.hash}
+                        address={row.account}
                         profile={row.profile}
                       />
 
@@ -377,13 +377,13 @@ function PlayersTable(props: Props): JSX.Element {
                       {!hideCoins ? (
                         row?.captainCoin && (
                           <>
-                            <Tooltip title={tooltipMessage(row.hash)}>
+                            <Tooltip title={tooltipMessage(row.account)}>
                               <Badge
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
                                   !loadingMultiplier &&
-                                  multiplier(row.hash).toFixed(3)
+                                  multiplier(row.account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}
@@ -405,7 +405,7 @@ function PlayersTable(props: Props): JSX.Element {
                                   onViewCoins(
                                     row.coins,
                                     row.captainCoin,
-                                    row.hash as string,
+                                    row.account as string,
                                   )
                                 }>
                                 <RemoveRedEye
@@ -462,7 +462,7 @@ function PlayersTable(props: Props): JSX.Element {
                               onViewCoins(
                                 row.coins,
                                 row.captainCoin,
-                                row.hash as string,
+                                row.account as string,
                               )
                             }>
                             <RemoveRedEye

@@ -1,8 +1,8 @@
 import moment from 'moment';
-import {ChainId} from 'types/blockchain';
-import {Kittygotchi} from 'types/kittygotchi';
+import { ChainId } from 'types/blockchain';
+import { Kittygotchi } from 'types/kittygotchi';
 
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 import {
   IMAGE_PATHS,
   KittygotchiTraitType,
@@ -129,15 +129,13 @@ export function getKittygotchiMetadataEndpoint(
     chainId === ChainId.Mainnet
   ) {
     if (chainId === ChainId.Mainnet) {
-      return `${KITTYGOTCHI_METADATA_ENDPOINT}${
-        prefix ? prefix + '/' : ''
-      }eth/`;
+      return `${KITTYGOTCHI_METADATA_ENDPOINT}${prefix ? prefix + '/' : ''
+        }eth/`;
     }
 
     if (chainId === ChainId.Binance) {
-      return `${KITTYGOTCHI_METADATA_ENDPOINT}${
-        prefix ? prefix + '/' : ''
-      }bsc/`;
+      return `${KITTYGOTCHI_METADATA_ENDPOINT}${prefix ? prefix + '/' : ''
+        }bsc/`;
     }
 
     return KITTYGOTCHI_METADATA_ENDPOINT;
@@ -151,7 +149,7 @@ export function getKittygotchiMetadataEndpoint(
 export function isKittygotchiNetworkSupported(chainId?: number) {
   if (chainId) {
     return (
-      // chainId === ChainId.Mainnet ||
+      chainId === ChainId.Mainnet ||
       chainId === ChainId.Ropsten ||
       chainId === ChainId.Matic ||
       chainId === ChainId.Mumbai ||
@@ -186,7 +184,7 @@ export function GET_KITTYGOTCHI_CHAIN_SYMBOL(chainId?: number) {
 export function GET_KITTYGOTCHI_MINT_RATE(chainId?: number) {
   if (chainId) {
     if (chainId === ChainId.Mainnet) {
-      return ethers.utils.parseEther('0.01');
+      return ethers.utils.parseEther('0.02');
     } else if (chainId === ChainId.Ropsten) {
       return ethers.utils.parseEther('0.0000001');
     } else if (chainId === ChainId.Matic) {

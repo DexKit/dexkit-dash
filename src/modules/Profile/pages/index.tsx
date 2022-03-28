@@ -465,7 +465,7 @@ export const ProfileIndex = () => {
               <Grid item xs={12} sm={6}>
                 <Card>
                   <CardHeader
-                    title={messages['app.kittygotchi.top5Ranking'] as string}
+                    title={messages['app.kittygotchi.top10Ranking'] as string}
                   />
                   <Divider />
                   {kittygotchiRanking.error ? (

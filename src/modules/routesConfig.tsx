@@ -92,7 +92,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    {
+     {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',
@@ -115,6 +115,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'game',
           url: `${COINLEAGUENFT_ROUTE}`,
+        },
+        {
+          id: 'coinleague.myprofile',
+          title: 'Profile',
+          messageId: 'sidebar.app.profile',
+          type: 'item',
+          customIcon: true,
+          icon: 'profile',
+          url: `${COINSLEAGUE_ROUTE}/profile`,
         },
         {
           id: 'discover-games',
@@ -144,6 +153,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
         {
+          id: 'coinleague.competition',
+          title: 'Competition',
+          messageId: 'sidebar.competition',
+          type: 'item',
+          customIcon: true,
+          icon: 'cup',
+          url: `${COINSLEAGUE_ROUTE}/competition`,
+        },
+    /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
           messageId: 'sidebar.app.mint-nft',
@@ -151,8 +169,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
-        },
-        {
+        },*/
+      {
           id: 'coinleague.how-to-play',
           title: 'How To Play',
           messageId: 'sidebar.howToPlay',
@@ -181,7 +199,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /*{
+    {
       id: 'myapps',
       title: 'My Apps',
       messageId: 'sidebar.myapps',
@@ -197,7 +215,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/my-apps/manage',
         },
       ],
-    },*/
+    },
     {
       id: 'affiliate',
       title: 'Affiliates',

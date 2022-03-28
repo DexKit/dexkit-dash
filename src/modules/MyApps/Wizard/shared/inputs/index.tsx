@@ -67,7 +67,6 @@ export const WizardTextInput: FC<WizardTextInputProps> = (props) => {
     }
   }, [value]);
 
-  console.log('error', error != null && error[property]);
   return (
     <CustomTextInput
       key={property?.toString()}

@@ -11,11 +11,11 @@ import {MetamaskSubprovider} from '@0x/subproviders';
 import {EIP712TypedData} from '@0x/types';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 
-import {sendConfig} from 'services/my-apps';
 import {NotificationType} from 'services/notification';
 import {Notification as CustomNotification} from 'types/models/Notification';
 import {ConfigFile, WhitelabelTypes} from 'types/myApps';
 import {onAddNotification} from 'redux/actions';
+import {sendConfig} from 'modules/MyApps/services/config';
 
 interface SubmitProps {
   text: string;
