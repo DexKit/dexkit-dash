@@ -116,7 +116,7 @@ export const ProfilePage: React.FC = () => {
 
   const [nftLeagueStatus, setNftLeagueStatus] = useState<
     NFTLeagueGameStatus | undefined
-  >(NFTLeagueGameStatus.Ended);
+  >();
 
   const [selectedGame, setSelectedGame] = useState<CoinLeagueGames>(
     CoinLeagueGames.CoinLeague,

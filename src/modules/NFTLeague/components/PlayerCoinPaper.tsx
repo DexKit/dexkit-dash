@@ -15,6 +15,8 @@ import {
 } from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 
+import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+
 import {Skeleton} from '@material-ui/lab';
 import {useChampionMetadataQuery} from 'modules/CoinLeagues/hooks/champions';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -30,6 +32,7 @@ import {ethers} from 'ethers';
 import {useCoinFeed} from '../hooks/useCoinFeed';
 import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
 import {truncateAddress} from 'utils';
+import {useChampionPoints} from '../hooks/useChampionPoints';
 
 const useStyle = makeStyles((theme) => ({
   coinSelectImage: {
@@ -51,7 +54,7 @@ interface Props {
   endPrice?: ethers.BigNumber;
   coinFeedAddress?: string;
   winner?: boolean;
-  state: 'waiting' | 'winner' | 'inprogress';
+  state: 'waiting' | 'ended' | 'inprogress';
   account?: string;
   onJoinGame?: (multiplier: number) => void;
   onSelectChampion?: () => void;
@@ -106,24 +109,27 @@ export const PlayerCoinPaper: React.FC<Props> = ({
     }
   }, [onJoinGame, multiplierValue]);
 
+  const championPoints = useChampionPoints(tokenId);
+
   const currPlayerScore = useMemo<number>(() => {
     if (
       coinFeed.data !== undefined &&
       initialPrice !== undefined &&
-      multiplier !== undefined
+      multiplier !== undefined &&
+      championPoints.data !== undefined
     ) {
       const diff =
         ((coinFeed.data.toNumber() - initialPrice.toNumber()) /
           coinFeed.data.toNumber()) *
         multiplier.toNumber();
 
-      return diff;
+      return diff + championPoints.data?.total;
     }
 
     return 0;
-  }, [coinFeed.data, initialPrice, multiplier]);
+  }, [coinFeed.data, initialPrice, multiplier, championPoints]);
 
-  if (state === 'winner' || state === 'inprogress') {
+  if (state === 'ended' || state === 'inprogress') {
     return (
       <Box
         p={4}
@@ -132,55 +138,44 @@ export const PlayerCoinPaper: React.FC<Props> = ({
         className={winner ? classes.winner : undefined}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <Grid container spacing={4}>
-              <Grid item>
-                <Box display='flex' alignItems='center' alignContent='center'>
-                  {metadataQuery?.isLoading || !metadataQuery?.data?.image ? (
-                    <Skeleton
-                      variant='rect'
-                      className={classes.coinSelectImage}
-                    />
-                  ) : (
-                    <img
-                      src={getNormalizedUrl(metadataQuery?.data?.image)}
-                      alt={metadataQuery?.data?.name}
-                      className={classes.coinSelectImage}
-                    />
-                  )}
-                </Box>
-              </Grid>
+            <Grid container>
               <Grid item xs>
-                <Grid
-                  container
-                  alignItems='center'
-                  alignContent='center'
-                  spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant='body2'>
-                      <Link
-                        component={RouterLink}
-                        to={`/coin-league/profile/${account}`}>
-                        {profile.data?.username
-                          ? profile.data?.username
-                          : truncateAddress(account)}
-                      </Link>
-                    </Typography>
-                    <Typography
-                      className={moduleClasses.boldText}
-                      color='textPrimary'
-                      variant='subtitle1'>
-                      {metadataQuery.isLoading ? (
-                        <Skeleton />
+                <Grid container spacing={4}>
+                  <Grid item>
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      alignContent='center'>
+                      {metadataQuery?.isLoading ||
+                      !metadataQuery?.data?.image ? (
+                        <Skeleton
+                          variant='rect'
+                          className={classes.coinSelectImage}
+                        />
                       ) : (
-                        metadataQuery.data?.name
+                        <img
+                          src={getNormalizedUrl(metadataQuery?.data?.image)}
+                          alt={metadataQuery?.data?.name}
+                          className={classes.coinSelectImage}
+                        />
                       )}
-                    </Typography>
+                    </Box>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={4}>
-                      <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
-                          ATK
+                  <Grid item xs>
+                    <Grid
+                      container
+                      alignItems='center'
+                      alignContent='center'
+                      spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography variant='body2'>
+                          <Link
+                            component={RouterLink}
+                            to={`/coin-league/profile/${account}`}>
+                            {profile.data?.username
+                              ? profile.data?.username
+                              : truncateAddress(account)}
+                          </Link>
                         </Typography>
                         <Typography
                           className={moduleClasses.boldText}
@@ -189,52 +184,71 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                           {metadataQuery.isLoading ? (
                             <Skeleton />
                           ) : (
-                            metadataQuery.data?.attributes.find(
-                              (a) => a.trait_type === 'Attack',
-                            )?.value
+                            metadataQuery.data?.name
                           )}
                         </Typography>
                       </Grid>
-                      <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
-                          DEF
-                        </Typography>
-                        <Typography
-                          className={moduleClasses.boldText}
-                          color='textPrimary'
-                          variant='subtitle1'>
-                          {metadataQuery.isLoading ? (
-                            <Skeleton />
-                          ) : (
-                            metadataQuery.data?.attributes.find(
-                              (a) => a.trait_type === 'Defense',
-                            )?.value
-                          )}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography color='textSecondary' variant='body2'>
-                          RUN
-                        </Typography>
-                        <Typography
-                          className={moduleClasses.boldText}
-                          color='textPrimary'
-                          variant='subtitle1'>
-                          {metadataQuery.isLoading ? (
-                            <Skeleton />
-                          ) : (
-                            metadataQuery.data?.attributes.find(
-                              (a) => a.trait_type === 'Run',
-                            )?.value
-                          )}
-                        </Typography>
+                      <Grid item xs={12}>
+                        <Grid container spacing={4}>
+                          <Grid item>
+                            <Typography color='textSecondary' variant='body2'>
+                              ATK
+                            </Typography>
+                            <Typography
+                              className={moduleClasses.boldText}
+                              color='textPrimary'
+                              variant='subtitle1'>
+                              {championPoints.isLoading ? (
+                                <Skeleton />
+                              ) : (
+                                championPoints.data?.attack
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography color='textSecondary' variant='body2'>
+                              DEF
+                            </Typography>
+                            <Typography
+                              className={moduleClasses.boldText}
+                              color='textPrimary'
+                              variant='subtitle1'>
+                              {championPoints.isLoading ? (
+                                <Skeleton />
+                              ) : (
+                                championPoints.data?.defense
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography color='textSecondary' variant='body2'>
+                              RUN
+                            </Typography>
+                            <Typography
+                              className={moduleClasses.boldText}
+                              color='textPrimary'
+                              variant='subtitle1'>
+                              {championPoints.isLoading ? (
+                                <Skeleton />
+                              ) : (
+                                championPoints.data?.run
+                              )}
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
+              {winner !== undefined && winner && (
+                <Grid item>
+                  <CrownIcon />
+                </Grid>
+              )}
             </Grid>
           </Grid>
+
           <Grid item xs={12}>
             <Paper variant='outlined'>
               <Box
@@ -247,7 +261,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                   color='textPrimary'
                   className={moduleClasses.boldText}
                   variant='body1'>
-                  {state === 'winner' ? score : currPlayerScore}
+                  {state === 'ended' ? score : currPlayerScore}
                 </Typography>
                 <Typography color='textPrimary' variant='body1'>
                   <IntlMessages id='nftLeague.score' />
@@ -297,7 +311,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       color='textPrimary'
                       className={moduleClasses.boldText}
                       variant='body1'>
-                      {state === 'winner' ? (
+                      {state === 'ended' ? (
                         ethers.utils.formatUnits(endPrice || 0, 8)
                       ) : coinFeed.data === undefined || coinFeed.isLoading ? (
                         <Skeleton />
@@ -310,7 +324,7 @@ export const PlayerCoinPaper: React.FC<Props> = ({
                       USD
                     </Typography>
                     <Typography color='textSecondary' variant='body1'>
-                      {state === 'winner' ? (
+                      {state === 'ended' ? (
                         <IntlMessages id='nftLeague.endPrice' />
                       ) : (
                         <IntlMessages id='nftLeague.currentPrice' />

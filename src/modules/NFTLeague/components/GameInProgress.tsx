@@ -60,6 +60,8 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
 
   const {createNotification} = useNotifications();
 
+  const {data, refetch} = useGameOnChain(id);
+
   const {messages} = useIntl();
 
   const {getTransactionScannerUrl} = useChainInfo();
@@ -122,9 +124,25 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
     [messages, createNotification, getTransactionScannerUrl, chainId],
   );
 
-  const startGameMutation = useStartGame(chainId, handleSubmitStartMutation);
-  const abortGameMutation = useAbortGame(chainId, handleSubmitAbortMutation);
-  const endGameMutation = useEndGame(chainId, handleSubmitEndMutation);
+  const handleRefetch = useCallback(() => refetch(), []);
+
+  const startGameMutation = useStartGame(
+    chainId,
+    handleSubmitStartMutation,
+    handleRefetch,
+  );
+
+  const abortGameMutation = useAbortGame(
+    chainId,
+    handleSubmitAbortMutation,
+    handleRefetch,
+  );
+
+  const endGameMutation = useEndGame(
+    chainId,
+    handleSubmitEndMutation,
+    handleRefetch,
+  );
 
   const {account} = useWeb3();
 
@@ -143,8 +161,6 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
   const [transactionConfirmed, setTransactionConfirmed] = useState(false);
 
   const [transactionHash, setTransactionHash] = useState<string>();
-
-  const {data} = useGameOnChain(id);
 
   const joinGameToggler = useToggler();
 
@@ -193,6 +209,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
     const onConfirmation = () => {
       setLoading(false);
       setTransactionConfirmed(true);
+      refetch();
     };
 
     const onError = (err: Error) => {
@@ -214,7 +231,15 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
         },
       );
     }
-  }, [battleFactory, data, selectedMultiplier, selectedToken, bittValue, id]);
+  }, [
+    battleFactory,
+    data,
+    selectedMultiplier,
+    selectedToken,
+    bittValue,
+    id,
+    refetch,
+  ]);
 
   const handleCloseDialog = useCallback(() => {
     selectTokenToggler.set(false);
@@ -414,21 +439,16 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                           className={classes.boldText}
                           color='textPrimary'
                           variant='subtitle1'>
-                          <Chip
-                            size='small'
-                            label={
-                              data?.started === false &&
-                              data?.player2 === ethers.constants.AddressZero ? (
-                                <IntlMessages id='nftLeague.waitingOpponent' />
-                              ) : data?.aborted === true ? (
-                                <IntlMessages id='nftLeague.aborted' />
-                              ) : data?.finished === true ? (
-                                <IntlMessages id='nftLeague.ended' />
-                              ) : (
-                                <IntlMessages id='nftLeague.inProgress' />
-                              )
-                            }
-                          />
+                          {data?.started === false &&
+                          data?.player2 === ethers.constants.AddressZero ? (
+                            <IntlMessages id='nftLeague.waitingOpponent' />
+                          ) : data?.aborted === true ? (
+                            <IntlMessages id='nftLeague.aborted' />
+                          ) : data?.finished === true ? (
+                            <IntlMessages id='nftLeague.ended' />
+                          ) : (
+                            <IntlMessages id='nftLeague.inProgress' />
+                          )}
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -447,62 +467,68 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                           {coinSymbol}
                         </Typography>
                       </Grid>
-                      <Grid item>
-                        <Typography color='textSecondary' variant='caption'>
-                          <IntlMessages
-                            id='nftLeague.startsIn'
-                            defaultMessage='Starts in'
-                          />
-                        </Typography>
-                        <Typography
-                          className={classes.boldText}
-                          color='textPrimary'
-                          variant='subtitle1'>
-                          {data !== undefined ? (
-                            <Countdown
-                              startTimestamp={data?.start_timestamp.toNumber()}
-                            />
-                          ) : (
-                            <Skeleton />
-                          )}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography color='textSecondary' variant='caption'>
-                          {data?.started ? (
+                      {!data?.started && (
+                        <Grid item>
+                          <Typography color='textSecondary' variant='caption'>
                             <IntlMessages
-                              id='nftLeague.gameEndsIn'
-                              defaultMessage='Ends in'
+                              id='nftLeague.startsIn'
+                              defaultMessage='Starts in'
                             />
-                          ) : (
-                            <IntlMessages
-                              id='nftLeague.gameDuration'
-                              defaultMessage='Game Duration'
-                            />
-                          )}
-                        </Typography>
-                        <Typography
-                          className={classes.boldText}
-                          color='textPrimary'
-                          variant='subtitle1'>
-                          {data !== undefined ? (
-                            data?.started ? (
+                          </Typography>
+                          <Typography
+                            className={classes.boldText}
+                            color='textPrimary'
+                            variant='subtitle1'>
+                            {data?.start_timestamp !== undefined ? (
                               <Countdown
                                 startTimestamp={data?.start_timestamp.toNumber()}
-                                duration={data?.duration.toNumber()}
                               />
                             ) : (
-                              <>
-                                {humanizeDuration(
-                                  data?.duration?.toNumber() * 1000 || 0,
-                                )}
-                              </>
-                            )
-                          ) : (
-                            <Skeleton />
-                          )}
-                        </Typography>
-                      </Grid>
+                              <Skeleton />
+                            )}
+                          </Typography>
+                        </Grid>
+                      )}
+
+                      {!data?.finished && (
+                        <Grid item>
+                          <Typography color='textSecondary' variant='caption'>
+                            {data?.started ? (
+                              <IntlMessages
+                                id='nftLeague.gameEndsIn'
+                                defaultMessage='Ends in'
+                              />
+                            ) : (
+                              <IntlMessages
+                                id='nftLeague.gameDuration'
+                                defaultMessage='Game Duration'
+                              />
+                            )}
+                          </Typography>
+                          <Typography
+                            className={classes.boldText}
+                            color='textPrimary'
+                            variant='subtitle1'>
+                            {data !== undefined ? (
+                              data?.started ? (
+                                <Countdown
+                                  startTimestamp={data?.start_timestamp.toNumber()}
+                                  duration={data?.duration.toNumber()}
+                                />
+                              ) : (
+                                <>
+                                  {humanizeDuration(
+                                    data?.duration?.toNumber() * 1000 || 0,
+                                  )}
+                                </>
+                              )
+                            ) : (
+                              <Skeleton />
+                            )}
+                          </Typography>
+                        </Grid>
+                      )}
+
                       <Grid item>
                         <Typography color='textSecondary' variant='caption'>
                           <IntlMessages id='nftLeague.gameType' />
@@ -581,8 +607,8 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
               <PlayerCoinPaper
                 state={
                   data?.winner !== ethers.constants.AddressZero
-                    ? 'winner'
-                    : 'inprogress'
+                    ? 'ended'
+                    : 'inprogress' //ENUMS
                 }
                 tokenId={data?.player1_coin.champion_id.toString()}
                 initialPrice={data?.player1_coin.start_price}
@@ -616,7 +642,9 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
               <PlayerCoinPaper
                 account={data?.player2}
                 state={
-                  data?.player2 === ethers.constants.AddressZero
+                  data?.winner !== ethers.constants.AddressZero
+                    ? 'ended'
+                    : data?.player2 === ethers.constants.AddressZero
                     ? 'waiting'
                     : 'inprogress' //enums
                 }

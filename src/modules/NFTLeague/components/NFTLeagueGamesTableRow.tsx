@@ -15,7 +15,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -27,12 +27,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {ethers} from 'ethers';
 import moment from 'moment';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
-
-const useStyles = makeStyles((theme) => ({
-  avatarButton: {
-    borderRadius: '50%',
-  },
-}));
+import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import NFTLeagueAvatar from './NFTLeagueAvatar';
 
 interface Props {
   game: GameGraph;
@@ -40,8 +36,6 @@ interface Props {
 
 export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
   const [collapse, setCollapse] = useState(false);
-
-  const classes = useStyles();
 
   const handleToggle = useCallback(() => {
     setCollapse((value) => !value);
@@ -68,16 +62,13 @@ export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
           </TableCell>
         </Hidden>
         <TableCell>
-          <AvatarGroup>
+          <Grid container spacing={2}>
             {game.players?.map((player, index: number) => (
-              <ButtonBase
-                component={RouterLink}
-                to={`${COINLEAGUE_PROFILE_ROUTE}/${player.id}`}
-                className={classes.avatarButton}>
-                <Avatar key={index} title={player.id} />
-              </ButtonBase>
+              <Grid item key={index}>
+                <NFTLeagueAvatar player={player} id={player.player.id} />
+              </Grid>
             ))}
-          </AvatarGroup>
+          </Grid>
         </TableCell>
         <Hidden smUp>
           <TableCell>

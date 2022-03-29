@@ -8,6 +8,7 @@ import {startGame} from '../services/battleFactory';
 export function useStartGame(
   chainId?: ChainId,
   onSubmit?: (hash: string) => void,
+  onConfirm?: () => void,
 ) {
   const {getProvider} = useWeb3();
 
@@ -32,12 +33,13 @@ export function useStartGame(
 
         if (receipt.confirmations > 0) {
           setConfirmed(true);
+          onConfirm!();
         }
 
         return tx;
       });
     },
-    [chainId, onSubmit, getProvider],
+    [chainId, onSubmit, getProvider, onConfirm],
   );
 
   const query = useMutation(mutationCallback);

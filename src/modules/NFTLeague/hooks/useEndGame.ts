@@ -8,6 +8,7 @@ import {endGame} from '../services/battleFactory';
 export function useEndGame(
   chainId?: ChainId,
   onSubmit?: (hash: string) => void,
+  onConfirm?: () => void,
 ) {
   const {getProvider} = useWeb3();
 
@@ -32,12 +33,13 @@ export function useEndGame(
 
         if (receipt.confirmations > 0) {
           setConfirmed(true);
+          onConfirm!();
         }
 
         return tx;
       });
     },
-    [chainId, onSubmit, getProvider],
+    [chainId, onSubmit, getProvider, onConfirm],
   );
 
   const query = useMutation(handleMutation);

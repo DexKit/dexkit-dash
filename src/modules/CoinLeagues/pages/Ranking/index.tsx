@@ -138,9 +138,10 @@ export function Ranking() {
         )}
         <Grid item xs={12} sm={8}>
           <CustomTabs
+            scrollButtons='auto'
             value={value}
             onChange={handleChange}
-            variant='standard'
+            variant='scrollable'
             TabIndicatorProps={{
               style: {display: 'none'},
             }}

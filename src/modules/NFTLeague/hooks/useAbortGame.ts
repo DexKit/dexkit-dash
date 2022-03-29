@@ -8,6 +8,7 @@ import {abortGame} from '../services/battleFactory';
 export function useAbortGame(
   chainId?: ChainId,
   onSubmit?: (hash: string) => void,
+  onConfirm?: () => void,
 ) {
   const {getProvider} = useWeb3();
 
@@ -32,12 +33,13 @@ export function useAbortGame(
 
         if (receipt.confirmations > 0) {
           setConfirmed(true);
+          onConfirm!();
         }
 
         return tx;
       });
     },
-    [onSubmit, chainId, getProvider],
+    [onSubmit, chainId, getProvider, onConfirm],
   );
 
   const query = useMutation(handleMutation);
