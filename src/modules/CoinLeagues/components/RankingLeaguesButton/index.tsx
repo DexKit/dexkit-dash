@@ -10,6 +10,7 @@ import {
   Collapse,
   Divider,
   makeStyles,
+  useTheme,
 } from '@material-ui/core';
 
 import {Skeleton} from '@material-ui/lab';
@@ -23,6 +24,7 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -61,6 +63,7 @@ interface RankingButtonProps {
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
   const {coinSymbol} = useLeaguesChainInfo();
+  const theme = useTheme();
 
   const {address, featured, position, label, count, profile} = props;
 
@@ -75,7 +78,9 @@ export const RankingButton = (props: RankingButtonProps) => {
   }, [toggler]);
 
   return (
-    <Paper variant='outlined'>
+    <Paper
+      variant='outlined'
+      style={featured ? {borderColor: theme.palette.primary.main} : undefined}>
       <ButtonBase onClick={handleToggle} className={classes.button}>
         <Box p={4}>
           <Grid
@@ -129,59 +134,79 @@ export const RankingButton = (props: RankingButtonProps) => {
       </ButtonBase>
       <Collapse in={toggler.show}>
         <Divider />
-        <Box p={4} display={'flex'}>
-          <Grid container>
+        <Box p={4} display='flex'>
+          <Grid container spacing={4}>
             <Grid item>
-              <CopyButton
-                size='small'
-                copyText={address || ''}
-                tooltip='Copied!'>
-                <FileCopy color='inherit' style={{fontSize: 16}} />
-              </CopyButton>
-            </Grid>
-            <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Wins: {props?.winsCount}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                Wins
               </Typography>
+              <Typography variant='subtitle1'>{props?.winsCount}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                First Place: {props?.firstCount}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages
+                  id='coinLeague.firstPlace'
+                  defaultMessage='First Place'
+                />
               </Typography>
+              <Typography variant='subtitle1'>{props?.firstCount}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Second Place: {props?.secondCount}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages
+                  id='coinLeague.secondPlace'
+                  defaultMessage='Second Place'
+                />
               </Typography>
+              <Typography variant='subtitle1'>{props?.secondCount}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Third Place: {props?.thirdCount}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages
+                  id='coinLeague.thirdPlace'
+                  defaultMessage='Third Place'
+                />
               </Typography>
+              <Typography variant='subtitle1'>{props?.thirdCount}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Joins: {props?.joinsCount}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages id='coinLeague.joins' defaultMessage='Joins' />
               </Typography>
+              <Typography variant='subtitle1'>{props?.joinsCount}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Wins/Joins:{' '}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages
+                  id='coinLeague.winsAndJoins'
+                  defaultMessage='Wins/Joins'
+                />
+              </Typography>
+              <Typography variant='subtitle1'>
                 {props?.joinsCount
                   ? `${Number(
                       ((props?.winsCount || 0) / props?.joinsCount) * 100,
-                    ).toFixed(2)} %`
+                    ).toFixed(2)}%`
                   : '0%'}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Earned {coinSymbol}: {props?.totalEarned}
+              <Typography variant='caption' color='textSecondary' gutterBottom>
+                <IntlMessages
+                  id='coinLeague.totalEarned'
+                  defaultMessage='Total Earned'
+                />
+              </Typography>
+              <Typography variant='subtitle1'>
+                {props?.totalEarned} {coinSymbol}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant={'body1'} className={classes.paragraphMargin}>
-                {coinSymbol} Profit: {props?.EarnedMinusSpent}
+              <Typography variant='caption' color='textSecondary'>
+                <IntlMessages id='coinLeague.profit' defaultMessage='Profit' />
+              </Typography>
+              <Typography variant='subtitle1'>
+                {props?.EarnedMinusSpent} {coinSymbol}
               </Typography>
             </Grid>
           </Grid>

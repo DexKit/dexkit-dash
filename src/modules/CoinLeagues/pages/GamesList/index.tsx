@@ -18,8 +18,6 @@ import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
-import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
-import {makeStyles} from '@material-ui/core/styles';
 
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
@@ -33,7 +31,6 @@ import {
 } from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
@@ -61,25 +58,9 @@ import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    padding: theme.spacing(2),
-    backgroundColor: '#1F1D2B',
-  },
-  chip: {
-    color: '#fff',
-    background: '#1F1D2B',
-    border: '2px solid #2e3243',
-  },
-  createGame: {
-    padding: theme.spacing(3),
-  },
-  tabs: {
-    maxWidth: '450px',
-  },
-}));
+import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
+import {TextField} from '@material-ui/core';
+import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
 
 enum Tabs {
   History = 'History',
@@ -87,7 +68,6 @@ enum Tabs {
 }
 
 const GamesList = () => {
-  const classes = useStyles();
   const history = useHistory();
   const {messages} = useIntl();
   const {pathname} = useLocation();
@@ -275,8 +255,39 @@ const GamesList = () => {
     filterToggler.set(true);
   }, [filterToggler]);
 
+  const handleShowCreateGameModal = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const shareDialogToggler = useToggler();
+
+  const [shareSelectedId, setShareSelectedId] = useState<string>();
+
+  const handleShareGame = useCallback(
+    (id) => {
+      setShareSelectedId(id);
+      shareDialogToggler.set(true);
+    },
+    [shareDialogToggler],
+  );
+
+  const handleCloseShareDialog = useCallback(() => {
+    setShareSelectedId(undefined);
+    shareDialogToggler.set(false);
+  }, [shareDialogToggler]);
+
   return (
     <>
+      <CoinLeagueShareDialog
+        dialogProps={{
+          open: shareDialogToggler.show,
+          onClose: handleCloseShareDialog,
+          fullWidth: true,
+          maxWidth: 'sm',
+          fullScreen: isMobile,
+        }}
+        id={shareSelectedId}
+      />
       <GameFilterDrawer
         show={filterToggler.show}
         onClose={filterToggler.toggle}
@@ -382,13 +393,17 @@ const GamesList = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.slice(0, 6).map((g, id) => (
               <Grid item xs={12} sm={4} md={4} lg={3} xl={2} key={id}>
-                <SmallCardGame game={g} key={id} onClick={onClickEnterGame} />
+                <SmallCardGame
+                  game={g}
+                  onClick={onClickEnterGame}
+                  onShare={handleShareGame}
+                />
               </Grid>
             ))}
             {isLoadingStarted &&
-              [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={2} xl={2} key={i}>
-                  <SmallCardGameSkeleton />
+              new Array(4).fill(null).map((v, i) => (
+                <Grid item xs={12} sm={3} key={i}>
+                  <SmallCardGame loading />
                 </Grid>
               ))}
             {!isLoadingStarted && !gamesInProgress?.length && (
@@ -407,11 +422,10 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container alignItems={'center'} spacing={2}>
+          <Grid container alignItems='center' spacing={4}>
             <Grid item xs={12} sm={6}>
               <CustomTabs
                 value={value}
-                className={classes.tabs}
                 onChange={handleChange}
                 variant='standard'
                 TabIndicatorProps={{
@@ -424,15 +438,18 @@ const GamesList = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <ContainedInput
+              <TextField
                 value={search}
                 onChange={handleSearch}
                 placeholder='Search'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <Search />
-                  </InputAdornment>
-                }
+                variant='outlined'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
               />
             </Grid>
@@ -440,13 +457,7 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button
-            className={classes.createGame}
-            fullWidth
-            variant={'contained'}
-            onClick={() => setOpen(true)}>
-            {'CREATE GAME'}
-          </Button>
+          <CreateGameButton onClick={handleShowCreateGameModal} />
         </Grid>
 
         <Grid item xs={12}>
@@ -455,7 +466,7 @@ const GamesList = () => {
             alignContent='center'
             alignItems='center'
             justifyContent='space-between'
-            spacing={2}>
+            spacing={4}>
             <Grid item>
               {value === Tabs.Games ? (
                 <Typography variant='h6'>
@@ -477,7 +488,7 @@ const GamesList = () => {
                 </Typography>
               )}
             </Grid>*/}
-            <Grid item>
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
                   <Chip
@@ -491,6 +502,7 @@ const GamesList = () => {
                     }
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -499,6 +511,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -507,6 +520,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleBitBoy}
                     color={filtersState.isBitboy ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -515,22 +529,18 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleJackpot}
                     color={filtersState.isJackpot ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              {/* <GameOrderByDropdown
-                onSelectGameOrder={(value) => setOrderByGame(value)}
-              /> */}
-
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid
                 alignItems='center'
                 alignContent='center'
-                justifyContent='center'
                 container
                 spacing={2}>
-                <Grid item>
+                <Grid item xs={isMobile}>
                   <GameOrderBySelect
                     value={filtersState.orderByGame}
                     onChange={handleChangeOrderBy}
@@ -555,14 +565,19 @@ const GamesList = () => {
           <Grid item xs={12}>
             <Grid container spacing={4}>
               {gamesToJoin?.map((g, id) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                  <CardGame game={g} id={g.id} onClick={onClickEnterGame} />
+                <Grid item xs={12} sm={4} key={id}>
+                  <CardGame
+                    game={g}
+                    id={g.id}
+                    onClick={onClickEnterGame}
+                    onShare={handleShareGame}
+                  />
                 </Grid>
               ))}
               {isLoadingCreated &&
-                [1, 2, 3].map((v, i) => (
-                  <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                    <CardGameSkeleton />
+                new Array(3).fill(null).map((v, i) => (
+                  <Grid item xs={12} sm={4} key={i}>
+                    <CardGame loading />
                   </Grid>
                 ))}
               {!isLoadingCreated && !gamesToJoin?.length && (

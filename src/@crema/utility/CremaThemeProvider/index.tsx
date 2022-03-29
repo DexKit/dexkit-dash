@@ -7,15 +7,56 @@ import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 import AppContext from '../AppContext';
 import AppLocale from 'shared/localization';
-import {responsiveFontSizes} from '@material-ui/core';
 import {useBreakPointDown} from '../Utils';
 import {NavStyle, ThemeMode, ThemeStyle} from 'shared/constants/AppEnums';
 import {useUrlSearchParams} from 'use-url-search-params';
 import AppContextPropsType from '../../../types/AppContextPropsType';
 
+const theme = createTheme({
+  spacing: 4,
+  props: {
+    MuiIconButton: {
+      color: 'inherit',
+    },
+    MuiIcon: {
+      color: 'inherit',
+    },
+  },
+  typography: {
+    fontFamily: ['Sora', 'sans-serif'].join(','),
+  },
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#F0883E',
+    },
+    success: {
+      main: '#2EA043',
+    },
+    error: {
+      main: '#F85149',
+    },
+    warning: {
+      main: '#BB800A',
+    },
+    info: {
+      main: '#388BFD',
+    },
+    text: {
+      primary: '#fff',
+    },
+    background: {
+      default: '#0D1017',
+      paper: '#151B22',
+    },
+  },
+  shape: {
+    borderRadius: 4,
+  },
+});
+
 const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   const {
-    theme,
     locale,
     isRTL,
     updateThemeMode,
@@ -24,7 +65,6 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
     setRTL,
     updateTheme,
   } = useContext<AppContextPropsType>(AppContext);
-  const {muiLocale} = AppLocale[locale.locale];
   const isBelowMd = useBreakPointDown('md');
 
   const initailValue: InitialType = {};
@@ -105,7 +145,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   }, [params.theme_style, theme, isBelowMd, updateTheme, updateThemeStyle]);
 
   return (
-    <ThemeProvider theme={responsiveFontSizes(createTheme(theme, muiLocale))}>
+    <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         {props.children}
       </MuiPickersUtilsProvider>

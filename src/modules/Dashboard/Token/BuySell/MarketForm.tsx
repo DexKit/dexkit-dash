@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import {useTheme} from '@material-ui/core';
+import {Paper, useTheme} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -135,17 +135,23 @@ const MarketForm: React.FC<Props> = (props) => {
     if (disableSelect) {
       if (disableSelect === 'to') {
         setDisableSelect('from');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('from')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('from');
         }
       } else {
         setDisableSelect('to');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('to')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('to');
         }
       }
     }
-  }, [tokenFrom, tokenTo, onChangeToken, onSwitchTokensCallback, onChangeDisableReceiveCallback]);
+  }, [
+    tokenFrom,
+    tokenTo,
+    onChangeToken,
+    onSwitchTokensCallback,
+    onChangeDisableReceiveCallback,
+  ]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
     tokenTo?.address || tokenTo?.symbol,
@@ -526,10 +532,7 @@ const MarketForm: React.FC<Props> = (props) => {
               {(priceQuoteTo || priceQuoteFrom) && (
                 <Grid item xs={12}>
                   <Box>
-                    <Accordion
-                      style={{
-                        backgroundColor: creamaTheme.palette.sidebar.bgColor,
-                      }}>
+                    <Accordion component={Paper} variant='outlined'>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls='panel1a-content'

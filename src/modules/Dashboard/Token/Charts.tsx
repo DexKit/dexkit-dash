@@ -154,6 +154,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
                     symbol={chartSymbol}
                     chainId={chainId}
                     darkMode={isDark}
+                    backgroundColor={theme.palette.background.paper}
                   />
                 </TabPanelChart>
               </>

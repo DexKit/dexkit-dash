@@ -35,7 +35,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
               (notification) => notification?.check === undefined,
             ).length
           }
-          color='secondary'>
+          color='primary'>
           <NotificationIcon />
         </Badge>
       </AppBarButton>

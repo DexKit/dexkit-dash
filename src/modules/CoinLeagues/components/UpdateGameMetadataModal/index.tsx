@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 
 import Grid from '@material-ui/core/Grid';
-
+import Divider from '@material-ui/core/Divider';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -30,6 +30,8 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -103,6 +105,8 @@ const validationSchema = yup.object({
 const UpdateGameMetadataModal = (props: Props) => {
   const {open, setOpen, id, gameMetadata} = props;
 
+  const {formatMessage} = useIntl();
+
   const {refetch} = useGameMetadata(id);
   const {account, chainId} = useWeb3();
   const {chainId: chainIdGame} = useLeaguesChainInfo();
@@ -156,28 +160,17 @@ const UpdateGameMetadataModal = (props: Props) => {
 
   return (
     <Dialog open={open}>
-      <DialogTitle>
-        <Grid container spacing={2}>
-          <Grid item xs={11}>
-            <Grid container spacing={2} justifyContent={'flex-start'}>
-              <Grid item>
-                <CrownIcon />
-              </Grid>
-              <Grid item>
-                <Typography variant='h6'>Add Prize description</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton onClick={() => setOpen(false)} size='small'>
-              <CloseIcon style={{color: '#fff'}} />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </DialogTitle>
-
-      <DialogContent dividers>
-        <Grid container className={classes.innerContent} spacing={2}>
+      <CustomDialogTitle
+        icon={<CrownIcon />}
+        onClose={() => setOpen(false)}
+        title={formatMessage({
+          id: 'coinLeague.addPrizeDescription',
+          defaultMessage: 'Add Prize description',
+        })}
+      />
+      <Divider />
+      <DialogContent>
+        <Grid container className={classes.innerContent} spacing={4}>
           <Grid item xs={12}>
             <Typography variant='h6' style={{fontWeight: 600}}>
               Prize Information for Game #{id}
@@ -192,84 +185,76 @@ const UpdateGameMetadataModal = (props: Props) => {
             <form onSubmit={formik.handleSubmit}>
               <Grid container className={classes.innerContent} spacing={4}>
                 <Grid item xs={12}>
-                  <FormControl
+                  <TextField
+                    value={formik.values.title}
+                    onChange={formik.handleChange}
+                    required
+                    id='title'
+                    label={
+                      <IntlMessages
+                        id='coinLeague.title'
+                        defaultMessage='Title'
+                      />
+                    }
+                    name='title'
                     fullWidth
-                    size='small'
-                    className={classes.formControl}>
-                    <TextField
-                      value={formik.values.title}
-                      onChange={formik.handleChange}
-                      required
-                      id='title'
-                      label='Title'
-                      name='title'
-                      error={
-                        formik.touched.title && Boolean(formik.errors.title)
-                      }
-                      helperText={formik.touched.title && formik.errors.title}
-                      style={{
-                        color: '#fff',
-                        borderRadius: 6,
-                      }}
-                    />
-                  </FormControl>
+                    variant='outlined'
+                    error={formik.touched.title && Boolean(formik.errors.title)}
+                    helperText={formik.touched.title && formik.errors.title}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl
+                  <TextField
+                    variant='outlined'
+                    value={formik.values.smallDescription}
+                    onChange={formik.handleChange}
                     fullWidth
-                    size='small'
-                    className={classes.formControl}>
-                    <TextField
-                      value={formik.values.smallDescription}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.smallDescription &&
-                        Boolean(formik.errors.smallDescription)
-                      }
-                      helperText={
-                        formik.touched.smallDescription &&
-                        formik.errors.smallDescription
-                      }
-                      required
-                      multiline
-                      rows={2}
-                      id='small-description'
-                      label='Small Description'
-                      name='smallDescription'
-                      style={{
-                        color: '#fff',
-                        borderRadius: 6,
-                      }}
-                    />
-                  </FormControl>
+                    error={
+                      formik.touched.smallDescription &&
+                      Boolean(formik.errors.smallDescription)
+                    }
+                    helperText={
+                      formik.touched.smallDescription &&
+                      formik.errors.smallDescription
+                    }
+                    required
+                    multiline
+                    rows={2}
+                    id='small-description'
+                    label={
+                      <IntlMessages
+                        id='coinLeague.smallDescription'
+                        defaultMessage='Small Description'
+                      />
+                    }
+                    name='smallDescription'
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl
+                  <TextField
+                    variant='outlined'
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.description &&
+                      Boolean(formik.errors.description)
+                    }
+                    helperText={
+                      formik.touched.description && formik.errors.description
+                    }
                     fullWidth
-                    size='small'
-                    className={classes.formControl}>
-                    <TextField
-                      value={formik.values.description}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.description &&
-                        Boolean(formik.errors.description)
-                      }
-                      helperText={
-                        formik.touched.description && formik.errors.description
-                      }
-                      required
-                      multiline
-                      rows={4}
-                      id='description'
-                      label='Description'
-                      name='description'
-                      style={{
-                        color: '#fff',
-                        borderRadius: 6,
-                      }}
-                    />
-                  </FormControl>
+                    required
+                    multiline
+                    rows={4}
+                    id='description'
+                    label={
+                      <IntlMessages
+                        id='coinLeague.smallDescription'
+                        defaultMessage='Small Description'
+                      />
+                    }
+                    name='description'
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Button
@@ -280,10 +265,7 @@ const UpdateGameMetadataModal = (props: Props) => {
                     fullWidth
                     startIcon={
                       isSubmitting() ? (
-                        <CircularProgress
-                          color='inherit'
-                          size={theme.spacing(7)}
-                        />
+                        <CircularProgress color='inherit' size='1rem' />
                       ) : (
                         submitState !== SubmitState.None && <DoneIcon />
                       )

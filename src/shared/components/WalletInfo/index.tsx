@@ -103,8 +103,8 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     },
     walletBalance: {
       padding: theme.spacing(2),
-      backgroundColor: '#252836',
-      borderRadius: 8,
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: theme.shape.borderRadius,
     },
     visibilityButton: {
       width: theme.spacing(4),
@@ -273,10 +273,11 @@ const WalletInfo: React.FC<Props> = (props) => {
                   )}
                 </ButtonBase>
                 <CopyButton
+                  color='inherit'
                   size='small'
                   copyText={defaultAccount || ''}
                   tooltip='Copied!'>
-                  <FileCopy color='inherit' style={{fontSize: 16}} />
+                  <FileCopy style={{fontSize: 16}} />
                 </CopyButton>
               </Box>
             </Grid>

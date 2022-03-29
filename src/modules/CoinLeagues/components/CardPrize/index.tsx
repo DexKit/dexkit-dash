@@ -2,55 +2,39 @@ import React from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Skeleton from '@material-ui/lab/Skeleton';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#2e3243',
-    padding: theme.spacing(2),
-  },
-  innerContent: {
-    padding: theme.spacing(1),
-    justifyContent: 'space-between',
-    fontSize: '1rem',
-  },
-}));
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 interface Props {
   prizePool?: number;
+  loading?: boolean;
 }
 
 function CardPrize(props: Props): JSX.Element {
-  const classes = useStyles();
-  const { coinSymbol } = useLeaguesChainInfo();
-
-
-  const { prizePool } = props;
-  /*const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
+  const {prizePool, loading} = props;
+  const {coinSymbol} = useLeaguesChainInfo();
 
   return (
-    <Container className={classes.container}>
-      <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Typography variant='subtitle2' style={{ color: '#7A8398' }}>
-            <IntlMessages id='app.coinLeagues.maxPrizePool' />
-          </Typography>
-          <Typography variant='h4' style={{ color: '#fff' }}>
-            {prizePool || '-'}  {coinSymbol}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Container>
+    <Paper>
+      <Box p={4}>
+        <Typography variant='caption' color='textSecondary'>
+          <IntlMessages id='app.coinLeagues.maxPrizePool' />
+        </Typography>
+        <Typography variant='subtitle1'>
+          {prizePool === undefined ? (
+            <Skeleton />
+          ) : (
+            <>
+              {prizePool} {coinSymbol}
+            </>
+          )}
+        </Typography>
+      </Box>
+    </Paper>
   );
 }
 

@@ -16,12 +16,12 @@ import Aggregator from 'assets/images/aggregator.png';
 import {blue} from '@material-ui/core/colors';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   statsCard: {
     fontFamily: Fonts.MEDIUM,
     fontSize: 20,
     lineHeight: '2rem',
-    borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     padding: '20px 24px',
   },
   cardContent: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     height: 30,
     width: 30,
-    borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: (props: {bgColor: string}) => props.bgColor,
     [theme.breakpoints.up('md')]: {
       height: 45,

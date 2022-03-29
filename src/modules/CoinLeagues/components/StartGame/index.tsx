@@ -19,8 +19,8 @@ import {
 import {useInterval} from 'hooks/utils/useInterval';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 interface Props {
   id?: string;
@@ -28,7 +28,7 @@ interface Props {
 
 export const StartGame = (props: Props) => {
   const {id} = props;
-  const { chainId } = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const {game, refetch} = useCoinLeagues(id);
   const {createNotification} = useNotifications();
   const [tx, setTx] = useState<string>();
@@ -93,15 +93,9 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [
-      game,
-      refetch,
-      onStartGameCallback,
-      chainId,
-      createNotification,
-      id
-    ],
+    [game, refetch, onStartGameCallback, chainId, createNotification, id],
   );
+
   const onAbortGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play && chainId) {
@@ -141,14 +135,7 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [
-      game,
-      refetch,
-      onAbortGameCallback,
-      chainId,
-      createNotification,
-      id
-    ],
+    [game, refetch, onAbortGameCallback, chainId, createNotification, id],
   );
   const abortTime = game?.abort_timestamp;
   const startTime = game?.start_timestamp;
@@ -167,8 +154,10 @@ export const StartGame = (props: Props) => {
 
   const started = useMemo(() => game?.started, [game]);
   const aborted = useMemo(() => game?.aborted, [game]);
+
   const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
   const currentPlayers = useMemo(() => game?.players.length, [game]);
+
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
@@ -226,24 +215,6 @@ export const StartGame = (props: Props) => {
                 alignContent={'center'}
                 spacing={2}
                 alignItems={'center'}>
-                <Grid item xs={12} md={12}>
-                  <Box display={'flex'} justifyContent={'center'}>
-                    {tx && (
-                      <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted ? (
-                          <IntlMessages id='app.coinLeagues.submittedTx' />
-                        ) : submitState === SubmitState.Error ? (
-                          <IntlMessages id='app.coinLeagues.txError' />
-                        ) : submitState === SubmitState.Confirmed ? (
-                          <IntlMessages id='app.coinLeagues.confirmedTx' />
-                        ) : (
-                          ''
-                        )}
-                      </Button>
-                    )}
-                  </Box>
-                </Grid>
-
                 {!aborted && (
                   <Grid item xs={12} md={12}>
                     <Button

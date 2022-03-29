@@ -1,8 +1,15 @@
 import React, {useCallback} from 'react';
 
-import Paper from '@material-ui/core/Paper';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
-import {Box, Grid, IconButton, makeStyles, Typography} from '@material-ui/core';
+import {
+  Box,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
+} from '@material-ui/core';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 
 type Props = {
@@ -14,7 +21,7 @@ type Props = {
 const useStyles = makeStyles((theme) => ({
   coinContainer: {
     borderRadius: '50%',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.common.white,
     height: theme.spacing(9),
     width: theme.spacing(9),
     justifyContent: 'center',
@@ -46,26 +53,22 @@ export const CoinItem = (props: Props) => {
   );
 
   return (
-    <Paper className={classes.item}>
-      <Grid container alignItems='center' spacing={4}>
-        <Grid item>
-          <Box className={classes.coinContainer}>
-            <img src={coin?.logo} className={classes.coin} alt={'Coin'} />
-          </Box>
-        </Grid>
+    <ListItem button>
+      <ListItemIcon>
+        <Box className={classes.coinContainer}>
+          <img src={coin?.logo} className={classes.coin} alt={'Coin'} />
+        </Box>
+      </ListItemIcon>
+      <ListItemText
+        primary={`${coin.base.toUpperCase()} / ${coin.quote.toUpperCase()}`}
+        secondary={coin.baseName}
+      />
 
-        <Grid item xs>
-          <Typography variant='body1'>{`${coin.base.toUpperCase()} / ${coin.quote.toUpperCase()}`}</Typography>
-          <Typography variant='body2' color='textSecondary'>
-            {coin.baseName}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <IconButton onClick={onClickDelete} size='small'>
-            <CloseCircle />
-          </IconButton>
-        </Grid>
-      </Grid>
-    </Paper>
+      <ListItemSecondaryAction>
+        <IconButton onClick={onClickDelete} size='small'>
+          <CloseCircle />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 };

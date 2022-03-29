@@ -37,6 +37,21 @@ import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import {
+  Collapse,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  useTheme,
+} from '@material-ui/core';
+import {useMobile} from 'hooks/useMobile';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import PlayerCoinsTable from '../v2/PlayerCoinsTable';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -118,25 +133,18 @@ const USD_POWER_NUMBER = 10 ** 8;
 function PlayersTable(props: Props): JSX.Element {
   const {id, account, finished, hideCoins, type, data, userProfiles} = props;
   const classes = useStyles();
+  const theme = useTheme();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
-  const [coins, setCoins] = useState([]);
-  const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
-  const [selectedPlayerAddress, setSelectedPlayerAddress] = useState<string>();
+
+  const [expanded, setExpanded] = useState<{[key: number]: boolean}>({});
+
   const accountLabels = useLabelAccounts();
   const {game, currentPrices, allFeeds} = useCoinLeagues(id);
 
-  const [openViewDialog, setOpenViewDialog] = useState(false);
-  const onCloseViewCoinsDialog = useCallback((ev: any) => {
-    setOpenViewDialog(false);
-  }, []);
+  const isMobile = useMobile();
+
   const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
-  const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
-    setCoins(c);
-    setSelectedCaptainCoin(cap);
-    setSelectedPlayerAddress(addr);
-    setOpenViewDialog(true);
-  }, []);
 
   // We need to this to calculate the monster of score in real time
   const playerRowData = useMemo(() => {
@@ -144,6 +152,7 @@ function PlayersTable(props: Props): JSX.Element {
       return data?.map((d) => {
         let label;
         const bitboyMember = GET_BITBOY_NAME(d.hash);
+
         if (bitboyMember) {
           label = bitboyMember.label;
         } else {
@@ -186,9 +195,9 @@ function PlayersTable(props: Props): JSX.Element {
             }
 
             return {
-              endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
+              endPrice: (f.price?.toNumber() / USD_POWER_NUMBER) as number,
               startPrice: startFeed
-                ? ((startFeed?.start_price.toNumber() /
+                ? ((startFeed?.start_price?.toNumber() /
                     USD_POWER_NUMBER) as number)
                 : 0,
               multiplier,
@@ -201,7 +210,7 @@ function PlayersTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * 100 * p.multiplier,
             );
-          const score = scores.reduce((p, c) => p + c);
+          const score = scores.length > 0 ? scores.reduce((p, c) => p + c) : 0;
           const profile = (userProfiles || []).find(
             (p) => p.address.toLowerCase() === d.hash.toLowerCase(),
           );
@@ -253,77 +262,90 @@ function PlayersTable(props: Props): JSX.Element {
 
   return (
     <>
-      <ViewCoinLeagueDialog
-        open={openViewDialog}
-        onClose={onCloseViewCoinsDialog}
-        coins={coins}
-        captainCoin={selectedCaptainCoin}
-        id={id}
-        playerAddress={selectedPlayerAddress}
-      />
-      <TableContainer className={classes.container} component={Paper}>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.position' />
-              </TableCell>
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.captain' />
-              </TableCell>
-              {(game?.num_coins.toNumber() || 0) > 1 && (
-                <TableCell className={classes.header}>
-                  <IntlMessages id='app.coinLeagues.coins' />
-                </TableCell>
-              )}
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.score' />
-              </TableCell>
-            </TableRow>
-          </TableHead>
+      <Grid container spacing={4}>
+        {!props.data?.length && (
+          <Grid item xs={12}>
+            <Typography variant='h5'>
+              <IntlMessages id='app.coinLeagues.notDataFound' />!
+            </Typography>
+          </Grid>
+        )}
+        {playerRowData
+          ?.sort((a, b) => {
+            if (game?.game_type === GameType.Winner) {
+              return b.score - a.score;
+            } else {
+              return a.score - b.score;
+            }
+          })
+          .map((row, i) => (
+            <Grid key={i} item xs={12}>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    justifyContent='space-between'
+                    alignItems='center'
+                    alignContent='center'>
+                    <Grid item>
+                      <Grid
+                        container
+                        spacing={2}
+                        alignItems='center'
+                        alignContent='center'>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            label={
+                              <Typography variant='inherit' color='primary'>
+                                {i + 1}°
+                              </Typography>
+                            }
+                          />
+                        </Grid>
+                        <Grid item>
+                          {isBalanceVisible ? (
+                            <UserProfileItem
+                              address={row.hash}
+                              profile={row.profile}
+                            />
+                          ) : (
+                            <Typography variant='subtitle1'>******</Typography>
+                          )}
+                        </Grid>
 
-          <TableBody>
-            {!props.data?.length && (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className={classes.noBorder}
-                  style={{textAlign: 'center', color: '#ffa552'}}>
-                  <Typography variant='h5'>
-                    <IntlMessages id='app.coinLeagues.notDataFound' />!
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
-            {playerRowData
-              ?.sort((a, b) => {
-                if (game?.game_type === GameType.Winner) {
-                  return b.score - a.score;
-                } else {
-                  return a.score - b.score;
-                }
-              })
-              .map((row, i) => (
-                <TableRow
-                  key={i}
-                  selected={
-                    row.account.toLowerCase() === account?.toLowerCase() &&
-                    isBalanceVisible
-                  }>
-                  <TableCell className={classes.noBorder}>
-                    <Box display={'flex'} alignItems={'center'}>
-                      <Chip className={classes.chip} label={`${i + 1}º`} />
-                      <UserProfileItem
-                        address={row.account}
-                        profile={row.profile}
-                      />
+                        {finished &&
+                          (playerRowData.length === 2 ||
+                            playerRowData.length === 3) &&
+                          i === 0 && (
+                            <Grid item>
+                              <Chip
+                                color='primary'
+                                icon={<CupIcon />}
+                                label={
+                                  messages['app.coinLeagues.winner'] as string
+                                }
+                                size='small'
+                              />
+                            </Grid>
+                          )}
 
-                      {finished &&
-                        (playerRowData.length === 2 ||
-                          playerRowData.length === 3) &&
-                        i === 0 && (
-                          <Box ml={2}>
-                            {' '}
+                        {finished && playerRowData.length > 3 && i === 0 && (
+                          <Grid item>
+                            <Chip
+                              color='primary'
+                              icon={<CupIcon />}
+                              label={
+                                messages['app.coinLeagues.winner'] as string
+                              }
+                              size='medium'
+                            />
+                          </Grid>
+                        )}
+
+                        {finished && playerRowData.length > 3 && i === 1 && (
+                          <Grid item>
                             <Chip
                               color='primary'
                               icon={<CupIcon />}
@@ -331,55 +353,53 @@ function PlayersTable(props: Props): JSX.Element {
                                 messages['app.coinLeagues.winner'] as string
                               }
                               size='small'
-                            />{' '}
-                          </Box>
+                            />
+                          </Grid>
                         )}
 
-                      {finished && playerRowData.length > 3 && i === 0 && (
-                        <Box ml={2}>
-                          {' '}
-                          <Chip
-                            color='primary'
-                            icon={<CupIcon />}
-                            label={messages['app.coinLeagues.winner'] as string}
-                            size='medium'
-                          />{' '}
-                        </Box>
-                      )}
-
-                      {finished && playerRowData.length > 3 && i === 1 && (
-                        <Box ml={2}>
-                          {' '}
-                          <Chip
-                            color='primary'
-                            icon={<CupIcon />}
-                            label={messages['app.coinLeagues.winner'] as string}
-                            size='small'
-                          />{' '}
-                        </Box>
-                      )}
-
-                      {finished && playerRowData.length > 3 && i === 2 && (
-                        <Box ml={2}>
-                          {' '}
-                          <Chip
-                            color='primary'
-                            icon={<CupIcon />}
-                            label={messages['app.coinLeagues.winner'] as string}
-                            size='small'
-                          />{' '}
-                        </Box>
-                      )}
-                    </Box>
-                  </TableCell>
-                  <TableCell className={classes.noBorder}>
-                    <Box display={'flex'} alignItems={'center'}>
-                      {!hideCoins ? (
-                        row?.captainCoin && (
-                          <>
-                            <Tooltip title={tooltipMessage(row.account)}>
+                        {finished && playerRowData.length > 3 && i === 2 && (
+                          <Grid item>
+                            <Chip
+                              color='primary'
+                              icon={<CupIcon />}
+                              label={
+                                messages['app.coinLeagues.winner'] as string
+                              }
+                              size='small'
+                            />
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                    {!hideCoins && (
+                      <Grid item>
+                        <IconButton
+                          size='small'
+                          onClick={() =>
+                            setExpanded((value) => ({
+                              ...value,
+                              [i]: !value[i],
+                            }))
+                          }>
+                          {expanded[i] ? (
+                            <ExpandLessIcon />
+                          ) : (
+                            <ExpandMoreIcon />
+                          )}
+                        </IconButton>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Grid>
+                {!expanded[i] && (
+                  <Grid item xs={12}>
+                    <Grid container spacing={4}>
+                      <Grid item>
+                        {!hideCoins ? (
+                          row?.captainCoin && (
+                            <Tooltip title={tooltipMessage(row.hash)}>
                               <Badge
-                                color={'primary'}
+                                color='primary'
                                 overlap='circular'
                                 badgeContent={
                                   !loadingMultiplier &&
@@ -399,102 +419,114 @@ function PlayersTable(props: Props): JSX.Element {
                                 </Avatar>
                               </Badge>
                             </Tooltip>
-                            {row?.coins.length === 0 && (
-                              <IconButton
-                                onClick={() =>
-                                  onViewCoins(
-                                    row.coins,
-                                    row.captainCoin,
-                                    row.account as string,
-                                  )
-                                }>
-                                <RemoveRedEye
-                                  style={{
-                                    color: '#fff',
-                                    marginLeft: 10,
-                                    alignSelf: 'center',
-                                  }}
-                                />
-                              </IconButton>
-                            )}
-                          </>
-                        )
-                      ) : (
-                        <Badge color={'primary'} overlap='circular'>
-                          <Avatar
-                            className={classes.chip}
-                            style={{height: 35, width: 35}}
-                          />
-                        </Badge>
-                      )}
-                    </Box>
-                  </TableCell>
-
-                  {row?.coins.length > 0 && (
-                    <TableCell className={classes.noBorder}>
-                      <Box display={'flex'} alignItems={'center'}>
-                        <AvatarGroup max={10} spacing={17}>
-                          {row?.coins.map((coin) =>
-                            !hideCoins ? (
-                              <Avatar
-                                className={classes.chip}
-                                src={getIconByCoin(
-                                  coin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                                style={{height: 35, width: 35}}>
-                                {getIconSymbol(
-                                  coin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                              </Avatar>
-                            ) : (
-                              <Avatar
-                                className={classes.chip}
-                                style={{height: 35, width: 35}}
-                              />
-                            ),
-                          )}
-                        </AvatarGroup>
-                        {!hideCoins && (
-                          <IconButton
-                            onClick={() =>
-                              onViewCoins(
-                                row.coins,
-                                row.captainCoin,
-                                row.account as string,
-                              )
-                            }>
-                            <RemoveRedEye
-                              style={{
-                                color: '#fff',
-                                marginLeft: 10,
-                                alignSelf: 'center',
-                              }}
+                          )
+                        ) : (
+                          <>
+                            <Avatar
+                              className={classes.chip}
+                              style={{height: 35, width: 35}}
                             />
-                          </IconButton>
+                          </>
                         )}
-                      </Box>
-                    </TableCell>
-                  )}
-
-                  <TableCell className={classes.noBorder}>
-                    <Chip
-                      clickable
-                      style={{
-                        background: '#343A49',
-                        color: row.score > 0 ? '#0e0' : '#e00',
-                      }}
-                      label={`${row.score > 0 ? '+' : ''}${row.score?.toFixed(
-                        3,
-                      )}%`}
+                      </Grid>
+                      <Grid item xs>
+                        {row?.coins.length > 0 &&
+                          (!isMobile ? (
+                            <Grid container spacing={2}>
+                              {row?.coins.map((coin, index) => (
+                                <Grid item key={index}>
+                                  {!hideCoins ? (
+                                    <Avatar
+                                      className={classes.chip}
+                                      src={getIconByCoin(
+                                        coin,
+                                        GET_LEAGUES_CHAIN_ID(chainId),
+                                      )}
+                                      style={{height: 35, width: 35}}>
+                                      {getIconSymbol(
+                                        coin,
+                                        GET_LEAGUES_CHAIN_ID(chainId),
+                                      )}
+                                    </Avatar>
+                                  ) : (
+                                    <Avatar
+                                      className={classes.chip}
+                                      style={{height: 35, width: 35}}
+                                    />
+                                  )}
+                                </Grid>
+                              ))}
+                            </Grid>
+                          ) : (
+                            <AvatarGroup max={10} spacing={17}>
+                              {row?.coins.map((coin, index) =>
+                                !hideCoins ? (
+                                  <Avatar
+                                    key={index}
+                                    className={classes.chip}
+                                    src={getIconByCoin(
+                                      coin,
+                                      GET_LEAGUES_CHAIN_ID(chainId),
+                                    )}
+                                    style={{height: 35, width: 35}}>
+                                    {getIconSymbol(
+                                      coin,
+                                      GET_LEAGUES_CHAIN_ID(chainId),
+                                    )}
+                                  </Avatar>
+                                ) : (
+                                  <Avatar
+                                    key={index}
+                                    className={classes.chip}
+                                    style={{height: 35, width: 35}}
+                                  />
+                                ),
+                              )}
+                            </AvatarGroup>
+                          ))}
+                      </Grid>
+                      <Grid item>
+                        <Chip
+                          size='small'
+                          variant='outlined'
+                          style={{
+                            color:
+                              row.score > 0
+                                ? theme.palette.success.main
+                                : theme.palette.error.main,
+                          }}
+                          label={
+                            isBalanceVisible
+                              ? `${
+                                  row.score > 0 ? '+' : ''
+                                }${row.score?.toFixed(3)}%`
+                              : '*.**%'
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Divider />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
+                <Grid
+                  item
+                  xs={12}
+                  style={{display: expanded[i] ? 'block' : 'none'}}>
+                  <Collapse in>
+                    <PlayerCoinsTable
+                      id={id}
+                      playerAddress={row.hash}
+                      coins={row.coins}
+                      captainCoin={row.captainCoin}
                     />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                  </Collapse>
+                </Grid>
+              </Grid>
+            </Grid>
+          ))}
+      </Grid>
     </>
   );
 }
