@@ -122,6 +122,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={FilterPlayerGame.ALL}
                       color={status === 'All' ? 'primary' : 'default'}
                       onClick={handleClickAll}
@@ -130,6 +131,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                   <Grid item>
                     <Chip
                       clickable
+                      variant='outlined'
                       size='small'
                       label={messages['app.coinLeague.waiting']}
                       color={
@@ -144,6 +146,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       size='small'
                       clickable
+                      variant='outlined'
                       label={messages['app.coinLeague.started'] as string}
                       color={
                         status === CoinLeagueGameStatus.Started
@@ -157,6 +160,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={messages['app.coinLeague.ended'] as string}
                       color={
                         status === CoinLeagueGameStatus.Ended
@@ -170,6 +174,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={messages['app.coinLeague.aborted'] as string}
                       color={
                         status === CoinLeagueGameStatus.Aborted

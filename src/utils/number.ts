@@ -9,3 +9,9 @@ export function getRandomInt(min: number, max: number) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+export function padNumber(num: number, size: number) {
+  let tmp = num.toString();
+  while (tmp.length < size) tmp = '0' + num;
+  return num;
+}

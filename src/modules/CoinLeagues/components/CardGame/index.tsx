@@ -27,7 +27,7 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    color: '#fff',
+    color: theme.palette.text.primary,
     borderRadius: 6,
     background: '#2e3243',
     padding: theme.spacing(2),

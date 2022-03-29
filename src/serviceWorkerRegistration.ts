@@ -101,7 +101,6 @@ function registerValidSW(swUrl: string, config?: Config) {
 
               // Execute callback
               if (config && config.onSuccess) {
-                console.log('entrou aqui');
                 config.onSuccess(registration);
               }
             }
