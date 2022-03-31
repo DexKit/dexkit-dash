@@ -217,6 +217,32 @@ const useRoutesConfig = (): NavItemProps[] => {
       ],
     },
     {
+      id: 'squidLeague',
+      title: 'SquidLeague',
+      messageId: 'sidebar.squidLeague',
+      type: 'group',
+      children: [
+        {
+          id: 'squidLeague',
+          title: 'Squid',
+          messageId: 'sidebar.squidLeague',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.octagon',
+          url: '/squid-league',
+        },
+        {
+          id: 'squidLeague-explore',
+          title: 'Explore',
+          messageId: 'sidebar.protocols.explore',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.octagon',
+          url: '/squid-league/explore',
+        },
+      ],
+    },
+    {
       id: 'affiliate',
       title: 'Affiliates',
       messageId: 'sidebar.affiliate',
