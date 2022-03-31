@@ -26,6 +26,7 @@ import {
   GET_CHAMPIONS_COINS,
   GET_NFT_LEAGUE_FACTORY_ADDRESS,
   NFT_LEAGUE_MULTIPLIERS,
+  NFT_LEAGUE_SUPPORTED_NETWORKS,
 } from '../constants';
 
 import * as yup from 'yup';
@@ -41,6 +42,7 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {ChainId} from 'types/blockchain';
 import {useChainInfo} from 'hooks/useChainInfo';
+import {NetworkSupportBackdrop} from 'shared/components/NetworkSupportBackdrop';
 
 const BULL = 0;
 const BEAR = 1;
@@ -248,6 +250,7 @@ export const NFTLeagueCreateGamePage = () => {
 
   return (
     <>
+      <NetworkSupportBackdrop supportedChains={NFT_LEAGUE_SUPPORTED_NETWORKS} />
       <CreateGameDialog
         dialogProps={{
           open: createGameToggler.show,

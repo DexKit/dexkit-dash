@@ -9,8 +9,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
     subheader: {
-      fontSize: 18,
-      textTransform: 'uppercase',
       color: theme.palette.common.white,
       fontWeight: 500,
     },

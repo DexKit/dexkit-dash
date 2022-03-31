@@ -18,15 +18,12 @@ const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
 
   return (
     <>
-      <>
-        <ListSubheader
-          disableSticky
-          component='li'
-          className={clsx(classes.subheader, 'visible-hover')}>
-          {<IntlMessages id={item.messageId} />}
-        </ListSubheader>
-        <Divider className={clsx(classes.divider, 'visible-hover')} />
-      </>
+      <ListSubheader
+        disableSticky
+        component='li'
+        className={clsx(classes.subheader, 'visible-hover')}>
+        {<IntlMessages id={item.messageId} />}
+      </ListSubheader>
       {item.children && Array.isArray(item.children) && (
         <>
           {item.children.map((item: any) => (

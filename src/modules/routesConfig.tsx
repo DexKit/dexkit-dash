@@ -34,7 +34,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.app.wallet',
           type: 'item',
           customIcon: true,
-          icon: 'money.wallet',
+          icon: 'wallet-2',
           url: `/wallet`,
         },
         {
@@ -52,7 +52,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.app.favorites',
           type: 'item',
           customIcon: true,
-          icon: 'lovely',
+          icon: 'star',
           url: `/favorite-coins`,
         },
         {
@@ -87,12 +87,12 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.protocols.explore',
           type: 'item',
           customIcon: true,
-          icon: 'buy.crypto',
+          icon: 'siacoin-sc',
           url: `/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
         },
       ],
     },
-     {
+    {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',
@@ -161,7 +161,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/competition`,
         },
-    /*{
+        /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
           messageId: 'sidebar.app.mint-nft',
@@ -170,7 +170,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
         },*/
-      {
+        {
           id: 'coinleague.how-to-play',
           title: 'How To Play',
           messageId: 'sidebar.howToPlay',
@@ -254,7 +254,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.affiliate.become-affiliate',
           type: 'item',
           customIcon: true,
-          icon: 'user.octagon',
+          icon: 'profile-2user',
           url: '/affiliate/overview',
         },
       ],
@@ -271,7 +271,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.settings.general',
           type: 'item',
           customIcon: true,
-          icon: 'settings',
+          icon: 'settings-4',
           url: '/settings',
         },
       ],

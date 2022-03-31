@@ -1,5 +1,12 @@
 import React, {useCallback} from 'react';
-import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import {
+  Divider,
+  Icon,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+} from '@material-ui/core';
 
 import clsx from 'clsx';
 import {Link as RouterLink} from 'react-router-dom';
@@ -15,15 +22,14 @@ import {useDispatch} from 'react-redux';
 import {toggleNavCollapsed} from 'redux/actions';
 import {useMobile} from 'hooks/useMobile';
 
+import {ReactComponent as ArrowRightIcon} from 'assets/images/arrow-right.svg';
+
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
   level: number;
 }
 
-const VerticalItem: React.FC<VerticalItemProps> = ({
-  item,
-  level,
-}) => {
+const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
   const classes = useStyles({level});
   const location = useLocation();
 
@@ -93,35 +99,34 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
   }, [dispatch, isMobile]);
 
   return (
-    <ListItem
-      component={RouterLink}
-      to={getUrl()}
-      className={classes.item}
-      selected={isActive()}
-      button
-      onClick={handleClick}>
-      {item.icon && (
-        <ListItemIcon className={classes.itemIcon}>
-          {item.customIcon ? (
-            <CustomIcon
-              icon={item.icon as string}
-              className={isActive() ? classes.svgActive : undefined}
-            />
-          ) : (
-            <Icon>{item.icon}</Icon>
-          )}
-        </ListItemIcon>
-      )}
-      <ListItemText
-        className={clsx(classes.listItemText, 'visible-hover')}
-        primary={<IntlMessages id={item.messageId} />}
-      />
-      {item.count && (
-        <Box mr={4} clone>
-          <Badge count={item.count} color={item.color} />
-        </Box>
-      )}
-    </ListItem>
+    <>
+      <ListItem
+        component={RouterLink}
+        to={getUrl()}
+        selected={isActive()}
+        button
+        onClick={handleClick}>
+        {item.icon && (
+          <ListItemIcon>
+            <Box className={classes.itemIcon}>
+              {item.customIcon ? (
+                <CustomIcon icon={item.icon as string} />
+              ) : (
+                <Icon>{item.icon}</Icon>
+              )}
+            </Box>
+          </ListItemIcon>
+        )}
+        <ListItemText
+          className={clsx(classes.listItemText, 'visible-hover')}
+          primary={<IntlMessages id={item.messageId} />}
+        />
+        <ListItemSecondaryAction className='visible-hover'>
+          <ArrowRightIcon />
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider className={clsx(classes.divider, 'visible-hover')} />
+    </>
   );
 };
 
