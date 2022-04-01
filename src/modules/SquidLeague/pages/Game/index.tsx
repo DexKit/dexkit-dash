@@ -25,8 +25,6 @@ export const Game = () => {
 
   return (
     <>
-      {(gameAddressQuery.isLoading || gameDataQuery.isLoading) &&
-        isSupportedBlockchain(chainId) && <GameLayoutSkeleton />}
       {!isSupportedBlockchain(chainId) && (
         <MainLayout>
           <Paper>

@@ -4,7 +4,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import {alpha, ButtonBase, Chip} from '@material-ui/core';
+import {alpha, ButtonBase, Chip, Tooltip} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -276,7 +276,17 @@ const CardGame: React.FC<Props> = ({
               </Grid>
               <Grid item>
                 <Chip
-                  icon={<ChartSquareIcon />}
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.gameLevel'
+                          defaultMessage='Game Level'
+                        />
+                      }>
+                      <ChartSquareIcon />
+                    </Tooltip>
+                  }
                   label={loading ? <Skeleton /> : gameLevel}
                   variant='outlined'
                 />
@@ -284,13 +294,21 @@ const CardGame: React.FC<Props> = ({
               <Grid item>
                 <Chip
                   icon={
-                    loading ? (
-                      <Skeleton variant='circle' width='1rem' height='1rem' />
-                    ) : game?.type === 'Bull' ? (
-                      <SendSquareIcon />
-                    ) : (
-                      <ReceiveSquareIcon />
-                    )
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.type'
+                          defaultMessage='Type'
+                        />
+                      }>
+                      {loading ? (
+                        <Skeleton variant='circle' width='1rem' height='1rem' />
+                      ) : game?.type === 'Bull' ? (
+                        <SendSquareIcon />
+                      ) : (
+                        <ReceiveSquareIcon />
+                      )}
+                    </Tooltip>
                   }
                   variant='outlined'
                   label={
@@ -327,21 +345,51 @@ const CardGame: React.FC<Props> = ({
               </Grid>
               <Grid item>
                 <Chip
-                  icon={<CoinIcon />}
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.numberOfCoins'
+                          defaultMessage='Number of Coins'
+                        />
+                      }>
+                      <CoinIcon />
+                    </Tooltip>
+                  }
                   variant='outlined'
                   label={loading ? <Skeleton /> : strPad(coins)}
                 />
               </Grid>
               <Grid item>
                 <Chip
-                  icon={<TimerIcon />}
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.duration'
+                          defaultMessage='Duration'
+                        />
+                      }>
+                      <TimerIcon />
+                    </Tooltip>
+                  }
                   variant='outlined'
                   label={loading ? <Skeleton /> : GET_LABEL_FROM_DURATION(time)}
                 />
               </Grid>
               <Grid item>
                 <Chip
-                  icon={<ProfileTwoUserIcon />}
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.players'
+                          defaultMessage='Players'
+                        />
+                      }>
+                      <ProfileTwoUserIcon />
+                    </Tooltip>
+                  }
                   variant='outlined'
                   label={
                     loading ? (
