@@ -55,7 +55,7 @@ export const WithdrawGameCard = (props: Params) => {
   const joinedPlayers = gameDataQuery.data?.joinedPlayers;
   const winners = gameDataRoundQuery.data?.totalPlayersPastRound;
   const totalPotPerPlayer = useMemo(() => {
-    if (pot && joinedPlayers && winners) {
+    if (pot && joinedPlayers && winners && winners.gt(0)) {
       return ethers.utils.formatEther(pot.mul(joinedPlayers).div(winners));
     } else {
       return null;
