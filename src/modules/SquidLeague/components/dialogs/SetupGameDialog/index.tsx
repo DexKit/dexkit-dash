@@ -115,6 +115,9 @@ export const SetupGameDialog: React.FC<Props> = ({
     if (onClose) {
       onClose({}, 'backdropClick');
     }
+    setTransactionHash('');
+    setErrorMessage(undefined);
+    setConfirmed(false);
   }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
@@ -215,7 +218,7 @@ export const SetupGameDialog: React.FC<Props> = ({
             <Typography align='center' variant='h5'>
               <IntlMessages
                 id='squidLeague.setupGame'
-                defaultMessage={'Setup Game'}
+                defaultMessage='Setup Game'
               />
             </Typography>
             <Typography align='center' variant='body1' color='textSecondary'>

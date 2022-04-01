@@ -183,7 +183,7 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
   }, [data, isLoading]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>

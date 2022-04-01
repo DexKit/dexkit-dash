@@ -1,15 +1,16 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Chip, Grid} from '@material-ui/core';
 import React, {useState} from 'react';
-//import {useIntl} from 'react-intl';
+import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';
-//import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
+import PageHeader from 'shared/components/v2/partials/PageHeader';
+import {SQUIDLEAGUE_ROUTE} from 'shared/constants/routes';
 import GamesTable from '../../components/GamesTable';
 
 import {GameStatus} from '../../constants/enum';
 
 export const ExploreGames = () => {
-  //const {formatMessage} = useIntl();
+  const {formatMessage} = useIntl();
 
   const [status, setStatus] = useState<GameStatus | undefined>();
 
@@ -17,14 +18,17 @@ export const ExploreGames = () => {
     <MainLayout>
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          {/*  <PageHeader
+          <PageHeader
             backUri='/'
-            title={formatMessage({id: 'nftLeague.games', defaultMessage: 'SquidLeague Game'} )}
+            title={formatMessage({
+              id: 'nftLeague.games',
+              defaultMessage: 'SquidLeague Game',
+            })}
             breadcrumbs={[
               {caption: 'Wallet', uri: '/'},
               {caption: 'Squid League', uri: SQUIDLEAGUE_ROUTE},
             ]}
-        />*/}
+          />
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={4}>
@@ -40,7 +44,8 @@ export const ExploreGames = () => {
                     alignContent='center'>
                     <Grid item>
                       <Chip
-                        variant={status === undefined ? 'default' : 'outlined'}
+                        variant='outlined'
+                        size='small'
                         color={status === undefined ? 'primary' : 'default'}
                         label={
                           <IntlMessages
@@ -53,9 +58,8 @@ export const ExploreGames = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Joining ? 'default' : 'outlined'
-                        }
+                        variant='outlined'
+                        size='small'
                         color={
                           status === GameStatus.Joining ? 'primary' : 'default'
                         }
@@ -70,9 +74,8 @@ export const ExploreGames = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Started ? 'default' : 'outlined'
-                        }
+                        variant='outlined'
+                        size='small'
                         color={
                           status === GameStatus.Started ? 'primary' : 'default'
                         }
@@ -87,9 +90,8 @@ export const ExploreGames = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Setup ? 'default' : 'outlined'
-                        }
+                        variant='outlined'
+                        size='small'
                         color={
                           status === GameStatus.Setup ? 'primary' : 'default'
                         }
@@ -104,11 +106,8 @@ export const ExploreGames = () => {
                     </Grid>
                     <Grid item>
                       <Chip
-                        variant={
-                          status === GameStatus.Finished
-                            ? 'default'
-                            : 'outlined'
-                        }
+                        variant='outlined'
+                        size='small'
                         color={
                           status === GameStatus.Finished ? 'primary' : 'default'
                         }

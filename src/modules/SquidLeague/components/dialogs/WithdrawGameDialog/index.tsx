@@ -24,6 +24,8 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+
 interface Props {
   gameAddress: string;
   dialogProps: DialogProps;
@@ -115,6 +117,9 @@ export const WithdrawGameDialog: React.FC<Props> = ({
     if (onClose) {
       onClose({}, 'backdropClick');
     }
+    setTransactionHash('');
+    setErrorMessage(undefined);
+    setConfirmed(false);
   }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
@@ -247,7 +252,7 @@ export const WithdrawGameDialog: React.FC<Props> = ({
           id: 'squidLeague.withdrawGamePrize',
           defaultMessage: 'Withdraw game prize',
         })}
-        icon={<AddIcon />}
+        icon={<MonetizationOnIcon />}
         onClose={handleClose}
       />
       <Divider />

@@ -617,7 +617,7 @@ function GameEnter(props: Props) {
               </Grid>
             </Grid>
           </Grid>
-          {!sufficientFunds && (
+          {!sufficientFunds && game !== undefined && (
             <Grid item xs={12}>
               <Alert severity='error'>
                 <IntlMessages

@@ -24,6 +24,7 @@ import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallb
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
 import {BigNumber} from 'ethers';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 interface Props {
   dialogProps: DialogProps;
@@ -57,6 +58,9 @@ export const JoinGameDialog: React.FC<Props> = ({
     if (onClose) {
       onClose({}, 'backdropClick');
     }
+    setTransactionHash('');
+    setErrorMessage(undefined);
+    setConfirmed(false);
   }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
@@ -253,7 +257,7 @@ export const JoinGameDialog: React.FC<Props> = ({
           id: 'squidLeague.joinGame',
           defaultMessage: 'Join Game',
         })}
-        icon={<AddIcon />}
+        icon={<GroupAddIcon />}
         onClose={handleClose}
       />
       <Divider />

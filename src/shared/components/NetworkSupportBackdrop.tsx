@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Backdrop,
@@ -6,10 +6,7 @@ import {
   Button,
   Grid,
   makeStyles,
-  MenuItem,
-  Select,
   Typography,
-  useTheme,
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {useEffect, useState} from 'react';
@@ -34,13 +31,12 @@ export function NetworkSupportBackdrop({supportedChains}: Props) {
 
   const {getProvider} = useWeb3();
 
-  const provider = useMemo(() => {
-    return getProvider();
-  }, [getProvider]);
-
-  const handleSwitchNetwork = useCallback((chainId: number) => {
-    switchChain(provider, chainId);
-  }, []);
+  const handleSwitchNetwork = useCallback(
+    (chainId: number) => {
+      switchChain(getProvider(), chainId);
+    },
+    [getProvider],
+  );
 
   useEffect(() => {
     if (chainId !== undefined) {
@@ -102,3 +98,5 @@ export function NetworkSupportBackdrop({supportedChains}: Props) {
     </Backdrop>
   );
 }
+
+export default NetworkSupportBackdrop;

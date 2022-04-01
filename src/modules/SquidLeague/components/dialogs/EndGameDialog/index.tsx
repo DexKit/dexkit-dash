@@ -23,6 +23,7 @@ import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
+import StopIcon from '@material-ui/icons/Stop';
 
 interface Props {
   gameAddress: string;
@@ -115,6 +116,9 @@ export const EndGameDialog: React.FC<Props> = ({
     if (onClose) {
       onClose({}, 'backdropClick');
     }
+    setConfirmed(false);
+    setTransactionHash('');
+    setErrorMessage(undefined);
   }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
@@ -244,7 +248,7 @@ export const EndGameDialog: React.FC<Props> = ({
           id: 'squidLeague.endGame',
           defaultMessage: 'End Game',
         })}
-        icon={<AddIcon />}
+        icon={<StopIcon />}
         onClose={handleClose}
       />
       <Divider />

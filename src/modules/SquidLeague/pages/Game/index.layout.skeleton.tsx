@@ -43,33 +43,15 @@ export const GameLayoutSkeleton = () => {
         <Grid item xs={12}></Grid>
         <Grid item xs={12}>
           <Typography color='textPrimary' variant='subtitle1'>
-            <Skeleton>
-              {' '}
-              <IntlMessages
-                id='squidLeague.gameInformation'
-                defaultMessage={'Squid League'}
-              />{' '}
-              #{1}
-            </Skeleton>
+            <Skeleton />
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography color='textPrimary' variant='subtitle1'>
-            <Skeleton>
-              {' '}
-              <IntlMessages id='squidLeague.battle' defaultMessage={'Battle'} />
-            </Skeleton>
+            <Skeleton />
           </Typography>
           <Typography color='textSecondary' variant='body1'>
-            <Skeleton>
-              {' '}
-              <IntlMessages
-                id='squidLeague.guessIfTheCoinWillGoUpOrDown'
-                defaultMessage={
-                  'Be a prediction wizard and guess if coin will go up or down in an hour'
-                }
-              />
-            </Skeleton>
+            <Skeleton />
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -77,14 +59,7 @@ export const GameLayoutSkeleton = () => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography color='textPrimary' variant='subtitle1'>
-                  <Skeleton>
-                    {' '}
-                    <IntlMessages
-                      id='squidLeague.round'
-                      defaultMessage={'Round'}
-                    />{' '}
-                    1
-                  </Skeleton>
+                  <Skeleton />
                 </Typography>
               </Grid>
               <Grid item xs={12}>

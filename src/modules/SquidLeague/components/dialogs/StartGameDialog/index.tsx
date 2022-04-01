@@ -23,6 +23,7 @@ import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 
 interface Props {
   gameAddress: string;
@@ -115,6 +116,9 @@ export const StartGameDialog: React.FC<Props> = ({
     if (onClose) {
       onClose({}, 'backdropClick');
     }
+    setTransactionHash('');
+    setErrorMessage(undefined);
+    setConfirmed(false);
   }, [onClose]);
 
   const handleViewTransaction = useCallback(() => {
@@ -247,7 +251,7 @@ export const StartGameDialog: React.FC<Props> = ({
           id: 'squidLeague.setupGame',
           defaultMessage: 'Setup Game',
         })}
-        icon={<AddIcon />}
+        icon={<PlayCircleOutlineIcon />}
         onClose={handleClose}
       />
       <Divider />

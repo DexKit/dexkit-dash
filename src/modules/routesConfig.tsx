@@ -243,6 +243,23 @@ const useRoutesConfig = (): NavItemProps[] => {
       ],
     },
     {
+      id: 'nftLeague',
+      title: 'NftLeague',
+      messageId: 'sidebar.nftLeague',
+      type: 'group',
+      children: [
+        {
+          id: 'nftLeague',
+          title: 'Squid',
+          messageId: 'sidebar.nftLeague',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.octagon',
+          url: '/nft-league',
+        },
+      ],
+    },
+    {
       id: 'affiliate',
       title: 'Affiliates',
       messageId: 'sidebar.affiliate',

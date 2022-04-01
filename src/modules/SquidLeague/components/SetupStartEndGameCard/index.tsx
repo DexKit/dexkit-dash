@@ -132,7 +132,6 @@ export const SetupStartEndGameCard = (props: Params) => {
     return false;
   }, [isStartedGameState, startTimestampRound, durationTimestampRound]);
 
-
   const canWeStartGame = useMemo(() => {
     if (isSetupGameState && startTimestampRound) {
       const actualDate = new Date();
@@ -249,7 +248,7 @@ export const SetupStartEndGameCard = (props: Params) => {
                         <Typography color='textSecondary' variant='caption'>
                           <IntlMessages
                             id='squidLeague.gameStartsIn'
-                            defaultMessage={'Game starts in'}
+                            defaultMessage='Game starts in'
                           />
                         </Typography>
                         <Typography variant='h5' color='textPrimary'>
@@ -264,7 +263,7 @@ export const SetupStartEndGameCard = (props: Params) => {
                           )}
                         </Typography>
                       </Box>
-                      <Box display={'flex'} justifyContent={'center'}>
+                      <Box display='flex' justifyContent='center'>
                         <TimerIcon />
                       </Box>
                     </Box>

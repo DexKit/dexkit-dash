@@ -9,9 +9,10 @@ import {
   TextField,
   Divider,
   Button,
+  InputAdornment,
 } from '@material-ui/core';
 
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 import {useToggler} from 'hooks/useToggler';
 
@@ -35,6 +36,9 @@ import {GET_MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {PlayersCard} from 'modules/SquidLeague/components/PlayersCard';
 import {getGameURL} from 'modules/SquidLeague/utils/url';
 import CopyLink from 'shared/components/CopyLink';
+import CopyButton from 'shared/components/CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
+import {FileCopyRounded} from '@material-ui/icons';
 
 interface Params {
   id: string;
@@ -84,6 +88,7 @@ export const GameLayout = (props: Params) => {
   const handleCloseSetupGameDialog = useCallback(() => {
     setupGameToggler.toggle();
   }, [setupGameToggler]);
+
   const lastChallengeTimestamp = gameDataQuery.data?.lastChallengeTimestamp;
 
   const round = gameDataQuery.data?.round;
@@ -156,12 +161,12 @@ export const GameLayout = (props: Params) => {
               id='squidLeague.gameInformation'
               defaultMessage={'Squid League'}
             />{' '}
-            #{Number(id) + 1}
+            #{Number(id)}
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography color='textPrimary' variant='subtitle1'>
-            <IntlMessages id='squidLeague.battle' defaultMessage={'Battle'} />
+            <IntlMessages id='squidLeague.battle' defaultMessage='Battle' />
           </Typography>
           <Typography color='textSecondary' variant='body1'>
             <IntlMessages
@@ -177,20 +182,9 @@ export const GameLayout = (props: Params) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography color='textPrimary' variant='subtitle1'>
-                  <IntlMessages
-                    id='squidLeague.round'
-                    defaultMessage={'Round'}
-                  />{' '}
+                  <IntlMessages id='squidLeague.round' defaultMessage='Round' />{' '}
                   {formatRound}
                 </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                {!isSupportedBlockchain(chainId) && (
-                  <Empty
-                    title='Network not Supported'
-                    message='Please switch to supported networks: Mumbai'
-                  />
-                )}
               </Grid>
               {!isJoinGameState && !isPlayerJoined && (
                 <Grid item xs={12}>
@@ -198,7 +192,7 @@ export const GameLayout = (props: Params) => {
                     <Typography variant='subtitle1' color='primary'>
                       <IntlMessages
                         id='squidLeague.notJoinedGame'
-                        defaultMessage={'You not joined this game'}
+                        defaultMessage='You not joined this game'
                       />
                     </Typography>
                   </Box>
@@ -211,17 +205,18 @@ export const GameLayout = (props: Params) => {
               {isWithdrawState && <WithdrawGameCard id={id} />}
               {canWeSetupChallenge && (
                 <Grid item xs={12}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <Box display={'flex'} justifyContent={'center'}>
+                  <Grid container spacing={4} justifyContent='center'>
+                    <Grid item xs={12} sm={4}>
+                      <Box display='flex' justifyContent='center'>
                         <Button
+                          fullWidth
                           onClick={() => setupGameToggler.toggle()}
-                          startIcon={<ArrowDownwardIcon />}
+                          startIcon={<ArrowForwardIcon />}
                           variant='outlined'
                           color='primary'>
                           <IntlMessages
                             id='squidLeague.setupGame'
-                            defaultMessage={'Setup Game'}
+                            defaultMessage='Setup Game'
                           />
                         </Button>
                       </Box>
@@ -237,13 +232,13 @@ export const GameLayout = (props: Params) => {
           <Typography variant='subtitle1' color='textPrimary'>
             <IntlMessages
               id='squidLeague.shareGame'
-              defaultMessage={'Share game'}
+              defaultMessage='Share game'
             />
           </Typography>
           <Typography variant='body2' color='textSecondary'>
             <IntlMessages
               id='squidLeague.shareYourGameWithAnotherPlayers'
-              defaultMessage={'Share game with another players'}
+              defaultMessage='Share game with another players'
             />
           </Typography>
         </Grid>
@@ -253,34 +248,25 @@ export const GameLayout = (props: Params) => {
               id: 'squidLeague.url',
               defaultMessage: 'url',
             })}
-            disabled
             value={getGameURL(id)}
             variant='outlined'
             fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <CopyButton
+                    size='small'
+                    tooltip={formatMessage({
+                      id: 'common.copied',
+                      defaultMessage: 'Copied!',
+                    })}
+                    copyText={getGameURL(id)}>
+                    <FileCopyRounded color='inherit' />
+                  </CopyButton>
+                </InputAdornment>
+              ),
+            }}
           />
-          <Box pt={2}>
-            <CopyLink tooltip='Copied' copyText={getGameURL(id)}>
-              <Button
-                startIcon={<ArrowDownwardIcon />}
-                variant='outlined'
-                color='primary'>
-                <IntlMessages
-                  id='squidLeague.copyLink'
-                  defaultMessage={'Copy Link'}
-                />
-              </Button>
-            </CopyLink>
-
-            {/*<Button
-              startIcon={<ArrowDownwardIcon />}
-              variant='outlined'
-              color='primary'>
-              <IntlMessages
-                id='squidLeague.copyLink'
-                defaultMessage={'Copy Link'}
-              />
-          </Button>*/}
-          </Box>
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -316,7 +302,7 @@ export const GameLayout = (props: Params) => {
             <Typography variant='body2' color='textSecondary'>
               <IntlMessages
                 id='squidLeague.pointsAreCountedHourly'
-                defaultMessage={'Points are counted hourly'}
+                defaultMessage='Points are counted hourly'
               />
             </Typography>
             <PlayersCard id={id} />

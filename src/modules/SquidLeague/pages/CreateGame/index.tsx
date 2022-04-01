@@ -70,8 +70,15 @@ export const CreateGamePage = () => {
     onSubmit: handleSubmit,
   });
 
+  const handleReset = useCallback(() => {
+    setConfirmedCreatedGame(false);
+    setTransaction('');
+    setErrorMessage(undefined);
+  }, []);
+
   const handleCloseCreateGameDialog = useCallback(() => {
     createGameToggler.toggle();
+    handleReset();
   }, [createGameToggler]);
 
   const onConfirmCreateGameCallback = useCallback(() => {
@@ -222,6 +229,9 @@ export const CreateGamePage = () => {
                 helperText={
                   Boolean(formik.errors.startsAt) && formik.errors.startsAt
                 }
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 name='startsAt'
                 type='datetime-local'
                 variant='outlined'

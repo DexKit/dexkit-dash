@@ -1,4 +1,10 @@
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
+
+export const SQUID_LEAGUE_SUPPORTED_NETWORKS = [
+  ChainId.Mumbai,
+  ChainId.Matic,
+  ChainId.Binance,
+];
 
 export const SQUID_LEAGUE_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xA8fc32F15e646c0462d0D7Aabf87704daa166F80',
@@ -12,4 +18,4 @@ export const GET_MAX_ROUNDS = (chainId?: ChainId) => {
   } else {
     return 6;
   }
-}
+};

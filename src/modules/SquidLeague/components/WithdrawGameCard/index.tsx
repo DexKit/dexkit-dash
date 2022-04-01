@@ -92,7 +92,7 @@ export const WithdrawGameCard = (props: Params) => {
         alignItems='center'
         alignContent='center'
         justifyContent='center'>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6}>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
               <Paper variant='outlined'>
@@ -136,14 +136,14 @@ export const WithdrawGameCard = (props: Params) => {
                       <Typography color='textSecondary' variant='caption'>
                         <IntlMessages
                           id='squidLeague.finalPrizePerPlayer'
-                          defaultMessage={'Final Prize per Player'}
+                          defaultMessage='Final Prize per Player'
                         />
                       </Typography>
                       <Typography variant='h5' color='textPrimary'>
                         {totalPotPerPlayer} {tokenSymbol}
                       </Typography>
                     </Box>
-                    <Box display={'flex'} justifyContent={'center'}>
+                    <Box display='flex' justifyContent='center'>
                       <CupIcon />
                     </Box>
                   </Box>
