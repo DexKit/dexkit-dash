@@ -5,29 +5,23 @@ import {
   Link,
   TableRow,
   TableCell,
-  Avatar,
   Hidden,
   IconButton,
   Collapse,
   Grid,
   Typography,
-  ButtonBase,
-  makeStyles,
 } from '@material-ui/core';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {AvatarGroup} from '@material-ui/lab';
 import {GameGraph} from '../utils/types';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {ethers} from 'ethers';
 import moment from 'moment';
-import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
-import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
 import NFTLeagueAvatar from './NFTLeagueAvatar';
 
 interface Props {

@@ -1,28 +1,17 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
-import TableContainer from '@material-ui/core/TableContainer';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
-
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
@@ -37,15 +26,7 @@ import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
-import {
-  Collapse,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  useTheme,
-} from '@material-ui/core';
+import {Collapse, Divider, Grid, useTheme} from '@material-ui/core';
 import {useMobile} from 'hooks/useMobile';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -131,7 +112,7 @@ const getIconSymbol = (
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {id, account, finished, hideCoins, type, data, userProfiles} = props;
+  const {id, finished, hideCoins, type, data, userProfiles} = props;
   const classes = useStyles();
   const theme = useTheme();
   const {messages} = useIntl();

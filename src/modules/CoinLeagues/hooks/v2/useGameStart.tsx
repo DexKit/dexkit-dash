@@ -109,7 +109,18 @@ export function useGameStart({
         });
       }
     },
-    [game, onStartGameCallback, chainId, createNotification],
+    [
+      game,
+      onStartGameCallback,
+      chainId,
+      createNotification,
+      enqueueSnackbar,
+      formatMessage,
+      handleViewTransaction,
+      messages,
+      onConfirm,
+      onError,
+    ],
   );
 
   return {

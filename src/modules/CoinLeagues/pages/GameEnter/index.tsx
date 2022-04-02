@@ -2,24 +2,17 @@ import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {CircularProgress, List, Paper} from '@material-ui/core';
+import {List, Paper} from '@material-ui/core';
 
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TickerTapeTV from '../../components/TickerTapeTV';
-import CardPrize from '../../components/CardPrize';
-import SimpleCardGame from '../../components/SimpleCardGame';
 import {HOME_ROUTE} from 'shared/constants/routes';
 import {
   Link as RouterLink,
@@ -27,14 +20,10 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ethers, BigNumber} from 'ethers';
-import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
-import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
 import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
-import SimpleCardGameSkeleton from 'modules/CoinLeagues/components/SimpleCardGame/index.skeleton';
 import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
 import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
 import IconButton from '@material-ui/core/IconButton';
@@ -46,10 +35,8 @@ import {GameType, Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinLeagues/components/PlayersTable';
 import OnePlayerTable from 'modules/CoinLeagues/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinLeagues/components/WaitingPlayers';
-import Chip from '@material-ui/core/Chip';
 import {useWeb3} from 'hooks/useWeb3';
 import {
-  ExplorerURL,
   GET_LEAGUES_CHAIN_ID,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
@@ -99,43 +86,14 @@ import GameActions from 'modules/CoinLeagues/components/v2/GameActions';
 import {useGameJoin} from 'modules/CoinLeagues/hooks/v2/useGameJoin';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    padding: theme.spacing(2),
-    backgroundColor: '#1F1D2B',
-  },
-  chip: {
-    color: '#fff',
-    background: '#1F1D2B',
-    border: '2px solid #2e3243',
-  },
-  gameTypePaper: {
-    borderRadius: 6,
-    backgroundColor: '#2e3243',
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
-  crownIconContainer: {
-    color: 'yellow',
-  },
-}));
 type Params = {
   id: string;
 };
 
 type Props = RouteComponentProps<Params>;
-enum SubmitState {
-  None,
-  WaitingWallet,
-  Submitted,
-  Error,
-  Confirmed,
-}
 
 function GameEnter(props: Props) {
   const theme = useTheme();
-  const classes = useStyles();
   const {
     match: {params},
   } = props;
@@ -159,7 +117,7 @@ function GameEnter(props: Props) {
   const {id} = params;
   const {game, gameQuery, refetch, winner, addressQuery} = useCoinLeagues(id);
 
-  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
 
   const gameMetaQuery = useGameMetadata(id);
   const tokensMultipliersQuery = useTokensMultipliers();
@@ -176,7 +134,6 @@ function GameEnter(props: Props) {
     useState(false);
   const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
-  const [tx, setTx] = useState<string>();
 
   const handleRefetch = useCallback(() => refetch(), [refetch]);
 
@@ -316,7 +273,7 @@ function GameEnter(props: Props) {
         }
       }
     },
-    [selectedCoins],
+    [selectedCoins, captainCoin],
   );
 
   const onDeleteCoin = useCallback(
@@ -369,7 +326,6 @@ function GameEnter(props: Props) {
     isNFTGame,
     selectedCoins,
     captainCoin,
-    refetch,
     chainId,
     affiliateField,
   ]);
@@ -403,15 +359,6 @@ function GameEnter(props: Props) {
       captainCoin !== undefined
     );
   }, [selectedCoins, numCoins, captainCoin]);
-
-  const goToExplorer = useCallback(
-    (_ev: any) => {
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
-        window.open(`${ExplorerURL[chainId]}${tx}`);
-      }
-    },
-    [tx, chainId],
-  );
 
   const prizePool = useMemo(() => {
     if (amountToPlay && currentPlayers) {
@@ -636,7 +583,7 @@ function GameEnter(props: Props) {
                       ID
                     </Typography>
                     <Typography variant='subtitle1'>
-                      {game != undefined ? game?.id.toNumber() : <Skeleton />}
+                      {game !== undefined ? game?.id.toNumber() : <Skeleton />}
                     </Typography>
                   </Grid>
                   <Grid item>

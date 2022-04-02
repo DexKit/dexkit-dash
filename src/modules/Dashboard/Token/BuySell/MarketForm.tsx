@@ -1,8 +1,7 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
 
-import {AppContext} from '@crema';
 import {useWeb3} from 'hooks/useWeb3';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 
@@ -17,7 +16,6 @@ import Typography from '@material-ui/core/Typography';
 import {Paper, useTheme} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import AppContextPropsType from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectTokenV2 from './SelectTokenV2';
 import {ModalOrderData} from 'types/models/ModalOrderData';
@@ -82,7 +80,6 @@ const MarketForm: React.FC<Props> = (props) => {
     onChangeDisableReceiveCallback,
   } = props;
 
-  const {theme: creamaTheme} = useContext<AppContextPropsType>(AppContext);
   const theme = useTheme();
 
   const classes = useStyles();

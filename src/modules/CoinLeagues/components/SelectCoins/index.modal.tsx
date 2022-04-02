@@ -110,6 +110,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
 
         return coin !== captainCoin;
       });
+    // eslint-disable-next-line
   }, [isCaptainCoin, filterText, String(selectedCoins), coins, captainCoin]);
 
   const handleFilterChange = useCallback(
@@ -135,7 +136,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
       } else {
         setCurrSelectedCoins((value) => [...value, coin]);
       }
-    },
+    }, // eslint-disable-next-line
     [onSelectCoin, String(currSelectedCoins)],
   );
 
@@ -154,6 +155,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
       onSelectCoins(currSelectedCoins);
       setCurrSelectedCoins([]);
     }
+    // eslint-disable-next-line
   }, [onSelectCoins, String(currSelectedCoins)]);
 
   return (

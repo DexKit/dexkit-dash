@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListSubheader, Divider} from '@material-ui/core';
+import {ListSubheader} from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';

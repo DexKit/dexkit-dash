@@ -18,7 +18,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useCallback} from 'react';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';
-import AddIcon from '@material-ui/icons/Add';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 import {useSquidGameCallbacks} from 'modules/SquidLeague/hooks/useSquidGameCallbacks';
 import {useNotifications} from 'hooks/useNotifications';

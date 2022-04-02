@@ -38,7 +38,6 @@ import {Alert} from '@material-ui/lab';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
-import ContainedInput from 'shared/components/ContainedInput';
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';

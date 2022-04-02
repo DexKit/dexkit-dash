@@ -6,14 +6,11 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
@@ -38,31 +35,9 @@ import IconButton from '@material-ui/core/IconButton';
 import AffiliateAddressCard from '../components/AffiliateAddressCard';
 import {InputAdornment, InputLabel, Paper, TextField} from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    backgroundColor: '#1F1D2B',
-  },
-  affiliateCard: {
-    borderRadius: 8,
-    padding: theme.spacing(1.5),
-    backgroundColor: '#252836',
-  },
-  field: {
-    padding: theme.spacing(1),
-    border: '1px solid #525C75',
-    borderRadius: 5,
-    height: theme.spacing(14),
-  },
-  settingsBtn: {
-    color: '#fff',
-  },
-}));
-
 const AffiliatePage: React.FC = () => {
   const isMobile = useMobile();
   const history = useHistory();
-  const classes = useStyles();
   const {messages} = useIntl();
 
   const {account: web3Account} = useWeb3();

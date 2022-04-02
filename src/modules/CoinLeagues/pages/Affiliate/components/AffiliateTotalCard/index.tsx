@@ -6,24 +6,10 @@ import Box from '@material-ui/core/Box';
 
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 
-import {makeStyles} from '@material-ui/core/styles';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Skeleton} from '@material-ui/lab';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    height: theme.spacing(20),
-    borderRadius: 6,
-    background: '#2e3243',
-  },
-  innerContent: {
-    color: '#7A8398',
-    fontSize: '1rem',
-  },
-}));
 
 interface Props {
   total: string;
@@ -32,7 +18,6 @@ interface Props {
 
 function AffiliateTotalCard({loading, total}: Props): JSX.Element {
   const {coinSymbol} = useLeaguesChainInfo();
-  const classes = useStyles();
 
   return (
     <Box p={4} component={Paper}>

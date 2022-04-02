@@ -7,7 +7,6 @@ import {
   Button,
   Divider,
   Hidden,
-  Chip,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -124,7 +123,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
     [messages, createNotification, getTransactionScannerUrl, chainId],
   );
 
-  const handleRefetch = useCallback(() => refetch(), []);
+  const handleRefetch = useCallback(() => refetch(), [refetch]);
 
   const startGameMutation = useStartGame(
     chainId,

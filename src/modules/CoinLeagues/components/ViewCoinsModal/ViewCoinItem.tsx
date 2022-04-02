@@ -1,5 +1,4 @@
 import React, {useMemo} from 'react';
-import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
   Box,

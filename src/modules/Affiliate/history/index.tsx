@@ -1,7 +1,6 @@
 import React from 'react';
 import TransactionTable from './TransactionTable';
-import {Box, makeStyles, Toolbar, Typography, Grid} from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
+import {Box, Typography, Grid} from '@material-ui/core';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
@@ -17,21 +16,7 @@ interface Props {
   onChangePerPage: (newPerPage: number) => void;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  toolbar: {
-    padding: '0 24px',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-}));
-
 const AffiliateHistory: React.FC<Props> = (props: Props) => {
-  const classes = useStyles();
-
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>

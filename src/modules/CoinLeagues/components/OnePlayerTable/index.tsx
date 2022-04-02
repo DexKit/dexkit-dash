@@ -3,7 +3,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {CircularProgress, Divider, Tab, useTheme} from '@material-ui/core';
+import {CircularProgress, Divider, useTheme} from '@material-ui/core';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -21,10 +21,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
-
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
@@ -39,7 +36,6 @@ import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GameType} from 'types/coinsleague';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
-import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 
 import {useNotifications} from 'hooks/useNotifications';
@@ -47,11 +43,9 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {getTransactionScannerUrl} from 'utils/blockchain';
-import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {truncateAddress} from 'utils';
-import {List} from '@material-ui/core';
 import ViewCoinListItem from '../ViewCoinsModal/ViewCoinItem';
 
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
@@ -176,7 +170,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     SubmitState.None,
   );
 
-  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
+  const {multiplier, tooltipMessage} = useMultipliers(id);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -208,15 +202,6 @@ function OnePlayerTable(props: Props): JSX.Element {
       return winner.claimed;
     }
   }, [isWinner, winner, data]);
-
-  const [openViewDialog, setOpenViewDialog] = useState(false);
-  const onCloseViewCoinsDialog = useCallback(() => {
-    setOpenViewDialog(false);
-  }, []);
-
-  const onViewCoins = useCallback((c: any) => {
-    setOpenViewDialog(true);
-  }, []);
 
   const handleCloseError = useCallback(() => {
     setSubmitState(SubmitState.None);

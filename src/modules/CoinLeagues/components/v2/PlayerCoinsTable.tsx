@@ -1,7 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
 import {
-  DialogProps,
   Table,
   TableBody,
   TableCell,
@@ -9,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import List from '@material-ui/core/List';
+
 import {ViewCoinListItem} from '../ViewCoinsModal/ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';

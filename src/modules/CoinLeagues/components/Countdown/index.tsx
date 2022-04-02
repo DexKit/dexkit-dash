@@ -1,28 +1,8 @@
 import React, {useMemo} from 'react';
 
-import IntlMessages from '@crema/utility/IntlMessages';
-
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import {useCountdown} from 'hooks/utils/useCountdown';
-import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {strPad} from 'modules/CoinLeagues/utils/time';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#2e3243',
-    padding: theme.spacing(2),
-  },
-  innerContent: {
-    padding: theme.spacing(1),
-    justifyContent: 'space-between',
-    fontSize: '1rem',
-  },
-}));
 
 interface Props {
   id: string;
@@ -41,7 +21,6 @@ function CardTimer(props: {time: number}) {
 }
 
 function Countdown(props: Props): JSX.Element {
-  const classes = useStyles();
   const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.id);
   const duration = game?.duration.toNumber();
   const startTimestamp = game?.start_timestamp.toNumber();

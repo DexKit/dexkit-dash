@@ -1,8 +1,6 @@
 import React from 'react';
 
 import {
-  ButtonBase,
-  ButtonBaseProps,
   Typography,
   withStyles,
   Avatar,

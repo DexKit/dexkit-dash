@@ -18,8 +18,6 @@ import {Skeleton} from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
-import CopyButton from 'shared/components/CopyButton';
-import FileCopy from '@material-ui/icons/FileCopy';
 
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import UserProfileItem from '../UserProfileItem';

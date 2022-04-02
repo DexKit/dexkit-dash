@@ -6,7 +6,6 @@ import {createTheme} from '@material-ui/core/styles';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 import AppContext from '../AppContext';
-import AppLocale from 'shared/localization';
 import {useBreakPointDown} from '../Utils';
 import {NavStyle, ThemeMode, ThemeStyle} from 'shared/constants/AppEnums';
 import {useUrlSearchParams} from 'use-url-search-params';
@@ -57,7 +56,6 @@ const theme = createTheme({
 
 const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   const {
-    locale,
     isRTL,
     updateThemeMode,
     changeNavStyle,
@@ -142,6 +140,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
       }
     };
     updateQuerySetting();
+    // eslint-disable-next-line
   }, [params.theme_style, theme, isBelowMd, updateTheme, updateThemeStyle]);
 
   return (

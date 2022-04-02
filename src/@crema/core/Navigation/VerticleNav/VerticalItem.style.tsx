@@ -2,9 +2,7 @@ import {alpha, makeStyles, lighten} from '@material-ui/core/styles';
 import {useContext} from 'react';
 import AppContext from '../../../utility/AppContext';
 import {Fonts, ThemeMode} from '../../../../shared/constants/AppEnums';
-import AppContextPropsType, {
-  CremaTheme,
-} from '../../../../types/AppContextPropsType';
+import AppContextPropsType from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);

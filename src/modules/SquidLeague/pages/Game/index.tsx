@@ -11,7 +11,6 @@ import MainLayout from 'shared/components/layouts/main';
 
 //import GameLayout from './index.layout';
 import GameLayout from './index.layout';
-import GameLayoutSkeleton from './index.layout.skeleton';
 
 interface Params {
   id: string;

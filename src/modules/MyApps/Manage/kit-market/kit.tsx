@@ -9,7 +9,6 @@ import {
 import React from 'react';
 import {makeStyles} from '@material-ui/core';
 import {BigNumber} from '@0x/utils';
-import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme) => ({
   root: {

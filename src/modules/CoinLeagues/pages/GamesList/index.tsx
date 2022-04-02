@@ -22,7 +22,6 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
 import {
   COINLEAGUENFT_ROUTE,

@@ -4,13 +4,11 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
 
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
@@ -47,34 +45,8 @@ import {truncateAddress} from 'utils';
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    backgroundColor: '#1F1D2B',
-  },
-  affiliateCard: {
-    borderRadius: 6,
-    margin: theme.spacing(0),
-    padding: theme.spacing(1),
-    backgroundColor: '#252836',
-  },
-  field: {
-    padding: theme.spacing(2),
-    border: '1px solid #525C75',
-    borderRadius: 5,
-    height: theme.spacing(16),
-  },
-  settingsBtn: {
-    color: '#fff',
-  },
-  affiliateLink: {
-    height: theme.spacing(5),
-  },
-}));
-
 const AffiliatePage: React.FC = () => {
   const history = useHistory();
-  const classes = useStyles();
   const {messages} = useIntl();
   const isMobile = useMobile();
 

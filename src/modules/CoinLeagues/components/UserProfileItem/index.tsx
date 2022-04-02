@@ -10,7 +10,6 @@ import {Avatar, Link} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import {getPublicIPFSPath, isIPFS} from 'utils/ipfs';
-import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {isAddress} from 'utils/ethers';
 

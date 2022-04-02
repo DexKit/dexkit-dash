@@ -8,7 +8,6 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import {Kit} from './kit';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import {WhitelabelTypes} from 'types/myApps';

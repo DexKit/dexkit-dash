@@ -11,7 +11,6 @@ import {
 import clsx from 'clsx';
 import {Link as RouterLink} from 'react-router-dom';
 
-import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';

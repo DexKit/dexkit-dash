@@ -79,7 +79,7 @@ export const CreateGamePage = () => {
   const handleCloseCreateGameDialog = useCallback(() => {
     createGameToggler.toggle();
     handleReset();
-  }, [createGameToggler]);
+  }, [createGameToggler, handleReset]);
 
   const onConfirmCreateGameCallback = useCallback(() => {
     if (!chainId) {

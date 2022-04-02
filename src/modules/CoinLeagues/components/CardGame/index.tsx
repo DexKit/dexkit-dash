@@ -6,12 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {alpha, ButtonBase, Chip, Tooltip} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
@@ -116,14 +114,6 @@ const CardGame: React.FC<Props> = ({
     return '';
   }, [game]);
 
-  const entryAmount = useMemo(() => {
-    if (game) {
-      return ethers.utils.formatEther(game.entry);
-    }
-
-    return '';
-  }, [game]);
-
   const time = useMemo(() => {
     if (game) {
       return Number(game.duration);
@@ -141,7 +131,7 @@ const CardGame: React.FC<Props> = ({
   }, [game]);
 
   const gameLevel =
-    game != undefined
+    game !== undefined
       ? GET_GAME_LEVEL(BigNumber.from(game.entry), chainId)
       : '';
 

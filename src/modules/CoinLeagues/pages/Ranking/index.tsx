@@ -8,7 +8,6 @@ import {
   IconButton,
   Typography,
   Divider,
-  Hidden,
 } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';

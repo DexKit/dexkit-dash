@@ -1,12 +1,5 @@
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  Paper,
-} from '@material-ui/core';
+import {Button, CircularProgress, Grid} from '@material-ui/core';
 import {Delete, Edit} from '@material-ui/icons';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
@@ -102,7 +95,7 @@ export const GameActions: React.FC<Props> = ({
     game?.started && !game?.finished && !game?.aborted && canEndGame;
 
   const isEnterGameEnabled =
-    currentPlayers != undefined &&
+    currentPlayers !== undefined &&
     currentPlayers >= 2 &&
     !game?.started &&
     !canEnterGame;

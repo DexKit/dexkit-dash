@@ -1,44 +1,11 @@
 import React, {useMemo} from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import {useCountdown} from 'hooks/utils/useCountdown';
-import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {strPad} from 'modules/CoinLeagues/utils/time';
-import IntlMessages from '@crema/utility/IntlMessages';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#2e3243',
-    padding: theme.spacing(2),
-  },
-  innerContent: {
-    padding: theme.spacing(1),
-    justifyContent: 'space-between',
-    fontSize: '1rem',
-  },
-}));
 
 interface Props {
   id: string;
-}
-
-function CardTimer(props: {time: number}) {
-  const time = props.time;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time - hours * 3600) / 60);
-  const seconds = time - hours * 3600 - minutes * 60;
-  return (
-    <Grid item>
-      <Typography variant='h6'>
-        {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
-      </Typography>
-    </Grid>
-  );
 }
 
 function CardTimerUnstyled(props: {time: number}) {

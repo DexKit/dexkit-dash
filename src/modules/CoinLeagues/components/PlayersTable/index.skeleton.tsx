@@ -5,8 +5,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {ChainId} from 'types/blockchain';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 interface Props {

@@ -8,7 +8,6 @@ import MainLayout from 'shared/components/layouts/main';
 import {NetworkSupportBackdrop} from 'shared/components/NetworkSupportBackdrop';
 import PageHeader from 'shared/components/v2/partials/PageHeader';
 import {NFTLEAGUE_ROUTE} from 'shared/constants/routes';
-import {ChainId} from 'types/blockchain';
 import NFTLeagueGamesTable from '../components/NFTLeagueGamesTable';
 import {NFT_LEAGUE_SUPPORTED_NETWORKS} from '../constants';
 

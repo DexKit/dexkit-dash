@@ -5,10 +5,7 @@ import Divider from '@material-ui/core/Divider';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
 import DoneIcon from '@material-ui/icons/Done';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -16,8 +13,7 @@ import * as yup from 'yup';
 
 import {useFormik} from 'formik';
 
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import {makeStyles} from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField';
 import {
@@ -112,7 +108,6 @@ const UpdateGameMetadataModal = (props: Props) => {
   const {chainId: chainIdGame} = useLeaguesChainInfo();
   const classes = useStyles();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-  const theme = useTheme();
 
   const {onPostMetadata} = useGameMetadataUpdater();
   const formik = useFormik({

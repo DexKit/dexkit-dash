@@ -22,7 +22,7 @@ export function useGameJoin({
   const {getScannerUrl} = useChainInfo();
 
   const [isLoading, setIsLoading] = useState(false);
-  const {messages, formatMessage} = useIntl();
+  const {formatMessage} = useIntl();
   const [error, setError] = useState<Error>();
   const [transactionHash, setTransactionHash] = useState<string>();
   const [confirmed, setConfirmed] = useState<boolean>();
@@ -132,7 +132,16 @@ export function useGameJoin({
         );
       }
     },
-    [game, onJoinGameCallback, chainId, createNotification, onConfirm],
+    [
+      game,
+      onJoinGameCallback,
+      chainId,
+      createNotification,
+      enqueueSnackbar,
+      onConfirm,
+      formatMessage,
+      handleViewTransaction,
+    ],
   );
 
   return {isLoading, reset, join, transactionHash, confirmed, error};

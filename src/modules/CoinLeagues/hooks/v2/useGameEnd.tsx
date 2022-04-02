@@ -116,7 +116,17 @@ export function useGameEnd({
         });
       }
     },
-    [game, onEndGameCallback, chainId, createNotification, onError, onConfirm],
+    [
+      game,
+      onEndGameCallback,
+      chainId,
+      createNotification,
+      onError,
+      onConfirm,
+      formatMessage,
+      enqueueSnackbar,
+      handleViewTransaction,
+    ],
   );
 
   return {reset, end, transactionHash, isLoading, confirmed, error};

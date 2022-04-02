@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Backdrop,
-  Box,
   Button,
   Grid,
   makeStyles,
@@ -58,6 +57,7 @@ export function NetworkSupportBackdrop({supportedChains}: Props) {
         setOpen(true);
       }
     }
+    // eslint-disable-next-line
   }, [chainId, String(supportedChains)]);
 
   return (

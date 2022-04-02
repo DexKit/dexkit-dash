@@ -29,15 +29,11 @@ import SetupStartEndGameCard from 'modules/SquidLeague/components/SetupStartEndG
 import SetupGameDialog from 'modules/SquidLeague/components/dialogs/SetupGameDialog';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
 import {useWeb3} from 'hooks/useWeb3';
-import {Empty} from 'shared/components/Empty';
-import {isSupportedBlockchain} from 'modules/SquidLeague/utils/blockchain';
 import WithdrawGameCard from 'modules/SquidLeague/components/WithdrawGameCard';
 import {GET_MAX_ROUNDS} from 'modules/SquidLeague/constants';
 import {PlayersCard} from 'modules/SquidLeague/components/PlayersCard';
 import {getGameURL} from 'modules/SquidLeague/utils/url';
-import CopyLink from 'shared/components/CopyLink';
 import CopyButton from 'shared/components/CopyButton';
-import FileCopy from '@material-ui/icons/FileCopy';
 import {FileCopyRounded} from '@material-ui/icons';
 
 interface Params {

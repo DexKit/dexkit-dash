@@ -381,9 +381,27 @@ export const SetupStartEndGameCard = (props: Params) => {
                       <Grid item xs={12}>
                         <Box display={'flex'} justifyContent={'center'}>
                           <Typography variant='subtitle1' color='textPrimary'>
-                            You played{' '}
-                            <strong>{playerPlayRound ? 'Up' : 'Down'} </strong>
-                            on this round
+                            <IntlMessages
+                              id='squidLeague.youPlayed'
+                              defaultMessage='You played'
+                            />{' '}
+                            <strong>
+                              {playerPlayRound ? (
+                                <IntlMessages
+                                  id='squidLeague.up'
+                                  defaultMessage='Up'
+                                />
+                              ) : (
+                                <IntlMessages
+                                  id='squidLeague.down'
+                                  defaultMessage='Down'
+                                />
+                              )}{' '}
+                            </strong>
+                            <IntlMessages
+                              id='squidLeague.onThisRound'
+                              defaultMessage='on this round'
+                            />
                           </Typography>
                         </Box>
                       </Grid>

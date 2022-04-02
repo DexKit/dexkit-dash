@@ -3,7 +3,6 @@ import React, {useCallback} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   TableContainer,
-  Paper,
   Table,
   TableHead,
   TableRow,

@@ -7,16 +7,12 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import {BigNumber, ethers} from 'ethers';
-import {makeStyles} from '@material-ui/core/styles';
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 
 import {useInterval} from 'hooks/utils/useInterval';
 import {CardTimer} from '../CardTimer';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {Skeleton} from '@material-ui/lab';
 
@@ -29,30 +25,6 @@ import {ReactComponent as SendSquareIcon} from '../../assets/send-square.svg';
 import {ReactComponent as TimerIcon} from '../../assets/timer.svg';
 import {ReactComponent as ChartSquareIcon} from '../../assets/chart-square.svg';
 import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeagues/utils/time';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#2e3243',
-    padding: theme.spacing(2),
-  },
-  button: {
-    fontWeight: 500,
-    borderRadius: 6,
-    fontSize: '1rem',
-    background: '#ffa552',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    color: 'black',
-  },
-  innerContent: {
-    fontSize: '1rem',
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    justifyContent: 'space-between',
-  },
-}));
 
 interface Props {
   game?: GameGraph;
@@ -70,7 +42,6 @@ function SmallCardGame({
   btnMessage,
 }: Props): JSX.Element {
   const {chainId, coinSymbol} = useLeaguesChainInfo();
-  const classes = useStyles();
   const [countdown, setCountdown] = useState<number>();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -83,7 +54,6 @@ function SmallCardGame({
       BigNumber.from(game?.currentPlayers || 0),
     ),
   );
-  const entryAmount = ethers.utils.formatEther(game?.entry || '0');
 
   const entriesIn = strPad(Number(game?.currentPlayers) || 0);
   const entriesOut = strPad(Number(game?.numPlayers) || 0);
@@ -119,7 +89,7 @@ function SmallCardGame({
     (_ev: any): void => {
       onClick(game?.intId);
     },
-    [game?.intId, onClick],
+    [game, onClick],
   );
 
   const theme = useTheme();
