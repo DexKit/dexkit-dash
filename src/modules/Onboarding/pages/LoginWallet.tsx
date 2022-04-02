@@ -2,24 +2,19 @@ import {
   Box,
   Grid,
   Typography,
-  Paper,
   makeStyles,
   Button,
   ButtonBase,
   TextField,
+  lighten,
+  Divider,
+  Hidden,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import React, {useCallback, useState} from 'react';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  FlashIcon,
-  GoogleIcon,
-  TwitterIcon,
-  ReceiptAddIcon,
-  DiscordIcon,
-} from 'shared/components/Icons';
+
+import {GoogleIcon, TwitterIcon, DiscordIcon} from 'shared/components/Icons';
 
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWelcomeModal} from 'hooks/useWelcomeModal';
@@ -27,13 +22,14 @@ import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router-dom';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
-import {Add as AddIcon} from '@material-ui/icons';
-import {useAccountsModal} from 'hooks/useAccountsModal';
+//import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+//import {useAccountsModal} from 'hooks/useAccountsModal';
 import {Alert} from '@material-ui/lab';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {useChainInfo} from 'hooks/useChainInfo';
+import LoginBackground from 'assets/images/login/background.svg';
+import {ReactComponent as DirectBoxSendSymbol} from 'assets/images/vuesax/twotone/directbox-send.svg';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -77,10 +73,15 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
   },
   actionButton: {
-    width: '100%',
-    display: 'block',
-    textAlign: 'left',
-    borderRadius: theme.shape.borderRadius,
+    backgroundColor: lighten(theme.palette.background.paper, 0.1),
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+    padding: theme.spacing(2),
+    margin: theme.spacing(2),
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionButtonPaper: {
     borderRadius: theme.shape.borderRadius,
@@ -131,11 +132,16 @@ const useStyles = makeStyles((theme) => ({
   overflowItemInner: {
     width: '30vw',
   },
+  loginBackground: {
+    backgroundImage: `url(${LoginBackground})`,
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 interface Props {}
 
-export const CreateWallet = (props: Props) => {
+export const LoginWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
@@ -223,22 +229,22 @@ export const CreateWallet = (props: Props) => {
     [email, onConnectMagicEmail, onCloseWeb3, toggleLoading],
   );
 
-  const handleConnectWalletLater = useCallback(() => {
+  /*  const handleConnectWalletLater = useCallback(() => {
     history.push(`/wallet/${FEE_RECIPIENT}`);
-  }, [history]);
+  }, [history]);*/
 
-  const accountsModal = useAccountsModal();
+  //const accountsModal = useAccountsModal();
 
-  const handleToggleAccountsModal = useCallback(() => {
+  /*const handleToggleAccountsModal = useCallback(() => {
     accountsModal.setShow(!accountsModal.showAccounts);
-  }, [accountsModal]);
+  }, [accountsModal]);*/
 
   const {messages} = useIntl();
 
   const {chainName} = useChainInfo();
 
   return (
-    <Box py={{xs: 8}}>
+    <Box style={{height: '100%'}}>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color='inherit' />
         <Box pl={2}>
@@ -247,7 +253,7 @@ export const CreateWallet = (props: Props) => {
           </Typography>
         </Box>
       </Backdrop>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} style={{height: '100%'}}>
         {account ? (
           <Grid item xs={12}>
             <Alert severity='info'>
@@ -263,364 +269,118 @@ export const CreateWallet = (props: Props) => {
             </Alert>
           </Grid>
         ) : null}
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Typography variant='h5'>
-                <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant='body2'>
-                <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box display={'flex'}>
-                <TextField
-                  value={email}
-                  onChange={handleChange}
-                  label={messages['app.onBoarding.eMail']}
-                  variant='outlined'
-                  size='small'
-                  error={!isEmailValid(email) && email !== ''}
-                  helperText={
-                    !isEmailValid(email) && email !== ''
-                      ? 'E-mail is not valid'
-                      : undefined
-                  }
-                  fullWidth
-                />
-                <Box marginLeft={2}>
+        <Hidden smUp>
+          <Grid item xs={12}>
+            <Box className={classes.loginBackground} />
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={4}>
+          <Box p={{sm: 6, xs: 2}} mt={{sm: 20}}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Typography variant='h5'>
+                  <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='body2'>
+                  <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Box display={'flex'} justifyContent='center'>
+                  <TextField
+                    value={email}
+                    onChange={handleChange}
+                    label={messages['app.onBoarding.eMail']}
+                    variant='outlined'
+                    size='small'
+                    error={!isEmailValid(email) && email !== ''}
+                    helperText={
+                      !isEmailValid(email) && email !== ''
+                        ? 'E-mail is not valid'
+                        : undefined
+                    }
+                    fullWidth
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box display={'flex'} justifyContent='center'>
                   <Button
                     disabled={email === '' || !isEmailValid(email)}
                     variant='contained'
-                    onClick={handleEmail}>
-                    <IntlMessages id='app.onBoarding.login' />
+                    color={'primary'}
+                    onClick={handleEmail}
+                    endIcon={<DirectBoxSendSymbol />}
+                    fullWidth>
+                    <IntlMessages
+                      id='app.onBoarding.signIn'
+                      defaultMessage={'Sign In'}
+                    />
                   </Button>
                 </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant='body1'>
-                <IntlMessages id='app.onBoarding.orContinueWithOneOfTheSocial' />
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              {isMobile ? (
-                <Box className={classes.scrollOverflow}>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleGoogle}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <GoogleIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              <IntlMessages id='app.onBoarding.google' />
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleTwitter}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <TwitterIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              <IntlMessages id='app.onBoarding.twitter' />
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleDiscord}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <DiscordIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              <IntlMessages id='app.onBoarding.discord' />
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
-                </Box>
-              ) : (
-                <Grid
-                  container
-                  spacing={4}
-                  wrap={isMobile ? 'nowrap' : undefined}>
-                  <Grid item xs={12} sm={3}>
-                    <ButtonBase
-                      onClick={handleGoogle}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <GoogleIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            <IntlMessages id='app.onBoarding.google' />
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <ButtonBase
-                      onClick={handleTwitter}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <TwitterIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            <IntlMessages id='app.onBoarding.twitter' />
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <ButtonBase
-                      onClick={handleDiscord}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <DiscordIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            <IntlMessages id='app.onBoarding.discord' />
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
-                </Grid>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant='body1'>
-                <IntlMessages id='app.onBoarding.orConnectAnExternalWallet' />
-              </Typography>
-            </Grid>
-            {!isMobile ? (
-              <Grid item xs={12}>
-                <ButtonBase
-                  onClick={handleConnectWeb3}
-                  className={classes.actionButton}>
-                  <Paper
-                    variant='outlined'
-                    className={classes.actionButtonPaper}>
-                    <Box p={4}>
-                      <Grid
-                        container
-                        spacing={2}
-                        alignItems='center'
-                        alignContent='center'>
-                        <Grid item>
-                          <Box className={classes.boxCircle}>
-                            <ReceiptAddIcon />
-                          </Box>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography variant='body1' style={{fontWeight: 500}}>
-                            <IntlMessages id='app.onBoarding.connectTheExternalWallet' />
-                          </Typography>
-                          <Typography variant='body2' color='textSecondary'>
-                            <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <NavigateNextIcon />
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </Paper>
-                </ButtonBase>
               </Grid>
-            ) : null}
-            <Grid item xs={12}>
-              <ButtonBase
-                onClick={handleConnectWalletLater}
-                className={classes.actionButton}>
-                <Paper variant='outlined' className={classes.actionButtonPaper}>
-                  <Box p={4}>
-                    <Grid
-                      container
-                      spacing={2}
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid item>
-                        <Box className={classes.boxCircle}>
-                          <FlashIcon />
-                        </Box>
-                      </Grid>
-                      <Grid item xs>
-                        <Typography variant='body1' style={{fontWeight: 500}}>
-                          <IntlMessages id='app.onBoarding.connectTheWalletLater' />
-                        </Typography>
-                        <Typography variant='body2' color='textSecondary'>
-                          <IntlMessages id='app.onBoarding.clickHereToOpenTheApp' />
-                        </Typography>
-                      </Grid>
+              <Grid item xs={12}>
+                <Box display={'flex'} justifyContent={'center'}>
+                  <Typography variant='body1'>
+                    <IntlMessages
+                      id='app.onBoarding.orContinue'
+                      defaultMessage={'Or continue'}
+                    />
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box display={'flex'} justifyContent={'center'}>
+                  <ButtonBase
+                    onClick={handleGoogle}
+                    className={classes.actionButton}>
+                    <GoogleIcon className={classes.walletActionButtonIcon} />
+                  </ButtonBase>
 
-                      <Grid item>
-                        <NavigateNextIcon />
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </ButtonBase>
+                  <ButtonBase
+                    onClick={handleTwitter}
+                    className={classes.actionButton}>
+                    <TwitterIcon className={classes.walletActionButtonIcon} />
+                  </ButtonBase>
+
+                  <ButtonBase
+                    onClick={handleDiscord}
+                    className={classes.actionButton}>
+                    <DiscordIcon className={classes.walletActionButtonIcon} />
+                  </ButtonBase>
+                </Box>
+              </Grid>
+              <Grid item xs={4} />
+              <Grid item xs={4}>
+                <Divider />
+              </Grid>
+              <Grid item xs={4} />
+              <Grid item xs={12}>
+                <Box display={'flex'} justifyContent={'center'}>
+                  <Button
+                    variant={'text'}
+                    color={'primary'}
+                    onClick={handleConnectWeb3}>
+                    <IntlMessages
+                      id='app.onBoarding.connectExternal'
+                      defaultMessage={'Connect External Wallet like Metamask'}
+                    />
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <ButtonBase
-                onClick={handleToggleAccountsModal}
-                className={classes.actionButton}>
-                <Paper variant='outlined' className={classes.actionButtonPaper}>
-                  <Box p={4}>
-                    <Grid
-                      container
-                      spacing={2}
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid item>
-                        <Box className={classes.boxCircle}>
-                          <AddIcon color='primary' />
-                        </Box>
-                      </Grid>
-                      <Grid item xs>
-                        <Typography variant='body1' style={{fontWeight: 500}}>
-                          <IntlMessages id='app.onBoarding.addAccount' />
-                        </Typography>
-                        <Typography variant='body2' color='textSecondary'>
-                          <IntlMessages id='app.onBoarding.addAccountForReadOnly' />
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <NavigateNextIcon />
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </ButtonBase>
-            </Grid>
-          </Grid>
+          </Box>
         </Grid>
+        <Hidden smDown>
+          <Grid item sm={8}>
+            <Box className={classes.loginBackground} />
+          </Grid>
+        </Hidden>
       </Grid>
     </Box>
   );
 };
 
-export default CreateWallet;
+export default LoginWallet;
