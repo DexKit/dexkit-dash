@@ -5,7 +5,7 @@ export const maticNetworkProvider = new providers.JsonRpcProvider(
   137,
 );
 export const mumbaiNetworkProvider = new providers.JsonRpcProvider(
-  'https://polygon-rpc.com/',
+  'https://rpc-mumbai.matic.today',
   80001,
 );
 export const bscNetworkProvider = new providers.JsonRpcProvider(

@@ -10,6 +10,8 @@ import {
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import {Alert} from '@material-ui/lab';
+
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PlayGameDialog from 'modules/SquidLeague/components/dialogs/PlayGameDialog';
@@ -31,6 +33,7 @@ import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';
 import {getLastChallengeTimestamp} from 'modules/SquidLeague/utils/time';
 import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 import {PlayingType} from 'modules/SquidLeague/constants/enum';
+import {ethers} from 'ethers';
 
 interface Params {
   id: string;
@@ -50,8 +53,14 @@ export const SetupStartEndGameCard = (props: Params) => {
 
   const gameAddressQuery = useGameAddress(id);
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
+
   const gameDataRoundQuery = useOnChainCurrentRoundGame(
     gameDataQuery.data?.round,
+    gameAddressQuery.data,
+  );
+
+  const previousGameRoundDataQuery = useOnChainCurrentRoundGame(
+    (gameDataQuery.data?.round || ethers.BigNumber.from(1)).sub(1),
     gameAddressQuery.data,
   );
 
@@ -186,6 +195,10 @@ export const SetupStartEndGameCard = (props: Params) => {
       return currentPrice.sub(startPrice).div(currentPrice);
     }
   }, [startPrice, currentPrice]);
+
+  const playerLostPreviousRound =
+    previousGameRoundDataQuery.data?.playerPlayCurrentRound !==
+    previousGameRoundDataQuery.data?.challengeResultCurrentRound;
 
   return (
     <Grid item xs={12}>
@@ -348,10 +361,22 @@ export const SetupStartEndGameCard = (props: Params) => {
                         defaultMessage={'Predict if coin goes up or down'}
                       />
                     </Grid>
+                    {playerLostPreviousRound && (
+                      <Grid item xs={12}>
+                        <Alert severity='warning'>
+                          <IntlMessages
+                            id='squidLeague.youLostThePreviousRound'
+                            defaultMessage='You lost the previous round'
+                          />
+                        </Alert>
+                      </Grid>
+                    )}
                     <Grid item xs={6}>
                       <Button
                         fullWidth
-                        disabled={!canWePlayChallenge}
+                        disabled={
+                          !canWePlayChallenge || playerLostPreviousRound
+                        }
                         startIcon={<ArrowUpwardIcon />}
                         variant='contained'
                         onClick={() => openPlayModal(true)}
@@ -365,7 +390,9 @@ export const SetupStartEndGameCard = (props: Params) => {
                     <Grid item xs={6}>
                       <Button
                         fullWidth
-                        disabled={!canWePlayChallenge}
+                        disabled={
+                          !canWePlayChallenge || playerLostPreviousRound
+                        }
                         startIcon={<ArrowDownwardIcon />}
                         variant='outlined'
                         onClick={() => openPlayModal(false)}

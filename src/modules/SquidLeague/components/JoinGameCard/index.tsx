@@ -3,8 +3,6 @@ import React, {useCallback, useMemo} from 'react';
 import {Paper, Box, Grid, Typography, Button} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-
 import {useToggler} from 'hooks/useToggler';
 
 import JoinGameDialog from 'modules/SquidLeague/components/dialogs/JoinGameDialog';
@@ -22,6 +20,7 @@ import {ReactComponent as CupIcon} from 'assets/images/vuesax/twotone/cup.svg';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 import {JoinGameStateSkeleton} from './JoinGameState.skeleton';
+import {GroupAdd} from '@material-ui/icons';
 
 interface Params {
   id: string;
@@ -149,23 +148,30 @@ export const JoinGameCard = (props: Params) => {
                   </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                  {!isPlayerJoined && (
+                  {!isPlayerJoined ? (
                     <Button
                       fullWidth
-                      startIcon={<ArrowDownwardIcon />}
+                      startIcon={<GroupAdd />}
                       variant='outlined'
                       onClick={() => joinGameToggler.toggle()}
                       color='primary'>
                       <IntlMessages
                         id='squidLeague.joinGame'
-                        defaultMessage={'Join Game'}
+                        defaultMessage='Join Game'
                       />
                     </Button>
-                  )}
-                  {isPlayerJoined && (
-                    <Box display={'flex'} justifyContent={'center'}>
-                      <Typography variant={'h5'}> Joined</Typography>
-                    </Box>
+                  ) : (
+                    <Button
+                      disabled
+                      fullWidth
+                      startIcon={<GroupAdd />}
+                      variant='outlined'
+                      color='primary'>
+                      <IntlMessages
+                        id='squidLeague.joined'
+                        defaultMessage='Joined'
+                      />
+                    </Button>
                   )}
                 </Grid>
               </Grid>

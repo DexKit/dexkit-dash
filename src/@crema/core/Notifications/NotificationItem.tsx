@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {CircularProgress} from '@material-ui/core';
 
 import {ethers} from 'ethers';
@@ -31,6 +31,7 @@ import {isTransactionMined} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import {useSnackbar} from 'notistack';
 import {useIntl} from 'react-intl';
+import {useNetworkProviderV2} from 'hooks/provider/useNetworkProvider';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   avatar: {
@@ -53,8 +54,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const theme = useTheme();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {getProvider} = useWeb3();
+  const {getProvider, chainId} = useWeb3();
   const {getScannerUrl} = useChainInfo();
+  const networkProvider = useNetworkProviderV2(
+    undefined,
+    (item.metadata as TxNotificationMetadata).chainId,
+  );
 
   const {messages} = useIntl();
 
@@ -67,8 +72,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   }, [item, onClick]);
 
   const handleRemove = useCallback(() => {
-    dispatch(onRemoveNotification(item?.id ?? id));
-  }, [dispatch, item, id]);
+    dispatch(onRemoveNotification(id));
+  }, [dispatch, id]);
 
   const isTransaction = item?.type === NotificationType.TRANSACTION;
 
@@ -99,7 +104,13 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       setWaitingConfirm(true);
 
       if (isTransaction && isPending) {
-        isTransactionMined(getProvider(), metadata.transactionHash).then(
+        let currProvider: any = getProvider();
+
+        if (metadata.chainId !== chainId) {
+          currProvider = networkProvider;
+        }
+
+        isTransactionMined(currProvider, metadata.transactionHash).then(
           (result: ethers.providers.TransactionReceipt | undefined) => {
             if (result !== undefined) {
               if ((result.status || 0) === 1) {
@@ -137,7 +148,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 // });
 
                 dispatch(
-                  updateNotification({
+                  updateNotification(id, {
                     ...item,
                     metadata: {
                       ...metadata,
@@ -181,7 +192,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 // });
 
                 dispatch(
-                  updateNotification({
+                  updateNotification(id, {
                     ...item,
                     metadata: {
                       ...metadata,
@@ -198,12 +209,15 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
     }
   }, [
     waitingConfirm,
+    id,
     item,
     dispatch,
     enqueueSnackbar,
     getProvider,
     handleViewTransaction,
     messages,
+    chainId,
+    networkProvider,
   ]);
 
   return (
@@ -271,4 +285,4 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   );
 };
 
-export default NotificationItem;
+export default memo(NotificationItem);
