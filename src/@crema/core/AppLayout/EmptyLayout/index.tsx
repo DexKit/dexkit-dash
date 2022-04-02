@@ -1,9 +1,10 @@
 import React, {useCallback, useContext} from 'react';
-import {ContentView} from '../../../index';
+import {renderRoutes} from 'react-router-config';
+import routes from '../../../../modules';
+import {Suspense} from '../../../index';
 import {
   Grid,
   Box,
-  Hidden,
   Divider,
   IconButton,
   Typography,
@@ -28,6 +29,7 @@ import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDial
 import WelcomeDialog from 'shared/components/WelcomeDialog';
 import {useAppGlobalState} from 'hooks/useGlobalState';
 import SignDataDialog from 'shared/components/SignDataDialog';
+import clsx from 'clsx';
 
 interface EmptyLayoutProps {
   props?: any;
@@ -72,77 +74,74 @@ const EmptyLayout: React.FC<EmptyLayoutProps> = (props) => {
         onCancel={globalState.handleSignCancel}
       />
       <WelcomeDialog onClose={handleCloseWelcome} open={welcomeModal.show} />
-      {isMobile ? (
-        <BottomDrawer open={accountsModal.showAccounts} anchor='bottom'>
-          <Box className={isMobile ? classes.accountsFixedHeight : undefined}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Box
-                  display='flex'
-                  alignItems='center'
-                  justifyContent='space-between'
-                  alignContent='center'>
-                  <Box>
-                    <Grid
-                      alignContent='center'
-                      container
-                      alignItems='center'
-                      spacing={2}>
-                      <Grid item>
-                        <WalletSearchIcon />
+      <Box className={clsx(classes.appMain)}>
+        {isMobile ? (
+          <BottomDrawer open={accountsModal.showAccounts} anchor='bottom'>
+            <Box className={isMobile ? classes.accountsFixedHeight : undefined}>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'
+                    alignContent='center'>
+                    <Box>
+                      <Grid
+                        alignContent='center'
+                        container
+                        alignItems='center'
+                        spacing={2}>
+                        <Grid item>
+                          <WalletSearchIcon />
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='body1'>Accounts</Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography variant='body1'>Accounts</Typography>
-                      </Grid>
-                    </Grid>
+                    </Box>
+                    <IconButton onClick={handleCloseAccounts} size='small'>
+                      <CloseIcon />
+                    </IconButton>
                   </Box>
-                  <IconButton onClick={handleCloseAccounts} size='small'>
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-                <Divider />
-              </Grid>
-              <Grid item xs={12}>
-                <Accounts />
-              </Grid>
-            </Grid>
-          </Box>
-        </BottomDrawer>
-      ) : (
-        <Dialog open={accountsModal.showAccounts}>
-          <DialogTitle>
-            <Box
-              display='flex'
-              alignItems='center'
-              justifyContent='space-between'>
-              <Box>
-                <Grid container alignItems='center' spacing={2}>
-                  <Grid item>
-                    <WalletSearchIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant='body1'>Accounts</Typography>
-                  </Grid>
+                  <Divider />
                 </Grid>
-              </Box>
-              <IconButton onClick={handleCloseAccounts} size='small'>
-                <CloseIcon />
-              </IconButton>
+                <Grid item xs={12}>
+                  <Accounts />
+                </Grid>
+              </Grid>
             </Box>
-          </DialogTitle>
-          <Divider />
-          <DialogContent className={classes.accountsDialgContent}>
-            <Accounts />
-          </DialogContent>
-        </Dialog>
-      )}
+          </BottomDrawer>
+        ) : (
+          <Dialog open={accountsModal.showAccounts}>
+            <DialogTitle>
+              <Box
+                display='flex'
+                alignItems='center'
+                justifyContent='space-between'>
+                <Box>
+                  <Grid container alignItems='center' spacing={2}>
+                    <Grid item>
+                      <WalletSearchIcon />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='body1'>Accounts</Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+                <IconButton onClick={handleCloseAccounts} size='small'>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
+            <Divider />
+            <DialogContent className={classes.accountsDialgContent}>
+              <Accounts />
+            </DialogContent>
+          </Dialog>
+        )}
 
-      <Hidden mdDown>
-        <ContentView />
-      </Hidden>
-      <Hidden lgUp>
-        <ContentView />
-      </Hidden>
+        <Suspense>{renderRoutes(routes)}</Suspense>
+      </Box>
     </>
   );
 };

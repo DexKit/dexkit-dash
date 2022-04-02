@@ -9,6 +9,7 @@ import {
   lighten,
   Divider,
   Hidden,
+  IconButton,
 } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -30,47 +31,14 @@ import {useIntl} from 'react-intl';
 import {useChainInfo} from 'hooks/useChainInfo';
 import LoginBackground from 'assets/images/login/background.svg';
 import {ReactComponent as DirectBoxSendSymbol} from 'assets/images/vuesax/twotone/directbox-send.svg';
+import {ReactComponent as DexKitLogo} from 'assets/images/login/dexkit-logo.svg';
+import {WALLET_ROUTE} from 'shared/constants/routes';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
-  primaryCard: {
-    backgroundColor: '#FCC591',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  primaryCardTitle: {
-    fontWeight: 500,
-    color: theme.palette.grey[900],
-  },
-  primaryCardSubtitle: {
-    fontWeight: 400,
-    color: theme.palette.grey[800],
-  },
-  iconCircle: {
-    backgroundColor: '#FFE3CA',
-    borderRadius: '50%',
-    display: 'flex',
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
   icon: {
     color: theme.palette.grey[800],
-  },
-  boxCircle: {
-    borderRadius: '50%',
-    backgroundColor: '#3A3D4A',
-    display: 'flex',
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
-  boxCircleIcon: {
-    height: theme.spacing(4),
-    width: theme.spacing(4),
   },
   actionButton: {
     backgroundColor: lighten(theme.palette.background.paper, 0.1),
@@ -86,54 +54,25 @@ const useStyles = makeStyles((theme) => ({
   actionButtonPaper: {
     borderRadius: theme.shape.borderRadius,
   },
-  actionButtonPaperBorder: {
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-  },
   walletActionButtonIcon: {
     color: theme.palette.primary.main,
-    height: theme.spacing(6),
-    width: theme.spacing(6),
-  },
-  walletActionButtonText: {
-    textTransform: 'none',
+    height: theme.spacing(8),
+    width: theme.spacing(8),
   },
   addressText: {
     fontWeight: 500,
-  },
-  iconContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    height: theme.spacing(10),
-    width: theme.spacing(10),
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
-  scrollOverflow: {
-    display: 'flex',
-    flexDirection: 'row',
-    overflowX: 'scroll',
-    flexWrap: 'nowrap',
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
-  },
-  overflowItem: {
-    marginRight: theme.spacing(4),
-    '&:last-child': {
-      marginRight: 0,
-    },
-  },
-  overflowItemInner: {
-    width: '30vw',
-  },
   loginBackground: {
     backgroundImage: `url(${LoginBackground})`,
+    width: '100%',
+    height: '100%',
+  },
+  loginBackgroundMobile: {
+    backgroundImage: `linear-gradient(180deg, rgba(13, 16, 23, 0) 0%, #0D1017 43.73%), url(${LoginBackground})`,
     width: '100%',
     height: '100%',
   },
@@ -147,6 +86,7 @@ export const LoginWallet = (props: Props) => {
   const isMobile = useMobile();
   const {onConnectWeb3, onCloseWeb3, account} = useWeb3();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
+  const defaultAccount = useDefaultAccount();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
@@ -229,6 +169,14 @@ export const LoginWallet = (props: Props) => {
     [email, onConnectMagicEmail, onCloseWeb3, toggleLoading],
   );
 
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+  }, [history]);
+
   /*  const handleConnectWalletLater = useCallback(() => {
     history.push(`/wallet/${FEE_RECIPIENT}`);
   }, [history]);*/
@@ -244,7 +192,7 @@ export const LoginWallet = (props: Props) => {
   const {chainName} = useChainInfo();
 
   return (
-    <Box style={{height: '100%'}}>
+    <Box style={{height: '100%', width: '100%'}}>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color='inherit' />
         <Box pl={2}>
@@ -253,40 +201,77 @@ export const LoginWallet = (props: Props) => {
           </Typography>
         </Box>
       </Backdrop>
-      <Grid container spacing={4} style={{height: '100%'}}>
-        {account ? (
-          <Grid item xs={12}>
-            <Alert severity='info'>
-              <Typography variant='body1'>
-                <IntlMessages id='app.onBoarding.youAreAlreadyConnected' />{' '}
-                <strong>
-                  {isMobile && account ? truncateAddress(account) : account}
-                </strong>{' '}
-                <IntlMessages id='app.onBoarding.accountOn' />{' '}
-                <strong>{chainName}</strong>{' '}
-                <IntlMessages id='app.onBoarding.network' />
-              </Typography>
-            </Alert>
-          </Grid>
-        ) : null}
+      <Grid container style={{height: '100%'}}>
         <Hidden smUp>
           <Grid item xs={12}>
-            <Box className={classes.loginBackground} />
-          </Grid>
-        </Hidden>
-        <Grid item xs={12} sm={4}>
-          <Box p={{sm: 6, xs: 2}} mt={{sm: 20}}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
+            <Box className={classes.loginBackgroundMobile} position='relative'>
+              <Box p={2}>
+                <DexKitLogo />
+              </Box>
+              <Box position='absolute' bottom='0px' p={4}>
                 <Typography variant='h5'>
                   <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
                 </Typography>
-              </Grid>
-              <Grid item xs={12}>
+
                 <Typography variant='body2'>
                   <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
                 </Typography>
-              </Grid>
+              </Box>
+            </Box>
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={4}>
+          <Box p={{xs: 4, sm: 8}} mt={{sm: 10}}>
+            <Grid container spacing={6}>
+              {defaultAccount || account ? (
+                <Grid item xs={12}>
+                  <Box display={'flex'}>
+                    <Box display={'flex'} alignItems={'center'}>
+                      <IconButton onClick={handleBack}>
+                        <ArrowBackIcon />
+                      </IconButton>
+                      {!account && (
+                        <Typography variant='h5'>
+                          <IntlMessages
+                            id='app.onBoarding.connectWallet'
+                            defaultMessage={'Connect Wallet'}
+                          />{' '}
+                        </Typography>
+                      )}
+                    </Box>
+                    {account && (
+                      <Alert severity='info'>
+                        <Typography variant='body1'>
+                          <IntlMessages id='app.onBoarding.youAreAlreadyConnected' />{' '}
+                          <strong>
+                            {isMobile && account
+                              ? truncateAddress(account)
+                              : account}
+                          </strong>{' '}
+                          <IntlMessages id='app.onBoarding.accountOn' />{' '}
+                          <strong>{chainName}</strong>{' '}
+                          <IntlMessages id='app.onBoarding.network' />
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Box>
+                </Grid>
+              ) : null}
+              <Hidden smDown>
+                <Grid item xs={12}>
+                  <DexKitLogo />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='h5'>
+                    <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='body2'>
+                    <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
+                  </Typography>
+                </Grid>
+              </Hidden>
               <Grid item xs={12}>
                 <Box display={'flex'} justifyContent='center'>
                   <TextField
@@ -315,7 +300,7 @@ export const LoginWallet = (props: Props) => {
                     endIcon={<DirectBoxSendSymbol />}
                     fullWidth>
                     <IntlMessages
-                      id='app.onBoarding.signIn'
+                      id='common.signIn'
                       defaultMessage={'Sign In'}
                     />
                   </Button>
@@ -357,19 +342,21 @@ export const LoginWallet = (props: Props) => {
                 <Divider />
               </Grid>
               <Grid item xs={4} />
-              <Grid item xs={12}>
-                <Box display={'flex'} justifyContent={'center'}>
-                  <Button
-                    variant={'text'}
-                    color={'primary'}
-                    onClick={handleConnectWeb3}>
-                    <IntlMessages
-                      id='app.onBoarding.connectExternal'
-                      defaultMessage={'Connect External Wallet like Metamask'}
-                    />
-                  </Button>
-                </Box>
-              </Grid>
+              {!isMobile && (
+                <Grid item xs={12}>
+                  <Box display={'flex'} justifyContent={'center'}>
+                    <Button
+                      variant={'text'}
+                      color={'primary'}
+                      onClick={handleConnectWeb3}>
+                      <IntlMessages
+                        id='app.onBoarding.connectExternal'
+                        defaultMessage={'Connect External Wallet like Metamask'}
+                      />
+                    </Button>
+                  </Box>
+                </Grid>
+              )}
             </Grid>
           </Box>
         </Grid>
