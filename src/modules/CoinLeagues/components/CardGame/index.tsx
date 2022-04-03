@@ -227,8 +227,8 @@ const CardGame: React.FC<Props> = ({
                   color='textSecondary'
                   gutterBottom>
                   <IntlMessages
-                    id='app.coinLeagues.prize'
-                    defaultMessage='Prize'
+                    id='app.coinLeagues.maxPrize'
+                    defaultMessage='Max Prize'
                   />
                 </Typography>
               </Grid>

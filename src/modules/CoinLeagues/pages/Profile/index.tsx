@@ -432,7 +432,7 @@ export const ProfilePage: React.FC = () => {
                 Coin League NFT
               </MenuItem>
               <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
-              {/* <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem> */}
+              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>
             </Select>
           </Grid>
           <Grid item xs={12}>
