@@ -77,6 +77,23 @@ export const GET_PLAYERS_FROM_GAME = gql`
   }
 `;
 
+export const GET_GAMES_FROM_PLAYER = gql`
+  query GetGamesFromPlayers($id: String, $first: Int!, $skip: Int! ) {
+    player(id: $id) {
+      games(first: $first, skip: $skip ) {
+        game {
+          id
+          intId
+          status
+          entry
+          startsAt
+          endedAt
+        }
+      }
+    }
+  }
+`;
+
 
 // FIXME: find a better way to do this in thegraph.
 export function GET_SQUID_LEAGUE_ALL_GAMES_QUERY(status?: GameStatus) {

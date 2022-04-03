@@ -223,6 +223,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'discover',
           url: '/squid-league/explore',
         },
+        {
+          id: 'squidLeague-mygames',
+          title: 'My Games',
+          messageId: 'sidebar.my-games',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.search',
+          url: '/squid-league/my-games',
+        },
       ],
     },
     {

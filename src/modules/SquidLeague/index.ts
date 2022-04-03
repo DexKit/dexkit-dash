@@ -13,6 +13,10 @@ export const squidLeagueConfigs = [
         component: React.lazy(() => import('./pages/Explore')),
       },
       {
+        path: `${SQUIDLEAGUE_ROUTE}/my-games`,
+        component: React.lazy(() => import('./pages/MyGames')),
+      },
+      {
         path: `${SQUIDLEAGUE_ROUTE}/:id`,
         component: React.lazy(() => import('./pages/Game')),
       },

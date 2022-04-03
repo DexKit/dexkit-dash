@@ -59,6 +59,7 @@ import {ChainId} from 'types/blockchain';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import NFTLeagueGamesTable from 'modules/NFTLeague/components/NFTLeagueGamesTable';
+import SquidLeagueMyGamesTable from 'modules/SquidLeague/components/MyGamesTable';
 
 import {GameStatus as NFTLeagueGameStatus} from 'modules/NFTLeague/constants/enum';
 
@@ -675,6 +676,9 @@ export const ProfilePage: React.FC = () => {
                 address={address}
                 isNFT={selectedGame === CoinLeagueGames.CoinLeagueNFT}
               />
+            )}
+            {selectedGame === CoinLeagueGames.SquidGame && (
+              <SquidLeagueMyGamesTable account={address} />
             )}
           </Grid>
         </Grid>
