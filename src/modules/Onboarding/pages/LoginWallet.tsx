@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    '&:hover': {
+      backgroundColor: lighten(theme.palette.background.paper, 0.2),
+    },
   },
   actionButtonPaper: {
     borderRadius: theme.shape.borderRadius,
@@ -74,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
   loginBackgroundMobile: {
     backgroundImage: `linear-gradient(180deg, rgba(13, 16, 23, 0) 0%, #0D1017 43.73%), url(${LoginBackground})`,
     width: '100%',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
     height: '100%',
   },
 }));
@@ -192,7 +198,9 @@ export const LoginWallet = (props: Props) => {
   const {chainName} = useChainInfo();
 
   return (
-    <Box style={{height: '100%', width: '100%'}}>
+    <Box
+      style={{height: '100%', width: '100%'}}
+      className={isMobile ? classes.loginBackgroundMobile : undefined}>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color='inherit' />
         <Box pl={2}>
@@ -202,7 +210,7 @@ export const LoginWallet = (props: Props) => {
         </Box>
       </Backdrop>
       <Grid container style={{height: '100%'}}>
-        <Hidden smUp>
+        {/* <Hidden smUp>
           <Grid item xs={12}>
             <Box className={classes.loginBackgroundMobile} position='relative'>
               <Box p={2}>
@@ -219,59 +227,63 @@ export const LoginWallet = (props: Props) => {
               </Box>
             </Box>
           </Grid>
-        </Hidden>
+        </Hidden> */}
         <Grid item xs={12} sm={4}>
-          <Box p={{xs: 4, sm: 8}} mt={{sm: 10}}>
+          <Box px={{xs: 4, sm: 8}} py={4}>
             <Grid container spacing={6}>
               {defaultAccount || account ? (
                 <Grid item xs={12}>
-                  <Box display={'flex'}>
-                    <Box display={'flex'} alignItems={'center'}>
-                      <IconButton onClick={handleBack}>
+                  <Grid
+                    container
+                    spacing={2}
+                    alignItems='center'
+                    alignContent='center'>
+                    <Grid item>
+                      <IconButton size='small' onClick={handleBack}>
                         <ArrowBackIcon />
                       </IconButton>
-                      {!account && (
-                        <Typography variant='h5'>
-                          <IntlMessages
-                            id='app.onBoarding.connectWallet'
-                            defaultMessage={'Connect Wallet'}
-                          />{' '}
-                        </Typography>
-                      )}
-                    </Box>
-                    {account && (
-                      <Alert severity='info'>
-                        <Typography variant='body1'>
-                          <IntlMessages id='app.onBoarding.youAreAlreadyConnected' />{' '}
-                          <strong>
-                            {isMobile && account
-                              ? truncateAddress(account)
-                              : account}
-                          </strong>{' '}
-                          <IntlMessages id='app.onBoarding.accountOn' />{' '}
-                          <strong>{chainName}</strong>{' '}
-                          <IntlMessages id='app.onBoarding.network' />
-                        </Typography>
-                      </Alert>
-                    )}
-                  </Box>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='body1'>
+                        <IntlMessages
+                          id='app.onBoarding.goBackToWallet'
+                          defaultMessage='Go back to wallet'
+                        />{' '}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
               ) : null}
-              <Hidden smDown>
+              <Grid item xs={12}>
+                <Box>
+                  <Grid container spacing={4}>
+                    <Grid item>
+                      <DexKitLogo />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography variant='h5'>
+                        <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary'>
+                        <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+              {account && (
                 <Grid item xs={12}>
-                  <DexKitLogo />
+                  <Alert severity='info' variant='outlined'>
+                    <Typography variant='body1'>
+                      <IntlMessages id='app.onBoarding.youAreAlreadyConnected' />{' '}
+                      <strong>{truncateAddress(account)}</strong>{' '}
+                      <IntlMessages id='app.onBoarding.accountOn' />{' '}
+                      <strong>{chainName}</strong>{' '}
+                      <IntlMessages id='app.onBoarding.network' />
+                    </Typography>
+                  </Alert>
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography variant='h5'>
-                    <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant='body2'>
-                    <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
-                  </Typography>
-                </Grid>
-              </Hidden>
+              )}
               <Grid item xs={12}>
                 <Box display={'flex'} justifyContent='center'>
                   <TextField
@@ -338,9 +350,12 @@ export const LoginWallet = (props: Props) => {
                 </Box>
               </Grid>
               <Grid item xs={4} />
-              <Grid item xs={4}>
-                <Divider />
-              </Grid>
+              {!isMobile && (
+                <Grid item xs={4}>
+                  <Divider />
+                </Grid>
+              )}
+
               <Grid item xs={4} />
               {!isMobile && (
                 <Grid item xs={12}>
