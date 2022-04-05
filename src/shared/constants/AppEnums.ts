@@ -31,6 +31,7 @@ export enum NavStyle {
   H_DEFAULT = 'h-default',
   HOR_LIGHT_NAV = 'hor-light-nav',
   HOR_DARK_LAYOUT = 'hor-dark-layout',
+  EMPTY_LAYOUT = 'empty-layout'
 }
 
 export enum FooterType {
