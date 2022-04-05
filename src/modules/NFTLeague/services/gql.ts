@@ -28,11 +28,20 @@ export const GET_ALL_GAMES = gql`
 `;
 
 // FIXME: find a better way to do this in thegraph.
-export function GET_NFT_LEAGUE_QUERY(status?: GameStatus) {
+export function GET_NFT_LEAGUE_QUERY(status?: GameStatus, account?: string) {
   let whereParam = '';
+  const params = [];
 
   if (status !== undefined) {
-    whereParam = `where: {status: $status}`;
+    params.push(`status: ${status}`);
+  }
+
+  if (account !== undefined) {
+    params.push(`playerAddresses_contains: ["${account.toLowerCase()}"]`);
+  }
+
+  if (status !== undefined || account !== undefined) {
+    whereParam = `where: {${params.join(',')}},`;
   }
 
   return gql`

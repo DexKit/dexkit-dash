@@ -27,6 +27,7 @@ import {useGamesGraph} from 'modules/SquidLeague/hooks/useGamesGraph';
 import {GameGraph} from 'modules/SquidLeague/utils/types';
 import {GameStatus} from 'modules/SquidLeague/constants/enum';
 import {Empty} from 'shared/components/Empty';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -106,12 +107,15 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 interface Props {
   filters: {
     status?: GameStatus;
+    account?: string;
   };
 }
 
 export const GamesTable: React.FC<Props> = ({filters}) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const isMobile = useMobile();
 
   const handleChangePage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -130,6 +134,7 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
 
   const {data, isLoading} = useGamesGraph(
     filters.status,
+    filters?.account,
     rowsPerPage,
     page * rowsPerPage,
   );
@@ -143,6 +148,9 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
     if (isLoading) {
       return new Array(6).fill(null).map((_, index: number) => (
         <TableRow key={index}>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
           <TableCell>
             <Skeleton />
           </TableCell>
@@ -171,15 +179,12 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
 
     return (
       <TableRow>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell>
+        <TableCell colSpan={isMobile ? 4 : 5}>
           <Empty title={'No Games'} message={'No games to display'} />
         </TableCell>
-        <TableCell></TableCell>
       </TableRow>
     );
-  }, [data, isLoading]);
+  }, [data, isLoading, isMobile]);
 
   return (
     <TableContainer>
@@ -192,7 +197,9 @@ export const GamesTable: React.FC<Props> = ({filters}) => {
             <TableCell component='th'>
               <IntlMessages id='squidLeague.entry' defaultMessage={'Entry'} />
             </TableCell>
-
+            <TableCell component='th'>
+              <IntlMessages id='squidLeague.status' defaultMessage={'Status'} />
+            </TableCell>
             <Hidden smDown>
               <TableCell component='th'>
                 <IntlMessages
