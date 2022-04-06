@@ -26,6 +26,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import {GameStatus} from '../constants/enum';
 import {useGamesGraph} from '../hooks/useGamesGraph';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -105,12 +106,15 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 interface Props {
   filters: {
     status?: GameStatus;
+    account?: string;
   };
 }
 
 export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const isMobile = useMobile();
 
   const handleChangePage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -127,7 +131,12 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
     [],
   );
 
-  const {data} = useGamesGraph(filters.status, rowsPerPage, page * rowsPerPage);
+  const {data} = useGamesGraph(
+    filters.status,
+    filters.account,
+    rowsPerPage,
+    page * rowsPerPage,
+  );
 
   const renderRows = useCallback(() => {
     if (data !== undefined) {
@@ -138,6 +147,9 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
 
     return new Array(6).fill(null).map((_, index: number) => (
       <TableRow key={index}>
+        <TableCell>
+          <Skeleton />
+        </TableCell>
         <TableCell>
           <Skeleton />
         </TableCell>
@@ -175,13 +187,18 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
             <TableCell component='th'>
               <IntlMessages id='nftLeague.entry' />
             </TableCell>
-
+            <TableCell component='th'>
+              <IntlMessages id='nftLeague.status' defaultMessage='Status' />
+            </TableCell>
             <Hidden smDown>
               <TableCell component='th'>
-                <IntlMessages id='nftLeague.startsAt' />
+                <IntlMessages id='nftLeague.starts' defaultMessage='Starts' />
               </TableCell>
               <TableCell component='th'>
-                <IntlMessages id='nftLeague.endsIn' />
+                <IntlMessages
+                  id='nftLeague.endsIn'
+                  defaultMessage='Ends/Duration'
+                />
               </TableCell>
             </Hidden>
             <TableCell component='th'>
@@ -199,7 +216,7 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
               labelRowsPerPage=''
               labelDisplayedRows={() => ''}
               rowsPerPageOptions={[5, 10, 25]}
-              colSpan={5}
+              colSpan={isMobile ? 5 : 6}
               count={data?.length || 0}
               rowsPerPage={rowsPerPage}
               page={page}

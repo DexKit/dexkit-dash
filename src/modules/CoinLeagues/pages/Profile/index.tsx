@@ -62,6 +62,10 @@ import NFTLeagueGamesTable from 'modules/NFTLeague/components/NFTLeagueGamesTabl
 
 import {GameStatus as NFTLeagueGameStatus} from 'modules/NFTLeague/constants/enum';
 
+import SquidLeagueGamesTable from 'modules/SquidLeague/components/GamesTable';
+
+import {GameStatus as SquidLeagueStatus} from 'modules/SquidLeague/constants/enum';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     justifyContent: 'flex-start',
@@ -116,6 +120,10 @@ export const ProfilePage: React.FC = () => {
 
   const [nftLeagueStatus, setNftLeagueStatus] = useState<
     NFTLeagueGameStatus | undefined
+  >();
+
+  const [squidLeagueStatus, setSquidLeagueStatus] = useState<
+    SquidLeagueStatus | undefined
   >();
 
   const [selectedGame, setSelectedGame] = useState<CoinLeagueGames>(
@@ -665,7 +673,104 @@ export const ProfilePage: React.FC = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <NFTLeagueGamesTable filters={{status: nftLeagueStatus}} />
+                  <NFTLeagueGamesTable
+                    filters={{status: nftLeagueStatus, account: address}}
+                  />
+                </Grid>
+              </Grid>
+            )}
+            {selectedGame === CoinLeagueGames.SquidGame && (
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Grid container justifyContent='center'>
+                    <Grid item>
+                      <Grid
+                        container
+                        spacing={2}
+                        justifyContent='center'
+                        alignItems='center'
+                        alignContent='center'>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              squidLeagueStatus === undefined
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.all' />}
+                            onClick={() => setSquidLeagueStatus(undefined)}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              squidLeagueStatus === SquidLeagueStatus.Started
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.waiting' />}
+                            onClick={() =>
+                              setSquidLeagueStatus(SquidLeagueStatus.Started)
+                            }
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              squidLeagueStatus === SquidLeagueStatus.Finished
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.inProgress' />}
+                            onClick={() =>
+                              setSquidLeagueStatus(SquidLeagueStatus.Started)
+                            }
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              squidLeagueStatus === SquidLeagueStatus.Finished
+                                ? 'primary'
+                                : 'default'
+                            }
+                            onClick={() =>
+                              setSquidLeagueStatus(SquidLeagueStatus.Finished)
+                            }
+                            label={<IntlMessages id='nftLeague.aborted' />}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              squidLeagueStatus === SquidLeagueStatus.Finished
+                                ? 'primary'
+                                : 'default'
+                            }
+                            onClick={() =>
+                              setSquidLeagueStatus(SquidLeagueStatus.Finished)
+                            }
+                            label={<IntlMessages id='nftLeague.ended' />}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <SquidLeagueGamesTable
+                    filters={{status: squidLeagueStatus, account: address}}
+                  />
                 </Grid>
               </Grid>
             )}

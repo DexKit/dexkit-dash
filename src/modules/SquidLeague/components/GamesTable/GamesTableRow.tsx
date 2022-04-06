@@ -10,6 +10,7 @@ import {
   Collapse,
   Grid,
   Typography,
+  Chip,
 } from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
@@ -45,6 +46,9 @@ export const GamesTableRow: React.FC<Props> = ({game}) => {
           </Link>
         </TableCell>
         <TableCell>{ethers.utils.formatEther(game.entry)} MATIC</TableCell>
+        <TableCell>
+          <Chip size='small' label={game.status} />
+        </TableCell>
         <Hidden smDown>
           <TableCell>
             {moment.unix(parseInt(game.startsAt)).format('DD/MM/YYYY hh:mm:ss')}

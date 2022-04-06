@@ -215,6 +215,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/squid-league',
         },
         {
+          id: 'squidLeague-MyGames',
+          title: 'My Games',
+          messageId: 'sidebar.my-games',
+          type: 'item',
+          customIcon: true,
+          icon: 'people',
+          url: '/squid-league/my-games',
+        },
+        {
           id: 'squidLeague-explore',
           title: 'Explore',
           messageId: 'sidebar.protocols.explore',

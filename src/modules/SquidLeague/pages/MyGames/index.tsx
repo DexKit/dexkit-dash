@@ -1,6 +1,5 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Chip, Grid} from '@material-ui/core';
-import {CloseRounded} from '@material-ui/icons';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import React, {useState} from 'react';
 import {useIntl} from 'react-intl';
@@ -11,12 +10,10 @@ import GamesTable from 'modules/SquidLeague/components/GamesTable';
 
 import {GameStatus} from '../../constants/enum';
 
-export const ExploreGames = () => {
+export const MyGames = () => {
   const {formatMessage} = useIntl();
 
   const [status, setStatus] = useState<GameStatus | undefined>();
-
-  const [showMyGames, setShowMyGames] = useState(false);
 
   const defaultAccount = useDefaultAccount();
 
@@ -27,8 +24,8 @@ export const ExploreGames = () => {
           <PageHeader
             backUri='/'
             title={formatMessage({
-              id: 'nftLeague.games',
-              defaultMessage: 'SquidLeague Game',
+              id: 'nftLeague.myGames',
+              defaultMessage: 'My Games',
             })}
             breadcrumbs={[
               {caption: 'Wallet', uri: '/'},
@@ -128,28 +125,14 @@ export const ExploreGames = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Chip
-                    size='small'
-                    icon={showMyGames ? <CloseRounded /> : undefined}
-                    color={showMyGames ? 'primary' : 'default'}
-                    clickable
-                    onClick={() => setShowMyGames((value) => !value)}
-                    label={
-                      <IntlMessages
-                        id='squidLeague.myGames'
-                        defaultMessage='My Games'
-                      />
-                    }
-                  />
-                </Grid>
+                <Grid item></Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
               <GamesTable
                 filters={{
                   status,
-                  account: showMyGames ? defaultAccount : undefined,
+                  account: defaultAccount,
                 }}
               />
             </Grid>
@@ -160,4 +143,4 @@ export const ExploreGames = () => {
   );
 };
 
-export default ExploreGames;
+export default MyGames;

@@ -1,6 +1,8 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Button, Chip, Grid} from '@material-ui/core';
+import {CloseRounded} from '@material-ui/icons';
 import Add from '@material-ui/icons/Add';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import React, {useCallback, useState} from 'react';
 import {useIntl} from 'react-intl';
 import {useHistory} from 'react-router';
@@ -15,6 +17,10 @@ import {GameStatus} from '../constants/enum';
 
 export const NFTLeagueIndex = () => {
   const {messages} = useIntl();
+
+  const defaultAccount = useDefaultAccount();
+
+  const [showMyGames, setShowMyGames] = useState(false);
 
   const [status, setStatus] = useState<GameStatus | undefined>(
     GameStatus.Waiting,
@@ -49,7 +55,8 @@ export const NFTLeagueIndex = () => {
                   container
                   justifyContent='space-between'
                   alignItems='center'
-                  alignContent='center'>
+                  alignContent='center'
+                  spacing={4}>
                   <Grid item>
                     <Button
                       onClick={handleGoCreate}
@@ -129,11 +136,31 @@ export const NFTLeagueIndex = () => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item></Grid>
+                  <Grid item>
+                    <Chip
+                      size='small'
+                      variant='outlined'
+                      icon={showMyGames ? <CloseRounded /> : undefined}
+                      color={showMyGames ? 'primary' : 'default'}
+                      clickable
+                      onClick={() => setShowMyGames((value) => !value)}
+                      label={
+                        <IntlMessages
+                          id='nftLeague.myGames'
+                          defaultMessage='My Games'
+                        />
+                      }
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <NFTLeagueGamesTable filters={{status}} />
+                <NFTLeagueGamesTable
+                  filters={{
+                    status,
+                    account: showMyGames ? defaultAccount : undefined,
+                  }}
+                />
               </Grid>
             </Grid>
           </Grid>
