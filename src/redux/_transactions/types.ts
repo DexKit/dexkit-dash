@@ -10,4 +10,5 @@ export interface Transaction {
   description: string;
   chainId: number;
   status: TransactionStatus;
+  timestamp?: number;
 }

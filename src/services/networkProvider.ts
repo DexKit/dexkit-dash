@@ -1,4 +1,5 @@
 import {providers} from 'ethers';
+import {ChainId} from 'types/blockchain';
 
 export const maticNetworkProvider = new providers.JsonRpcProvider(
   'https://polygon-rpc.com/',
@@ -12,9 +13,27 @@ export const bscNetworkProvider = new providers.JsonRpcProvider(
   'https://bsc-dataseed.binance.org/',
   56,
 );
+
 export const ethereumNetworkProvider = new providers.JsonRpcProvider(
   'https://eth-mainnet.alchemyapi.io/v2/flGT97cHvj0kkXk2-5AHHCC9AXJGlU7L',
 );
+
 export const ethereumRopstenNetworkProvider = new providers.JsonRpcProvider(
   'https://eth-ropsten.alchemyapi.io/v2/aJ_98nQ0EEQ7iTnUFaT_vpuE5mxgYbRl',
 );
+
+export function getProviderByChainId(chainId?: number) {
+  if (chainId) {
+    if (chainId === ChainId.Ropsten) {
+      return ethereumRopstenNetworkProvider;
+    } else if (chainId === ChainId.Mumbai) {
+      return mumbaiNetworkProvider;
+    } else if (chainId === ChainId.Mainnet) {
+      return ethereumNetworkProvider;
+    } else if (chainId === ChainId.Binance) {
+      return bscNetworkProvider;
+    } else if (chainId === ChainId.Matic) {
+      return maticNetworkProvider;
+    }
+  }
+}

@@ -1,7 +1,5 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {CircularProgress} from '@material-ui/core';
-
-import {ethers} from 'ethers';
 
 // import PropTypes from 'prop-types';
 import {
@@ -21,17 +19,13 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Notification} from 'types/models/Notification';
-import {useDispatch} from 'react-redux';
-import {onRemoveNotification, updateNotification} from 'redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {onRemoveNotification} from 'redux/actions';
 import Delete from '@material-ui/icons/Delete';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import IntlMessages from '@crema/utility/IntlMessages';
-import {useChainInfo} from 'hooks/useChainInfo';
-import {isTransactionMined} from 'utils/blockchain';
-import {useWeb3} from 'hooks/useWeb3';
-import {useSnackbar} from 'notistack';
-import {useIntl} from 'react-intl';
-import {useNetworkProviderV2} from 'hooks/provider/useNetworkProvider';
+
+import {AppState} from 'redux/store';
+import {TransactionStatus} from 'redux/_transactions/types';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   avatar: {
@@ -54,16 +48,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const theme = useTheme();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {getProvider, chainId} = useWeb3();
-  const {getScannerUrl} = useChainInfo();
-  const networkProvider = useNetworkProviderV2(
-    undefined,
-    (item.metadata as TxNotificationMetadata).chainId,
+
+  const {transactions} = useSelector<AppState, AppState['transactions']>(
+    ({transactions}) => transactions,
   );
-
-  const {messages} = useIntl();
-
-  const {enqueueSnackbar} = useSnackbar();
 
   const handleClick = useCallback(() => {
     if (onClick) {
@@ -77,148 +65,26 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
   const isTransaction = item?.type === NotificationType.TRANSACTION;
 
-  const isTransactionPending =
-    (item?.metadata as TxNotificationMetadata)?.status === 'pending';
-  const isTransactionDone =
-    (item?.metadata as TxNotificationMetadata)?.status === 'done';
-  const isTransactionFailed =
-    (item?.metadata as TxNotificationMetadata)?.status === 'failed';
+  const transaction = useMemo(() => {
+    if (transactions !== undefined && isTransaction) {
+      const metadata: TxNotificationMetadata =
+        item.metadata as TxNotificationMetadata;
 
-  const handleViewTransaction = useCallback(
-    (chainId: number, hash: string) => {
-      window.open(`${getScannerUrl(chainId)}/tx/${hash}`, '_blank');
-    },
-    [getScannerUrl],
-  );
+      const txIndex = transactions.findIndex(
+        (tx) => tx.hash === metadata.transactionHash,
+      );
 
-  const [waitingConfirm, setWaitingConfirm] = useState(false);
-
-  useEffect(() => {
-    const metadata = item.metadata as TxNotificationMetadata;
-
-    const isTransaction = item?.type === NotificationType.TRANSACTION;
-    const isPending =
-      (item?.metadata as TxNotificationMetadata)?.status === 'pending';
-
-    if (!waitingConfirm) {
-      setWaitingConfirm(true);
-
-      if (isTransaction && isPending) {
-        let currProvider: any = getProvider();
-
-        if (metadata.chainId !== chainId) {
-          currProvider = networkProvider;
-        }
-
-        isTransactionMined(currProvider, metadata.transactionHash).then(
-          (result: ethers.providers.TransactionReceipt | undefined) => {
-            if (result !== undefined) {
-              if ((result.status || 0) === 1) {
-                enqueueSnackbar(
-                  messages['app.common.transactionConfirmed'] as string,
-                  {
-                    variant: 'success',
-                    autoHideDuration: 5000,
-                    action: (
-                      <Button
-                        onClick={() =>
-                          handleViewTransaction(
-                            metadata.chainId,
-                            metadata.transactionHash,
-                          )
-                        }>
-                        <IntlMessages id='app.common.view' />
-                      </Button>
-                    ),
-                  },
-                );
-
-                // window.Notification.requestPermission().then((value) => {
-                //   if (typeof window !== 'undefined') {
-                //     const notification = new window.Notification(
-                //       messages['app.common.transactionConfirmed'] as string,
-                //     );
-
-                //     notification.onclick = () =>
-                //       handleViewTransaction(
-                //         metadata.chainId,
-                //         metadata.transactionHash,
-                //       );
-                //   }
-                // });
-
-                dispatch(
-                  updateNotification(id, {
-                    ...item,
-                    metadata: {
-                      ...metadata,
-                      status: 'done',
-                    } as TxNotificationMetadata,
-                  }),
-                );
-                setWaitingConfirm(false);
-              } else if ((result.status || 0) === 0) {
-                enqueueSnackbar(
-                  messages['app.common.transactionFailed'] as string,
-                  {
-                    variant: 'error',
-                    autoHideDuration: 5000,
-                    action: (
-                      <Button
-                        onClick={() =>
-                          handleViewTransaction(
-                            metadata.chainId,
-                            metadata.transactionHash,
-                          )
-                        }>
-                        <IntlMessages id='app.common.view' />
-                      </Button>
-                    ),
-                  },
-                );
-
-                // window.Notification.requestPermission().then((value) => {
-                //   if (typeof window !== 'undefined') {
-                //     const notification = new window.Notification(
-                //       messages['app.common.transactionFailed'] as string,
-                //     );
-
-                //     notification.onclick = () =>
-                //       handleViewTransaction(
-                //         metadata.chainId,
-                //         metadata.transactionHash,
-                //       );
-                //   }
-                // });
-
-                dispatch(
-                  updateNotification(id, {
-                    ...item,
-                    metadata: {
-                      ...metadata,
-                      status: 'failed',
-                    } as TxNotificationMetadata,
-                  }),
-                );
-                setWaitingConfirm(false);
-              }
-            }
-          },
-        );
-      }
+      return transactions[txIndex];
     }
-  }, [
-    waitingConfirm,
-    id,
-    item,
-    dispatch,
-    enqueueSnackbar,
-    getProvider,
-    handleViewTransaction,
-    messages,
-    chainId,
-    networkProvider,
-  ]);
+
+    return undefined; // eslint-disable-next-line
+  }, [String(transactions), item, isTransaction]);
+
+  const isTransactionPending =
+    transaction?.status === TransactionStatus.Pending;
+
+  const isTransactionDone = transaction?.status === TransactionStatus.Confirmed;
+  const isTransactionFailed = transaction?.status === TransactionStatus.Failed;
 
   return (
     <ListItem id={item?.id?.toString() ?? id.toString()} onClick={handleClick}>
@@ -256,11 +122,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         )}
       </ListItemAvatar>
       <ListItemText
-        primary={<Typography variant='body1'>{item?.title ?? ''}</Typography>}
+        primary={<Typography variant='body1'>{item?.title || ''}</Typography>}
         secondary={
           <>
             <Box mb={2}>
-              <Typography variant='body2'>{item?.body ?? ''}</Typography>
+              <Typography variant='body2'>{item?.body || ''}</Typography>
             </Box>
             {item?.url && item?.urlCaption ? (
               <Box>
