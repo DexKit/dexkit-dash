@@ -11,6 +11,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {WALLET_ROUTE} from 'shared/constants/routes';
+import {useMobile} from 'hooks/useMobile';
 
 export interface PageHeaderProps {
   breadcrumbs?: {caption: string; uri?: string}[];
@@ -26,6 +27,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   useBackUriFromRouter,
 }) => {
   const history = useHistory();
+  const isMobile = useMobile();
   const renderBreadcrumbs = () => {
     return breadcrumbs?.map((b, index: number) =>
       b.uri ? (
@@ -51,7 +53,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <Box>
       <Grid container spacing={2}>
-        {breadcrumbs?.length && (
+        {breadcrumbs?.length && !isMobile && (
           <Grid item xs={12}>
             <Breadcrumbs>{renderBreadcrumbs()}</Breadcrumbs>
           </Grid>

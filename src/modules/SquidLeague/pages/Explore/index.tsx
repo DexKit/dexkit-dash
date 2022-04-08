@@ -1,7 +1,5 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Chip, Grid} from '@material-ui/core';
-import {CloseRounded} from '@material-ui/icons';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import React, {useState} from 'react';
 import {useIntl} from 'react-intl';
 import MainLayout from 'shared/components/layouts/main';
@@ -16,10 +14,6 @@ export const ExploreGames = () => {
 
   const [status, setStatus] = useState<GameStatus | undefined>();
 
-  const [showMyGames, setShowMyGames] = useState(false);
-
-  const defaultAccount = useDefaultAccount();
-
   return (
     <MainLayout>
       <Grid container spacing={4}>
@@ -27,7 +21,7 @@ export const ExploreGames = () => {
           <PageHeader
             useBackUriFromRouter={true}
             title={formatMessage({
-              id: 'nftLeague.games',
+              id: 'squidLeague.games',
               defaultMessage: 'SquidLeague Game',
             })}
             breadcrumbs={[
@@ -128,7 +122,8 @@ export const ExploreGames = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item>
+                <Grid item></Grid>
+                {/*  <Grid item>
                   <Chip
                     size='small'
                     icon={showMyGames ? <CloseRounded /> : undefined}
@@ -142,14 +137,13 @@ export const ExploreGames = () => {
                       />
                     }
                   />
-                </Grid>
+                </Grid>*/}
               </Grid>
             </Grid>
             <Grid item xs={12}>
               <GamesTable
                 filters={{
                   status,
-                  account: showMyGames ? defaultAccount : undefined,
                 }}
               />
             </Grid>
