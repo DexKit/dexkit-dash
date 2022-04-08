@@ -229,8 +229,8 @@ export const LoginWallet = (props: Props) => {
           </Grid>
         </Hidden> */}
         <Grid item xs={12} sm={4}>
-          <Box px={{xs: 4, sm: 8}} py={4}>
-            <Grid container spacing={6}>
+          <Box p={{xs: 4, sm: 20}} my={{xs: 12, sm: 10}}>
+            <Grid container spacing={8}>
               {defaultAccount || account ? (
                 <Grid item xs={12}>
                   <Grid
