@@ -1,9 +1,9 @@
 // Mumbai Price Feeds
 
-import {BigNumber} from '@ethersproject/bignumber';
-import {ethers} from 'ethers';
-import {ChainId} from 'types/blockchain';
-import {BSCPriceFeeds} from './PriceFeeds/bsc';
+import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
+import { ChainId } from 'types/blockchain';
+import { BSCPriceFeeds } from './PriceFeeds/bsc';
 
 export const DEXKIT_MULTIPLIER_HOLDING = BigNumber.from(50).mul(
   BigNumber.from(10).pow(18),
@@ -649,7 +649,7 @@ export const PriceFeeds = {
   [ChainId.Binance]: BSCPriceFeeds,
 };
 
-export const CHAMPIONS: {[key: number]: string} = {
+export const CHAMPIONS: { [key: number]: string } = {
   // We are holding for now the minting to improve secondary market
   // [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
@@ -657,54 +657,54 @@ export const CHAMPIONS: {[key: number]: string} = {
   [ChainId.Mumbai]: '0x05b93425E4b44c9042Ed97b7A332aB1575EbD25d',
 };
 
-export const SALE_EARLY_FIRST_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_FIRST_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1637150592,
   [ChainId.Matic]: 1637211600,
   [ChainId.Binance]: 0,
 };
 
-export const FIRST_ROUND_DATE: {[key: number]: number} = {
+export const FIRST_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1637236211,
   [ChainId.Matic]: 1637254800,
   [ChainId.Binance]: 0,
 };
 
-export const SALE_EARLY_SECOND_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_SECOND_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638421200,
   [ChainId.Binance]: 0,
 };
 
-export const SECOND_ROUND_DATE: {[key: number]: number} = {
+export const SECOND_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638422100,
   [ChainId.Binance]: 0,
 };
 
-export const SALE_EARLY_THIRD_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_THIRD_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639631700,
   [ChainId.Binance]: 0,
 };
 
-export const THIRD_ROUND_DATE: {[key: number]: number} = {
+export const THIRD_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639674000,
 };
 
-export const EARLY_ACCESS_KIT_AMOUNT: {[key: number]: number} = {
+export const EARLY_ACCESS_KIT_AMOUNT: { [key: number]: number } = {
   [ChainId.Matic]: 50,
   [ChainId.Mumbai]: 50,
   [ChainId.Binance]: 0,
 };
 
-export const EARLY_ACCESS_BITT_AMOUNT: {[key: number]: number} = {
+export const EARLY_ACCESS_BITT_AMOUNT: { [key: number]: number } = {
   [ChainId.Matic]: 200,
   [ChainId.Mumbai]: 200,
   [ChainId.Binance]: 0,
 };
 
-export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
+export const EVENT_HOLDING_AMOUNT: { [key: number]: BigNumber } = {
   [ChainId.Matic]: ethers.utils.parseUnits('115', 'ether'),
   [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
   [ChainId.Binance]: ethers.utils.parseUnits('0.01', 'ether'),
@@ -733,7 +733,7 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 export const GAME_METADATA_API =
   process.env.NODE_ENV === 'development'
     ? //'http://localhost:4001'
-      'https://coinleague-app-api-yxwk6.ondigitalocean.app'
+    'https://coinleague-app-api-yxwk6.ondigitalocean.app'
     : process.env.REACT_APP_PROFILE_API;
 
 export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;
@@ -741,15 +741,21 @@ export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;
 export enum Months {
   February = 'February',
   March = 'March',
+  April = 'April'
   // March = 3,
 }
 
 export const BLOCK_TIMESTAMP_COMPETION: {
-  [key: string]: {[key: number]: number};
+  [key: string]: { [key: number]: number };
 } = {
   [Months.March]: {
     [ChainId.Mumbai]: 0,
     [ChainId.Matic]: 25464624,
     [ChainId.Binance]: 0,
   },
+  [Months.April]: {
+    [ChainId.Mumbai]: 0,
+    [ChainId.Matic]: 26596644,
+    [ChainId.Binance]: 0,
+  }
 };
