@@ -6,7 +6,7 @@ import {isSupportedBlockchain} from 'modules/SquidLeague/utils/blockchain';
 import React from 'react';
 import {Empty} from 'shared/components/Empty';
 import MainLayout from 'shared/components/layouts/main';
-import NetworkSupportBackdrop from 'shared/components/NetworkSupportBackdrop';
+import NetworkSupportCard from 'shared/components/NetworkSupportCard';
 import GameLayout from '../Game/index.layout';
 
 const GamesList = () => {
@@ -15,9 +15,9 @@ const GamesList = () => {
 
   return (
     <>
-      <NetworkSupportBackdrop
-        supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS}
-      />
+      {!isSupportedBlockchain(chainId) && (
+        <NetworkSupportCard supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS} />
+      )}
       {lastGameIdQuery.isError && (
         <MainLayout>
           <Paper>

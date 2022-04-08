@@ -55,6 +55,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'star',
           url: `/favorite-coins`,
         },
+        /* Removing for now NFT wallet  
         {
           id: 'nfts',
           title: 'NFT Wallet',
@@ -63,7 +64,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'slider.horizontal',
           url: '/nfts/wallet',
-        },
+        },*/
         {
           id: 'wizard',
           title: 'Wizard',

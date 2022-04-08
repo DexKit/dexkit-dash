@@ -11,12 +11,11 @@ import {
   Grid,
   Typography,
   Chip,
-  Avatar,
 } from '@material-ui/core';
 
 import humanizeDuration from 'humanize-duration';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -44,8 +43,6 @@ export const NFTLeagueGamesTableRow: React.FC<Props> = ({game}) => {
   const handleToggle = useCallback(() => {
     setCollapse((value) => !value);
   }, []);
-
-  const history = useHistory();
 
   return (
     <>

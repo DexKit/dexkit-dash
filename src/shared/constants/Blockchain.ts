@@ -1,7 +1,7 @@
-import {BigNumber} from '@0x/utils';
-import {Web3Wrapper} from '@0x/web3-wrapper';
-import {ChainId} from 'types/blockchain';
-import {EthereumNetwork} from './AppEnums';
+import { BigNumber } from '@0x/utils';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { ChainId } from 'types/blockchain';
+import { EthereumNetwork } from './AppEnums';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -136,7 +136,7 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
     case ChainId.Rinkeby:
       return 'Rinkeby';
     case ChainId.Matic:
-      return 'MATIC';
+      return 'Polygon';
     case ChainId.Mumbai:
       return 'Mumbai';
     case ChainId.Kovan:
@@ -154,7 +154,7 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
 
 export const GET_CHAIN_ID_NAME_V2 = (
   chainId: number,
-  networks?: {chainId: number; name: string}[],
+  networks?: { chainId: number; name: string }[],
 ): string => {
   if (networks) {
     const index = networks.findIndex((n) => n.chainId === chainId);
@@ -193,7 +193,7 @@ export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
 
 export const GET_CHAIN_NATIVE_COIN_V2 = (
   chainId: ChainId | undefined,
-  networks?: {chainId: number; symbol: string}[],
+  networks?: { chainId: number; symbol: string }[],
 ) => {
   const symbol = GET_CHAIN_NATIVE_COIN(chainId);
 

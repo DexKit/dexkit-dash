@@ -42,7 +42,8 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {ChainId} from 'types/blockchain';
 import {useChainInfo} from 'hooks/useChainInfo';
-import {NetworkSupportBackdrop} from 'shared/components/NetworkSupportBackdrop';
+import {NetworkSupportCard} from 'shared/components/NetworkSupportCard';
+import {isSupportedBlockchain} from '../utils/blockchain';
 
 const BULL = 0;
 const BEAR = 1;
@@ -250,7 +251,6 @@ export const NFTLeagueCreateGamePage = () => {
 
   return (
     <>
-      <NetworkSupportBackdrop supportedChains={NFT_LEAGUE_SUPPORTED_NETWORKS} />
       <CreateGameDialog
         dialogProps={{
           open: createGameToggler.show,
@@ -279,7 +279,7 @@ export const NFTLeagueCreateGamePage = () => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <PageHeader
-              backUri='/nft-league'
+              useBackUriFromRouter={true}
               title={messages['nftLeague.createGame'] as string}
               breadcrumbs={[
                 {caption: 'Wallet', uri: '/'},
@@ -287,6 +287,14 @@ export const NFTLeagueCreateGamePage = () => {
               ]}
             />
           </Grid>
+          <Grid item xs={12}>
+            {!isSupportedBlockchain(chainId) && (
+              <NetworkSupportCard
+                supportedChains={NFT_LEAGUE_SUPPORTED_NETWORKS}
+              />
+            )}
+          </Grid>
+
           {errorMessage && (
             <Grid item xs={12}>
               <Alert severity='error' onClose={handleClearError}>

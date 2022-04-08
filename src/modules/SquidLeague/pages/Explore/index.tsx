@@ -25,7 +25,7 @@ export const ExploreGames = () => {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <PageHeader
-            backUri='/'
+            useBackUriFromRouter={true}
             title={formatMessage({
               id: 'nftLeague.games',
               defaultMessage: 'SquidLeague Game',

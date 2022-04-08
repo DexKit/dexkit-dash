@@ -22,7 +22,7 @@ export const MyGames = () => {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <PageHeader
-            backUri='/'
+            useBackUriFromRouter={true}
             title={formatMessage({
               id: 'nftLeague.myGames',
               defaultMessage: 'My Games',

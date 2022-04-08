@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Box,
   Breadcrumbs,
@@ -9,19 +9,23 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {WALLET_ROUTE} from 'shared/constants/routes';
 
 export interface PageHeaderProps {
   breadcrumbs?: {caption: string; uri?: string}[];
   title?: string;
   backUri?: string;
+  useBackUriFromRouter?: boolean;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   breadcrumbs,
   backUri,
+  useBackUriFromRouter,
 }) => {
+  const history = useHistory();
   const renderBreadcrumbs = () => {
     return breadcrumbs?.map((b, index: number) =>
       b.uri ? (
@@ -35,6 +39,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       ),
     );
   };
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+  }, [history]);
 
   return (
     <Box>
@@ -51,6 +63,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({
                 <ArrowBackIcon />
               </IconButton>
             )}
+            {useBackUriFromRouter && (
+              <IconButton onClick={handleBack} size='small'>
+                <ArrowBackIcon />
+              </IconButton>
+            )}
+
             {title && (
               <Grid item>
                 <Typography variant='h5'>{title}</Typography>

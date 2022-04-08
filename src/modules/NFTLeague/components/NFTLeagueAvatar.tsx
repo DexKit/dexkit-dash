@@ -1,4 +1,4 @@
-import {Avatar, AvatarProps, ButtonBase, makeStyles} from '@material-ui/core';
+import {Avatar, AvatarProps, makeStyles} from '@material-ui/core';
 import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
 import React, {memo} from 'react';
 import {useHistory} from 'react-router';
