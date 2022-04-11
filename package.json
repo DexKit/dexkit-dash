@@ -1,6 +1,6 @@
 {
   "name": "dexkit-dash",
-  "version": "0.0.6.19.2",
+  "version": "0.0.6.19.3",
   "private": true,
   "jest": {
     "testEnvironment": "node"
