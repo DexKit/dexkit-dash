@@ -305,12 +305,14 @@ const GamesList = () => {
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            {/*<img
+            <Box display={'flex'} justifyContent={'center'}>
+              {/*<img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'banner'}
         />*/}
-            <AAdsCoinleagueBanner type={2} />
+              <AAdsCoinleagueBanner type={2} />
+            </Box>
           </Grid>
         </Hidden>
         <Grid item xs={12} xl={6} sm={6}>
@@ -360,7 +362,9 @@ const GamesList = () => {
               style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
           />*/}
+          <Box display={'flex'} justifyContent={'center'}>
             <AAdsCoinleagueBanner />
+            </Box>
           </Grid>
         </Hidden>
 

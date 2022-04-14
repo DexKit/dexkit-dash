@@ -536,7 +536,9 @@ function GameEnter(props: Props) {
             style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
       />*/}
-          <AAdsCoinleagueBanner type={2} />
+          <Box display={'flex'} justifyContent={'center'}>
+            <AAdsCoinleagueBanner type={2} />
+          </Box>
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>
@@ -591,7 +593,9 @@ function GameEnter(props: Props) {
             style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
           />*/}
-          <AAdsCoinleagueBanner type={1} />
+          <Box display={'flex'} justifyContent={'center'}>
+            <AAdsCoinleagueBanner type={1} />
+          </Box>
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
