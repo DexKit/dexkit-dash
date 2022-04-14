@@ -39,7 +39,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -61,6 +61,7 @@ import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
+import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -304,11 +305,12 @@ const GamesList = () => {
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img
+            {/*<img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'banner'}
-            />
+        />*/}
+            <AAdsCoinleagueBanner type={2} />
           </Grid>
         </Hidden>
         <Grid item xs={12} xl={6} sm={6}>
@@ -353,11 +355,12 @@ const GamesList = () => {
         </Grid>
         <Hidden xsDown={true}>
           <Grid item xs={12} sm={8}>
-            <img
+            {/*<img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
-            />
+          />*/}
+            <AAdsCoinleagueBanner />
           </Grid>
         </Hidden>
 

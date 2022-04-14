@@ -61,7 +61,7 @@ import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -98,6 +98,7 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
 
+import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -530,11 +531,12 @@ function GameEnter(props: Props) {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img
+          {/*<img
             src={CoinsLeagueBanner}
             style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
-          />
+      />*/}
+          <AAdsCoinleagueBanner type={2} />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>
@@ -584,11 +586,12 @@ function GameEnter(props: Props) {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item sm={5} xl={5}>
-          <img
+          {/* <img
             src={CoinsLeagueBanner}
             style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
-          />
+          />*/}
+          <AAdsCoinleagueBanner type={1} />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
