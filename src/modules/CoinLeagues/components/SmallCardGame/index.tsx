@@ -94,8 +94,6 @@ function SmallCardGame({
 
   const theme = useTheme();
 
-  console.log('small', game?.title);
-
   return (
     <Paper
       variant={game?.title ? 'outlined' : 'elevation'}
