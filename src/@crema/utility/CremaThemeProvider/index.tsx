@@ -54,6 +54,49 @@ const theme = createTheme({
   },
 });
 
+const theme_light = createTheme({
+  spacing: 4,
+  props: {
+    MuiIconButton: {
+      color: 'inherit',
+    },
+    MuiIcon: {
+      color: 'inherit',
+    },
+  },
+  typography: {
+    fontFamily: ['Sora', 'sans-serif'].join(','),
+  },
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#FFDEB3',
+    },
+    success: {
+      main: '#0E8424',
+    },
+    error: {
+      main: '#CF332C',
+    },
+    warning: {
+      main: '#BB800A',
+    },
+    info: {
+      main: '#388BFD',
+    },
+    text: {
+      primary: '#484F58',
+    },
+    background: {
+      default: '#F7F7F9',
+      paper: '#E4E7EB',
+    },
+  },
+  shape: {
+    borderRadius: 4,
+  },
+});
+
 const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   const {
     isRTL,
@@ -62,6 +105,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
     updateThemeStyle,
     setRTL,
     updateTheme,
+    themeMode,
   } = useContext<AppContextPropsType>(AppContext);
   const isBelowMd = useBreakPointDown('md');
 
@@ -144,7 +188,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   }, [params.theme_style, theme, isBelowMd, updateTheme, updateThemeStyle]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themeMode === ThemeMode.LIGHT ? theme_light : theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         {props.children}
       </MuiPickersUtilsProvider>
