@@ -38,17 +38,10 @@ import {withStyles} from '@material-ui/styles';
 import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    color: theme.palette.text.primary,
-    borderRadius: 6,
-    background: theme.palette.background.paper,
-    padding: theme.spacing(2),
-  },
-  containerPrize: {
-    borderRadius: 6,
-    background: theme.palette.background.paper,
-
-    padding: theme.spacing(2),
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   timer: {
     background: theme.palette.background.paper,
@@ -274,7 +267,7 @@ const CardGame: React.FC<Props> = ({
                           defaultMessage='Game Level'
                         />
                       }>
-                      <ChartSquareIcon />
+                      <ChartSquareIcon className={classes.icon} />
                     </Tooltip>
                   }
                   label={loading ? <Skeleton /> : gameLevel}
@@ -294,9 +287,9 @@ const CardGame: React.FC<Props> = ({
                       {loading ? (
                         <Skeleton variant='circle' width='1rem' height='1rem' />
                       ) : game?.type === 'Bull' ? (
-                        <SendSquareIcon />
+                        <SendSquareIcon className={classes.icon} />
                       ) : (
-                        <ReceiveSquareIcon />
+                        <ReceiveSquareIcon className={classes.icon} />
                       )}
                     </Tooltip>
                   }
@@ -343,7 +336,7 @@ const CardGame: React.FC<Props> = ({
                           defaultMessage='Number of Coins'
                         />
                       }>
-                      <CoinIcon />
+                      <CoinIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'
@@ -360,7 +353,7 @@ const CardGame: React.FC<Props> = ({
                           defaultMessage='Duration'
                         />
                       }>
-                      <TimerIcon />
+                      <TimerIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'
@@ -377,7 +370,7 @@ const CardGame: React.FC<Props> = ({
                           defaultMessage='Players'
                         />
                       }>
-                      <ProfileTwoUserIcon />
+                      <ProfileTwoUserIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'

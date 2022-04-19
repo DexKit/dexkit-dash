@@ -70,7 +70,7 @@ const theme_light = createTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#FFDEB3',
+      main: '#DB6D28',
     },
     success: {
       main: '#0E8424',
