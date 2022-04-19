@@ -113,6 +113,8 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   const types: TypesType = {};
   const [params] = useUrlSearchParams(initailValue, types);
 
+  console.log(themeMode);
+
   useEffect(() => {
     const updateQuerySetting = () => {
       if (params.theme_mode) {

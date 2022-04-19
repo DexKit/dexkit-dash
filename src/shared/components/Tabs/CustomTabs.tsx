@@ -10,7 +10,7 @@ export const CustomTabs = withStyles((theme) => ({
 
 export const CustomTab = withStyles((theme) => ({
   root: {
-    color: theme.palette.common.white,
+    color: theme.palette.text.primary,
     borderRadius: theme.shape.borderRadius,
     flexGrow: 1,
     textTransform: 'capitalize',
@@ -20,10 +20,10 @@ export const CustomTab = withStyles((theme) => ({
     },
   },
   selected: {
-    color: theme.palette.common.white,
+    color: theme.palette.text.primary,
     background: theme.palette.action.hover,
   },
   textColorPrimary: {
-    color: theme.palette.common.white,
+    color: theme.palette.text.primary,
   },
 }))(Tab);

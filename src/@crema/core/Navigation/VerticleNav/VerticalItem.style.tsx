@@ -6,6 +6,10 @@ import AppContextPropsType from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
+  console.log(themeMode);
+  console.log(theme.palette.primary.main);
+
   return {
     item: {},
     itemIcon: {
@@ -56,17 +60,17 @@ const useStyles = makeStyles((theme) => {
         '& .nav-item-text': {
           fontFamily: Fonts.MEDIUM,
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
 
         '& .nav-item-icon': {
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
 
         '& .nav-item-icon-arrow': {
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
       },
       '& .nav-item-icon': {
@@ -104,6 +108,7 @@ const useStyles = makeStyles((theme) => {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       fontWeight: 400,
+      color: theme.palette.text.primary,
     },
     hiddenOverflow: {
       overflow: 'hidden',
