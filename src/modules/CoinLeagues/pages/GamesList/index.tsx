@@ -22,12 +22,8 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
-import {
-  COINLEAGUENFT_ROUTE,
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {Search} from '@material-ui/icons';
@@ -35,7 +31,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -70,7 +66,7 @@ enum Tabs {
 const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
-  const {pathname} = useLocation();
+  // const {pathname} = useLocation();
   const {account} = useWeb3();
   const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
@@ -78,13 +74,13 @@ const GamesList = () => {
 
   useDiscord();
 
-  const isNFTGame = useMemo(() => {
-    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [pathname]);
+  // const isNFTGame = useMemo(() => {
+  //   if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }, [pathname]);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
