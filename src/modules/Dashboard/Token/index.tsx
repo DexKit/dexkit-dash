@@ -324,9 +324,11 @@ const TokenPage = () => {
                     display='flex'
                     flexDirection='column'
                     alignItems='center'>
-                    <RoundedIconButton onClick={toggleShare}>
-                      <Share className={classes.icon} />
-                    </RoundedIconButton>
+                    <Box mb={1}>
+                      <RoundedIconButton onClick={toggleShare}>
+                        <Share className={classes.icon} />
+                      </RoundedIconButton>
+                    </Box>
                     <Typography variant='caption'>
                       <IntlMessages id='app.dashboard.share' />
                     </Typography>

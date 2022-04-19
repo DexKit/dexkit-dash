@@ -22,7 +22,6 @@ import {
 } from 'react-router-dom';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ethers, BigNumber} from 'ethers';
-import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
 import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
 import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
@@ -85,6 +84,7 @@ import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 import GameActions from 'modules/CoinLeagues/components/v2/GameActions';
 import {useGameJoin} from 'modules/CoinLeagues/hooks/v2/useGameJoin';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import {useMobile} from 'hooks/useMobile';
 
 //import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 
@@ -415,6 +415,8 @@ function GameEnter(props: Props) {
       );
     }
   }, [userProfiles, account]);
+
+  const isMobile = useMobile();
 
   return (
     <>
@@ -817,7 +819,7 @@ function GameEnter(props: Props) {
             IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
               <Grid item xs={12}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={isMobile ? 12 : true}>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Button
@@ -841,23 +843,22 @@ function GameEnter(props: Props) {
                         </List>
                       </Grid>
                     </Grid>
-                    {isNFTGame && (
+                  </Grid>
+                  {isNFTGame && (
+                    <Grid item xs={isMobile ? 12 : true}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                          <Typography variant='h6' style={{margin: 5}}>
-                            Choose Champion {champion === undefined ? '0' : '1'}
-                            / 1
-                          </Typography>
-                        </Grid>
                         <Grid item xs={12}>
                           <Button
                             fullWidth
                             disabled={champion !== undefined}
                             onClick={onOpenSelectChampionDialog}
-                            startIcon={<CryptocurrencyIcon />}
                             endIcon={<ExpandMoreIcon />}
                             variant='outlined'>
-                            Choose your Champion
+                            <IntlMessages
+                              id='coinLeague.chooseYourChampion'
+                              defaultMessage='Choose your Champion'
+                            />{' '}
+                            {champion === undefined ? '0' : '1'} / 1
                           </Button>
                         </Grid>
                         <Grid item xs={12}>
@@ -878,11 +879,11 @@ function GameEnter(props: Props) {
                           </Grid>
                         )}
                       </Grid>
-                    )}
-                  </Grid>
+                    </Grid>
+                  )}
 
                   {game?.num_coins.toNumber() !== 1 && (
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={isMobile ? 12 : true}>
                       <Grid container spacing={2}>
                         <Grid item xs={12}>
                           <Button

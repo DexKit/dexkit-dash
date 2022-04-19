@@ -22,12 +22,8 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
-import {
-  COINLEAGUENFT_ROUTE,
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {Search} from '@material-ui/icons';
@@ -35,7 +31,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -70,7 +66,7 @@ enum Tabs {
 const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
-  const {pathname} = useLocation();
+  // const {pathname} = useLocation();
   const {account} = useWeb3();
   const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
@@ -78,13 +74,13 @@ const GamesList = () => {
 
   useDiscord();
 
-  const isNFTGame = useMemo(() => {
-    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [pathname]);
+  // const isNFTGame = useMemo(() => {
+  //   if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }, [pathname]);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -325,58 +321,67 @@ const GamesList = () => {
             </Box>
           </Grid>
         </Hidden>
-        <Grid item xs={12} xl={6} sm={6}>
-          <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5'>
-              Coin League {isNFTGame && '- NFT Room'}
-            </Typography>
-            <Box p={2}>
+        <Grid item xs={12}>
+          <Grid
+            container
+            alignItems='center'
+            alignContent='center'
+            spacing={4}
+            justifyContent='space-between'>
+            <Grid item>
               <ChainSelect />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} xl={6}>
-          <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-            <Box pr={2}>
-              <SwapButton />
-            </Box>
-            <Box pr={2}>
-              <ShareButton shareText={`Coin league Games`} />
-            </Box>
-            <Box pr={2}>
-              <BuyCryptoButton
-                btnMsg={`Buy ${coinSymbol}`}
-                defaultCurrency={coinSymbol}
-              />
-            </Box>
-            <Box pr={2}>
-              <MaticBridgeButton />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          {account ? (
-            <ActiveChainBalance />
-          ) : (
-            <Button
-              variant={'contained'}
-              onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-              <IntlMessages id='common.connectWallet' />:{' '}
-            </Button>
-          )}
-        </Grid>
-        <Hidden xsDown={true}>
-          <Grid item xs={12} sm={8}>
-            {/*<img
-              src={CoinsLeagueBanner}
-              style={{borderRadius: '12px'}}
-              alt={'Coinleague Banner'}
-          />*/}
-            <Box display={'flex'} justifyContent={'center'}>
-              <AAdsCoinleagueBanner />
-            </Box>
+            </Grid>
+            <Grid item>
+              <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+                <Box pr={2}>
+                  <SwapButton />
+                </Box>
+                <Box pr={2}>
+                  <ShareButton shareText={`Coin league Games`} />
+                </Box>
+                <Box pr={2}>
+                  <BuyCryptoButton
+                    btnMsg={`Buy ${coinSymbol}`}
+                    defaultCurrency={coinSymbol}
+                  />
+                </Box>
+                <Box pr={2}>
+                  <MaticBridgeButton />
+                </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Hidden>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justifyContent='space-between'
+            spacing={4}
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              {account ? (
+                <ActiveChainBalance />
+              ) : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
+                  <IntlMessages id='common.connectWallet' />:
+                </Button>
+              )}
+            </Grid>
+            <Hidden xsDown={true}>
+              <Grid item xs={8}>
+                <img
+                  src={CoinsLeagueBanner}
+                  style={{borderRadius: '12px'}}
+                  alt={'Coinleague Banner'}
+                />
+              </Grid>
+            </Hidden>
+          </Grid>
+        </Grid>
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>
@@ -463,7 +468,15 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <CreateGameButton onClick={handleShowCreateGameModal} />
+          <CreateGameButton
+            onClick={handleShowCreateGameModal}
+            subtitle={
+              <IntlMessages
+                id='coinLeague.coinLeague'
+                defaultMessage='Coin League'
+              />
+            }
+          />
         </Grid>
 
         <Grid item xs={12}>

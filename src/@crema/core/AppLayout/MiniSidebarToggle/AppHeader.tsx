@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
 import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
@@ -26,7 +26,8 @@ import {
   useMediaQuery,
   Container,
   ButtonBase,
-  IconButton,
+  Badge,
+  Paper,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
@@ -49,6 +50,7 @@ import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
 import {useChainInfo} from 'hooks/useChainInfo';
+import {AppState} from 'redux/store';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -238,6 +240,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   const {chainName} = useChainInfo();
 
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
+
   return (
     <>
       {chainId ? (
@@ -270,7 +276,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  {isMobile ? <DexkitLogoIconImage /> : <DexkitLogoImage />}
+                  <DexkitLogoIconImage />
                 </Grid>
                 <Grid item>
                   <Grid
@@ -278,38 +284,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {isMetamask() || isMagicProvider() ? (
-                      <Grid item>
-                        {chainId !== undefined ? (
-                          <Grid item>
-                            <ButtonBase
-                              onClick={handleOpenSwitchNetwork}
-                              className={classes.switchNetworkButton}>
-                              <Box className={classes.badgeRoot}>
-                                {chainName}
-                                <IconButton size='small'>
-                                  <ExpandMoreIcon />
-                                </IconButton>
-                              </Box>
-                            </ButtonBase>
-                          </Grid>
-                        ) : null}
-                      </Grid>
-                    ) : (
-                      chainId && (
-                        <Grid item>
-                          <Box
-                            className={classes.badgeRoot}
-                            display={'flex'}
-                            alignItems={'center'}>
-                            {chainName}
-                          </Box>
-                        </Grid>
-                      )
-                    )}
-                    <Grid item>
-                      <Notifications />
-                    </Grid>
                     <Grid item>
                       <ButtonBase
                         className={classes.avatarButton}
@@ -328,7 +302,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     </Grid>
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
-                        <MenuIcon />
+                        <Badge
+                          variant='dot'
+                          color='primary'
+                          badgeContent={
+                            notifications.filter(
+                              (notification) =>
+                                notification?.check === undefined,
+                            ).length
+                          }>
+                          <MenuIcon />
+                        </Badge>
                       </AppBarButton>
                     </Grid>
                   </Grid>
@@ -393,7 +377,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
-                      <WalletInfo />
+                      <Paper>
+                        <WalletInfo />
+                      </Paper>
                     </Grid>
                   ) : null}
                   <Grid item>

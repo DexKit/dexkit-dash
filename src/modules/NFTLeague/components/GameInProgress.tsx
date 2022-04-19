@@ -49,6 +49,9 @@ import {ChainId} from 'types/blockchain';
 import Countdown from 'shared/components/Countdown';
 
 import humanizeDuration from 'humanize-duration';
+import ShareGameDialog from './ShareGameDialog';
+import {useMobile} from 'hooks/useMobile';
+import {Share} from '@material-ui/icons';
 
 interface Props {
   id: string;
@@ -323,8 +326,33 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
     return false;
   }, [data]);
 
+  const isMobile = useMobile();
+
+  const shareDialogToggler = useToggler();
+
+  const handleCloseShareDialog = useCallback(() => {
+    shareDialogToggler.set(false);
+  }, [shareDialogToggler]);
+
+  const handleShareGame = useCallback(
+    (id) => {
+      shareDialogToggler.set(true);
+    },
+    [shareDialogToggler],
+  );
+
   return (
     <>
+      <ShareGameDialog
+        dialogProps={{
+          open: shareDialogToggler.show,
+          onClose: handleCloseShareDialog,
+          fullWidth: true,
+          maxWidth: 'sm',
+          fullScreen: isMobile,
+        }}
+        id={id}
+      />
       {selectTokenToggler.show && (
         <SelectChampionDialog
           dialogProps={{
@@ -479,9 +507,18 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                             color='textPrimary'
                             variant='subtitle1'>
                             {data?.start_timestamp !== undefined ? (
-                              <Countdown
-                                startTimestamp={data?.start_timestamp.toNumber()}
-                              />
+                              moment(
+                                data?.start_timestamp?.toNumber() * 1000,
+                              ).isBefore(moment()) ? (
+                                <IntlMessages
+                                  id='nftLeague.ready'
+                                  defaultMessage='Ready'
+                                />
+                              ) : (
+                                <Countdown
+                                  startTimestamp={data?.start_timestamp.toNumber()}
+                                />
+                              )
                             ) : (
                               <Skeleton />
                             )}
@@ -510,10 +547,20 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                             variant='subtitle1'>
                             {data !== undefined ? (
                               data?.started ? (
-                                <Countdown
-                                  startTimestamp={data?.start_timestamp.toNumber()}
-                                  duration={data?.duration.toNumber()}
-                                />
+                                moment(
+                                  data?.start_timestamp?.toNumber() * 1000 +
+                                    data?.duration?.toNumber() * 1000,
+                                ).isAfter(moment()) ? (
+                                  <Countdown
+                                    startTimestamp={data?.start_timestamp.toNumber()}
+                                    duration={data?.duration.toNumber()}
+                                  />
+                                ) : (
+                                  <IntlMessages
+                                    id='nftLeague.ended'
+                                    defaultMessage='Ended'
+                                  />
+                                )
                               ) : (
                                 <>
                                   {humanizeDuration(
@@ -553,7 +600,19 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                     </Grid>
                   </Hidden>
                   <Grid item>
-                    <Grid container spacing={4}>
+                    <Grid container spacing={2}>
+                      <Grid item>
+                        <Button
+                          startIcon={<Share />}
+                          variant='outlined'
+                          size='large'
+                          onClick={handleShareGame}>
+                          <IntlMessages
+                            id='nftLeague.share'
+                            defaultMessage='Share'
+                          />
+                        </Button>
+                      </Grid>
                       <Grid item>
                         {canFinhishGame && (
                           <Button
@@ -581,6 +640,7 @@ export const GameInProgress: React.FC<Props> = ({id}) => {
                           )}
                       </Grid>
                       {data?.player2 === ethers.constants.AddressZero &&
+                        data?.player1 === account &&
                         data?.aborted === false && (
                           <Grid item>
                             <Button

@@ -1,53 +1,40 @@
-import React, {memo, useCallback, useMemo} from 'react';
-import {CircularProgress} from '@material-ui/core';
-
-// import PropTypes from 'prop-types';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {
-  ListItemAvatar,
-  Avatar,
+  Divider,
+  CircularProgress,
+  Grid,
   IconButton,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  makeStyles,
   Box,
   Typography,
-  Button,
   useTheme,
+  Link,
 } from '@material-ui/core';
+
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Notification} from 'types/models/Notification';
-import {useDispatch, useSelector} from 'react-redux';
-import {onRemoveNotification} from 'redux/actions';
-import Delete from '@material-ui/icons/Delete';
+import {useSelector} from 'react-redux';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import {AppState} from 'redux/store';
 import {TransactionStatus} from 'redux/_transactions/types';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  avatar: {
-    width: 24,
-    height: 24,
-  },
-}));
-
 interface NotificationItemProps {
   item: Notification;
   onClick?: (item: Notification) => void;
+  onMenu?: (index: number, anchor: HTMLElement | null) => void;
   id: number;
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
   item,
   onClick,
+  onMenu,
   id,
 }) => {
   const theme = useTheme();
-  const classes = useStyles();
-  const dispatch = useDispatch();
 
   const {transactions} = useSelector<AppState, AppState['transactions']>(
     ({transactions}) => transactions,
@@ -58,10 +45,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       onClick(item);
     }
   }, [item, onClick]);
-
-  const handleRemove = useCallback(() => {
-    dispatch(onRemoveNotification(id));
-  }, [dispatch, id]);
 
   const isTransaction = item?.type === NotificationType.TRANSACTION;
 
@@ -86,69 +69,72 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const isTransactionDone = transaction?.status === TransactionStatus.Confirmed;
   const isTransactionFailed = transaction?.status === TransactionStatus.Failed;
 
+  const anchor = useRef<HTMLButtonElement | null>(null);
+
   return (
-    <ListItem id={item?.id?.toString() ?? id.toString()} onClick={handleClick}>
-      <ListItemAvatar>
-        {isTransaction ? (
-          <>
-            {isTransactionPending ? (
-              <CircularProgress />
-            ) : isTransactionDone ? (
-              <CheckCircleOutlineIcon
-                style={{
-                  color: theme.palette.success.main,
-                  fontSize: theme.spacing(10),
-                }}
-                fontSize='inherit'
-              />
-            ) : isTransactionFailed ? (
-              <HighlightOffIcon
-                style={{
-                  color: theme.palette.error.main,
-                  fontSize: theme.spacing(10),
-                }}
-                fontSize='inherit'
-              />
-            ) : null}
-          </>
-        ) : (
-          <>
-            {item?.image ? (
-              <Avatar className={classes.avatar} src={item.image} />
-            ) : (
-              <Avatar className={classes.avatar} />
-            )}
-          </>
-        )}
-      </ListItemAvatar>
-      <ListItemText
-        primary={<Typography variant='body1'>{item?.title || ''}</Typography>}
-        secondary={
-          <>
-            <Box mb={2}>
-              <Typography variant='body2'>{item?.body || ''}</Typography>
-            </Box>
-            {item?.url && item?.urlCaption ? (
-              <Box>
-                <Button
-                  size='small'
-                  color='primary'
-                  target='_blank'
-                  href={item.url}>
-                  {item.urlCaption}
-                </Button>
+    <Box onClick={handleClick}>
+      <Box p={4}>
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <Box display='flex' alignContent='center' alignItems='center'>
+              <Box
+                display='flex'
+                alignContent='center'
+                alignItems='center'
+                mr={1}>
+                {isTransaction && (
+                  <>
+                    {isTransactionPending ? (
+                      <CircularProgress size='1rem' />
+                    ) : isTransactionDone ? (
+                      <CheckCircleOutlineIcon
+                        style={{
+                          color: theme.palette.success.main,
+                          fontSize: '1rem',
+                        }}
+                      />
+                    ) : isTransactionFailed ? (
+                      <HighlightOffIcon
+                        style={{
+                          color: theme.palette.error.main,
+                          fontSize: '1rem',
+                        }}
+                        fontSize='inherit'
+                      />
+                    ) : null}
+                  </>
+                )}
               </Box>
-            ) : null}
-          </>
-        }
-      />
-      <ListItemSecondaryAction>
-        <IconButton size='small' onClick={handleRemove}>
-          <Delete />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+              <Typography variant='body1'>{item?.title || ''}</Typography>
+            </Box>
+
+            <Typography variant='caption' color='textSecondary'>
+              {item?.body || ''}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton
+              ref={(ref) => (anchor.current = ref)}
+              size='small'
+              onClick={() => onMenu!(id, anchor.current)}>
+              <MoreVertIcon fontSize='small' />
+            </IconButton>
+          </Grid>
+
+          {item.url !== undefined && (
+            <Grid item xs={12}>
+              <Link href={item.url} target='_blank'>
+                {item.urlCaption}
+              </Link>
+            </Grid>
+          )}
+        </Grid>
+        <Box mt={4}>
+          <Divider />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
-export default memo(NotificationItem);
+export default NotificationItem;

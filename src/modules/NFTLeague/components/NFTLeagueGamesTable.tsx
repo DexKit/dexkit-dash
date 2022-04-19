@@ -203,8 +203,8 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
       {!isLoading &&
         data?.length === 0 &&
         filters.status === GameStatus.Waiting && (
-          <Box m={4} p={4}>
-            <Paper>
+          <Paper>
+            <Box p={4}>
               <Empty
                 image={<EmptyGame />}
                 title={formatMessage({
@@ -217,8 +217,8 @@ export const NFTLeagueGamesTable: React.FC<Props> = ({filters}) => {
                 })}
                 callToAction={callToAction}
               />
-            </Paper>
-          </Box>
+            </Box>
+          </Paper>
         )}
 
       {((data && data?.length > 0) ||

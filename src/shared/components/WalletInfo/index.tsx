@@ -48,6 +48,7 @@ import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {useChainInfo} from 'hooks/useChainInfo';
+import IntlMessages from '@crema/utility/IntlMessages';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -103,7 +104,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     },
     walletBalance: {
       padding: theme.spacing(2),
-      backgroundColor: theme.palette.background.paper,
       borderRadius: theme.shape.borderRadius,
     },
     visibilityButton: {
@@ -351,7 +351,10 @@ const WalletInfo: React.FC<Props> = (props) => {
         size={isMobile ? 'small' : 'large'}
         onClick={onGoToManageWallet}
         startIcon={<WalletAddIcon />}>
-        Connect wallet
+        <IntlMessages
+          id='common.connectWallet'
+          defaultMessage='Connect Wallet'
+        />
       </Button>
     </Box>
   ) : null;

@@ -28,9 +28,11 @@ const MaticBridgeButton = (props: Props) => {
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
-      <RoundedIconButton onClick={handleBuyCrypto}>
-        <ProgrammingArrowsIcon className={classes.icon} />
-      </RoundedIconButton>
+      <Box mb={1}>
+        <RoundedIconButton onClick={handleBuyCrypto}>
+          <ProgrammingArrowsIcon className={classes.icon} />
+        </RoundedIconButton>
+      </Box>
       <Typography variant='caption' className={classes.itemText}>
         Bridge
       </Typography>
