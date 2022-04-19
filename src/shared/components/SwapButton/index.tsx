@@ -51,9 +51,11 @@ const SwapButton = () => {
       </Backdrop>
 
       <Box display='flex' flexDirection='column' alignItems='center'>
-        <RoundedIconButton onClick={onSwap}>
-          <MoneySendIcon className={classes.icon} />
-        </RoundedIconButton>
+        <Box mb={1}>
+          <RoundedIconButton onClick={onSwap}>
+            <MoneySendIcon className={classes.icon} />
+          </RoundedIconButton>
+        </Box>
         <Typography variant='caption' className={classes.itemText}>
           Swap
         </Typography>

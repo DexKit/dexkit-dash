@@ -91,6 +91,7 @@ interface Props {
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
   token?: Token;
+  disableAccounts?: boolean;
 }
 
 const CoinTools = (props: Props) => {
@@ -104,6 +105,7 @@ const CoinTools = (props: Props) => {
     network,
     disableReceive,
     enableTrade = true,
+    disableAccounts,
   } = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
@@ -244,6 +246,7 @@ const CoinTools = (props: Props) => {
           onMakeFavorite={onMakeFavorite}
           isFavorite={isFavorite}
           isTrade={enableTrade}
+          disableAccounts={disableAccounts}
         />
       </Box>
     </>

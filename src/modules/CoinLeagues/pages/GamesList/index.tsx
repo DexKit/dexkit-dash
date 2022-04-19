@@ -321,55 +321,67 @@ const GamesList = () => {
             />
           </Grid>
         </Hidden>
-        <Grid item xs={12} xl={6} sm={6}>
-          <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5'>
-              Coin League {isNFTGame && '- NFT Room'}
-            </Typography>
-            <Box p={2}>
+        <Grid item xs={12}>
+          <Grid
+            container
+            alignItems='center'
+            alignContent='center'
+            spacing={4}
+            justifyContent='space-between'>
+            <Grid item>
               <ChainSelect />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={6} xl={6}>
-          <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-            <Box pr={2}>
-              <SwapButton />
-            </Box>
-            <Box pr={2}>
-              <ShareButton shareText={`Coin league Games`} />
-            </Box>
-            <Box pr={2}>
-              <BuyCryptoButton
-                btnMsg={`Buy ${coinSymbol}`}
-                defaultCurrency={coinSymbol}
-              />
-            </Box>
-            <Box pr={2}>
-              <MaticBridgeButton />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          {account ? (
-            <ActiveChainBalance />
-          ) : (
-            <Button
-              variant={'contained'}
-              onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-              <IntlMessages id='common.connectWallet' />:{' '}
-            </Button>
-          )}
-        </Grid>
-        <Hidden xsDown={true}>
-          <Grid item xs={12} sm={8}>
-            <img
-              src={CoinsLeagueBanner}
-              style={{borderRadius: '12px'}}
-              alt={'Coinleague Banner'}
-            />
+            </Grid>
+            <Grid item>
+              <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+                <Box pr={2}>
+                  <SwapButton />
+                </Box>
+                <Box pr={2}>
+                  <ShareButton shareText={`Coin league Games`} />
+                </Box>
+                <Box pr={2}>
+                  <BuyCryptoButton
+                    btnMsg={`Buy ${coinSymbol}`}
+                    defaultCurrency={coinSymbol}
+                  />
+                </Box>
+                <Box pr={2}>
+                  <MaticBridgeButton />
+                </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Hidden>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justifyContent='space-between'
+            spacing={4}
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              {account ? (
+                <ActiveChainBalance />
+              ) : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
+                  <IntlMessages id='common.connectWallet' />:
+                </Button>
+              )}
+            </Grid>
+            <Hidden xsDown={true}>
+              <Grid item xs={8}>
+                <img
+                  src={CoinsLeagueBanner}
+                  style={{borderRadius: '12px'}}
+                  alt={'Coinleague Banner'}
+                />
+              </Grid>
+            </Hidden>
+          </Grid>
+        </Grid>
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>
@@ -456,7 +468,15 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <CreateGameButton onClick={handleShowCreateGameModal} />
+          <CreateGameButton
+            onClick={handleShowCreateGameModal}
+            subtitle={
+              <IntlMessages
+                id='coinLeague.coinLeague'
+                defaultMessage='Coin League'
+              />
+            }
+          />
         </Grid>
 
         <Grid item xs={12}>

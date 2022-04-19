@@ -1,9 +1,14 @@
-import React, {useContext, useCallback} from 'react';
+import React, {useContext, useCallback, useState} from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
+import {Badge, useTheme} from '@material-ui/core';
 import clsx from 'clsx';
 import Navigation from '../../Navigation/VerticleNav';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {
+  onRemoveNotification,
+  setWeb3State,
+  toggleNavCollapsed,
+} from '../../../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppSidebar.style';
@@ -12,14 +17,27 @@ import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
 
-import {Grid, IconButton, Divider, ButtonBase, Avatar} from '@material-ui/core';
+import NotificationItem from '@crema/core/Notifications/NotificationItem';
+
+import {ReactComponent as GridFiveIcon} from 'assets/images/menu/grid-5.svg';
+import {ReactComponent as NotificationIcon} from 'assets/images/menu/notification.svg';
+
+import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
+import {
+  Grid,
+  IconButton,
+  Divider,
+  ButtonBase,
+  Avatar,
+  Typography,
+  MenuItem,
+  Menu,
+  ListItemIcon,
+} from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
 
-import CloseIcon from '@material-ui/icons/Close';
-
-import MenuIcon from '@material-ui/icons/Menu';
-import Close from '@material-ui/icons/Close';
+import {ReactComponent as MenuIcon} from 'assets/images/menu/menu.svg';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 
 import {useWeb3} from 'hooks/useWeb3';
@@ -27,6 +45,23 @@ import WalletInfo from 'shared/components/WalletInfo';
 
 import {useHistory} from 'react-router';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+import Delete from '@material-ui/icons/Delete';
+import {groupItems} from 'utils';
+import {humanizeDate} from 'utils/date';
+import Close from '@material-ui/icons/Close';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import {useCustomNetworkList} from 'hooks/network';
+import {useChainInfo} from 'hooks/useChainInfo';
+import {Skeleton} from '@material-ui/lab';
+import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {Web3State} from 'types/blockchain';
+import {switchChain} from 'utils/wallet';
 
 interface AppSidebarProps {
   variant?: string;
@@ -37,6 +72,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   position = 'left',
   variant,
 }) => {
+  const {onSwitchMagicNetwork} = useMagicProvider();
   const dispatch = useDispatch();
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   const {navCollapsed} = useSelector<AppState, AppState['settings']>(
@@ -52,7 +88,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const kittygotchiProfile = useProfileKittygotchi();
 
-  const {account, chainId} = useWeb3();
+  const {account, chainId, getProvider} = useWeb3();
 
   const history = useHistory();
 
@@ -60,8 +96,175 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     return history.location.pathname === LOGIN_WALLET_ROUTE;
   }, [history]);
 
+  const [selectedTab, setSelectedTab] = useState<'notifications' | 'menu'>(
+    'menu',
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.ChangeEvent<{}>, newValue: 'notifications' | 'menu') =>
+      setSelectedTab(newValue),
+    [],
+  );
+
+  const notificationsState = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
+
+  const notifications = notificationsState.notifications.map((n, index) => ({
+    ...n,
+    id: index,
+  }));
+
+  const handleClickNotification = useCallback(() => {}, []);
+
+  const [anchor, setAnchor] = useState<HTMLElement>();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>();
+
+  const handleToggleMenu = useCallback(
+    (index: number, anchor: HTMLElement | null) => {
+      setMenuOpen((value) => !value);
+      setSelectedIndex(index);
+
+      if (anchor !== null) {
+        setAnchor(anchor);
+      }
+    },
+    [],
+  );
+
+  const handleRemove = useCallback(() => {
+    if (selectedIndex !== undefined) {
+      dispatch(onRemoveNotification(selectedIndex));
+      setSelectedIndex(undefined);
+      setAnchor(undefined);
+      setMenuOpen(false);
+    }
+  }, [dispatch, selectedIndex]);
+
+  const handleCloseMenu = useCallback(() => {
+    setSelectedIndex(undefined);
+    setAnchor(undefined);
+    setMenuOpen(false);
+  }, []);
+
+  const theme = useTheme();
+
+  const isMetamask = useCallback(() => {
+    if (window.ethereum) {
+      if ((window.ethereum as any).isMetaMask) {
+        return true;
+      }
+    }
+
+    return false;
+  }, []);
+
+  const {chainName} = useChainInfo();
+
+  const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+  const {networks} = useCustomNetworkList();
+
+  const handleOpenSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(true);
+  }, []);
+
+  const handleCloseSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(false);
+  }, []);
+
+  const handleSelectChain = useCallback(
+    async (chainId: number) => {
+      setShowSwitchNetwork(false);
+
+      if (isMagicProvider()) {
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        onSwitchMagicNetwork(magicNetwork);
+      } else {
+        dispatch(setWeb3State(Web3State.Connecting));
+
+        const provider = getProvider();
+
+        try {
+          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+
+          if (customIndex > -1) {
+            const params: {
+              chainId: string; // A 0x-prefixed hexadecimal string
+              chainName: string;
+              nativeCurrency?: {
+                name: string;
+                symbol: string; // 2-6 characters long
+                decimals: number;
+              };
+              rpcUrls: string[];
+              blockExplorerUrls?: string[];
+              iconUrls?: string[]; // Currently ignored.
+            } = {
+              chainId: '0x' + networks[customIndex].chainId.toString(16),
+              chainName: networks[customIndex].name,
+              rpcUrls: [networks[customIndex].rpcUrl],
+              blockExplorerUrls: networks[customIndex].explorerUrl
+                ? [networks[customIndex].explorerUrl]
+                : undefined,
+            };
+
+            const nativeCurrency: {
+              name: string;
+              symbol: string;
+              decimals: number;
+            } = {
+              name: networks[customIndex].name,
+              //@ts-ignore
+              symbol: networks[customIndex].symbol,
+              decimals: 18,
+            };
+
+            if (networks[customIndex].nativeTokenSymbol) {
+              nativeCurrency.symbol = networks[customIndex].nativeTokenSymbol;
+            }
+
+            params.nativeCurrency = nativeCurrency;
+
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [params],
+            });
+          } else {
+            await switchChain(provider, chainId);
+          }
+
+          window.location.reload();
+          dispatch(setWeb3State(Web3State.Done));
+        } catch {
+          window.location.reload();
+          dispatch(setWeb3State(Web3State.Done));
+        }
+      }
+    },
+    [dispatch, getProvider, onSwitchMagicNetwork, networks],
+  );
+
   return (
     <>
+      {chainId ? (
+        <SwitchNetworkDialog
+          selected={chainId}
+          open={showSwitchNetwork}
+          onSelectChain={handleSelectChain}
+          onClose={handleCloseSwitchNetwork}
+        />
+      ) : null}
+      <Menu open={menuOpen} anchorEl={anchor} onClose={handleCloseMenu}>
+        <MenuItem onClick={handleRemove}>
+          <ListItemIcon>
+            <Delete fontSize='small' />
+          </ListItemIcon>
+          <Typography variant='inherit'>
+            <IntlMessages id='common.remove' defaultMessage='Remove' />
+          </Typography>
+        </MenuItem>
+      </Menu>
       <Hidden lgUp>
         <Drawer
           anchor={position}
@@ -73,6 +276,28 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           style={{position: 'absolute'}}>
           <Box height='100%'>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
+              <Box p={4} bgcolor={theme.palette.background.default}>
+                <Grid
+                  container
+                  spacing={4}
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='space-between'>
+                  <Grid item>
+                    <DexkitLogoIconImage />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant='body1'>
+                      <IntlMessages id='common.menu' defaultMessage='Menu' />
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={handleToggleDrawer} size='small'>
+                      <MenuIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
               <Box p={4}>
                 <Grid
                   container
@@ -80,8 +305,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   justifyContent='space-between'
                   alignItems='center'
                   alignContent='center'>
-                  <Grid item>
-                    <Box p={2}>
+                  <Grid item xs={12}>
+                    <Box p={2} className={classes.wallet}>
                       <Grid
                         container
                         alignItems='center'
@@ -106,28 +331,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             />
                           </ButtonBase>
                         </Grid>
-                        {/* <Grid item>
-                          <Typography variant='caption'>
-                            {defaultAddress ? (
-                              truncateAddress(defaultAddress)
-                            ) : (
-                              <Skeleton />
-                            )}
-                          </Typography>
-                          <Typography variant='body2'>3.3 ETH</Typography>
-                          <Typography color='textSecondary' variant='body2'>
-                            {defaultAddress ? (
-                              <Link
-                                onClick={handleToggleDrawer}
-                                component={RouterLink}
-                                to='/profile'>
-                                View profile
-                              </Link>
-                            ) : (
-                              <Skeleton />
-                            )}
-                          </Typography>
-                        </Grid> */}
 
                         {!isOnLoginPage() || account ? (
                           <Grid item xs>
@@ -137,22 +340,109 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                       </Grid>
                     </Box>
                   </Grid>
-                  <Grid item>
-                    <Box
-                      display='flex'
-                      alignItems='center'
-                      alignContent='center'
-                      justifyContent='center'>
-                      <IconButton size='small' onClick={handleToggleDrawer}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
+                  <Grid item xs={12}>
+                    {isMetamask() || isMagicProvider() ? (
+                      <ButtonBase
+                        onClick={handleOpenSwitchNetwork}
+                        className={classes.switchNetworkButton}>
+                        <Typography variant='body1'>
+                          {chainName !== undefined ? chainName : <Skeleton />}
+                        </Typography>
+                        <ExpandMore />
+                      </ButtonBase>
+                    ) : (
+                      chainId && (
+                        <ButtonBase
+                          disabled
+                          className={classes.switchNetworkButton}>
+                          <Typography variant='body1'>
+                            {chainName !== undefined ? chainName : <Skeleton />}
+                          </Typography>
+                          <ExpandMore />
+                        </ButtonBase>
+                      )
+                    )}
                   </Grid>
                 </Grid>
               </Box>
+              <Box>
+                <CustomTabs
+                  value={selectedTab}
+                  onChange={handleChangeTab}
+                  variant='fullWidth'
+                  TabIndicatorProps={{
+                    style: {display: 'none'},
+                  }}>
+                  <CustomTab value='menu' icon={<GridFiveIcon />} />
+                  <CustomTab
+                    value='notifications'
+                    icon={
+                      <Badge
+                        variant='dot'
+                        color='primary'
+                        badgeContent={
+                          notifications.filter(
+                            (notification) => notification?.check === undefined,
+                          ).length
+                        }>
+                        <NotificationIcon />
+                      </Badge>
+                    }
+                  />
+                </CustomTabs>
+              </Box>
               <Divider />
               <Scrollbar className={classes.drawerScrollAppSidebar}>
-                <Navigation />
+                {selectedTab === 'menu' && <Navigation />}
+
+                {selectedTab === 'notifications' &&
+                  (notifications.length > 0 ? (
+                    <Box py={4}>
+                      {groupItems(notifications).map((group, groupIndex) => (
+                        <React.Fragment key={groupIndex}>
+                          <Box px={4}>
+                            <Typography color='primary' variant='body1'>
+                              {humanizeDate(group.date)}
+                            </Typography>
+                          </Box>
+                          {group.items.map((item: any, itemIndex: number) => (
+                            <NotificationItem
+                              onClick={handleClickNotification}
+                              id={item.id}
+                              key={itemIndex}
+                              item={item}
+                              onMenu={handleToggleMenu}
+                            />
+                          ))}
+                        </React.Fragment>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Box p={4}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        alignContent='center'
+                        justify='center'
+                        direction='column'
+                        spacing={2}>
+                        <Grid item xs={12}>
+                          <NotificationIcon />
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography
+                            variant='body1'
+                            color='textSecondary'
+                            align='center'>
+                            <IntlMessages
+                              id='common.nothingToSeeHere'
+                              defaultMessage='Nothing to See Here'
+                            />
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  ))}
               </Scrollbar>
             </Box>
           </Box>
@@ -175,44 +465,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             <Divider />
             <Scrollbar className={classes.scrollAppSidebar}>
               <Navigation />
-              {/* <Box p={4} className='visible-hover'>
-                <Paper>
-                  <Box p={4}>
-                    <Grid
-                      spacing={4}
-                      container
-                      direction='column'
-                      justify='center'
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid item>
-                        <SupportImage />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography align='center' variant='h5'>
-                          Doubts?
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography align='center' variant='body1'>
-                          Do you have any questions? Please, contact our
-                          support.
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button
-                          fullWidth
-                          color='primary'
-                          startIcon={<TwoFourSupportIcon />}
-                          variant='contained'
-                          size='large'>
-                          Support
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </Box> */}
             </Scrollbar>
           </Box>
         </Box>
