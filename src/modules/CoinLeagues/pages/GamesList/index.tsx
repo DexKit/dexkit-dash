@@ -31,7 +31,6 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -310,16 +309,16 @@ const GamesList = () => {
         )}
 
         <Hidden smUp={true}>
-          <Grid item xs={12}>
+          {/*<Grid item xs={12}>
             <Box display={'flex'} justifyContent={'center'}>
-              {/*<img
+              <img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'banner'}
-        />*/}
+        />
               <AAdsCoinleagueBanner type={2} />
             </Box>
-          </Grid>
+        </Grid>*/}
         </Hidden>
         <Grid item xs={12}>
           <Grid
@@ -373,11 +372,12 @@ const GamesList = () => {
             </Grid>
             <Hidden xsDown={true}>
               <Grid item xs={8}>
-                <img
+                {/* <img
                   src={CoinsLeagueBanner}
                   style={{borderRadius: '12px'}}
                   alt={'Coinleague Banner'}
-                />
+              />*/}
+                <AAdsCoinleagueBanner />
               </Grid>
             </Hidden>
           </Grid>
