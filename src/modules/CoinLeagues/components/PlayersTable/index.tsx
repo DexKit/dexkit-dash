@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {lighten, makeStyles} from '@material-ui/core/styles';
 
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -26,7 +26,14 @@ import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
-import {Collapse, Divider, Grid, useTheme} from '@material-ui/core';
+import {
+  Box,
+  Collapse,
+  Divider,
+  Grid,
+  Hidden,
+  useTheme,
+} from '@material-ui/core';
 import {useMobile} from 'hooks/useMobile';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -116,7 +123,7 @@ function PlayersTable(props: Props): JSX.Element {
   const classes = useStyles();
   const theme = useTheme();
   const {messages} = useIntl();
-  const {chainId} = useWeb3();
+  const {chainId, account} = useWeb3();
 
   const [expanded, setExpanded] = useState<{[key: number]: boolean}>({});
 
@@ -261,45 +268,84 @@ function PlayersTable(props: Props): JSX.Element {
           })
           .map((row, i) => (
             <Grid key={i} item xs={12}>
-              <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <Grid
-                    container
-                    justifyContent='space-between'
-                    alignItems='center'
-                    alignContent='center'>
-                    <Grid item>
-                      <Grid
-                        container
-                        spacing={2}
-                        alignItems='center'
-                        alignContent='center'>
-                        <Grid item>
-                          <Chip
-                            size='small'
-                            variant='outlined'
-                            label={
-                              <Typography variant='inherit' color='primary'>
-                                {i + 1}°
-                              </Typography>
-                            }
-                          />
-                        </Grid>
-                        <Grid item>
-                          {isBalanceVisible ? (
-                            <UserProfileItem
-                              address={row.hash}
-                              profile={row.profile}
+              <Box
+                bgcolor={
+                  row.account === account
+                    ? lighten(theme.palette.background.default, 0.05)
+                    : undefined
+                }
+                p={4}>
+                <Grid
+                  container
+                  spacing={4}
+                  alignItems='center'
+                  alignContent='center'>
+                  <Grid item xs={12}>
+                    <Grid
+                      container
+                      justifyContent='space-between'
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item sm={4}>
+                        <Grid
+                          container
+                          spacing={2}
+                          alignItems='center'
+                          alignContent='center'>
+                          <Grid item>
+                            <Chip
+                              size='small'
+                              variant='outlined'
+                              label={
+                                <Typography variant='inherit' color='primary'>
+                                  {i + 1}°
+                                </Typography>
+                              }
                             />
-                          ) : (
-                            <Typography variant='subtitle1'>******</Typography>
-                          )}
-                        </Grid>
+                          </Grid>
+                          <Grid item>
+                            {isBalanceVisible ? (
+                              <UserProfileItem
+                                address={row.hash}
+                                profile={row.profile}
+                              />
+                            ) : (
+                              <Typography variant='subtitle1'>
+                                ******
+                              </Typography>
+                            )}
+                          </Grid>
 
-                        {finished &&
-                          (playerRowData.length === 2 ||
-                            playerRowData.length === 3) &&
-                          i === 0 && (
+                          {finished &&
+                            (playerRowData.length === 2 ||
+                              playerRowData.length === 3) &&
+                            i === 0 && (
+                              <Grid item>
+                                <Chip
+                                  color='primary'
+                                  icon={<CupIcon />}
+                                  label={
+                                    messages['app.coinLeagues.winner'] as string
+                                  }
+                                  size='small'
+                                />
+                              </Grid>
+                            )}
+
+                          {finished && playerRowData.length > 3 && i === 0 && (
+                            <Grid item>
+                              <Chip
+                                color='primary'
+                                icon={<CupIcon />}
+                                label={
+                                  messages['app.coinLeagues.winner'] as string
+                                }
+                                size='medium'
+                              />
+                            </Grid>
+                          )}
+
+                          {finished && playerRowData.length > 3 && i === 1 && (
                             <Grid item>
                               <Chip
                                 color='primary'
@@ -312,199 +358,297 @@ function PlayersTable(props: Props): JSX.Element {
                             </Grid>
                           )}
 
-                        {finished && playerRowData.length > 3 && i === 0 && (
-                          <Grid item>
-                            <Chip
-                              color='primary'
-                              icon={<CupIcon />}
-                              label={
-                                messages['app.coinLeagues.winner'] as string
-                              }
-                              size='medium'
-                            />
-                          </Grid>
-                        )}
-
-                        {finished && playerRowData.length > 3 && i === 1 && (
-                          <Grid item>
-                            <Chip
-                              color='primary'
-                              icon={<CupIcon />}
-                              label={
-                                messages['app.coinLeagues.winner'] as string
-                              }
-                              size='small'
-                            />
-                          </Grid>
-                        )}
-
-                        {finished && playerRowData.length > 3 && i === 2 && (
-                          <Grid item>
-                            <Chip
-                              color='primary'
-                              icon={<CupIcon />}
-                              label={
-                                messages['app.coinLeagues.winner'] as string
-                              }
-                              size='small'
-                            />
-                          </Grid>
-                        )}
-                      </Grid>
-                    </Grid>
-                    {!hideCoins && (
-                      <Grid item>
-                        <IconButton
-                          size='small'
-                          onClick={() =>
-                            setExpanded((value) => ({
-                              ...value,
-                              [i]: !value[i],
-                            }))
-                          }>
-                          {expanded[i] ? (
-                            <ExpandLessIcon />
-                          ) : (
-                            <ExpandMoreIcon />
-                          )}
-                        </IconButton>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Grid>
-                {!expanded[i] && (
-                  <Grid item xs={12}>
-                    <Grid container spacing={4}>
-                      <Grid item>
-                        {!hideCoins ? (
-                          row?.captainCoin && (
-                            <Tooltip title={tooltipMessage(row.hash)}>
-                              <Badge
+                          {finished && playerRowData.length > 3 && i === 2 && (
+                            <Grid item>
+                              <Chip
                                 color='primary'
-                                overlap='circular'
-                                badgeContent={
-                                  !loadingMultiplier &&
-                                  multiplier(row.account).toFixed(3)
-                                }>
-                                <Avatar
-                                  className={classes.chip}
-                                  src={getIconByCoin(
-                                    row.captainCoin,
-                                    GET_LEAGUES_CHAIN_ID(chainId),
-                                  )}
-                                  style={{height: 35, width: 35}}>
-                                  {getIconSymbol(
-                                    row.captainCoin,
-                                    GET_LEAGUES_CHAIN_ID(chainId),
-                                  )}
-                                </Avatar>
-                              </Badge>
-                            </Tooltip>
-                          )
-                        ) : (
-                          <>
-                            <Avatar
-                              className={classes.chip}
-                              style={{height: 35, width: 35}}
-                            />
-                          </>
-                        )}
+                                icon={<CupIcon />}
+                                label={
+                                  messages['app.coinLeagues.winner'] as string
+                                }
+                                size='small'
+                              />
+                            </Grid>
+                          )}
+                        </Grid>
                       </Grid>
-                      <Grid item xs>
-                        {row?.coins.length > 0 &&
-                          (!isMobile ? (
-                            <Grid container spacing={2}>
-                              {row?.coins.map((coin, index) => (
-                                <Grid item key={index}>
-                                  {!hideCoins ? (
+                      <Hidden smDown>
+                        <Grid item xs={6}>
+                          <Grid
+                            container
+                            spacing={4}
+                            justifyContent={'center'}
+                            alignItems='center'
+                            alignContent='center'>
+                            <Grid item xs={4}>
+                              {!hideCoins ? (
+                                row?.captainCoin && (
+                                  <Tooltip title={tooltipMessage(row.hash)}>
+                                    <Badge
+                                      color='primary'
+                                      overlap='circular'
+                                      badgeContent={
+                                        !loadingMultiplier &&
+                                        multiplier(row.account).toFixed(3)
+                                      }>
+                                      <Avatar
+                                        className={classes.chip}
+                                        src={getIconByCoin(
+                                          row.captainCoin,
+                                          GET_LEAGUES_CHAIN_ID(chainId),
+                                        )}
+                                        style={{height: 35, width: 35}}>
+                                        {getIconSymbol(
+                                          row.captainCoin,
+                                          GET_LEAGUES_CHAIN_ID(chainId),
+                                        )}
+                                      </Avatar>
+                                    </Badge>
+                                  </Tooltip>
+                                )
+                              ) : (
+                                <>
+                                  <Avatar
+                                    className={classes.chip}
+                                    style={{height: 35, width: 35}}
+                                  />
+                                </>
+                              )}
+                            </Grid>
+                            <Grid item xs={8}>
+                              {row?.coins.length > 0 &&
+                                (!isMobile ? (
+                                  <Grid container spacing={2}>
+                                    {row?.coins.map((coin, index) => (
+                                      <Grid item key={index}>
+                                        {!hideCoins ? (
+                                          <Avatar
+                                            className={classes.chip}
+                                            src={getIconByCoin(
+                                              coin,
+                                              GET_LEAGUES_CHAIN_ID(chainId),
+                                            )}
+                                            style={{height: 35, width: 35}}>
+                                            {getIconSymbol(
+                                              coin,
+                                              GET_LEAGUES_CHAIN_ID(chainId),
+                                            )}
+                                          </Avatar>
+                                        ) : (
+                                          <Avatar
+                                            className={classes.chip}
+                                            style={{height: 35, width: 35}}
+                                          />
+                                        )}
+                                      </Grid>
+                                    ))}
+                                  </Grid>
+                                ) : (
+                                  <AvatarGroup max={10} spacing={17}>
+                                    {row?.coins.map((coin, index) =>
+                                      !hideCoins ? (
+                                        <Avatar
+                                          key={index}
+                                          className={classes.chip}
+                                          src={getIconByCoin(
+                                            coin,
+                                            GET_LEAGUES_CHAIN_ID(chainId),
+                                          )}
+                                          style={{height: 35, width: 35}}>
+                                          {getIconSymbol(
+                                            coin,
+                                            GET_LEAGUES_CHAIN_ID(chainId),
+                                          )}
+                                        </Avatar>
+                                      ) : (
+                                        <Avatar
+                                          key={index}
+                                          className={classes.chip}
+                                          style={{height: 35, width: 35}}
+                                        />
+                                      ),
+                                    )}
+                                  </AvatarGroup>
+                                ))}
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            style={{
+                              color:
+                                row.score > 0
+                                  ? theme.palette.success.main
+                                  : theme.palette.error.main,
+                            }}
+                            label={
+                              isBalanceVisible
+                                ? `${
+                                    row.score > 0 ? '+' : ''
+                                  }${row.score?.toFixed(3)}%`
+                                : '*.**%'
+                            }
+                          />
+                        </Grid>
+                      </Hidden>
+                      {!hideCoins && (
+                        <Grid item>
+                          <IconButton
+                            size='small'
+                            onClick={() =>
+                              setExpanded((value) => ({
+                                ...value,
+                                [i]: !value[i],
+                              }))
+                            }>
+                            {expanded[i] ? (
+                              <ExpandLessIcon />
+                            ) : (
+                              <ExpandMoreIcon />
+                            )}
+                          </IconButton>
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Grid>
+                  {!expanded[i] && (
+                    <Hidden smUp>
+                      <Grid item xs={12}>
+                        <Grid container spacing={4}>
+                          <Grid item>
+                            {!hideCoins ? (
+                              row?.captainCoin && (
+                                <Tooltip title={tooltipMessage(row.hash)}>
+                                  <Badge
+                                    color='primary'
+                                    overlap='circular'
+                                    badgeContent={
+                                      !loadingMultiplier &&
+                                      multiplier(row.account).toFixed(3)
+                                    }>
                                     <Avatar
                                       className={classes.chip}
                                       src={getIconByCoin(
-                                        coin,
+                                        row.captainCoin,
                                         GET_LEAGUES_CHAIN_ID(chainId),
                                       )}
                                       style={{height: 35, width: 35}}>
                                       {getIconSymbol(
-                                        coin,
+                                        row.captainCoin,
                                         GET_LEAGUES_CHAIN_ID(chainId),
                                       )}
                                     </Avatar>
-                                  ) : (
-                                    <Avatar
-                                      className={classes.chip}
-                                      style={{height: 35, width: 35}}
-                                    />
-                                  )}
+                                  </Badge>
+                                </Tooltip>
+                              )
+                            ) : (
+                              <>
+                                <Avatar
+                                  className={classes.chip}
+                                  style={{height: 35, width: 35}}
+                                />
+                              </>
+                            )}
+                          </Grid>
+                          <Grid item xs>
+                            {row?.coins.length > 0 &&
+                              (!isMobile ? (
+                                <Grid container spacing={2}>
+                                  {row?.coins.map((coin, index) => (
+                                    <Grid item key={index}>
+                                      {!hideCoins ? (
+                                        <Avatar
+                                          className={classes.chip}
+                                          src={getIconByCoin(
+                                            coin,
+                                            GET_LEAGUES_CHAIN_ID(chainId),
+                                          )}
+                                          style={{height: 35, width: 35}}>
+                                          {getIconSymbol(
+                                            coin,
+                                            GET_LEAGUES_CHAIN_ID(chainId),
+                                          )}
+                                        </Avatar>
+                                      ) : (
+                                        <Avatar
+                                          className={classes.chip}
+                                          style={{height: 35, width: 35}}
+                                        />
+                                      )}
+                                    </Grid>
+                                  ))}
                                 </Grid>
+                              ) : (
+                                <AvatarGroup max={10} spacing={17}>
+                                  {row?.coins.map((coin, index) =>
+                                    !hideCoins ? (
+                                      <Avatar
+                                        key={index}
+                                        className={classes.chip}
+                                        src={getIconByCoin(
+                                          coin,
+                                          GET_LEAGUES_CHAIN_ID(chainId),
+                                        )}
+                                        style={{height: 35, width: 35}}>
+                                        {getIconSymbol(
+                                          coin,
+                                          GET_LEAGUES_CHAIN_ID(chainId),
+                                        )}
+                                      </Avatar>
+                                    ) : (
+                                      <Avatar
+                                        key={index}
+                                        className={classes.chip}
+                                        style={{height: 35, width: 35}}
+                                      />
+                                    ),
+                                  )}
+                                </AvatarGroup>
                               ))}
-                            </Grid>
-                          ) : (
-                            <AvatarGroup max={10} spacing={17}>
-                              {row?.coins.map((coin, index) =>
-                                !hideCoins ? (
-                                  <Avatar
-                                    key={index}
-                                    className={classes.chip}
-                                    src={getIconByCoin(
-                                      coin,
-                                      GET_LEAGUES_CHAIN_ID(chainId),
-                                    )}
-                                    style={{height: 35, width: 35}}>
-                                    {getIconSymbol(
-                                      coin,
-                                      GET_LEAGUES_CHAIN_ID(chainId),
-                                    )}
-                                  </Avatar>
-                                ) : (
-                                  <Avatar
-                                    key={index}
-                                    className={classes.chip}
-                                    style={{height: 35, width: 35}}
-                                  />
-                                ),
-                              )}
-                            </AvatarGroup>
-                          ))}
+                          </Grid>
+                          <Grid item>
+                            <Chip
+                              size='small'
+                              variant='outlined'
+                              style={{
+                                color:
+                                  row.score > 0
+                                    ? theme.palette.success.main
+                                    : theme.palette.error.main,
+                              }}
+                              label={
+                                isBalanceVisible
+                                  ? `${
+                                      row.score > 0 ? '+' : ''
+                                    }${row.score?.toFixed(3)}%`
+                                  : '*.**%'
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Divider />
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Chip
-                          size='small'
-                          variant='outlined'
-                          style={{
-                            color:
-                              row.score > 0
-                                ? theme.palette.success.main
-                                : theme.palette.error.main,
-                          }}
-                          label={
-                            isBalanceVisible
-                              ? `${
-                                  row.score > 0 ? '+' : ''
-                                }${row.score?.toFixed(3)}%`
-                              : '*.**%'
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Divider />
-                      </Grid>
-                    </Grid>
+                    </Hidden>
+                  )}
+                  <Grid
+                    item
+                    xs={12}
+                    style={{display: expanded[i] ? 'block' : 'none'}}>
+                    <Collapse in>
+                      <PlayerCoinsTable
+                        id={id}
+                        playerAddress={row.hash}
+                        coins={row.coins}
+                        captainCoin={row.captainCoin}
+                      />
+                    </Collapse>
                   </Grid>
-                )}
-                <Grid
-                  item
-                  xs={12}
-                  style={{display: expanded[i] ? 'block' : 'none'}}>
-                  <Collapse in>
-                    <PlayerCoinsTable
-                      id={id}
-                      playerAddress={row.hash}
-                      coins={row.coins}
-                      captainCoin={row.captainCoin}
-                    />
-                  </Collapse>
                 </Grid>
-              </Grid>
+              </Box>
             </Grid>
           ))}
       </Grid>

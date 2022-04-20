@@ -85,9 +85,11 @@ const BuyCryptoButton = (props: Props) => {
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
-      <RoundedIconButton onClick={handleClick}>
-        <CardIcon className={classes.icon} />
-      </RoundedIconButton>
+      <Box mb={1}>
+        <RoundedIconButton onClick={handleClick}>
+          <CardIcon className={classes.icon} />
+        </RoundedIconButton>
+      </Box>
       <Typography variant='caption' className={classes.itemText}>
         {btnMsg || 'Buy Crypto'}
       </Typography>

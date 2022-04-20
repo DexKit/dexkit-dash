@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, lighten} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
@@ -186,6 +186,24 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       width: '100%',
       color: 'white',
       overflow: 'hidden',
+    },
+    badgeRoot: {
+      padding: theme.spacing(2),
+      borderRadius: theme.shape.borderRadius,
+    },
+    switchNetworkButton: {
+      textTransform: 'uppercase',
+      padding: theme.spacing(4),
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderRadius: theme.shape.borderRadius,
+      background: lighten(theme.palette.background.paper, 0.075),
+    },
+    wallet: {
+      borderRadius: theme.shape.borderRadius,
+      background: lighten(theme.palette.background.paper, 0.075),
     },
   };
 });

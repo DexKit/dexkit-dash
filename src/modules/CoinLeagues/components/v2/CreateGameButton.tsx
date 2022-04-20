@@ -33,7 +33,13 @@ const CircleBox = withStyles((theme) => ({
   },
 }))(Box);
 
-export const CreateGameButton = ({onClick}: {onClick: () => void}) => {
+export const CreateGameButton = ({
+  onClick,
+  subtitle,
+}: {
+  onClick: () => void;
+  subtitle: React.ReactNode | React.ReactNode[];
+}) => {
   return (
     <CustomButton onClick={onClick}>
       <Grid container spacing={4} alignItems='center' alignContent='center'>
@@ -50,10 +56,7 @@ export const CreateGameButton = ({onClick}: {onClick: () => void}) => {
             />
           </Typography>
           <Typography align='left' variant='body2' color='textSecondary'>
-            <IntlMessages
-              id='app.coinLeague.coinLeague'
-              defaultMessage='Coin League'
-            />
+            {subtitle}
           </Typography>
         </Grid>
         <Grid item>
