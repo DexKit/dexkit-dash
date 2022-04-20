@@ -74,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& > path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   container: {
     justifyContent: 'flex-start',

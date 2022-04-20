@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {useTheme, alpha, Chip, Tooltip} from '@material-ui/core';
+import {useTheme, alpha, Chip, Tooltip, makeStyles} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -33,6 +33,13 @@ interface Props {
   onShare?: (id?: string) => void;
   loading?: boolean;
 }
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 function SmallCardGame({
   game,
@@ -43,6 +50,7 @@ function SmallCardGame({
 }: Props): JSX.Element {
   const {chainId, coinSymbol} = useLeaguesChainInfo();
   const [countdown, setCountdown] = useState<number>();
+  const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -93,8 +101,6 @@ function SmallCardGame({
   );
 
   const theme = useTheme();
-
-  console.log('small', game?.title);
 
   return (
     <Paper
@@ -184,7 +190,7 @@ function SmallCardGame({
                           defaultMessage='Game Level'
                         />
                       }>
-                      <ChartSquareIcon />
+                      <ChartSquareIcon className={classes.icon} />
                     </Tooltip>
                   }
                   label={loading ? <Skeleton /> : gameLevel}
@@ -204,9 +210,9 @@ function SmallCardGame({
                       {loading ? (
                         <Skeleton variant='circle' width='1rem' height='1rem' />
                       ) : game?.type === 'Bull' ? (
-                        <SendSquareIcon />
+                        <SendSquareIcon className={classes.icon} />
                       ) : (
-                        <ReceiveSquareIcon />
+                        <ReceiveSquareIcon className={classes.icon} />
                       )}
                     </Tooltip>
                   }
@@ -253,7 +259,7 @@ function SmallCardGame({
                           defaultMessage='Number of Coins'
                         />
                       }>
-                      <CoinIcon />
+                      <CoinIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'
@@ -270,7 +276,7 @@ function SmallCardGame({
                           defaultMessage='Duration'
                         />
                       }>
-                      <TimerIcon />
+                      <TimerIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'
@@ -287,7 +293,7 @@ function SmallCardGame({
                           defaultMessage='Players'
                         />
                       }>
-                      <ProfileTwoUserIcon />
+                      <ProfileTwoUserIcon className={classes.icon} />
                     </Tooltip>
                   }
                   variant='outlined'
