@@ -86,6 +86,8 @@ import GameActions from 'modules/CoinLeagues/components/v2/GameActions';
 import {useGameJoin} from 'modules/CoinLeagues/hooks/v2/useGameJoin';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 
+//import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
+
 type Params = {
   id: string;
 };

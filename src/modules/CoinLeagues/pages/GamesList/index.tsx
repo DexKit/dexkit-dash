@@ -35,7 +35,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -60,6 +60,7 @@ import {useMobile} from 'hooks/useMobile';
 import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
 import {TextField} from '@material-ui/core';
 import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
+import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 
 enum Tabs {
   History = 'History',
@@ -314,11 +315,14 @@ const GamesList = () => {
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img
+            <Box display={'flex'} justifyContent={'center'}>
+              {/*<img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'banner'}
-            />
+        />*/}
+              <AAdsCoinleagueBanner type={2} />
+            </Box>
           </Grid>
         </Hidden>
         <Grid item xs={12} xl={6} sm={6}>
@@ -363,11 +367,14 @@ const GamesList = () => {
         </Grid>
         <Hidden xsDown={true}>
           <Grid item xs={12} sm={8}>
-            <img
+            {/*<img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
-            />
+          />*/}
+            <Box display={'flex'} justifyContent={'center'}>
+              <AAdsCoinleagueBanner />
+            </Box>
           </Grid>
         </Hidden>
 
