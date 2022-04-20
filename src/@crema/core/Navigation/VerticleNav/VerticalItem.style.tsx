@@ -7,11 +7,13 @@ import AppContextPropsType from '../../../../types/AppContextPropsType';
 const useStyles = makeStyles((theme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
 
-  console.log(themeMode);
-  console.log(theme.palette.primary.main);
-
   return {
     item: {},
+    arrowIcon: {
+      '& path': {
+        stroke: theme.palette.text.primary,
+      },
+    },
     itemIcon: {
       background: lighten(theme.palette.background.paper, 0.1),
       width: theme.spacing(10),

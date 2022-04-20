@@ -121,7 +121,7 @@ const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
           primary={<IntlMessages id={item.messageId} />}
         />
         <ListItemSecondaryAction className='visible-hover'>
-          <ArrowRightIcon />
+          <ArrowRightIcon className={classes.arrowIcon} />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider className={clsx(classes.divider, 'visible-hover')} />

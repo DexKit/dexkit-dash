@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       display: 'flex',
       flexDirection: 'row',
       position: 'relative',
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: theme.palette.common.white,
       '&.appMainFixedFooter': {
         paddingBottom: 48,
         [theme.breakpoints.up('xl')]: {

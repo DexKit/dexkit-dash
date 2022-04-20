@@ -63,6 +63,13 @@ const theme_light = createTheme({
     MuiIcon: {
       color: 'inherit',
     },
+    MuiPaper: {
+      variant: 'outlined',
+    },
+    MuiCard: {
+      variant: 'outlined',
+      elevation: 0,
+    },
   },
   typography: {
     fontFamily: ['Sora', 'sans-serif'].join(','),
@@ -70,7 +77,7 @@ const theme_light = createTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#FFDEB3',
+      main: '#ffa552',
     },
     success: {
       main: '#0E8424',
@@ -88,8 +95,8 @@ const theme_light = createTheme({
       primary: '#484F58',
     },
     background: {
-      default: '#F7F7F9',
-      paper: '#E4E7EB',
+      default: '#FFF',
+      paper: '#F7F7F9',
     },
   },
   shape: {

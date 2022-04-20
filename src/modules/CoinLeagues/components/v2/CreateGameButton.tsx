@@ -27,6 +27,9 @@ const CircleBox = withStyles((theme) => ({
     justifyContent: 'center',
     borderRadius: '50%',
     backgroundColor: theme.palette.background.default,
+    '& svg path': {
+      stroke: theme.palette.text.primary,
+    },
   },
 }))(Box);
 

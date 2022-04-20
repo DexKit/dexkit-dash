@@ -1,7 +1,7 @@
-import {makeStyles, Theme} from '@material-ui/core';
-import {ThemeMode} from '../../../../shared/constants/AppEnums';
+import {makeStyles} from '@material-ui/core';
+import {CremaTheme} from 'types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     avatar: {
       backgroundColor: theme.palette.background.default,
@@ -161,12 +161,7 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     sidebarBg: {
-      backgroundColor: (props: {themeMode: ThemeMode}) =>
-        props.themeMode === ThemeMode.SEMI_DARK
-          ? theme.palette.background.paper
-          : props.themeMode === ThemeMode.LIGHT
-          ? 'white'
-          : '#313541',
+      backgroundColor: theme.palette.background.paper,
     },
     scrollAppSidebar: {
       paddingTop: 8,
