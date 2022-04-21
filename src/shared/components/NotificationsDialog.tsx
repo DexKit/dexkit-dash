@@ -10,9 +10,7 @@ import {
   Button,
   Dialog,
   Box,
-  IconButton,
   DialogContent,
-  DialogTitle,
   Divider,
   Typography,
   makeStyles,
@@ -23,7 +21,6 @@ import {
 import NotificationItem from '@crema/core/Notifications/NotificationItem';
 import {AppState} from 'redux/store';
 import {useDispatch, useSelector} from 'react-redux';
-import CloseIcon from '@material-ui/icons/Close';
 import {NotificationOutlinedIcon} from './Icons';
 import {useMobile} from 'hooks/useMobile';
 import {useIntl} from 'react-intl';
@@ -32,6 +29,7 @@ import {groupItems} from 'utils';
 import {humanizeDate} from 'utils/date';
 import {Delete} from '@material-ui/icons';
 import {onRemoveNotification} from 'redux/actions';
+import CustomDialogTitle from './CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -142,28 +140,16 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
         </MenuItem>
       </Menu>
       <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>
-        <DialogTitle>
-          <Box
-            display='flex'
-            alignItems='center'
-            alignContent='center'
-            justifyContent='space-between'>
-            <Box display='flex' alignItems='center' alignContent='center'>
-              <Box
-                display='flex'
-                alignItems='center'
-                alignContent='center'
-                mr={2}>
-                <NotificationOutlinedIcon className={classes.icon} />
-              </Box>
-              <Typography variant='body1'>Notifications</Typography>
-            </Box>
-            <Box></Box>
-            <IconButton onClick={handleClose} size='small'>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </DialogTitle>
+        <CustomDialogTitle
+          icon={<NotificationOutlinedIcon className={classes.icon} />}
+          title={
+            <IntlMessages
+              id='common.notifications'
+              defaultMessage='Notifications'
+            />
+          }
+          onClose={handleClose}
+        />
         <Divider />
 
         {canEnableNotifications() ? (

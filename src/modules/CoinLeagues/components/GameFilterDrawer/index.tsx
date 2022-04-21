@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
       width: '30vw',
     },
   },
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
 }));
 
 export const GameFilterDrawer = (props: Props) => {
@@ -66,8 +71,9 @@ export const GameFilterDrawer = (props: Props) => {
     [filtersState],
   );
 
-  const handleChangeNumberOfPlayers = useCallback((e) => {
-    filtersState.setNumberOfPlayers(e.target.value);
+  const handleChangeNumberOfPlayers = useCallback(
+    (e) => {
+      filtersState.setNumberOfPlayers(e.target.value);
     },
     [filtersState],
   );
@@ -115,7 +121,7 @@ export const GameFilterDrawer = (props: Props) => {
                 <Grid item>
                   <Grid container spacing={2} alignItems='center'>
                     <Grid item>
-                      <FilterSearchIcon style={{}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Grid>
                     <Grid item>
                       <Typography variant='body1'>

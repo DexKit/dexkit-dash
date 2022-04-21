@@ -13,7 +13,6 @@ import {
   useMediaQuery,
   Dialog,
   DialogContent,
-  DialogTitle,
 } from '@material-ui/core';
 import useStyles from './index.style';
 import AppFixedFooter from './AppFixedFooter';
@@ -33,6 +32,8 @@ import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDial
 import WelcomeDialog from 'shared/components/WelcomeDialog';
 import {useAppGlobalState} from 'hooks/useGlobalState';
 import SignDataDialog from 'shared/components/SignDataDialog';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface MiniSidebarToggleProps {
   props?: any;
@@ -126,26 +127,14 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
           </BottomDrawer>
         ) : (
           <Dialog open={accountsModal.showAccounts}>
-            <DialogTitle>
-              <Box
-                display='flex'
-                alignItems='center'
-                justifyContent='space-between'>
-                <Box>
-                  <Grid container alignItems='center' spacing={2}>
-                    <Grid item>
-                      <WalletSearchIcon />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='body1'>Accounts</Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <IconButton onClick={handleCloseAccounts} size='small'>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </DialogTitle>
+            <CustomDialogTitle
+              icon={<WalletSearchIcon />}
+              title={
+                <IntlMessages id='common.accounts' defaultMessage='Accounts' />
+              }
+              onClose={handleCloseAccounts}
+            />
+
             <Divider />
             <DialogContent className={classes.accountsDialgContent}>
               <Accounts />

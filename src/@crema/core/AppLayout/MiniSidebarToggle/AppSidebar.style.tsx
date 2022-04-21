@@ -1,8 +1,22 @@
-import {makeStyles, lighten} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
+import {ThemeMode} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
+    dexkitIcon: {
+      '& path': {
+        fill: ({themeMode}: {themeMode: any}) =>
+          themeMode === ThemeMode.LIGHT
+            ? theme.palette.primary.main
+            : theme.palette.common.white,
+      },
+    },
+    icon: {
+      '& path': {
+        stroke: theme.palette.text.primary,
+      },
+    },
     avatar: {
       backgroundColor: theme.palette.background.default,
       width: theme.spacing(12),
@@ -10,6 +24,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     },
     avatarButton: {
       borderRadius: '50%',
+      border: `1px solid ${theme.palette.divider}`,
     },
     drawer: {
       width: '100%',
@@ -184,7 +199,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     sidebarStandard: {
       height: '100%',
       width: '100%',
-      color: 'white',
       overflow: 'hidden',
     },
     badgeRoot: {
@@ -199,11 +213,8 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       justifyContent: 'space-between',
       alignItems: 'center',
       borderRadius: theme.shape.borderRadius,
-      background: lighten(theme.palette.background.paper, 0.075),
-    },
-    wallet: {
-      borderRadius: theme.shape.borderRadius,
-      background: lighten(theme.palette.background.paper, 0.075),
+      border: `1px solid ${theme.palette.divider}`,
+      background: theme.palette.background.paper,
     },
   };
 });

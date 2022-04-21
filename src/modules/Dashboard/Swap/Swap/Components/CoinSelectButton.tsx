@@ -6,6 +6,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const StyledButton = withStyles((theme) => ({
   root: {
     minHeight: '100%',
+
+    '&:hover': {
+      borderColor: theme.palette.text.primary,
+    },
   },
 }))(Button);
 
