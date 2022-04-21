@@ -1,7 +1,21 @@
 import {fade, makeStyles} from '@material-ui/core/styles';
+import {ThemeMode} from 'shared/constants/AppEnums';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
+  dexkitIcon: {
+    '& path': {
+      fill: ({themeMode}: {themeMode: any}) =>
+        themeMode === ThemeMode.LIGHT
+          ? theme.palette.primary.main
+          : theme.palette.common.white,
+    },
+  },
+  fallback: {
+    '& path': {
+      fill: theme.palette.text.primary,
+    },
+  },
   avatar: {
     borderColor: theme.palette.divider,
     backgroundColor: theme.palette.background.paper,
@@ -16,6 +30,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   avatarButton: {
     borderRadius: '50%',
+    border: `1px solid ${theme.palette.divider}`,
   },
   appToolbar: {
     paddingLeft: 20,
@@ -118,6 +133,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   switchNetworkButton: {
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
   },
 }));

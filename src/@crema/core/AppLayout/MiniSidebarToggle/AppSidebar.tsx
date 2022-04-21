@@ -1,7 +1,7 @@
 import React, {useContext, useCallback, useState} from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import {Badge, useTheme} from '@material-ui/core';
+import {Badge, Paper, useTheme} from '@material-ui/core';
 import clsx from 'clsx';
 import Navigation from '../../Navigation/VerticleNav';
 import {
@@ -23,6 +23,11 @@ import {ReactComponent as GridFiveIcon} from 'assets/images/menu/grid-5.svg';
 import {ReactComponent as NotificationIcon} from 'assets/images/menu/notification.svg';
 
 import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
+
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+
+import MenuIcon from '@material-ui/icons/Menu';
+
 import {
   Grid,
   IconButton,
@@ -37,7 +42,7 @@ import {
 
 import {Link as RouterLink} from 'react-router-dom';
 
-import {ReactComponent as MenuIcon} from 'assets/images/menu/menu.svg';
+import {ReactComponent as MenuCloseIcon} from 'assets/images/menu/menu.svg';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 
 import {useWeb3} from 'hooks/useWeb3';
@@ -53,7 +58,6 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import Delete from '@material-ui/icons/Delete';
 import {groupItems} from 'utils';
 import {humanizeDate} from 'utils/date';
-import Close from '@material-ui/icons/Close';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {useCustomNetworkList} from 'hooks/network';
 import {useChainInfo} from 'hooks/useChainInfo';
@@ -68,10 +72,7 @@ interface AppSidebarProps {
   position?: 'left' | 'bottom' | 'right' | 'top';
 }
 
-const AppSidebar: React.FC<AppSidebarProps> = ({
-  position = 'left',
-  variant,
-}) => {
+const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
   const {onSwitchMagicNetwork} = useMagicProvider();
   const dispatch = useDispatch();
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
@@ -265,7 +266,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           </Typography>
         </MenuItem>
       </Menu>
-      <Hidden lgUp>
+      <Hidden smUp>
         <Drawer
           anchor={position}
           open={navCollapsed}
@@ -284,7 +285,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   alignContent='center'
                   justifyContent='space-between'>
                   <Grid item>
-                    <DexkitLogoIconImage />
+                    <DexkitLogoIconImage className={classes.dexkitIcon} />
                   </Grid>
                   <Grid item>
                     <Typography variant='body1'>
@@ -293,7 +294,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   </Grid>
                   <Grid item>
                     <IconButton onClick={handleToggleDrawer} size='small'>
-                      <MenuIcon />
+                      <MenuCloseIcon className={classes.icon} />
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -306,39 +307,41 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   alignItems='center'
                   alignContent='center'>
                   <Grid item xs={12}>
-                    <Box p={2} className={classes.wallet}>
-                      <Grid
-                        container
-                        alignItems='center'
-                        alignContent='center'
-                        spacing={4}>
-                        <Grid item>
-                          <ButtonBase
-                            className={classes.avatarButton}
-                            to='/profile'
-                            onClick={handleToggleDrawer}
-                            component={RouterLink}>
-                            <Avatar
-                              className={classes.avatar}
-                              src={
-                                account && chainId
-                                  ? kittygotchiProfile.getDefault(
-                                      account,
-                                      chainId,
-                                    )?.image
-                                  : undefined
-                              }
-                            />
-                          </ButtonBase>
-                        </Grid>
-
-                        {!isOnLoginPage() || account ? (
-                          <Grid item xs>
-                            <WalletInfo onClick={handleToggleDrawer} />
+                    <Paper>
+                      <Box p={2}>
+                        <Grid
+                          container
+                          alignItems='center'
+                          alignContent='center'
+                          spacing={4}>
+                          <Grid item>
+                            <ButtonBase
+                              className={classes.avatarButton}
+                              to='/profile'
+                              onClick={handleToggleDrawer}
+                              component={RouterLink}>
+                              <Avatar
+                                className={classes.avatar}
+                                src={
+                                  account && chainId
+                                    ? kittygotchiProfile.getDefault(
+                                        account,
+                                        chainId,
+                                      )?.image
+                                    : undefined
+                                }
+                              />
+                            </ButtonBase>
                           </Grid>
-                        ) : null}
-                      </Grid>
-                    </Box>
+
+                          {!isOnLoginPage() || account ? (
+                            <Grid item xs>
+                              <WalletInfo onClick={handleToggleDrawer} />
+                            </Grid>
+                          ) : null}
+                        </Grid>
+                      </Box>
+                    </Paper>
                   </Grid>
                   <Grid item xs={12}>
                     {isMetamask() || isMagicProvider() ? (
@@ -373,7 +376,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   TabIndicatorProps={{
                     style: {display: 'none'},
                   }}>
-                  <CustomTab value='menu' icon={<GridFiveIcon />} />
+                  <CustomTab
+                    value='menu'
+                    icon={<GridFiveIcon className={classes.icon} />}
+                  />
                   <CustomTab
                     value='notifications'
                     icon={
@@ -385,7 +391,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             (notification) => notification?.check === undefined,
                           ).length
                         }>
-                        <NotificationIcon />
+                        <NotificationIcon className={classes.icon} />
                       </Badge>
                     }
                   />
@@ -448,7 +454,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           </Box>
         </Drawer>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden smDown>
         <Box
           height='100%'
           className={clsx(
@@ -459,7 +465,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
             <Box p={4}>
               <IconButton onClick={() => dispatch(toggleNavCollapsed())}>
-                {navCollapsed ? <MenuIcon /> : <Close />}
+                {navCollapsed ? (
+                  <MenuIcon className={classes.icon} />
+                ) : (
+                  <MenuOpenIcon className={classes.icon} />
+                )}
               </IconButton>
             </Box>
             <Divider />

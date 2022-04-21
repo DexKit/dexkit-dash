@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 
 import {GoogleIcon, TwitterIcon, DiscordIcon} from 'shared/components/Icons';
 
@@ -35,6 +35,9 @@ import {ReactComponent as DexKitLogo} from 'assets/images/login/dexkit-logo.svg'
 import {WALLET_ROUTE} from 'shared/constants/routes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {ThemeMode} from 'shared/constants/AppEnums';
+import AppContextPropsType from 'types/AppContextPropsType';
+import {AppContext} from '@crema';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -82,12 +85,22 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: 'center center',
     height: '100%',
   },
+  logo: {
+    '& path': {
+      fill: ({themeMode}: {themeMode: any}) =>
+        themeMode === ThemeMode.LIGHT
+          ? theme.palette.primary.main
+          : theme.palette.common.white,
+    },
+  },
 }));
 
 interface Props {}
 
 export const LoginWallet = (props: Props) => {
-  const classes = useStyles();
+  const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
+  const classes = useStyles({themeMode});
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
   const {onConnectWeb3, onCloseWeb3, account} = useWeb3();
@@ -258,7 +271,7 @@ export const LoginWallet = (props: Props) => {
                 <Box>
                   <Grid container spacing={8}>
                     <Grid item xs={12}>
-                      <DexKitLogo />
+                      <DexKitLogo className={classes.logo} />
                     </Grid>
                     <Grid item xs={12}>
                       <Typography variant='h5'>

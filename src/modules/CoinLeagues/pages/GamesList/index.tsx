@@ -53,9 +53,17 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
-import {TextField} from '@material-ui/core';
+import {makeStyles, TextField} from '@material-ui/core';
 import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
 import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 enum Tabs {
   History = 'History',
@@ -70,6 +78,8 @@ const GamesList = () => {
   const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
   const isMobile = useMobile();
+
+  const classes = useStyles();
 
   useDiscord();
 
@@ -571,7 +581,7 @@ const GamesList = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>

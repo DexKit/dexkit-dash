@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
     subheader: {
-      color: theme.palette.common.white,
+      color: theme.palette.text.primary,
       fontWeight: 500,
     },
     divider: {

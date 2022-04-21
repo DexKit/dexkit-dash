@@ -7,7 +7,11 @@ export const RoundedIconButton = withStyles((theme) => ({
     alignContent: 'center',
     justifyContent: 'center',
     backgroundColor: theme.palette.background.paper,
+    '& svg path': {
+      stroke: theme.palette.text.primary,
+    },
     borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
   },

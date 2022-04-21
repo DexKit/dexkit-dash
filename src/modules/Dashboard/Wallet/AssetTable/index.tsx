@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  makeStyles,
   TextField,
   useTheme,
 } from '@material-ui/core';
@@ -34,6 +35,14 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AssetList from '../components/AssetList';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 interface AssetTableProps {
   balances: MyBalances[];
@@ -56,6 +65,8 @@ const AssetTable: React.FC<AssetTableProps> = ({
   loadingUsd,
   errorUsd,
 }) => {
+  const classes = useStyles();
+
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -164,7 +175,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                   <Grid item>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item>
-                        <FilterSearchIcon style={{}} />
+                        <FilterSearchIcon className={classes.icon} />
                       </Grid>
                       <Grid item>
                         <Typography variant='body1'>Filter</Typography>
