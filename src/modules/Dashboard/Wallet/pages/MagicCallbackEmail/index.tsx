@@ -1,20 +1,21 @@
 import Box from '@material-ui/core/Box';
 
 import Typography from '@material-ui/core/Typography';
-import { useMagicProvider } from 'hooks/provider/useMagicProvider';
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import React, {useEffect} from 'react';
+import {useHistory} from 'react-router';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { getCachedMagicNetwork, getMagic } from 'services/magic';
+import {getCachedMagicNetwork, getMagic} from 'services/magic';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
 import Grid from '@material-ui/core/Grid';
-import { useWelcomeModal } from 'hooks/useWelcomeModal';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 const MagicCallbackEmail = () => {
-  const { onConnectMagic } = useMagicProvider();
+  const {onConnectMagic} = useMagicProvider();
   const history = useHistory();
-  const { loginBackRoute, onSetLoginBackRoute } = useWelcomeModal();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
 
   ////TODO: colocar loading nos callbacks
   /* eslint-disable */
@@ -24,7 +25,7 @@ const MagicCallbackEmail = () => {
     const magic = getMagic(network);
     magic.auth.loginWithCredential().finally(() => {
       onConnectMagic().then((acc) => {
-        if (loginBackRoute) {
+        if (loginBackRoute && loginBackRoute !== LOGIN_WALLET_ROUTE) {
           history.push(loginBackRoute);
           onSetLoginBackRoute(undefined);
         } else {
@@ -48,7 +49,7 @@ const MagicCallbackEmail = () => {
         <Grid item>
           <img
             src={MoneyWalletIcon}
-            style={{ height: 150, width: 150 }}
+            style={{height: 150, width: 150}}
             alt='Wallet'
           />
         </Grid>
