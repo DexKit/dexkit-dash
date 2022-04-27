@@ -318,8 +318,8 @@ const GamesList = () => {
           </Grid>
         )}
 
-        <Hidden smUp={true}>
-          {/*<Grid item xs={12}>
+        {/*<Hidden smUp={true}>
+          <Grid item xs={12}>
             <Box display={'flex'} justifyContent={'center'}>
               <img
               src={CoinsLeagueBanner}
@@ -328,8 +328,8 @@ const GamesList = () => {
         />
               <AAdsCoinleagueBanner type={2} />
             </Box>
-        </Grid>*/}
-        </Hidden>
+        </Grid>
+        </Hidden>*/}
         <Grid item xs={12}>
           <Grid
             container

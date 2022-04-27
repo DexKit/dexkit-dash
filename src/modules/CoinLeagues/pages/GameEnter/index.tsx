@@ -492,22 +492,24 @@ function GameEnter(props: Props) {
             <Grid container justifyContent='space-between'>
               <Grid item>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Breadcrumbs>
-                      <Link
-                        color='inherit'
-                        component={RouterLink}
-                        to={HOME_ROUTE}>
-                        <IntlMessages id='app.coinLeagues.dashboard' />
-                      </Link>
-                      <Link
-                        color='inherit'
-                        component={RouterLink}
-                        to={listGamesRoute}>
-                        <IntlMessages id='app.coinLeagues.games' />
-                      </Link>
-                    </Breadcrumbs>
-                  </Grid>
+                  {!isMobile && (
+                    <Grid item xs={12}>
+                      <Breadcrumbs>
+                        <Link
+                          color='inherit'
+                          component={RouterLink}
+                          to={HOME_ROUTE}>
+                          <IntlMessages id='app.coinLeagues.dashboard' />
+                        </Link>
+                        <Link
+                          color='inherit'
+                          component={RouterLink}
+                          to={listGamesRoute}>
+                          <IntlMessages id='app.coinLeagues.games' />
+                        </Link>
+                      </Breadcrumbs>
+                    </Grid>
+                  )}
                   <Grid item xs={12}>
                     <Grid
                       container
@@ -568,7 +570,7 @@ function GameEnter(props: Props) {
               </Grid>
             </Grid>
           </Grid>
-          {!sufficientFunds && game !== undefined && (
+          {!sufficientFunds && game !== undefined && !game.started && (
             <Grid item xs={12}>
               <Alert severity='error'>
                 <IntlMessages
