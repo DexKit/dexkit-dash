@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   itemText: {
     whiteSpace: 'nowrap',

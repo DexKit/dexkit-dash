@@ -29,13 +29,7 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
   );
 
   const updateThemeMode = (themeMode: ThemeMode) => {
-    // let currentTheme: Theme = defaultConfig.theme;
-
-    // if (themeMode === ThemeMode.DARK) {
-    //   currentTheme = defaultDarkConfig.theme;
-    // }
-
-    updateTheme(defaultDarkConfig.theme);
+    updateMode(themeMode);
   };
 
   const setRTL = (rtl: boolean) => {
@@ -47,10 +41,6 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
     updateTheme(theme);
     setRtl(rtl);
   };
-
-  useEffect(() => {
-    updateThemeMode(ThemeMode.DARK);
-  }, []);
 
   useEffect(() => {
     const locale: any = JSON.parse(localStorage.getItem('locale') || '{}');

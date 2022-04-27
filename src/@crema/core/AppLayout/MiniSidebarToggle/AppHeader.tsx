@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useContext} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -51,13 +51,17 @@ import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {AppState} from 'redux/store';
+import AppContext from '@crema/utility/AppContext';
+import AppContextPropsType from 'types/AppContextPropsType';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const {chainId, getProvider, account} = useWeb3();
   const {onSwitchMagicNetwork} = useMagicProvider();
 
-  const classes = useStyles();
+  const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
+  const classes = useStyles({themeMode});
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -269,14 +273,14 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 }
           }>
           {isMobile ? (
-            <Box>
+            <Box px={2}>
               <Grid
                 container
                 justify='space-between'
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  <DexkitLogoIconImage />
+                  <DexkitLogoIconImage className={classes.dexkitIcon} />
                 </Grid>
                 <Grid item>
                   <Grid
@@ -327,7 +331,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               spacing={2}>
               <Grid item>
                 <Box mr={4}>
-                  <DexkitLogoImage />
+                  <DexkitLogoImage className={classes.dexkitIcon} />
                 </Box>
               </Grid>
               <Grid item xs>
@@ -391,6 +395,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       to='/profile'
                       component={RouterLink}>
                       <Avatar
+                        classes={{fallback: classes.fallback}}
                         className={classes.avatar}
                         src={
                           account && chainId

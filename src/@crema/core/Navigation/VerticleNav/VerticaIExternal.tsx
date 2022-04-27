@@ -48,7 +48,7 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
       />
       <ListItemSecondaryAction
         className={clsx(classes.hiddenOverflow, 'nav-item-icon-arrow')}>
-        <ExportIcon />
+        <ExportIcon className={classes.arrowIcon} />
       </ListItemSecondaryAction>
     </ListItem>
   );

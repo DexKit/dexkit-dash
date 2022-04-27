@@ -136,7 +136,7 @@ const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
         />
         <ListItemSecondaryAction className='visible-hover'>
           <IconButton onClick={handleClickIconButton}>
-            <ArrowRightIcon />
+            <ArrowRightIcon className={classes.arrowIcon} />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

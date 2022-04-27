@@ -23,6 +23,12 @@ import clsx from 'clsx';
 import {Home} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+      fill: theme.palette.text.primary,
+    },
+  },
   paper: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
@@ -173,7 +179,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
           {!selectActive ? (
             <Grid item>
               <IconButton onClick={handleEdit} size='small'>
-                <EditIcon />
+                <EditIcon className={classes.icon} />
               </IconButton>
             </Grid>
           ) : null}

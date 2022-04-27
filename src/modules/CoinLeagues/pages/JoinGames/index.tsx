@@ -8,6 +8,7 @@ import {
   IconButton,
   InputAdornment,
   Link,
+  makeStyles,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -54,6 +55,14 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
+
 const JoinGames = () => {
   const history = useHistory();
   const {account} = useWeb3();
@@ -61,6 +70,8 @@ const JoinGames = () => {
   const defaultAccount = useDefaultAccount();
 
   const {messages} = useIntl();
+
+  const classes = useStyles();
 
   useDiscord();
   const [room, setRoom] = useState(RoomType.Main);
@@ -334,7 +345,7 @@ const JoinGames = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
