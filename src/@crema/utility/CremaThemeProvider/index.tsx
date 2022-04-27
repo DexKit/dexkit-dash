@@ -123,7 +123,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
     } else {
       updateThemeMode!(ThemeMode.LIGHT);
     }
-  }, [darkMode]);
+  }, [darkMode, updateThemeMode]);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>

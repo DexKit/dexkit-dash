@@ -80,7 +80,7 @@ const SLIDES_TEXTS: {title: string; description: string}[] = [
       'You can manage all your ERC, BEP and POLY assets from any internet connected device.',
   },
   {
-    title: 'Maximum control over your finances.',
+    title: 'Maximum control over your finances',
     description:
       'Buy, trade or exchange cryptocurrencies from the platform and manage them as you prefer.',
   },
