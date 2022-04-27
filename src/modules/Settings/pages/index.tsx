@@ -64,7 +64,6 @@ import AppContextPropsType from 'types/AppContextPropsType';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {WALLET_ROUTE} from 'shared/constants/routes';
 import {useMobile} from 'hooks/useMobile';
-import {ThemeMode} from 'shared/constants/AppEnums';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDarkMode} from 'redux/actions';
@@ -99,9 +98,6 @@ export const Settings: React.FC = () => {
   const {tokens} = useCustomTokenList();
   const isMobile = useMobile();
 
-  const {themeMode, updateThemeMode} =
-    useContext<AppContextPropsType>(AppContext);
-
   const {addAsset} = useAddCustomAsset();
 
   const {removeNetwork} = useRemoveCustomNetwork();
@@ -112,9 +108,12 @@ export const Settings: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const handleSetThemeMode = useCallback((value: boolean) => {
-    dispatch(setDarkMode(value));
-  }, []);
+  const handleSetThemeMode = useCallback(
+    (value: boolean) => {
+      dispatch(setDarkMode(value));
+    },
+    [dispatch],
+  );
 
   const handleBack = useCallback(() => {
     if (history.length > 0) {

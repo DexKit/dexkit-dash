@@ -1,7 +1,14 @@
 import React, {useCallback, useState} from 'react';
 
-import {Box, Dialog, DialogProps, CircularProgress} from '@material-ui/core';
-
+import {
+  Box,
+  Dialog,
+  DialogProps,
+  CircularProgress,
+  DialogTitle,
+  IconButton,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import Slider from './Slider';
 import {makeStyles} from '@material-ui/core';
 
@@ -16,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     overflow: 'inherit',
     borderRadius: theme.shape.borderRadius,
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
   },
 }));
 
@@ -67,7 +80,7 @@ const SLIDES_TEXTS: {title: string; description: string}[] = [
       'You can manage all your ERC, BEP and POLY assets from any internet connected device.',
   },
   {
-    title: 'Maximum control over your finances.',
+    title: 'Maximum control over your finances',
     description:
       'Buy, trade or exchange cryptocurrencies from the platform and manage them as you prefer.',
   },
@@ -131,18 +144,27 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
       fullScreen={isMobile}
       maxWidth='sm'
       classes={{paper: classes.dialogPaper}}>
+      {onClose && (
+        <DialogTitle>
+          <IconButton
+            aria-label='close'
+            className={classes.closeButton}
+            onClick={() => onClose({}, 'backdropClick')}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+      )}
       <Slider
         slideCount={4}
         index={index}
         onChangeIndex={handleChangeIndex}
         onSelectIndex={handleSelectIndex}
         onNext={handleNext}
-        interval={5000}
         onPrevious={handlePrevious}
         description={SLIDES_TEXTS[index].description}
         title={SLIDES_TEXTS[index].title}
         onStart={handleGoLogin}>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={
               isMobile
@@ -152,7 +174,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={
               isMobile
@@ -162,7 +184,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={
               isMobile
@@ -172,7 +194,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={
               isMobile

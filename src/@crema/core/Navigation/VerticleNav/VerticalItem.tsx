@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {
   Divider,
   Icon,
+  IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
@@ -15,7 +16,12 @@ import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
-import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
+import {
+  RouteComponentProps,
+  useLocation,
+  withRouter,
+  useHistory,
+} from 'react-router-dom';
 import CustomIcon from 'shared/components/CustomIcon';
 import {useDispatch} from 'react-redux';
 import {toggleNavCollapsed} from 'redux/actions';
@@ -31,11 +37,12 @@ interface VerticalItemProps extends RouteComponentProps<any> {
 const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
   const classes = useStyles({level});
   const location = useLocation();
+  const history = useHistory();
 
-  const getUrl = () => {
+  const getUrl = useCallback(() => {
     if (item.url) return item.url;
     return '/';
-  };
+  }, [item.url]);
   const isActive = () => {
     if (item.url === location.pathname) {
       return true;
@@ -97,6 +104,13 @@ const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
     }
   }, [dispatch, isMobile]);
 
+  const handleClickIconButton = useCallback(() => {
+    if (isMobile) {
+      dispatch(toggleNavCollapsed());
+    }
+    history.push(getUrl());
+  }, [dispatch, isMobile, history, getUrl]);
+
   return (
     <>
       <ListItem
@@ -121,7 +135,9 @@ const VerticalItem: React.FC<VerticalItemProps> = ({item, level}) => {
           primary={<IntlMessages id={item.messageId} />}
         />
         <ListItemSecondaryAction className='visible-hover'>
-          <ArrowRightIcon className={classes.arrowIcon} />
+          <IconButton onClick={handleClickIconButton}>
+            <ArrowRightIcon className={classes.arrowIcon} />
+          </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
       <Divider className={clsx(classes.divider, 'visible-hover')} />

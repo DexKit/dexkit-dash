@@ -29,7 +29,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {
   ExplorerURL,
   GET_LEAGUES_CHAIN_ID,
-  IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
@@ -135,8 +134,6 @@ const USD_POWER_NUMBER = 10 ** 8;
 function OnePlayerTable(props: Props): JSX.Element {
   const {id, account, winner, data, type, profile, prizePool, currentPlayers} =
     props;
-
-  console.log(currentPlayers);
 
   const classes = useStyles();
   const {messages} = useIntl();
@@ -526,51 +523,59 @@ function OnePlayerTable(props: Props): JSX.Element {
                     {playerData.coins?.length > 0 &&
                       (isMobile ? (
                         <AvatarGroup max={10} spacing={17}>
-                          {chainId &&
-                            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                            playerData?.coins.map((coin) =>
-                              isBalanceVisible ? (
+                          {playerData?.coins.map((coin) =>
+                            isBalanceVisible ? (
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                              </Avatar>
+                            ) : (
+                              <Badge color={'primary'} overlap='circular'>
                                 <Avatar
                                   className={classes.chip}
-                                  src={getIconByCoin(coin, chainId)}
+                                  style={{height: 35, width: 35}}
+                                />
+                              </Badge>
+                            ),
+                          )}
+                        </AvatarGroup>
+                      ) : (
+                        <Grid container spacing={3}>
+                          {playerData?.coins.map((coin) =>
+                            isBalanceVisible ? (
+                              <Grid item>
+                                <Avatar
+                                  className={classes.chip}
+                                  src={getIconByCoin(
+                                    coin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
                                   style={{height: 35, width: 35}}>
-                                  {getIconSymbol(coin, chainId)}
+                                  {getIconSymbol(
+                                    coin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
                                 </Avatar>
-                              ) : (
-                                <Badge color={'primary'} overlap='circular'>
+                              </Grid>
+                            ) : (
+                              <Grid item>
+                                <Badge color='primary' overlap='circular'>
                                   <Avatar
                                     className={classes.chip}
                                     style={{height: 35, width: 35}}
                                   />
                                 </Badge>
-                              ),
-                            )}
-                        </AvatarGroup>
-                      ) : (
-                        <Grid container spacing={3}>
-                          {chainId &&
-                            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                            playerData?.coins.map((coin) =>
-                              isBalanceVisible ? (
-                                <Grid item>
-                                  <Avatar
-                                    className={classes.chip}
-                                    src={getIconByCoin(coin, chainId)}
-                                    style={{height: 35, width: 35}}>
-                                    {getIconSymbol(coin, chainId)}
-                                  </Avatar>
-                                </Grid>
-                              ) : (
-                                <Grid item>
-                                  <Badge color='primary' overlap='circular'>
-                                    <Avatar
-                                      className={classes.chip}
-                                      style={{height: 35, width: 35}}
-                                    />
-                                  </Badge>
-                                </Grid>
-                              ),
-                            )}
+                              </Grid>
+                            ),
+                          )}
                         </Grid>
                       ))}
                   </Grid>

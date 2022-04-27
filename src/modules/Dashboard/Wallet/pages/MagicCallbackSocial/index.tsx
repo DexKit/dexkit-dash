@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-
+import React, {useEffect} from 'react';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { useMagicProvider } from 'hooks/provider/useMagicProvider';
-import { useHistory } from 'react-router';
-import { getMagic, getCachedMagicNetwork } from 'services/magic';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {useHistory} from 'react-router';
+import {getMagic, getCachedMagicNetwork} from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
-import { useWelcomeModal } from 'hooks/useWelcomeModal';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 const MagicCallbackSocial = () => {
-  const { onConnectMagic } = useMagicProvider();
-  const { loginBackRoute, onSetLoginBackRoute } = useWelcomeModal();
+  const {onConnectMagic} = useMagicProvider();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const history = useHistory();
 
   //TODO: colocar loading nos callbacks
@@ -25,7 +25,7 @@ const MagicCallbackSocial = () => {
     const magic = getMagic(network);
     magic.oauth.getRedirectResult().finally(() => {
       onConnectMagic().then((acc) => {
-        if (loginBackRoute) {
+        if (loginBackRoute && loginBackRoute !== LOGIN_WALLET_ROUTE) {
           history.push(loginBackRoute);
           onSetLoginBackRoute(undefined);
         } else {
@@ -49,7 +49,7 @@ const MagicCallbackSocial = () => {
         <Grid item>
           <img
             src={MoneyWalletIcon}
-            style={{ height: 150, width: 150 }}
+            style={{height: 150, width: 150}}
             alt='Wallet'
           />
         </Grid>

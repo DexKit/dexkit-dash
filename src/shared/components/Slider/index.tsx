@@ -5,14 +5,11 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core';
 
 import SwipeableViews from 'react-swipeable-views';
-import {autoPlay} from 'react-swipeable-views-utils';
 import SliderPagination from './SliderPagination';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {useMobile} from 'hooks/useMobile';
-
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,7 +47,6 @@ interface SliderProps {
   children?: React.ReactNode | React.ReactNode[];
   slideCount: number;
   index: number;
-  interval: number;
   description?: string;
   title?: string;
 }
@@ -59,7 +55,6 @@ export const Slider = (props: SliderProps) => {
   const {
     children,
     index,
-    interval,
     onSelectIndex,
     onChangeIndex,
     onStart,
@@ -130,12 +125,9 @@ export const Slider = (props: SliderProps) => {
           </Grid>
         </Box>
       </div>
-      <AutoPlaySwipeableViews
-        interval={interval}
-        index={index}
-        onChangeIndex={onChangeIndex}>
+      <SwipeableViews index={index} onChangeIndex={onChangeIndex}>
         {children}
-      </AutoPlaySwipeableViews>
+      </SwipeableViews>
     </div>
   );
 };

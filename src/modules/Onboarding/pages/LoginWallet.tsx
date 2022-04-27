@@ -189,11 +189,7 @@ export const LoginWallet = (props: Props) => {
   );
 
   const handleBack = useCallback(() => {
-    if (history.length > 0) {
-      history.goBack();
-    } else {
-      history.push(WALLET_ROUTE);
-    }
+    history.push(WALLET_ROUTE);
   }, [history]);
 
   /*  const handleConnectWalletLater = useCallback(() => {
