@@ -46,6 +46,7 @@ import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 import {useHistory} from 'react-router-dom';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 interface Props {
   chainId: number | undefined;
@@ -317,7 +318,7 @@ const MarketForm: React.FC<Props> = (props) => {
   let errorMessage = null;
   const notConnected = web3State !== Web3State.Done;
   const handleConnectWallet = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, []);
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>

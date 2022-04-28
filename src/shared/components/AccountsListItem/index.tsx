@@ -217,9 +217,19 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
                   />
                 </MenuItem>
               )}
-              <MenuItem onClick={handleEdit}>Add Label</MenuItem>
+              <MenuItem onClick={handleEdit}>
+                <IntlMessages
+                  id={'accounts.addLabel'}
+                  defaultMessage={'Add Label'}
+                />
+              </MenuItem>
               {isConnected && (
-                <MenuItem onClick={handleDisconnectWallet}>Disconnect</MenuItem>
+                <MenuItem onClick={handleDisconnectWallet}>
+                  <IntlMessages
+                    id={'accounts.disconnect'}
+                    defaultMessage={'Disconnect'}
+                  />
+                </MenuItem>
               )}
             </Menu>
           </Grid>
