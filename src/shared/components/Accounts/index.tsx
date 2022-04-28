@@ -348,6 +348,12 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Typography variant='body1'>Manage Accounts</Typography>
         </Grid>
+        {!account && (
+          <Grid item xs={12}>
+            {connectButton}
+          </Grid>
+        )}
+
         <Grid item xs={12}>
           <Box
             display='flex'
@@ -390,21 +396,35 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             {wallet[selectedNetwork].map((a, index: number) => (
-              <Grid item xs={12} key={index}>
-                <AccountListItem
-                  account={a}
-                  isConnected={
-                    a.address.toLowerCase() === account?.toLowerCase()
-                  }
-                  onLabelChange={handleLabelChange}
-                  onOpenMenu={handleOpenMenu}
-                  isDefault={index == 0}
-                  selectActive={selectActive}
-                  onSelect={handleSelect}
-                  selected={isAccountSelected(a)}
-                  onMakeDefault={handleMakeDefault}
-                />
-              </Grid>
+              <>
+                {index === 0 && (
+                  <Grid item xs={12}>
+                    Default Account
+                  </Grid>
+                )}
+
+                {index === 1 && (
+                  <Grid item xs={12}>
+                    Other Accounts
+                  </Grid>
+                )}
+
+                <Grid item xs={12} key={index}>
+                  <AccountListItem
+                    account={a}
+                    isConnected={
+                      a.address.toLowerCase() === account?.toLowerCase()
+                    }
+                    onLabelChange={handleLabelChange}
+                    onOpenMenu={handleOpenMenu}
+                    isDefault={index === 0}
+                    selectActive={selectActive}
+                    onSelect={handleSelect}
+                    selected={isAccountSelected(a)}
+                    onMakeDefault={handleMakeDefault}
+                  />
+                </Grid>
+              </>
             ))}
           </Grid>
         </Grid>

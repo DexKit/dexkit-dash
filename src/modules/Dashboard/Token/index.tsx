@@ -403,14 +403,14 @@ const TokenPage = () => {
                     />
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+                {/*    <Grid item xs={12}>
                   <HistoryTables
                     account={account}
                     networkName={networkName}
                     address={address}
                   />
                 </Grid>
-                {/*   <Grid item xs={12}>
+                 <Grid item xs={12}>
                   <InfoTab error={error} loading={loading} data={data} />
                 </Grid> */}
               </>

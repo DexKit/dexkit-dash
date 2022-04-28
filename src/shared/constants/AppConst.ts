@@ -1,6 +1,7 @@
-import {BigNumber} from '@0x/utils';
-import {ChainId} from 'types/blockchain';
-import {EthereumNetwork} from './AppEnums';
+import { BigNumber } from '@0x/utils';
+import { AssetPlatforms } from 'services/rest/coingecko/constants';
+import { ChainId } from 'types/blockchain';
+import { EthereumNetwork } from './AppEnums';
 
 export const initialUrl = `/wallet`;
 
@@ -148,4 +149,15 @@ export const getCoingeckoContractUrlFromNetwork = (
     default:
       return 'https://api.coingecko.com/api/v3/coins/ethereum/contract';
   }
+};
+
+export const getCoingeckoContractUrlFromChainId = (
+  chainId: number,
+) => {
+  const smartPlatformId = AssetPlatforms.filter(a => a.chain_identifier).find(ap => Number(ap.chain_identifier) === chainId);
+  if (smartPlatformId) {
+    return `https://api.coingecko.com/api/v3/coins/${smartPlatformId.id}/contract`;
+  }
+  return '';
+
 };

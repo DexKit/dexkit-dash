@@ -16,11 +16,15 @@ import {
   makeStyles,
   Checkbox,
 } from '@material-ui/core';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import clsx from 'clsx';
 import {Home} from '@material-ui/icons';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -70,6 +74,10 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const {onCloseWeb3} = useWeb3();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   const theme = useTheme();
 
   const classes = useStyles();
@@ -97,6 +105,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
+    setAnchorEl(null);
   }, []);
 
   const handleSelect = useCallback(() => {
@@ -105,11 +114,25 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const handleMakeDefault = useCallback(() => {
     onMakeDefault(account);
+    setAnchorEl(null);
   }, [onMakeDefault, account]);
+
+  const handleDisconnectWallet = useCallback(() => {
+    onCloseWeb3();
+    setAnchorEl(null);
+  }, [onCloseWeb3]);
 
   useEffect(() => {
     setLabel(account.label);
   }, [account]);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Paper
@@ -176,14 +199,39 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
               </Typography>
             ) : null}
           </Grid>
-          {!selectActive ? (
+          <Grid item>
+            <IconButton
+              aria-label='more'
+              aria-controls='long-menu'
+              aria-haspopup='true'
+              onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+
+            <Menu
+              id='account-accounts'
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}>
+              {!isDefault && !selectActive && (
+                <MenuItem onClick={handleMakeDefault}>Make Default</MenuItem>
+              )}
+              <MenuItem onClick={handleEdit}>Edit Label</MenuItem>
+              {isConnected && (
+                <MenuItem onClick={handleDisconnectWallet}>Disconnect</MenuItem>
+              )}
+            </Menu>
+          </Grid>
+
+          {false ? (
             <Grid item>
               <IconButton onClick={handleEdit} size='small'>
                 <EditIcon className={classes.icon} />
               </IconButton>
             </Grid>
           ) : null}
-          {!isDefault && !selectActive ? (
+          {false ? (
             <Grid item>
               <IconButton onClick={handleMakeDefault} size='small'>
                 <Home />
