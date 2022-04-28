@@ -2102,5 +2102,15 @@
   "myapps.deleteAPP": "Deleting your app",
   "myapps.pleaseSignDelete": "Please sign message with your wallet to delete app",
   "myapps.submittedDeleteApp": "Your app was deleted",
-  "myapps.errorDeleteApp": "Error deleting your app, please contact support"
+  "myapps.errorDeleteApp": "Error deleting your app, please contact support",
+  "accounts.accounts": "Accounts",
+  "accounts.makeDefault": "Default Account",
+  "accounts.addLabel": "Add Label",
+  "accounts.disconnect": "Disconnect",
+  "accounts.otherAccounts": "Other Accounts",
+  "accounts.defaultAccount": "Default Account",
+  "accounts.manageAccounts": "Manage Accounts",
+  "accounts.addValid": "Add valid account",
+  "accounts.addNew": "Add new account",
+  "accounts.addressCopied": "Address copied"
 }

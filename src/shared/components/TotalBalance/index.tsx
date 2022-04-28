@@ -337,13 +337,18 @@ const TotalBalance = (props: Props) => {
                         )}
                       </Grid>
                       <Grid item>
-                        <Box display='flex' alignItems='center'>
-                          <Typography variant='body2'>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          justifyContent={'flex-start'}>
+                          <Typography variant='body2' color={'textSecondary'}>
                             <span>
                               {isBalanceVisible
                                 ? truncateIsAddress(defaultAccountLabel)
                                 : '******'}{' '}
                             </span>
+                          </Typography>
+                          <Box pl={2} pr={2}>
                             <CopyButton
                               size='small'
                               copyText={address || ''}
@@ -353,15 +358,14 @@ const TotalBalance = (props: Props) => {
                                 style={{fontSize: 16}}
                               />
                             </CopyButton>
-                            <IconButton
-                              onClick={handleShowAccounts}
-                              size='small'>
-                              <KeyboardArrowDownIcon />
-                            </IconButton>
-                          </Typography>
+                          </Box>
                         </Box>
 
-                        <Grid container spacing={2}>
+                        <Grid
+                          container
+                          spacing={2}
+                          alignContent={'center'}
+                          alignItems='center'>
                           <Grid item>
                             <Typography className={classes.usdAmount}>
                               {loadingUsd || loading ? (
@@ -385,22 +389,29 @@ const TotalBalance = (props: Props) => {
                                       ? theme.palette.success.main
                                       : theme.palette.error.main,
                                 }}
-                                variant={'h6'}>
+                                variant={'body1'}>
                                 {usdTotalPercentage.toFixed(2)}%
                               </Typography>
                             </Grid>
                           )}
+                          <Grid item>
+                            <IconButton
+                              onClick={handleToggleVisibility}
+                              size='small'>
+                              {isBalanceVisible ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </IconButton>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {isBalanceVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
+                    <IconButton onClick={handleShowAccounts}>
+                      <KeyboardArrowDownIcon />
                     </IconButton>
                   </Grid>
                 </Grid>

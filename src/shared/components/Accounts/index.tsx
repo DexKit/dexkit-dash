@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
@@ -41,6 +41,7 @@ import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circl
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const Accounts = () => {
   const theme = useTheme();
@@ -72,8 +73,6 @@ const Accounts = () => {
   );
 
   const {web3State, account} = useWeb3();
-
-  const addressInputRef = useRef<HTMLInputElement>();
 
   const onChangeAddress = (
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -112,7 +111,7 @@ const Accounts = () => {
   const accountsModal = useAccountsModal();
 
   const handleConnectWeb3 = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     accountsModal.setShow(false);
   }, []);
 
@@ -174,7 +173,10 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          Address copied!
+          <IntlMessages
+            id={'accounts.addressCopied'}
+            defaultMessage={'Address copied!'}
+          />
         </Alert>
       </Snackbar>
     );
@@ -268,7 +270,12 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='body1'>Add new account</Typography>
+              <Typography variant='body1'>
+                <IntlMessages
+                  id={'accounts.addNew'}
+                  defaultMessage={'Add new account'}
+                />{' '}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid
@@ -281,9 +288,7 @@ const Accounts = () => {
                     variant='outlined'
                     placeholder='Address'
                     fullWidth
-                    ref={(ref: any) => {
-                      addressInputRef.current = ref;
-                    }}
+                    value={address}
                     /*endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
                         <Tooltip title={'Paste valid account'}>
@@ -297,7 +302,13 @@ const Accounts = () => {
                   />
                 </Grid>
                 <Grid item>
-                  <Tooltip title={'Add valid account'}>
+                  <Tooltip
+                    title={
+                      <IntlMessages
+                        id={'accounts.addValid'}
+                        defaultMessage={'Add valid account'}
+                      />
+                    }>
                     <SquaredIconButton
                       onClick={handleAddAccount}
                       disabled={
@@ -346,7 +357,12 @@ const Accounts = () => {
           </SwipeableViews>
         </Grid> */}
         <Grid item xs={12}>
-          <Typography variant='body1'>Manage Accounts</Typography>
+          <Typography variant='body1'>
+            <IntlMessages
+              id={'accounts.manageAccounts'}
+              defaultMessage={'Manage Accounts'}
+            />
+          </Typography>
         </Grid>
         {!account && (
           <Grid item xs={12}>
@@ -360,7 +376,11 @@ const Accounts = () => {
             justifyContent='space-between'
             alignItems='center'>
             <Typography variant='body1'>
-              {wallet[selectedNetwork].length} Accounts
+              {wallet[selectedNetwork].length}{' '}
+              <IntlMessages
+                id={'accounts.accounts'}
+                defaultMessage={'Accounts'}
+              />
             </Typography>
 
             {selectActive ? (
@@ -399,13 +419,19 @@ const Accounts = () => {
               <>
                 {index === 0 && (
                   <Grid item xs={12}>
-                    Default Account
+                    <IntlMessages
+                      id={'accounts.defaultAccount'}
+                      defaultMessage={'Default Account'}
+                    />
                   </Grid>
                 )}
 
                 {index === 1 && (
                   <Grid item xs={12}>
-                    Other Accounts
+                    <IntlMessages
+                      id={'accounts.otherAccounts'}
+                      defaultMessage={'Other Accounts'}
+                    />
                   </Grid>
                 )}
 

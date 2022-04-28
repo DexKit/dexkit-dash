@@ -20,11 +20,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
-import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
-import clsx from 'clsx';
-import {Home} from '@material-ui/icons';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {useWeb3} from 'hooks/useWeb3';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -135,11 +133,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
   };
 
   return (
-    <Paper
-      className={clsx(
-        classes.paper,
-        isDefault ? classes.paperDefault : undefined,
-      )}>
+    <Paper className={classes.paper}>
       {isEditing ? (
         <TextField
           fullWidth
@@ -215,29 +209,20 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}>
               {!isDefault && !selectActive && (
-                <MenuItem onClick={handleMakeDefault}>Make Default</MenuItem>
+                <MenuItem onClick={handleMakeDefault}>
+                  {' '}
+                  <IntlMessages
+                    id={'accounts.makeDefault'}
+                    defaultMessage={'Default Account'}
+                  />
+                </MenuItem>
               )}
-              <MenuItem onClick={handleEdit}>Edit Label</MenuItem>
+              <MenuItem onClick={handleEdit}>Add Label</MenuItem>
               {isConnected && (
                 <MenuItem onClick={handleDisconnectWallet}>Disconnect</MenuItem>
               )}
             </Menu>
           </Grid>
-
-          {false ? (
-            <Grid item>
-              <IconButton onClick={handleEdit} size='small'>
-                <EditIcon className={classes.icon} />
-              </IconButton>
-            </Grid>
-          ) : null}
-          {false ? (
-            <Grid item>
-              <IconButton onClick={handleMakeDefault} size='small'>
-                <Home />
-              </IconButton>
-            </Grid>
-          ) : null}
         </Grid>
       )}
     </Paper>

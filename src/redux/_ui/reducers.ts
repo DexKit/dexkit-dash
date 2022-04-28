@@ -1,5 +1,5 @@
-import {Token} from 'types/app';
-import {createReducer} from '@reduxjs/toolkit';
+import { Token } from 'types/app';
+import { createReducer } from '@reduxjs/toolkit';
 import {
   setAccounts,
   setAccount,
@@ -17,8 +17,8 @@ import {
   toggleBalancesIsVisible,
   setLoginBackRoute,
 } from './actions';
-import {CoinDetailCoinGecko} from 'types/coingecko';
-import {Network, WalletType, SupportedNetworkType} from 'types/blockchain';
+import { CoinDetailCoinGecko } from 'types/coingecko';
+import { Network, WalletType, SupportedNetworkType } from 'types/blockchain';
 
 export type FavoriteCoin = Token & CoinDetailCoinGecko;
 
@@ -67,16 +67,16 @@ const initialUIState: UIState = {
 export default createReducer(initialUIState, (builder) =>
   builder
     .addCase(initWallet, (state, action) => {
-      const {wallet} = action.payload;
+      const { wallet } = action.payload;
       state.wallet = wallet;
     })
     .addCase(setAccounts, (state, action) => {
-      const {accounts, type} = action.payload;
+      const { accounts, type } = action.payload;
 
       state.wallet[type] = accounts;
     })
     .addCase(setAccount, (state, action) => {
-      const {account, type} = action.payload;
+      const { account, type } = action.payload;
       const ind = state.wallet[type].findIndex(
         (a) => a?.address?.toLowerCase() === account?.address?.toLowerCase(),
       );
@@ -85,7 +85,7 @@ export default createReducer(initialUIState, (builder) =>
       }
     })
     .addCase(setAccountLabel, (state, action) => {
-      const {account, type} = action.payload;
+      const { account, type } = action.payload;
       const ind = state.wallet[type].findIndex(
         (a) => a.address.toLowerCase() === account.address.toLowerCase(),
       );
@@ -94,7 +94,7 @@ export default createReducer(initialUIState, (builder) =>
       }
     })
     .addCase(setDefaultAccount, (state, action) => {
-      const {account, type} = action.payload;
+      const { account, type } = action.payload;
       const ind = state.wallet[type].findIndex(
         (a) => a.address.toLowerCase() === account.address.toLowerCase(),
       );
@@ -106,7 +106,7 @@ export default createReducer(initialUIState, (builder) =>
       }
     })
     .addCase(removeAccount, (state, action) => {
-      const {account, type} = action.payload;
+      const { account, type } = action.payload;
       const ind = state.wallet[type].findIndex(
         (a) => a.address?.toLowerCase() === account.address?.toLowerCase(),
       );
@@ -115,7 +115,7 @@ export default createReducer(initialUIState, (builder) =>
       }
     })
     .addCase(addAccounts, (state, action) => {
-      const {accounts, type} = action.payload;
+      const { accounts, type } = action.payload;
       accounts.forEach((acc) => {
         const ind = state.wallet[type].findIndex(
           (a) => a.address?.toLowerCase() === acc.address?.toLowerCase(),
