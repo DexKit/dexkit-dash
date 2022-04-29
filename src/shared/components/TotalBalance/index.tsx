@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   usdAmount: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 600,
   },
   usdAmountSign: {
@@ -410,7 +410,7 @@ const TotalBalance = (props: Props) => {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleShowAccounts}>
+                    <IconButton onClick={handleShowAccounts} size={'medium'}>
                       <KeyboardArrowDownIcon />
                     </IconButton>
                   </Grid>

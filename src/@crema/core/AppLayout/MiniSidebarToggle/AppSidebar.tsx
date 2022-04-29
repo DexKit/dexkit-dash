@@ -442,7 +442,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
                             align='center'>
                             <IntlMessages
                               id='common.nothingToSeeHere'
-                              defaultMessage='Nothing to See Here'
+                              defaultMessage='Nothing to see here'
                             />
                           </Typography>
                         </Grid>

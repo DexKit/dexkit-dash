@@ -47,6 +47,7 @@ import {useHistory} from 'react-router-dom';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {FEATURE_TRADE_COINS_ZRX} from 'utils/features';
 
 interface Props {
   chainId: number | undefined;
@@ -84,7 +85,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const theme = useTheme();
 
   const classes = useStyles();
-  const {messages} = useIntl();
+  const {messages, formatMessage} = useIntl();
 
   const network = useNetwork();
   const history = useHistory();
@@ -363,6 +364,11 @@ const MarketForm: React.FC<Props> = (props) => {
     errorMessage = `${messages['app.dashboard.switchTo']} ${FORMAT_NETWORK_NAME(
       networkName,
     )} ${messages['app.dashboard.networkInYourWallet']}`;
+  } else if (!FEATURE_TRADE_COINS_ZRX(chainId)) {
+    errorMessage = formatMessage({
+      id: 'common.networkNotSupported',
+      defaultMessage: 'Network not supported',
+    });
   }
   const {usdFormatter} = useUSDFormatter();
 

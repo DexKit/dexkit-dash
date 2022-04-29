@@ -122,7 +122,7 @@ const WalletTabs: React.FC<Props> = (props) => {
       <TabContext value={value}>
         <Box pt={{xl: 4}}>
           <Box mb={4}>
-            <Typography variant='h5'>
+            <Typography variant='h6'>
               <IntlMessages id='app.dashboard.wallet' />
             </Typography>
           </Box>

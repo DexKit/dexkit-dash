@@ -522,7 +522,7 @@ function GameEnter(props: Props) {
                         </IconButton>
                       </Grid>
                       <Grid item>
-                        <Typography variant='h5'>
+                        <Typography variant='h6'>
                           {gameMetaQuery.data
                             ? `${gameMetaQuery.data.title} -`
                             : null}{' '}

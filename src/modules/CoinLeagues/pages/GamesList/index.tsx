@@ -22,8 +22,12 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
+import {
+  COINLEAGUENFT_ROUTE,
+  HOME_ROUTE,
+  LOGIN_WALLET_ROUTE,
+} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {Search} from '@material-ui/icons';
@@ -53,9 +57,10 @@ import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
-import {makeStyles, TextField} from '@material-ui/core';
+import {IconButton, makeStyles, TextField} from '@material-ui/core';
 import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
 import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -73,7 +78,7 @@ enum Tabs {
 const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
-  // const {pathname} = useLocation();
+  const {pathname} = useLocation();
   const {account} = useWeb3();
   const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
@@ -83,13 +88,13 @@ const GamesList = () => {
 
   useDiscord();
 
-  // const isNFTGame = useMemo(() => {
-  //   if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }, [pathname]);
+  const isNFTGame = useMemo(() => {
+    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [pathname]);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -281,6 +286,18 @@ const GamesList = () => {
     shareDialogToggler.set(false);
   }, [shareDialogToggler]);
 
+  const handleBack = useCallback(
+    (ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(listGamesRoute);
+      }
+      //history.push(listGamesRoute)
+    },
+    [listGamesRoute, history],
+  );
+
   return (
     <>
       <CoinLeagueShareDialog
@@ -338,7 +355,18 @@ const GamesList = () => {
             spacing={4}
             justifyContent='space-between'>
             <Grid item>
-              <ChainSelect />
+              <Box display={'flex'} alignItems={'center'}>
+                <IconButton onClick={handleBack}>
+                  <ArrowBackIcon />
+                </IconButton>
+                <Box pr={2} pl={2}>
+                  <Typography variant='h6'>
+                    Coin League {isNFTGame && '- NFT Room'}
+                  </Typography>
+                </Box>
+
+                <ChainSelect />
+              </Box>
             </Grid>
             <Grid item>
               <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>

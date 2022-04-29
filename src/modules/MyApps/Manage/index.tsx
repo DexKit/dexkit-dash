@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
-import {Grid, Box} from '@material-ui/core';
+import {Grid, Box, Typography, IconButton} from '@material-ui/core';
 import {teal} from '@material-ui/core/colors';
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -14,8 +14,9 @@ import Alert from '@material-ui/lab/Alert';
 //import {useBalance} from 'hooks/balance/useBalance';
 //import ErrorView from 'modules/Common/ErrorView';
 import {AboutDialog} from './AboutDialog';
-import {Fonts} from 'shared/constants/AppEnums';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {WALLET_ROUTE} from 'shared/constants/routes';
+import {useHistory} from 'react-router-dom';
 
 // import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
@@ -27,6 +28,16 @@ const MyApps: React.FC = () => {
   const {insufficientAmountAlert} = useSelector<AppState, AppState['myApps']>(
     ({myApps}) => myApps,
   );
+  const history = useHistory();
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+    //history.push(listGamesRoute);
+  }, [history]);
 
   // useEffect(() => {
   //   if (balances == null || balances.length === 0){
@@ -39,16 +50,16 @@ const MyApps: React.FC = () => {
     <>
       <Box pt={{xl: 4}}>
         <Box display='flex' alignItems='center' mt={1}>
-          <Box
-            component='h3'
-            color='text.primary'
-            fontWeight={Fonts.BOLD}
-            ml={2}>
+          <IconButton onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant='h6'>
+            {' '}
             <IntlMessages
               id='myapps.manage-title'
-              defaultMessage={'Manage APPs'}
+              defaultMessage={'Manage Apps'}
             />
-          </Box>
+          </Typography>
           <AboutDialog />
         </Box>
 

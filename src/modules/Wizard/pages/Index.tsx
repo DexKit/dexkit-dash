@@ -22,7 +22,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Web3State} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import {useIntl} from 'react-intl';
-import { useMobile } from 'hooks/useMobile';
+import {useMobile} from 'hooks/useMobile';
+import {WALLET_ROUTE} from 'shared/constants/routes';
 
 export default () => {
   const history = useHistory();
@@ -45,20 +46,33 @@ export default () => {
 
   const {messages} = useIntl();
 
+  const handleBack = useCallback(
+    (_ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(WALLET_ROUTE);
+      }
+    },
+    [history],
+  );
+
   return (
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-        {!isMobile && <Grid item xs={12}>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to='/'>
-                <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-              </Link>
-              <Link color='inherit' component={RouterLink} to='/wizard'>
-                <IntlMessages id='app.wizard.wizard' />
-              </Link>
-            </Breadcrumbs>
-          </Grid>}
+          {!isMobile && (
+            <Grid item xs={12}>
+              <Breadcrumbs>
+                <Link color='inherit' component={RouterLink} to='/'>
+                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                </Link>
+                <Link color='inherit' component={RouterLink} to='/wizard'>
+                  <IntlMessages id='app.wizard.wizard' />
+                </Link>
+              </Breadcrumbs>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box
@@ -66,11 +80,11 @@ export default () => {
                 alignItems='center'
                 alignContent='center'
                 mr={2}>
-                <IconButton size='small' component={RouterLink} to={'/'}>
+                <IconButton size='small' onClick={handleBack}>
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h5'>
+              <Typography variant='h6'>
                 <IntlMessages id='app.wizard.wizard' />
               </Typography>
             </Box>
@@ -88,7 +102,14 @@ export default () => {
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
+                <Tooltip
+                  title={
+                    isNotConnected ? (
+                      <IntlMessages id='app.wizard.notConnected' />
+                    ) : (
+                      ''
+                    )
+                  }>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'
@@ -112,7 +133,14 @@ export default () => {
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
+                <Tooltip
+                  title={
+                    isNotConnected ? (
+                      <IntlMessages id='app.wizard.notConnected' />
+                    ) : (
+                      ''
+                    )
+                  }>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'
