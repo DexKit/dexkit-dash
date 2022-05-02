@@ -84,7 +84,7 @@ export default () => {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h6'>
+              <Typography variant='h5'>
                 <IntlMessages id='app.wizard.wizard' />
               </Typography>
             </Box>

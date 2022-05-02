@@ -209,7 +209,7 @@ const JoinGames = () => {
                   </IconButton>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h6'>
+                  <Typography variant='h5'>
                     <IntlMessages
                       id='app.coinLeagues.discoverGames'
                       defaultMessage={'Discover Games'}

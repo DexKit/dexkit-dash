@@ -71,7 +71,7 @@ export const Favorites = () => {
             <ArrowBackIcon />
           </IconButton>
         </Box>
-        <Typography variant='h6'>
+        <Typography variant='h5'>
           <IntlMessages id='app.common.favorites' />
         </Typography>
       </Box>

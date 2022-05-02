@@ -84,8 +84,8 @@ const useRoutesConfig = (): NavItemProps[] => {
       children: [
         {
           id: 'all',
-          title: 'Explore',
-          messageId: 'sidebar.protocols.explore',
+          title: 'Explorer',
+          messageId: 'app.protocolExplorer.explorer',
           type: 'item',
           customIcon: true,
           icon: 'siacoin-sc',

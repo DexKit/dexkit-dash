@@ -53,7 +53,7 @@ const MyApps: React.FC = () => {
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant='h6'>
+          <Typography variant='h5'>
             {' '}
             <IntlMessages
               id='myapps.manage-title'

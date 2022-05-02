@@ -185,7 +185,7 @@ const TokenPage = () => {
                       </IconButton>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h6'>
+                      <Typography variant='h5'>
                         <IntlMessages id='app.dashboard.trade' />
                       </Typography>
                     </Grid>

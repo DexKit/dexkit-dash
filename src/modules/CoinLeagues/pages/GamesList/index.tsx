@@ -360,7 +360,7 @@ const GamesList = () => {
                   <ArrowBackIcon />
                 </IconButton>
                 <Box pr={2} pl={2}>
-                  <Typography variant='h6'>
+                  <Typography variant='h5'>
                     Coin League {isNFTGame && '- NFT Room'}
                   </Typography>
                 </Box>

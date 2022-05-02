@@ -120,7 +120,7 @@ const MyGames = () => {
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant='h6'>
+          <Typography variant='h5'>
             {' '}
             <IntlMessages
               id='app.coinLeagues.myGames'

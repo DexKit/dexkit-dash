@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {useStyles} from './index.style';
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from 'shared/components/PageHeader';
 import ErrorView from 'modules/Common/ErrorView';
 import {useNetwork} from 'hooks/useNetwork';
 import useFetch from 'use-http';

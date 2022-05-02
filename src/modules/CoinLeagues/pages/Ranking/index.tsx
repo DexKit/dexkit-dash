@@ -84,7 +84,7 @@ export function Ranking() {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h6'>
+              <Typography variant='h5'>
                 <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               {!isMobile && (

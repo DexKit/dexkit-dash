@@ -19,6 +19,8 @@ export enum ChainId {
   Binance = 56,
   BinanceTest = 97,
   Matic = 137,
+  Avalanche = 43114,
+  Fantom = 250,
   Mumbai = 80001,
 }
 
