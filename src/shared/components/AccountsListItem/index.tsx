@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect, useMemo} from 'react';
 import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
 import {
@@ -132,6 +132,10 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
     setAnchorEl(null);
   };
 
+  const isWithoutLabel = useMemo(() => {
+    return account.label.toLowerCase() === account.address.toLowerCase();
+  }, [account.label, account.address]);
+
   return (
     <Paper className={classes.paper}>
       {isEditing ? (
@@ -213,16 +217,11 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
                   {' '}
                   <IntlMessages
                     id={'accounts.makeDefault'}
-                    defaultMessage={'Default Account'}
+                    defaultMessage={'Default account'}
                   />
                 </MenuItem>
               )}
-              <MenuItem onClick={handleEdit}>
-                <IntlMessages
-                  id={'accounts.addLabel'}
-                  defaultMessage={'Add Label'}
-                />
-              </MenuItem>
+
               {isConnected && (
                 <MenuItem onClick={handleDisconnectWallet}>
                   <IntlMessages
@@ -231,6 +230,19 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
                   />
                 </MenuItem>
               )}
+              <MenuItem onClick={handleEdit}>
+                {isWithoutLabel ? (
+                  <IntlMessages
+                    id={'accounts.addLabel'}
+                    defaultMessage={'Add label'}
+                  />
+                ) : (
+                  <IntlMessages
+                    id={'accounts.editLabel'}
+                    defaultMessage={'Edit label'}
+                  />
+                )}
+              </MenuItem>
             </Menu>
           </Grid>
         </Grid>

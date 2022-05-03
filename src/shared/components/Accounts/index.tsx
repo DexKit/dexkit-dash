@@ -8,6 +8,8 @@ import {
   Snackbar,
   CircularProgress,
   TextField,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
 
 import {useTheme} from '@material-ui/core/styles';
@@ -104,7 +106,7 @@ const Accounts = () => {
       );
 
       setAddNew(false);
-      setAddress(undefined);
+      setAddress('');
     }
   }, [address, dispatch, addAccounts]);
 
@@ -241,27 +243,31 @@ const Accounts = () => {
     },
     [selectedAccounts],
   );
+  const allAccounts = wallet[selectedNetwork];
 
   // TODO: put a confirm modal before this
   const handleRemoveMultiple = useCallback(() => {
+    const totalRemovedAccounts = selectedAccounts.length;
     for (let account of selectedAccounts) {
       dispatch(removeAccount({account: account, type: selectedNetwork}));
 
       let newAccounts = [...selectedAccounts];
 
       let index = selectedAccounts.findIndex(
-        (another) => another.address === another.address,
+        (another) =>
+          another.address.toLowerCase() === account.address.toLowerCase(),
       );
 
       if (index > -1) {
         newAccounts.splice(index, 1);
         setSelectedAccounts(newAccounts);
-        if (newAccounts.length === 0) {
-          history.push(LOGIN_WALLET_ROUTE);
-        }
       }
     }
-  }, [selectedAccounts, history]);
+    // If we removed all accounts, just send to login wallet route
+    if (totalRemovedAccounts === allAccounts.length) {
+      history.push(LOGIN_WALLET_ROUTE);
+    }
+  }, [selectedAccounts, history, allAccounts]);
 
   return (
     <Box pt={{xl: 4}}>
@@ -289,42 +295,39 @@ const Accounts = () => {
                     placeholder='Address'
                     fullWidth
                     value={address}
-                    /*endAdornment={
-                      <InputAdornment position='end' onClick={handlePaste}>
-                        <Tooltip title={'Paste valid account'}>
-                          <IconButton aria-label='paste' color='primary'>
-                            <CallReceivedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    }*/
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <Tooltip
+                            title={
+                              <IntlMessages
+                                id={'accounts.addValid'}
+                                defaultMessage={'Add valid account'}
+                              />
+                            }>
+                            <IconButton
+                              onClick={handleAddAccount}
+                              disabled={
+                                address === '' ||
+                                address === undefined ||
+                                error !== undefined
+                              }>
+                              <AddIcon
+                                color={
+                                  address !== '' &&
+                                  address !== undefined &&
+                                  !error
+                                    ? 'primary'
+                                    : 'inherit'
+                                }
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}
                     onChange={onChangeAddress}
                   />
-                </Grid>
-                <Grid item>
-                  <Tooltip
-                    title={
-                      <IntlMessages
-                        id={'accounts.addValid'}
-                        defaultMessage={'Add valid account'}
-                      />
-                    }>
-                    <SquaredIconButton
-                      onClick={handleAddAccount}
-                      disabled={
-                        address === '' ||
-                        address === undefined ||
-                        error !== undefined
-                      }>
-                      <AddIcon
-                        color={
-                          address !== '' && address !== undefined && !error
-                            ? 'primary'
-                            : 'inherit'
-                        }
-                      />
-                    </SquaredIconButton>
-                  </Tooltip>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
@@ -357,12 +360,14 @@ const Accounts = () => {
           </SwipeableViews>
         </Grid> */}
         <Grid item xs={12}>
-          <Typography variant='body1'>
-            <IntlMessages
-              id={'accounts.manageAccounts'}
-              defaultMessage={'Manage Accounts'}
-            />
-          </Typography>
+          <Box pt={2}>
+            <Typography variant='body1'>
+              <IntlMessages
+                id={'accounts.manageAccounts'}
+                defaultMessage={'Manage accounts'}
+              />
+            </Typography>
+          </Box>
         </Grid>
         {!account && (
           <Grid item xs={12}>
@@ -421,17 +426,19 @@ const Accounts = () => {
                   <Grid item xs={12}>
                     <IntlMessages
                       id={'accounts.defaultAccount'}
-                      defaultMessage={'Default Account'}
+                      defaultMessage={'Default account'}
                     />
                   </Grid>
                 )}
 
                 {index === 1 && (
                   <Grid item xs={12}>
-                    <IntlMessages
-                      id={'accounts.otherAccounts'}
-                      defaultMessage={'Other Accounts'}
-                    />
+                    <Box pt={2}>
+                      <IntlMessages
+                        id={'accounts.otherAccounts'}
+                        defaultMessage={'Other accounts'}
+                      />
+                    </Box>
                   </Grid>
                 )}
 

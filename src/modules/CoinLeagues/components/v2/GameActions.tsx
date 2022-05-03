@@ -1,5 +1,5 @@
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Button, CircularProgress, Grid} from '@material-ui/core';
+import {Button, CircularProgress, Grid, makeStyles} from '@material-ui/core';
 import {Delete, Edit} from '@material-ui/icons';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
@@ -14,6 +14,14 @@ import StopIcon from '@material-ui/icons/Stop';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 interface Props {
   game?: Game;
@@ -37,6 +45,8 @@ export const GameActions: React.FC<Props> = ({
   onRefetch,
   enterLoading,
 }) => {
+  const classes = useStyles();
+
   const currentPlayers = game?.players?.length;
 
   const startTimestamp = game?.start_timestamp;
@@ -138,7 +148,9 @@ export const GameActions: React.FC<Props> = ({
                 )}
                 {onShowMetadata && (
                   <Grid item>
-                    <Button startIcon={<CrownIcon />} onClick={onShowMetadata}>
+                    <Button
+                      startIcon={<CrownIcon className={classes.icon} />}
+                      onClick={onShowMetadata}>
                       <IntlMessages
                         id='coinLeague.viewJackpot'
                         defaultMessage='View Jackpot'

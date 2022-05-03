@@ -13,6 +13,7 @@ import {
   Paper,
   CardContent,
 } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import useFetch from 'use-http';
@@ -31,7 +32,6 @@ import {useTokenInfo} from 'hooks/useTokenInfo';
 
 import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
-import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
 
 import BuySell from 'modules/Dashboard/Token/BuySell';
 import Charts from 'modules/Dashboard/Token/Charts';
@@ -271,7 +271,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                 <Grid container spacing={2} alignItems='center'>
                   <Grid item>
                     <IconButton onClick={handleBack} size='small'>
-                      <ArrowLeftIcon />
+                      <ArrowBackIcon />
                     </IconButton>
                   </Grid>
                   <Grid item>
@@ -548,13 +548,13 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       <InfoTab error={error} loading={loading} data={data} />
                     </Grid>
                   ) : null}
-                  <Grid item xs={12}>
+                  {/*<Grid item xs={12}>
                     <HistoryTables
                       account={account}
                       networkName={networkName}
                       address={address}
                     />
-                  </Grid>
+                  </Grid>*/}
                 </>
               )}
             </Grid>
