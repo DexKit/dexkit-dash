@@ -33,7 +33,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {ChainId, Web3State} from 'types/blockchain';
+import {Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {isKittygotchiNetworkSupported} from '../utils';
@@ -194,7 +194,7 @@ export const KittygotchiIndex = () => {
     if (
       defaultAccount &&
       web3State === Web3State.Done &&
-      (chainId === ChainId.Matic || ChainId.Mumbai)
+      isKittygotchiNetworkSupported(chainId)
     ) {
       kittygotchiList.get(defaultAccount);
     }
@@ -279,7 +279,7 @@ export const KittygotchiIndex = () => {
               <Alert severity='info'>
                 <Typography variant='body2'>
                   <IntlMessages id='app.kittygotchi.connectTo' /> Binance Smart
-                  Chain or Polygon{' '} or ETH
+                  Chain or Polygon or ETH
                   <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>
