@@ -33,7 +33,7 @@ import {ChainId} from 'types/blockchain';
 
 export function Competition() {
   const isMobile = useMobile();
-  const [month, setMonth] = useState(Months.April);
+  const [month, setMonth] = useState(Months.May);
   const isNFT = false;
 
   const query = useRankingCompetion(

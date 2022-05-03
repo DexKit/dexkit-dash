@@ -740,7 +740,8 @@ export const PROFILE_API = `${GAME_METADATA_API}/api/profile`;
 export enum Months {
   February = 'February',
   March = 'March',
-  April = 'April'
+  April = 'April',
+  May = 'May'
   // March = 3,
 }
 
@@ -753,6 +754,11 @@ export const BLOCK_TIMESTAMP_COMPETION: { [key: string]: { [key: number]: number
   [Months.April]: {
     [ChainId.Mumbai]: 0,
     [ChainId.Matic]: 26596644,
+    [ChainId.Binance]: 0,
+  },
+  [Months.May]: {
+    [ChainId.Mumbai]: 0,
+    [ChainId.Matic]: 27796644,
     [ChainId.Binance]: 0,
   }
 };
