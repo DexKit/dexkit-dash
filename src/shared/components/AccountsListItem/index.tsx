@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect, useMemo} from 'react';
 import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
 import {
@@ -16,11 +16,13 @@ import {
   makeStyles,
   Checkbox,
 } from '@material-ui/core';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
-import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
-import clsx from 'clsx';
-import {Home} from '@material-ui/icons';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {useWeb3} from 'hooks/useWeb3';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -70,6 +72,10 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const {onCloseWeb3} = useWeb3();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   const theme = useTheme();
 
   const classes = useStyles();
@@ -97,6 +103,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const handleEdit = useCallback(() => {
     setIsEditing(true);
+    setAnchorEl(null);
   }, []);
 
   const handleSelect = useCallback(() => {
@@ -105,18 +112,32 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
 
   const handleMakeDefault = useCallback(() => {
     onMakeDefault(account);
+    setAnchorEl(null);
   }, [onMakeDefault, account]);
+
+  const handleDisconnectWallet = useCallback(() => {
+    onCloseWeb3();
+    setAnchorEl(null);
+  }, [onCloseWeb3]);
 
   useEffect(() => {
     setLabel(account.label);
   }, [account]);
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isWithoutLabel = useMemo(() => {
+    return account.label.toLowerCase() === account.address.toLowerCase();
+  }, [account.label, account.address]);
+
   return (
-    <Paper
-      className={clsx(
-        classes.paper,
-        isDefault ? classes.paperDefault : undefined,
-      )}>
+    <Paper className={classes.paper}>
       {isEditing ? (
         <TextField
           fullWidth
@@ -176,20 +197,54 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
               </Typography>
             ) : null}
           </Grid>
-          {!selectActive ? (
-            <Grid item>
-              <IconButton onClick={handleEdit} size='small'>
-                <EditIcon className={classes.icon} />
-              </IconButton>
-            </Grid>
-          ) : null}
-          {!isDefault && !selectActive ? (
-            <Grid item>
-              <IconButton onClick={handleMakeDefault} size='small'>
-                <Home />
-              </IconButton>
-            </Grid>
-          ) : null}
+          <Grid item>
+            <IconButton
+              aria-label='more'
+              aria-controls='long-menu'
+              aria-haspopup='true'
+              onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+
+            <Menu
+              id='account-accounts'
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}>
+              {!isDefault && !selectActive && (
+                <MenuItem onClick={handleMakeDefault}>
+                  {' '}
+                  <IntlMessages
+                    id={'accounts.makeDefault'}
+                    defaultMessage={'Default account'}
+                  />
+                </MenuItem>
+              )}
+
+              {isConnected && (
+                <MenuItem onClick={handleDisconnectWallet}>
+                  <IntlMessages
+                    id={'accounts.disconnect'}
+                    defaultMessage={'Disconnect'}
+                  />
+                </MenuItem>
+              )}
+              <MenuItem onClick={handleEdit}>
+                {isWithoutLabel ? (
+                  <IntlMessages
+                    id={'accounts.addLabel'}
+                    defaultMessage={'Add label'}
+                  />
+                ) : (
+                  <IntlMessages
+                    id={'accounts.editLabel'}
+                    defaultMessage={'Edit label'}
+                  />
+                )}
+              </MenuItem>
+            </Menu>
+          </Grid>
         </Grid>
       )}
     </Paper>

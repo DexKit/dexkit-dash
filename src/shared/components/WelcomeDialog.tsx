@@ -14,6 +14,7 @@ import {makeStyles} from '@material-ui/core';
 
 import {useHistory} from 'react-router';
 import {useMobile} from 'hooks/useMobile';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 const useStyles = makeStyles((theme) => ({
   slide: {
@@ -112,7 +113,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
       onClose({}, 'backdropClick');
     }
 
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, [onClose, history]);
 
   const handleChangeIndex = useCallback((newIndex: number) => {

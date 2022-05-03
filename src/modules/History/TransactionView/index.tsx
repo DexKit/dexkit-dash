@@ -5,7 +5,7 @@ import {Box, Paper} from '@material-ui/core';
 import {truncateAddress} from 'utils';
 import {useStyles} from './index.style';
 
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from 'shared/components/PageHeader';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 

@@ -177,7 +177,7 @@ const WalletInfo: React.FC<Props> = (props) => {
 
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     if (onClick) {
       onClick();
     }
@@ -185,7 +185,7 @@ const WalletInfo: React.FC<Props> = (props) => {
 
   const onGoToLoginWallet = () => {
     handleClose();
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     if (onClick) {
       onClick();
     }

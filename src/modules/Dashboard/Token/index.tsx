@@ -4,7 +4,6 @@ import {useIntl} from 'react-intl';
 
 import {
   Link,
-  Button,
   Grid,
   Box,
   IconButton,
@@ -14,10 +13,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Paper,
-  Backdrop,
-  CircularProgress,
-  useTheme,
 } from '@material-ui/core';
 
 import {useHistory, Link as RouterLink} from 'react-router-dom';
@@ -49,9 +44,7 @@ import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
-import {FEATURE_TRADE_COINS_ZRX} from 'utils/features';
-import {useChainInfo} from 'hooks/useChainInfo';
-import {Web3State} from 'types/blockchain';
+import {WALLET_ROUTE} from 'shared/constants/routes';
 
 const TokenPage = () => {
   const history = useHistory();
@@ -76,7 +69,7 @@ const TokenPage = () => {
     );
   }, [searchParams, networkName]);
 
-  const {account: web3Account, chainId, onConnectWeb3, web3State} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
@@ -147,131 +140,19 @@ const TokenPage = () => {
     return `${getWindowUrl()}/trade?${searchParams.toString()}`;
   }, [history.location.search]);
 
-  const handleGoClick = useCallback(() => {
-    history.push('/wallet');
-  }, [history]);
-
-  const handleConnectWallet = useCallback(() => {
-    onConnectWeb3();
-  }, []);
-
-  const handleGoToWallet = useCallback(() => {
-    history.push('/wallet');
-  }, [history]);
-
-  const theme = useTheme();
-  const {chainName} = useChainInfo();
+  const handleGoClick = useCallback(
+    (_ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(WALLET_ROUTE);
+      }
+    },
+    [history],
+  );
 
   return (
     <>
-      <Backdrop
-        className={classes.backdrop}
-        open={
-          chainId !== undefined &&
-          chainId > 0 &&
-          !FEATURE_TRADE_COINS_ZRX(chainId)
-        }>
-        <Box p={4}>
-          <Grid
-            container
-            alignItems='center'
-            alignContent='center'
-            justifyContent='center'>
-            <Grid item xs={12} sm={5}>
-              <Paper>
-                <Box p={4}>
-                  <Grid
-                    container
-                    spacing={4}
-                    direction='column'
-                    alignItems='center'
-                    alignContent='center'
-                    justifyContent='center'>
-                    <Grid item>
-                      <Typography gutterBottom align='center' variant='h5'>
-                        {chainName ? (
-                          <>
-                            {chainName}{' '}
-                            <IntlMessages id='app.wallet.networkIsNotSupported' />{' '}
-                          </>
-                        ) : (
-                          <IntlMessages id='app.wallet.youNetworkIsNotSupported' />
-                        )}
-                      </Typography>
-                      <Typography
-                        color='textSecondary'
-                        align='center'
-                        variant='body2'>
-                        <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant='outlined'
-                        onClick={handleGoToWallet}
-                        color='primary'
-                        fullWidth>
-                        <IntlMessages id='app.wallet.goToWallet' />
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Box>
-      </Backdrop>
-      <Backdrop className={classes.backdrop} open={!chainId}>
-        <Grid
-          container
-          alignItems='center'
-          alignContent='center'
-          justifyContent='center'>
-          <Grid item xs={12} sm={4}>
-            <Paper>
-              <Box p={4}>
-                <Grid
-                  container
-                  spacing={4}
-                  direction='column'
-                  alignItems='center'
-                  alignContent='center'
-                  justifyContent='center'>
-                  <Grid item>
-                    <Typography gutterBottom align='center' variant='h5'>
-                      <IntlMessages id='app.wallet.youAreOffline' />
-                    </Typography>
-                    <Typography
-                      color='textSecondary'
-                      align='center'
-                      variant='body2'>
-                      <IntlMessages id='app.wallet.pleaseConnectYourWalletToTrade' />
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleConnectWallet}
-                      disabled={web3State === Web3State.Connecting}
-                      startIcon={
-                        web3State === Web3State.Connecting ? (
-                          <CircularProgress
-                            size={theme.spacing(6)}
-                            color='inherit'
-                          />
-                        ) : undefined
-                      }
-                      color='primary'
-                      variant='contained'
-                      fullWidth>
-                      <IntlMessages id='app.connectWallet' />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Backdrop>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
@@ -403,14 +284,14 @@ const TokenPage = () => {
                     />
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+                {/*    <Grid item xs={12}>
                   <HistoryTables
                     account={account}
                     networkName={networkName}
                     address={address}
                   />
                 </Grid>
-                {/*   <Grid item xs={12}>
+                 <Grid item xs={12}>
                   <InfoTab error={error} loading={loading} data={data} />
                 </Grid> */}
               </>

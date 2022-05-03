@@ -213,7 +213,7 @@ export const ProfilePage: React.FC = () => {
               <IconButton onClick={handleBack}>
                 <ArrowBackIcon />
               </IconButton>
-              <Typography variant='h6' style={{margin: 5}}>
+              <Typography variant='h5' style={{margin: 5}}>
                 <IntlMessages id='app.coinLeagues.profile' />
               </Typography>
             </Box>

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {Box} from '@material-ui/core';
 
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from 'shared/components/PageHeader';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils/text';

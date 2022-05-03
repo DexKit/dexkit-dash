@@ -1,5 +1,6 @@
 import { BigNumber } from '@0x/utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
+import { NetworkParams } from 'redux/_settingsv2/actions';
 import { ChainId } from 'types/blockchain';
 import { EthereumNetwork } from './AppEnums';
 
@@ -220,3 +221,21 @@ export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
       return ChainId.Mainnet;
   }
 };
+
+
+export const AVAX_NETWORK: NetworkParams = {
+  chainId: 43114,
+  name: 'Avalanche',
+  nativeTokenSymbol: 'AVAX',
+  rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
+  explorerUrl: 'https://snowtrace.io'
+}
+
+
+export const FANTOM_NETWORK: NetworkParams = {
+  chainId: 250,
+  name: 'Fantom',
+  nativeTokenSymbol: 'FTM',
+  rpcUrl: 'https://rpc.ftm.tools/',
+  explorerUrl: 'https://ftmscan.com/'
+}

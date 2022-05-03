@@ -1,7 +1,7 @@
-import {ChainId} from 'types/blockchain';
-import {Token} from 'types/app';
-import {EthereumNetwork} from './AppEnums';
-import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
+import { ChainId } from 'types/blockchain';
+import { Token } from 'types/app';
+import { EthereumNetwork } from './AppEnums';
+import { isKittygotchiNetworkSupported } from 'modules/Kittygotchi/utils';
 
 // const WETH: Token = {
 //   address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -11,6 +11,28 @@ import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
 //   decimals: 18,
 //   logoURI: '',
 // };
+
+export const SCAM_TOKENS: Token[] = [
+
+  {
+    address: "0x0b91b07beb67333225a5ba0259d55aee10e3a578",
+    chainId: ChainId.Matic,
+    name: 'Mnep',
+    symbol: 'Mnep',
+    decimals: 18,
+  },
+  {
+    address: '0xb988Bd378A0754957d5D9471C96E0F8051645a26',
+    chainId: ChainId.Matic,
+    name: 'INS',
+    symbol: 'INS',
+    decimals: 18,
+
+  }
+
+]
+
+
 
 const DEXKIT_ETH: Token = {
   address: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',

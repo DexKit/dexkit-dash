@@ -327,6 +327,7 @@ export const LoginWallet = (props: Props) => {
                   </Button>
                 </Box>
               </Grid>
+
               <Grid item xs={12}>
                 <Box display={'flex'} justifyContent={'center'}>
                   <Typography variant='body1'>
@@ -336,8 +337,6 @@ export const LoginWallet = (props: Props) => {
                     />
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid item xs={12}>
                 <Box display={'flex'} justifyContent={'center'}>
                   <ButtonBase
                     onClick={handleGoogle}

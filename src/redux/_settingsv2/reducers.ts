@@ -1,5 +1,5 @@
-import {createReducer} from '@reduxjs/toolkit';
-import {isAddressEqual} from 'utils/blockchain';
+import { createReducer } from '@reduxjs/toolkit';
+import { isAddressEqual } from 'utils/blockchain';
 
 import {
   addCustomToken,

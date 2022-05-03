@@ -1,4 +1,5 @@
 import React from 'react';
+import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
 
 export const onboardingConfig = [
   {
@@ -12,7 +13,7 @@ export const onboardingConfig = [
         component: React.lazy(() => import('./pages/CreateWallet')),
       },
       {
-        path: '/onboarding/login-wallet',
+        path: LOGIN_WALLET_ROUTE,
         component: React.lazy(() => import('./pages/LoginWallet')),
       },
       {

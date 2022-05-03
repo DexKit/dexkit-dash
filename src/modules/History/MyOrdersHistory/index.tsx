@@ -14,7 +14,7 @@ import {useStyles} from './index.style';
 import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from 'shared/components/PageHeader';
 import {truncateAddress} from 'utils/text';
 import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
 import {EthereumNetwork} from 'shared/constants/AppEnums';

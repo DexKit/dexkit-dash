@@ -122,7 +122,10 @@ const MyGames = () => {
           </IconButton>
           <Typography variant='h5'>
             {' '}
-            <IntlMessages id='app.coinLeagues.myGames' />
+            <IntlMessages
+              id='app.coinLeagues.myGames'
+              defaultMessage={'My Games'}
+            />
           </Typography>
           <Box p={2}>
             <FormControl>

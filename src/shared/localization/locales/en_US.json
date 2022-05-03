@@ -1,5 +1,6 @@
 {
   "common.connectWallet": "Connect Wallet",
+  "common.nothingToSeeHere": "Nothing to see here",
   "coinLeagues.page.event.round.description": "In this round users will be able to create 4400 champions.",
   "coinLeagues.page.gameEnter.captain.choose": "Choose your Captain",
   "coinLeagues.page.gameEnter.captain.chooseCurrency": "Choose Captain Currency",
@@ -2102,5 +2103,16 @@
   "myapps.deleteAPP": "Deleting your app",
   "myapps.pleaseSignDelete": "Please sign message with your wallet to delete app",
   "myapps.submittedDeleteApp": "Your app was deleted",
-  "myapps.errorDeleteApp": "Error deleting your app, please contact support"
+  "myapps.errorDeleteApp": "Error deleting your app, please contact support",
+  "accounts.accounts": "Accounts",
+  "accounts.makeDefault": "Make default",
+  "accounts.addLabel": "Add label",
+  "accounts.editLabel": "Edit label",
+  "accounts.disconnect": "Disconnect",
+  "accounts.otherAccounts": "Other accounts",
+  "accounts.defaultAccount": "Default account",
+  "accounts.manageAccounts": "Manage accounts",
+  "accounts.addValid": "Add valid account",
+  "accounts.addNew": "Add new account",
+  "accounts.addressCopied": "Address copied"
 }
