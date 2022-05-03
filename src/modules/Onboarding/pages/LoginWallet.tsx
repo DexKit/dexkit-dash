@@ -45,10 +45,10 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButton: {
     backgroundColor: lighten(theme.palette.background.paper, 0.1),
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-    padding: theme.spacing(2),
-    margin: theme.spacing(2),
+    width: theme.spacing(17),
+    height: theme.spacing(17),
+    padding: theme.spacing(1),
+    margin: theme.spacing(3),
     borderRadius: '50%',
     display: 'flex',
     justifyContent: 'center',
@@ -70,10 +70,13 @@ const useStyles = makeStyles((theme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: theme.palette.text.primary,
   },
   loginBackground: {
     backgroundImage: `url(${LoginBackground})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
     width: '100%',
     height: '100%',
   },
@@ -237,9 +240,16 @@ export const LoginWallet = (props: Props) => {
             </Box>
           </Grid>
         </Hidden> */}
+        <Hidden smUp>
+          <Grid item xs={12}>
+            <Box p={6}>
+              <DexKitLogo className={classes.logo} />
+            </Box>
+          </Grid>
+        </Hidden>
         <Grid item xs={12} sm={4}>
-          <Box p={{xs: 4, sm: 20}} my={{xs: 12, sm: 10}}>
-            <Grid container spacing={8}>
+          <Box p={{xs: 6, sm: 20}} my={{xs: 12, sm: 10}}>
+            <Grid container spacing={4}>
               {defaultAccount || account ? (
                 <Grid item xs={12}>
                   <Grid
@@ -266,14 +276,16 @@ export const LoginWallet = (props: Props) => {
               <Grid item xs={12}>
                 <Box>
                   <Grid container spacing={8}>
+                    <Hidden smDown>
+                      <Grid item xs={12}>
+                        <DexKitLogo className={classes.logo} />
+                      </Grid>
+                    </Hidden>
                     <Grid item xs={12}>
-                      <DexKitLogo className={classes.logo} />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant='h5'>
+                      <Typography variant='h6'>
                         <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
                       </Typography>
-                      <Typography variant='body2' color='textSecondary'>
+                      <Typography variant='body2' color={'textSecondary'}>
                         <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
                       </Typography>
                     </Grid>
@@ -329,15 +341,15 @@ export const LoginWallet = (props: Props) => {
               </Grid>
 
               <Grid item xs={12}>
-                <Box display={'flex'} justifyContent={'center'}>
-                  <Typography variant='body1'>
+                <Box display={'flex'} justifyContent={'center'} pt={4}>
+                  <Typography variant='body2' color={'textSecondary'}>
                     <IntlMessages
                       id='app.onBoarding.orContinue'
                       defaultMessage={'Or continue'}
                     />
                   </Typography>
                 </Box>
-                <Box display={'flex'} justifyContent={'center'}>
+                <Box display={'flex'} justifyContent={'center'} pt={4}>
                   <ButtonBase
                     onClick={handleGoogle}
                     className={classes.actionButton}>

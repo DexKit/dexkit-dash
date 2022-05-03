@@ -58,6 +58,13 @@ const darkTheme = createTheme({
   shape: {
     borderRadius: 4,
   },
+  overrides: {
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      },
+    },
+  },
 });
 
 const lightTheme = createTheme({
@@ -107,6 +114,13 @@ const lightTheme = createTheme({
   },
   shape: {
     borderRadius: 4,
+  },
+  overrides: {
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      },
+    },
   },
 });
 

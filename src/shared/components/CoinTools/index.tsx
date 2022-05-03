@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.modal,
-    color: '#fff',
+    color: theme.palette.text.primary,
   },
   btnSecondary: {
     color: '#F15A2B',
