@@ -39,7 +39,7 @@ export const CopyLink = (props: Props) => {
       disableFocusListener
       disableTouchListener
       title={tooltip}>
-      <Link href='#' onClick={handleCopy} {...props}>
+      <Link onClick={handleCopy} {...props}>
         {children}
       </Link>
     </Tooltip>

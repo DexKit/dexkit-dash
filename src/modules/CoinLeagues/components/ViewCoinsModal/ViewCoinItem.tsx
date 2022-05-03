@@ -1,7 +1,14 @@
 import React, {useMemo} from 'react';
-import IntlMessages from '@crema/utility/IntlMessages';
 
-import {Box, Grid, makeStyles, Typography, useTheme} from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  makeStyles,
+  TableCell,
+  TableRow,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
@@ -130,76 +137,72 @@ export const ViewCoinListItem = (props: Props) => {
   ]);
 
   return (
-    <Box style={{padding: theme.spacing(4)}} className={classes.item}>
-      <Grid alignItems='center' alignContent='center' container spacing={6}>
-        {!isMobile && (
-          <Grid item>
-            <Box className={classes.tokenContainer}>
-              <img src={coin.logo} className={classes.token} />
-            </Box>
-          </Grid>
-        )}
-
-        <Grid item xs={3}>
-          <Typography variant='body1'>{`${coin.base.toUpperCase()}`}</Typography>
-          <Typography variant='body2' color='textSecondary'>
-            {coin.baseName}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant='body1'>
-            <IntlMessages id='app.coinLeagues.start' />
-          </Typography>
-          <Typography variant='body2' color='textSecondary'>
-            {priceStart}
-          </Typography>
-        </Grid>
-        {started ? (
-          <Grid item xs>
-            <Typography variant='body1'>
-              <IntlMessages id='app.coinLeagues.current' />
-            </Typography>
-            <Typography variant='body2' color='textSecondary'>
-              {priceEnd}
-            </Typography>
-          </Grid>
-        ) : (
-          <Grid item xs>
-            <Typography variant='body1'>
-              <IntlMessages id='app.coinLeagues.end' />
-            </Typography>
-            <Typography variant='body2' color='textSecondary'>
-              {priceEnd}
-            </Typography>
-          </Grid>
-        )}
-
-        <Grid item>
-          {priceScore ? (
-            <>
-              {isCaptain && (
-                <Tooltip title={tooltipMessage(playerAddress)}>
-                  <Chip
-                    color={'primary'}
-                    label={`x ${multipliers(playerAddress).toFixed(3)}`}
-                  />
-                </Tooltip>
-              )}
-              <Chip
-                clickable
-                style={{
-                  background: '#343A49',
-                  color: Number(priceScore) > 0 ? '#0e0' : '#e00',
-                }}
-                label={`${Number(priceScore) > 0 ? '+' : ''}${Number(priceScore).toFixed(5)}%`}
-              />
-            </>
-          ) : (
-            <Typography variant='body1'> -</Typography>
+    <TableRow>
+      <TableCell>
+        <Grid alignItems='center' alignContent='center' container spacing={6}>
+          {!isMobile && (
+            <Grid item>
+              <Box className={classes.tokenContainer}>
+                <img src={coin.logo} className={classes.token} />
+              </Box>
+            </Grid>
           )}
+
+          <Grid item xs={3}>
+            <Typography variant='body1'>{`${coin.base.toUpperCase()}`}</Typography>
+            <Typography variant='body2' color='textSecondary'>
+              {coin.baseName}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </TableCell>
+      <TableCell>
+        <Typography variant='body2' color='textSecondary'>
+          {priceStart}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant='body2' color='textSecondary'>
+          {priceEnd}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        {priceScore ? (
+          <>
+            <Grid container spacing={2}>
+              {isCaptain && (
+                <Grid item>
+                  <Tooltip title={tooltipMessage(playerAddress)}>
+                    <Chip
+                      size='small'
+                      color='primary'
+                      label={`x ${multipliers(playerAddress).toFixed(3)}`}
+                    />
+                  </Tooltip>
+                </Grid>
+              )}
+              <Grid item>
+                <Chip
+                  size='small'
+                  variant='outlined'
+                  style={{
+                    color:
+                      Number(priceScore) > 0
+                        ? theme.palette.success.main
+                        : theme.palette.error.main,
+                  }}
+                  label={`${Number(priceScore) > 0 ? '+' : ''}${Number(
+                    priceScore,
+                  ).toFixed(5)}%`}
+                />
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          <Typography variant='body1'>-</Typography>
+        )}
+      </TableCell>
+    </TableRow>
   );
 };
 

@@ -144,11 +144,15 @@ export const useProfileGameDeleteCallback = () => {
 };
 
 export const useProfileGame = (account?: string) => {
-  return useQuery(['GET_GAME_PROFILE', account], () => {
-    if (!account) {
-      return undefined;
-    }
+  return useQuery(
+    ['GET_GAME_PROFILE', account],
+    () => {
+      if (!account) {
+        return undefined;
+      }
 
-    return getProfile(account);
-  });
+      return getProfile(account);
+    },
+    {retryDelay: 30000},
+  );
 };

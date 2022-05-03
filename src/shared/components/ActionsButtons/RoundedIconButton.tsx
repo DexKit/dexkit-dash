@@ -2,8 +2,18 @@ import {withStyles, IconButton} from '@material-ui/core';
 
 export const RoundedIconButton = withStyles((theme) => ({
   root: {
-    backgroundColor: '#2E3243',
-    border: '1px solid #525C75',
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.background.paper,
+    '& svg path': {
+      stroke: theme.palette.text.primary,
+    },
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
   },
 }))(IconButton);
 

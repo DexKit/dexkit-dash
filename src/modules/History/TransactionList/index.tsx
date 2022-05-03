@@ -7,11 +7,10 @@ import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import TransactionTable from './TransactionTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from 'shared/components/PageHeader';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils/text';
-
 
 type Params = {
   address: string;

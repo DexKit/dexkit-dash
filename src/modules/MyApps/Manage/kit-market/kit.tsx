@@ -9,13 +9,12 @@ import {
 import React from 'react';
 import {makeStyles} from '@material-ui/core';
 import {BigNumber} from '@0x/utils';
-import {CremaTheme} from 'types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: 50,
     width: 50,
-    borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: (props: {bgColor: string}) => props.bgColor,
   },
 }));

@@ -1,6 +1,13 @@
 import React, {useState, useCallback} from 'react';
 import {useIntl} from 'react-intl';
-import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Grid,
+  Chip,
+  Badge,
+  makeStyles,
+} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
@@ -26,8 +33,18 @@ interface Props {
   address?: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
+
 const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
   const defaultAccount = useDefaultAccount();
+
+  const classes = useStyles();
 
   const account = address ? address : defaultAccount;
 
@@ -111,7 +128,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -122,6 +139,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={FilterPlayerGame.ALL}
                       color={status === 'All' ? 'primary' : 'default'}
                       onClick={handleClickAll}
@@ -130,6 +148,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                   <Grid item>
                     <Chip
                       clickable
+                      variant='outlined'
                       size='small'
                       label={messages['app.coinLeague.waiting']}
                       color={
@@ -144,6 +163,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       size='small'
                       clickable
+                      variant='outlined'
                       label={messages['app.coinLeague.started'] as string}
                       color={
                         status === CoinLeagueGameStatus.Started
@@ -157,6 +177,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={messages['app.coinLeague.ended'] as string}
                       color={
                         status === CoinLeagueGameStatus.Ended
@@ -170,6 +191,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                     <Chip
                       clickable
                       size='small'
+                      variant='outlined'
                       label={messages['app.coinLeague.aborted'] as string}
                       color={
                         status === CoinLeagueGameStatus.Aborted
@@ -188,7 +210,7 @@ const MyGamesTable: React.FC<Props> = ({address, isNFT = false}) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>

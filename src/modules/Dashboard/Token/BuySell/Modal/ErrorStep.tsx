@@ -34,12 +34,12 @@ const ErrorStep: React.FC<Props> = (props) => {
             title: 'Error',
             body: error.message,
           };
-          dispatch(onAddNotification([notification], NotificationType.ERROR));
+          dispatch(onAddNotification([notification]));
         } else if (typeof error === 'string') {
           setMessage(error);
 
           const notification: Notification = {title: 'Error', body: error};
-          dispatch(onAddNotification([notification], NotificationType.ERROR));
+          dispatch(onAddNotification([notification]));
         }
       }
     }

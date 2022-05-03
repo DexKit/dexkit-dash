@@ -1,17 +1,28 @@
 import React, {useCallback, useState} from 'react';
 
 import {useSelector} from 'react-redux';
-import {Badge} from '@material-ui/core';
+import {Badge, makeStyles} from '@material-ui/core';
 
 import {AppState} from 'redux/store';
 
-import {ReactComponent as NotificationIcon} from 'assets/images/icons/notification.svg';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 import {NotificationsDialog} from 'shared/components/NotificationsDialog';
+
+import {NotificationOutlinedIcon} from 'shared/components/Icons';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 interface NotificationsProps {}
 
 const Notifications: React.FC<NotificationsProps> = () => {
+  const classes = useStyles();
+
   const {notifications} = useSelector<AppState, AppState['notification']>(
     ({notification}) => notification,
   );
@@ -35,8 +46,8 @@ const Notifications: React.FC<NotificationsProps> = () => {
               (notification) => notification?.check === undefined,
             ).length
           }
-          color='secondary'>
-          <NotificationIcon />
+          color='primary'>
+          <NotificationOutlinedIcon className={classes.icon} />
         </Badge>
       </AppBarButton>
     </>

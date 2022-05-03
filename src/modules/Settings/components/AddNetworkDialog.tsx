@@ -63,23 +63,18 @@ export const AddNetworkDialog: React.FC<Props> = ({
   const isFormValid = useMemo(() => {
     console.log(values);
     if (values.rpcUrl !== '' && !isValidURL(values.rpcUrl)) {
-      console.log('entra 1');
-
       return false;
     }
 
     if (values.explorerUrl !== '' && !isValidURL(values.explorerUrl)) {
-      console.log('entra 2');
       return false;
     }
 
     if (!/^[A-Z]+$/.test(values.nativeTokenSymbol.toUpperCase())) {
-      console.log('entra 3');
       return false;
     }
 
     if (!/^[0-9]+$/.test(values.chainId)) {
-      console.log('entra 4');
       return false;
     }
 

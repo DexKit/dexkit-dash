@@ -1,6 +1,7 @@
-import {BigNumber} from '@0x/utils';
-import {ChainId} from 'types/blockchain';
-import {EthereumNetwork} from './AppEnums';
+import { BigNumber } from '@0x/utils';
+import { AssetPlatforms } from 'services/rest/coingecko/constants';
+import { ChainId } from 'types/blockchain';
+import { EthereumNetwork } from './AppEnums';
 
 export const initialUrl = `/wallet`;
 
@@ -38,6 +39,10 @@ export const ZRX_API_URL = (chainId: ChainId | undefined) => {
       return 'https://api.0x.org'; //'/swap/v1/quote'
     case ChainId.Binance:
       return 'https://bsc.api.0x.org'; //'/swap/v1/quote'
+    case ChainId.Avalanche:
+      return 'https://avalanche.api.0x.org'; //'/swap/v1/quote'
+    case ChainId.Fantom:
+      return 'https://fantom.api.0x.org'; //'/swap/v1/quote'
     case ChainId.Matic:
       return 'https://polygon.api.0x.org'; //'/swap/v1/quote'
     case ChainId.Kovan:
@@ -71,6 +76,10 @@ export const ZRX_API_URL_FROM_NETWORK = (
       return 'https://bsc.api.0x.org'; //'/swap/v1/quote'
     case EthereumNetwork.matic:
       return 'https://polygon.api.0x.org'; //'/swap/v1/quote'
+    case EthereumNetwork.avalanche:
+      return 'https://avalanche.api.0x.org'; //'/swap/v1/quote'
+    case EthereumNetwork.fantom:
+      return 'https://fantom.api.0x.org'; //'/swap/v1/quote'
     default:
       return 'https://api.0x.org';
   }
@@ -81,11 +90,18 @@ export const ETHERSCAN_API_URL = (chainId: ChainId | undefined) => {
     case ChainId.Mainnet:
       return 'https://etherscan.io';
     case ChainId.Binance:
-      return 'https://bscscan.com/';
+      return 'https://bscscan.com';
     case ChainId.Matic:
-      return 'https://polygonscan.com/';
+      return 'https://polygonscan.com';
     case ChainId.Kovan:
       return 'https://kovan.etherscan.io';
+    case ChainId.Avalanche:
+      return 'https://kovan.etherscan.io';
+    case ChainId.Fantom:
+      return 'https://ftmscan.com';
+    case ChainId.Avalanche:
+      return 'https://snowtrace.io';
+
     default:
       return 'https://etherscan.io';
   }
@@ -95,9 +111,13 @@ export const ETHERSCAN_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
     case EthereumNetwork.ethereum:
       return 'https://etherscan.io';
     case EthereumNetwork.bsc:
-      return 'https://bscscan.com/';
+      return 'https://bscscan.com';
     case EthereumNetwork.matic:
-      return 'https://polygonscan.com/';
+      return 'https://polygonscan.com';
+    case EthereumNetwork.avalanche:
+      return 'https://snowtrace.io';
+    case EthereumNetwork.fantom:
+      return 'https://ftmscan.com';
     default:
       return 'https://etherscan.io';
   }
@@ -148,4 +168,15 @@ export const getCoingeckoContractUrlFromNetwork = (
     default:
       return 'https://api.coingecko.com/api/v3/coins/ethereum/contract';
   }
+};
+
+export const getCoingeckoContractUrlFromChainId = (
+  chainId: number,
+) => {
+  const smartPlatformId = AssetPlatforms.filter(a => a.chain_identifier).find(ap => Number(ap.chain_identifier) === chainId);
+  if (smartPlatformId) {
+    return `https://api.coingecko.com/api/v3/coins/${smartPlatformId.id}/contract`;
+  }
+  return '';
+
 };

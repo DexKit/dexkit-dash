@@ -110,28 +110,31 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
     <Grid container spacing={4}>
       <Grid item xs={12} sm={12} md={12}>
         <Card>
-          <Tabs
-            value={chartSource}
-            onChange={onSetChartSource}
-            aria-label='chart tabs'
-            indicatorColor='primary'>
-            <Tab
-              label={
-                <Tooltip title={messages['app.dashboard.chartDexExchange']}>
-                  <span>DEX</span>
-                </Tooltip>
-              }
-              {...a11yProps(0)}
-            />
-            <Tab
-              label={
-                <Tooltip title={messages['app.dashboard.chartBinanceExchange']}>
-                  <span>Binance</span>
-                </Tooltip>
-              }
-              {...a11yProps(1)}
-            />
-          </Tabs>
+          {false && (
+            <Tabs
+              value={chartSource}
+              onChange={onSetChartSource}
+              aria-label='chart tabs'
+              indicatorColor='primary'>
+              <Tab
+                label={
+                  <Tooltip title={messages['app.dashboard.chartDexExchange']}>
+                    <span>DEX</span>
+                  </Tooltip>
+                }
+                {...a11yProps(0)}
+              />
+              <Tab
+                label={
+                  <Tooltip
+                    title={messages['app.dashboard.chartBinanceExchange']}>
+                    <span>Binance</span>
+                  </Tooltip>
+                }
+                {...a11yProps(1)}
+              />
+            </Tabs>
+          )}
           <CardContent className={classes.iframeContainer}>
             {!chartSymbol ? (
               <Skeleton variant='rect' height={370} />
@@ -154,6 +157,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
                     symbol={chartSymbol}
                     chainId={chainId}
                     darkMode={isDark}
+                    backgroundColor={theme.palette.background.paper}
                   />
                 </TabPanelChart>
               </>

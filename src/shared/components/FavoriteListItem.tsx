@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   paper: {
-    backgroundColor: '#252836',
+    backgroundColor: theme.palette.background.paper,
     borderRadius: 6,
     display: 'block',
     textAlign: 'left',

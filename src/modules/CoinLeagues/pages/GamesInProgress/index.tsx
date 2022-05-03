@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
@@ -11,52 +11,53 @@ import {
   Link,
   Typography,
   Badge,
+  TextField,
 } from '@material-ui/core';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { HOME_ROUTE } from 'shared/constants/routes';
+import {HOME_ROUTE} from 'shared/constants/routes';
 
-import { Empty } from 'shared/components/Empty';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import {Empty} from 'shared/components/Empty';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
 import SwapButton from 'shared/components/SwapButton';
 
-import ContainedInput from 'shared/components/ContainedInput';
-import { Search } from '@material-ui/icons';
+import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
-import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
-import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import { ShareButton } from 'shared/components/ShareButton';
-import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
-import { GameOrderBy } from 'modules/CoinLeagues/constants/enums';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
-import { useToggler } from 'hooks/useToggler';
+import {ShareButton} from 'shared/components/ShareButton';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
+import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import CardGame from 'modules/CoinLeagues/components/CardGame';
+import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
+import {useMobile} from 'hooks/useMobile';
 
 const GamesInProgress = () => {
   const history = useHistory();
-  const { account } = useWeb3();
-  const { coinSymbol } = useLeaguesChainInfo();
-  const { messages } = useIntl();
+  const {account} = useWeb3();
+  const {coinSymbol} = useLeaguesChainInfo();
+  const {messages} = useIntl();
 
   const [search, setSearch] = useState('');
 
-  const { listGamesRoute, enterGameRoute } = useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
 
   const filtersState = useGamesFilters();
 
@@ -123,8 +124,37 @@ const GamesInProgress = () => {
     filterToggler.set(true);
   }, [filterToggler]);
 
+  const shareDialogToggler = useToggler();
+
+  const [shareSelectedId, setShareSelectedId] = useState<string>();
+
+  const handleShareGame = useCallback(
+    (id) => {
+      setShareSelectedId(id);
+      shareDialogToggler.set(true);
+    },
+    [shareDialogToggler],
+  );
+
+  const handleCloseShareDialog = useCallback(() => {
+    setShareSelectedId(undefined);
+    shareDialogToggler.set(false);
+  }, [shareDialogToggler]);
+
+  const isMobile = useMobile();
+
   return (
     <>
+      <CoinLeagueShareDialog
+        dialogProps={{
+          open: shareDialogToggler.show,
+          onClose: handleCloseShareDialog,
+          fullWidth: true,
+          maxWidth: 'sm',
+          fullScreen: isMobile,
+        }}
+        id={shareSelectedId}
+      />
       <GameFilterDrawer
         show={filterToggler.show}
         onClose={filterToggler.toggle}
@@ -150,7 +180,7 @@ const GamesInProgress = () => {
           <Grid item xs={12}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleagues Banner'}
             />
           </Grid>
@@ -161,7 +191,7 @@ const GamesInProgress = () => {
             <IconButton onClick={handleBack}>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant='h6' style={{ margin: 5 }}>
+            <Typography variant='h5' style={{margin: 5}}>
               <IntlMessages id='app.coinLeagues.gamesInProgress' />
             </Typography>
             <Box p={2}>
@@ -200,22 +230,25 @@ const GamesInProgress = () => {
           <Grid item xs={12} sm={8}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleagues Banner'}
             />
           </Grid>
         </Hidden>
 
         <Grid item xs={12}>
-          <ContainedInput
+          <TextField
+            variant='outlined'
             value={search}
             onChange={handleSearch}
             placeholder={messages['app.coinLeagues.search'] as string}
-            startAdornment={
-              <InputAdornment position='start'>
-                <Search />
-              </InputAdornment>
-            }
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
             fullWidth
           />
         </Grid>
@@ -282,7 +315,7 @@ const GamesInProgress = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -293,19 +326,19 @@ const GamesInProgress = () => {
 
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            {gamesInProgress?.map((g, id) => (
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                <CardGameProgress
-                  game={g}
-                  key={id}
+            {gamesInProgress?.map((game, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <CardGame
+                  onShare={handleShareGame}
+                  game={game}
                   onClick={onClickEnterGame}
                 />
               </Grid>
             ))}
             {isLoading &&
-              [1, 2, 3, 4, 6, 7, 8].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                  <CardGameProgressSkeleton />
+              new Array(8).fill(null).map((v, i) => (
+                <Grid item xs={12} sm={4} key={i}>
+                  <CardGame loading />
                 </Grid>
               ))}
             {!isLoading && !gamesInProgress?.length && (

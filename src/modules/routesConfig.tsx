@@ -34,7 +34,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.app.wallet',
           type: 'item',
           customIcon: true,
-          icon: 'money.wallet',
+          icon: 'wallet-2',
           url: `/wallet`,
         },
         /*  {
@@ -52,9 +52,10 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.app.favorites',
           type: 'item',
           customIcon: true,
-          icon: 'lovely',
+          icon: 'star',
           url: `/favorite-coins`,
         },
+        /* Removing for now NFT wallet  
         {
           id: 'nfts',
           title: 'NFT Wallet',
@@ -83,11 +84,11 @@ const useRoutesConfig = (): NavItemProps[] => {
       children: [
         {
           id: 'all',
-          title: 'Explore',
-          messageId: 'sidebar.protocols.explore',
+          title: 'Explorer',
+          messageId: 'app.protocolExplorer.explorer',
           type: 'item',
           customIcon: true,
-          icon: 'buy.crypto',
+          icon: 'siacoin-sc',
           url: `/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
         },
       ],
@@ -149,7 +150,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.ranking',
           type: 'item',
           customIcon: true,
-          icon: 'cup',
+          icon: 'ranking',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
         {
@@ -199,7 +200,59 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /* {
+    {
+      id: 'squidLeague',
+      title: 'SquidLeague',
+      messageId: 'sidebar.squidLeague',
+      type: 'group',
+      children: [
+        {
+          id: 'squidLeague',
+          title: 'Squid',
+          messageId: 'sidebar.squidLeague',
+          type: 'item',
+          customIcon: true,
+          icon: 'people',
+          url: '/squid-league',
+        },
+        {
+          id: 'squidLeague-explore',
+          title: 'Explore',
+          messageId: 'sidebar.protocols.explore',
+          type: 'item',
+          customIcon: true,
+          icon: 'discover',
+          url: '/squid-league/explore',
+        },
+        {
+          id: 'squidLeague-mygames',
+          title: 'My Games',
+          messageId: 'sidebar.my-games',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.search',
+          url: '/squid-league/my-games',
+        },
+      ],
+    },
+    {
+      id: 'nftLeague',
+      title: 'NftLeague',
+      messageId: 'sidebar.nftLeague',
+      type: 'group',
+      children: [
+        {
+          id: 'nftLeague',
+          title: 'NFT League',
+          messageId: 'sidebar.nftLeague',
+          type: 'item',
+          customIcon: true,
+          icon: 'security',
+          url: '/nft-league',
+        },
+      ],
+    },
+    {
       id: 'myapps',
       title: 'My Apps',
       messageId: 'sidebar.myapps',
@@ -215,7 +268,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/my-apps/manage',
         },
       ],
-    },*/
+    },
     /*   {
       id: 'affiliate',
       title: 'Affiliates',
@@ -228,7 +281,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.affiliate.become-affiliate',
           type: 'item',
           customIcon: true,
-          icon: 'user.octagon',
+          icon: 'profile-2user',
           url: '/affiliate/overview',
         },
       ],
@@ -245,7 +298,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           messageId: 'sidebar.settings.general',
           type: 'item',
           customIcon: true,
-          icon: 'settings',
+          icon: 'settings-4',
           url: '/settings',
         },
       ],

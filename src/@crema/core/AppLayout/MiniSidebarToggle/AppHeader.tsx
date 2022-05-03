@@ -1,11 +1,11 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useContext} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
 import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
@@ -25,7 +25,8 @@ import {
   useMediaQuery,
   Container,
   ButtonBase,
-  IconButton,
+  Badge,
+  Paper,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
@@ -40,17 +41,22 @@ import {switchChain} from 'utils/wallet';
 import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 import {useChainInfo} from 'hooks/useChainInfo';
+import {AppState} from 'redux/store';
+
+import AppContextPropsType from 'types/AppContextPropsType';
+import AppContext from '@crema/utility/AppContext';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const {chainId, getProvider, account} = useWeb3();
   const {onSwitchMagicNetwork} = useMagicProvider();
 
-  const classes = useStyles();
+  const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
+  const classes = useStyles({themeMode});
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -227,11 +233,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           }
         });
       }
-    }
-
-  }, [chainId, account]);*/
+    }*/
 
   const {chainName} = useChainInfo();
+
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
 
   return (
     <>
@@ -258,7 +266,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 }
           }>
           {isMobile ? (
-            <Box>
+            <Box px={2}>
               <Grid
                 container
                 justify='space-between'
@@ -273,38 +281,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {isMetamask() || isMagicProvider() ? (
-                      <Grid item>
-                        {chainId !== undefined ? (
-                          <Grid item>
-                            <ButtonBase
-                              onClick={handleOpenSwitchNetwork}
-                              className={classes.switchNetworkButton}>
-                              <Box className={classes.badgeRoot}>
-                                {chainName}
-                                <IconButton size='small'>
-                                  <ExpandMoreIcon />
-                                </IconButton>
-                              </Box>
-                            </ButtonBase>
-                          </Grid>
-                        ) : null}
-                      </Grid>
-                    ) : (
-                      chainId && (
-                        <Grid item>
-                          <Box
-                            className={classes.badgeRoot}
-                            display={'flex'}
-                            alignItems={'center'}>
-                            {chainName}
-                          </Box>
-                        </Grid>
-                      )
-                    )}
-                    <Grid item>
-                      <Notifications />
-                    </Grid>
                     {/* <Grid item>
                       <ButtonBase
                         className={classes.avatarButton}
@@ -315,7 +291,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           src={
                             account && chainId
                               ? kittygotchiProfile.getDefault(account, chainId)
-                                ?.image
+                                  ?.image
                               : undefined
                           }
                         />
@@ -323,7 +299,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     </Grid>*/}
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
-                        <MenuIcon />
+                        <Badge
+                          variant='dot'
+                          color='primary'
+                          badgeContent={
+                            notifications.filter(
+                              (notification) =>
+                                notification?.check === undefined,
+                            ).length
+                          }>
+                          <MenuIcon />
+                        </Badge>
                       </AppBarButton>
                     </Grid>
                   </Grid>
@@ -388,7 +374,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
-                      <WalletInfo />
+                      <Paper>
+                        <WalletInfo />
+                      </Paper>
                     </Grid>
                   ) : null}
                   <Grid item>
@@ -400,11 +388,12 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       to='/profile'
                       component={RouterLink}>
                       <Avatar
+                        classes={{fallback: classes.fallback}}
                         className={classes.avatar}
                         src={
                           account && chainId
                             ? kittygotchiProfile.getDefault(account, chainId)
-                              ?.image
+                                ?.image
                             : undefined
                         }
                       />

@@ -16,17 +16,16 @@ import {
 import Typography from '@material-ui/core/Typography';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   id?: string;
 }
 
-export const EndGame = (props: Props) => {
-  const {id} = props;
-  const { chainId } = useLeaguesChainInfo();
+export const EndGameButton: React.FC<Props> = ({id}) => {
+  const {chainId} = useLeaguesChainInfo();
   const {game, refetch, refetchWinner} = useCoinLeagues(id);
   const [tx, setTx] = useState<string>();
   const {createNotification} = useNotifications();
@@ -42,7 +41,9 @@ export const EndGame = (props: Props) => {
     },
     [tx, chainId],
   );
+
   const {messages} = useIntl();
+
   const startTimestamp = game?.start_timestamp;
   const durationBN = game?.duration;
 
@@ -101,80 +102,24 @@ export const EndGame = (props: Props) => {
       chainId,
       createNotification,
       id,
-      refetchWinner
+      refetchWinner,
     ],
   );
 
   return (
-    <>
-      {canEndGame && (
-        <Paper>
-          <Box m={2}>
-            <Grid container spacing={4} justifyContent={'flex-end'}>
-              <Grid item xs md={3}>
-                <Box m={2}>
-                  <Grid
-                    container
-                    justifyContent={'center'}
-                    alignContent={'center'}
-                    alignItems={'center'}>
-                    <Grid item xs={12} md={12}>
-                      <Box display={'flex'} justifyContent={'center'}>
-                        {tx && (
-                          <Button variant={'text'} onClick={goToExplorer}>
-                            {submitState === SubmitState.Submitted
-                              ? 'Submitted Tx'
-                              : submitState === SubmitState.Error
-                              ? 'Tx Error'
-                              : submitState === SubmitState.Confirmed
-                              ? 'Confirmed Tx'
-                              : ''}
-                          </Button>
-                        )}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <Button
-                        onClick={onEndGame}
-                        fullWidth
-                        disabled={
-                          !canEndGame ||
-                          submitState !== SubmitState.None ||
-                          !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                        }
-                        variant='contained'
-                        color={
-                          submitState === SubmitState.Error
-                            ? 'default'
-                            : 'primary'
-                        }>
-                        <ButtonState
-                          state={submitState}
-                          defaultMsg={
-                            messages['app.coinLeagues.endGame'] as string
-                          }
-                          confirmedMsg={
-                            messages['app.coinLeagues.gameFinished'] as string
-                          }
-                        />
-                      </Button>
-
-                      <Paper>
-                        <Box display={'flex'} justifyContent={'center'} p={2}>
-                          <Typography>
-                            &nbsp; Game will auto end soon or you can manually
-                            end it
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      )}
-    </>
+    <Button
+      onClick={onEndGame}
+      fullWidth
+      disabled={
+        !canEndGame ||
+        submitState !== SubmitState.None ||
+        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+      }
+      variant='contained'
+      color='primary'>
+      <IntlMessages id='coinLeague.endGame' defaultMessage='End Game' />
+    </Button>
   );
 };
+
+export default EndGameButton;

@@ -37,7 +37,7 @@ interface Props {
   shareButton?: boolean;
 }
 
-const PageTitle: React.FC<Props> = ({
+const PageHeader: React.FC<Props> = ({
   breadcrumbs,
   title,
   subtitle,
@@ -169,4 +169,4 @@ const PageTitle: React.FC<Props> = ({
   );
 };
 
-export default PageTitle;
+export default PageHeader;

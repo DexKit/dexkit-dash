@@ -1,5 +1,5 @@
-import {ChainId} from 'types/blockchain';
-import {EthereumNetwork, MainnetNetwork, EXCHANGE} from './AppEnums';
+import { ChainId } from 'types/blockchain';
+import { EthereumNetwork, MainnetNetwork, EXCHANGE } from './AppEnums';
 
 export const GET_NETWORK_NAME = (chainId?: ChainId) => {
   switch (Number(chainId)) {
@@ -16,12 +16,16 @@ export const GET_NETWORK_NAME = (chainId?: ChainId) => {
       return EthereumNetwork.bsc;
     case ChainId.BinanceTest:
       return EthereumNetwork.bsc_testnet;
+    case ChainId.Fantom:
+      return EthereumNetwork.fantom;
+    case ChainId.Avalanche:
+      return EthereumNetwork.avalanche;
     default:
       return EthereumNetwork.ethereum;
   }
 };
 
-export const GET_NETWORK_NAME_V2 = (networkName: string, chainId?: ChainId, ) => {
+export const GET_NETWORK_NAME_V2 = (networkName: string, chainId?: ChainId,) => {
   switch (Number(chainId)) {
     case ChainId.Mainnet:
     case ChainId.Ropsten:

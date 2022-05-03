@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useCallback, useEffect, useState} from 'react';
+import {ethers} from 'ethers';
+import {useWeb3} from 'hooks/useWeb3';
 
 import axios from 'axios';
 
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query';
 
-import { DEXKIT, BITTOKEN } from 'shared/constants/tokens';
+import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
 
-import { ChainId, Web3State } from 'types/blockchain';
+import {ChainId, Web3State} from 'types/blockchain';
 import {
   getChampionApiEndpoint,
   getChampionMetadata,
@@ -27,32 +27,32 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { useNotifications } from 'hooks/useNotifications';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
-import { getRarityFromBodyType } from 'modules/CoinLeagues/utils/champions';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {getRarityFromBodyType} from 'modules/CoinLeagues/utils/champions';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 import {
   GET_CHAMPIONS_CONTRACT_ADDR,
   IS_CHAMPIONS_SUPPORTED_NETWORK,
 } from 'modules/CoinLeagues/utils/champions';
 
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 export function useChampionMint() {
-  const { getProvider, web3State } = useWeb3();
-  const { chainId } = useLeaguesChainInfo();
+  const {getProvider, web3State} = useWeb3();
+  const {chainId} = useLeaguesChainInfo();
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [transactionHash, setTransactionHash] = useState<string>();
   const [tokenId, setTokenId] = useState<string>();
 
-  const { createNotification } = useNotifications();
+  const {createNotification} = useNotifications();
 
   const clear = useCallback(() => {
     setError(undefined);
@@ -115,7 +115,7 @@ export function useChampionMint() {
     }
   }, [web3State, chainId, getProvider, clear, createNotification, messages]);
 
-  return { mint, loading, error, transactionHash, tokenId, clear };
+  return {mint, loading, error, transactionHash, tokenId, clear};
 }
 
 export const useChampionMetadata = (tokenId?: string) => {
@@ -123,7 +123,7 @@ export const useChampionMetadata = (tokenId?: string) => {
   const [error, setError] = useState<Error>();
   const [data, setData] = useState<ChampionMetadata>();
 
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
 
   const clear = useCallback(() => {
     setError(undefined);
@@ -179,11 +179,11 @@ export const useChampionMetadata = (tokenId?: string) => {
     }
   }, [tokenId, fetch]);
 
-  return { data, loading, error, clear, fetch };
+  return {data, loading, error, clear, fetch};
 };
 
 export const useChampionMetadataQuery = (tokenId?: string) => {
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
   return useQuery(['GET_CHAMPION_METADATA', tokenId, chainId], () => {
     if (!tokenId || !chainId) {
       return;
@@ -201,7 +201,7 @@ export const useChampionMetadataQuery = (tokenId?: string) => {
 };
 // TODO: create query on backend to return all these id's at once
 export const useChampionsMetadataQuery = (tokenIds?: string[]) => {
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
   return useQuery(['GET_CHAMPION_METADATA', tokenIds, chainId], async () => {
     if (!tokenIds || !tokenIds.length || !chainId) {
       return;
@@ -236,7 +236,7 @@ export const useChampionsMetadataQuery = (tokenIds?: string[]) => {
 };
 
 export const useChampionTokenHolding = (account?: string) => {
-  const { chainId, getProvider } = useWeb3();
+  const {chainId, getProvider} = useWeb3();
 
   const query = useQuery(
     ['GET_COIN_LEAGUES_BALANCES_HOLDING', account, chainId, getProvider],
@@ -323,9 +323,9 @@ const GET_MY_CHAMPIONS = gql`
 `;
 
 export function useMyChampions(
-  params: { chainId?: number; limit?: number; account?: string } = { limit: 100 },
+  params: {chainId?: number; limit?: number; account?: string} = {limit: 100},
 ) {
-  const { chainId, limit, account } = params;
+  const {chainId, limit, account} = params;
 
   const userDefaulAccount = useDefaultAccount();
   const defaultAccount = account ? account : userDefaulAccount;
@@ -333,7 +333,6 @@ export function useMyChampions(
   const [data, setData] = useState<CoinLeaguesChampion[]>();
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
-
 
   const fetch = useCallback(() => {
     if (defaultAccount && chainId) {
@@ -347,7 +346,7 @@ export function useMyChampions(
         client
           .query({
             query: GET_MY_CHAMPIONS,
-            variables: { owner: defaultAccount.toLocaleLowerCase() },
+            variables: {owner: defaultAccount.toLocaleLowerCase()},
           })
 
           .then(async (result) => {
@@ -396,7 +395,7 @@ export function useMyChampions(
     }
   }, [chainId, defaultAccount, fetch]);
 
-  return { fetch, data, loading, error };
+  return {fetch, data, loading, error};
 }
 
 export function useChampionsTotalSupply(chainId?: number) {
@@ -414,7 +413,7 @@ export function useChampionsTotalSupply(chainId?: number) {
     };
   }, [chainId]);
 
-  return { totalSupply };
+  return {totalSupply};
 }
 
 const GET_CHAMPION_BALANCE_QUERY = gql`
@@ -427,8 +426,8 @@ const GET_CHAMPION_BALANCE_QUERY = gql`
 
 const GET_CHAMPION_BALANCE = 'GET_CHAMPION_BALANCE';
 
-export function useChampionBalance(params: { account: string; chainId: number }) {
-  const { account, chainId } = params;
+export function useChampionBalance(params: {account: string; chainId: number}) {
+  const {account, chainId} = params;
 
   return useQuery([GET_CHAMPION_BALANCE, chainId, account], async () => {
     // TODO: refactor this code later
@@ -441,9 +440,9 @@ export function useChampionBalance(params: { account: string; chainId: number })
       client = maticClient;
     }
 
-    const result = await client.query<{ owner: { balance: string } }>({
+    const result = await client.query<{owner: {balance: string}}>({
       query: GET_CHAMPION_BALANCE_QUERY,
-      variables: { account: account?.toLocaleLowerCase() },
+      variables: {account: account?.toLocaleLowerCase()},
     });
 
     if (result.data.owner !== null) {

@@ -4,7 +4,6 @@ import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {onAddNotification} from 'redux/actions';
-import {NotificationType} from 'services/notification';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import Box from '@material-ui/core/Box';
@@ -79,11 +78,11 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
       if (e instanceof Error) {
         setError(e.message);
         const notification: Notification = {title: 'Error', body: e.message};
-        dispatch(onAddNotification([notification], NotificationType.ERROR));
+        dispatch(onAddNotification([notification]));
       } else if (typeof error === 'string') {
         setError(e);
-        const notification: Notification = {title: 'Error', body: e};
-        dispatch(onAddNotification([notification], NotificationType.ERROR));
+        const notification: Notification = {title: 'Error', body: String(e)};
+        dispatch(onAddNotification([notification]));
       }
 
       setLoading(false);

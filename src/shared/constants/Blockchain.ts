@@ -1,7 +1,8 @@
-import {BigNumber} from '@0x/utils';
-import {Web3Wrapper} from '@0x/web3-wrapper';
-import {ChainId} from 'types/blockchain';
-import {EthereumNetwork} from './AppEnums';
+import { BigNumber } from '@0x/utils';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { NetworkParams } from 'redux/_settingsv2/actions';
+import { ChainId } from 'types/blockchain';
+import { EthereumNetwork } from './AppEnums';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -136,7 +137,7 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
     case ChainId.Rinkeby:
       return 'Rinkeby';
     case ChainId.Matic:
-      return 'MATIC';
+      return 'Polygon';
     case ChainId.Mumbai:
       return 'Mumbai';
     case ChainId.Kovan:
@@ -154,7 +155,7 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
 
 export const GET_CHAIN_ID_NAME_V2 = (
   chainId: number,
-  networks?: {chainId: number; name: string}[],
+  networks?: { chainId: number; name: string }[],
 ): string => {
   if (networks) {
     const index = networks.findIndex((n) => n.chainId === chainId);
@@ -193,7 +194,7 @@ export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
 
 export const GET_CHAIN_NATIVE_COIN_V2 = (
   chainId: ChainId | undefined,
-  networks?: {chainId: number; symbol: string}[],
+  networks?: { chainId: number; symbol: string }[],
 ) => {
   const symbol = GET_CHAIN_NATIVE_COIN(chainId);
 
@@ -220,3 +221,21 @@ export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
       return ChainId.Mainnet;
   }
 };
+
+
+export const AVAX_NETWORK: NetworkParams = {
+  chainId: 43114,
+  name: 'Avalanche',
+  nativeTokenSymbol: 'AVAX',
+  rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
+  explorerUrl: 'https://snowtrace.io'
+}
+
+
+export const FANTOM_NETWORK: NetworkParams = {
+  chainId: 250,
+  name: 'Fantom',
+  nativeTokenSymbol: 'FTM',
+  rpcUrl: 'https://rpc.ftm.tools/',
+  explorerUrl: 'https://ftmscan.com/'
+}

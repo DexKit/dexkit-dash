@@ -2,26 +2,34 @@ import React, {useCallback, useState} from 'react';
 
 import {
   Box,
-  Grid,
-  Button,
   Dialog,
   DialogProps,
   CircularProgress,
+  DialogTitle,
+  IconButton,
 } from '@material-ui/core';
-
+import CloseIcon from '@material-ui/icons/Close';
 import Slider from './Slider';
-import {makeStyles} from '@material-ui/styles';
-import {useMobile} from 'hooks/useMobile';
+import {makeStyles} from '@material-ui/core';
 
 import {useHistory} from 'react-router';
+import {useMobile} from 'hooks/useMobile';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   slide: {
     width: '100%',
     height: 'auto',
   },
   dialogPaper: {
     overflow: 'inherit',
+    borderRadius: theme.shape.borderRadius,
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
   },
 }));
 
@@ -66,11 +74,26 @@ const LazyImage = (props: LazyImageProps) => {
   );
 };
 
-const DESCRIPTIONS = [
-  'Welcome to Coinleague, the on-chain crypto price prediction game. Test your knowledge and skills, play levels from Beginner to Grand master.',
-  'Use the buttons to swap, buy or bridge Matic to play, all from within this website.',
-  'Detailed instructions on how to play can be found in the menu on the right, join the Discord for community and help. ',
-  'CoinLeague NFT\'s with instant in game utility coming soon. Mint your Coinleague NFT to enter the NFT games room. - coming real soon! Like we mean weeks not years like those other NFT projects',
+const SLIDES_TEXTS: {title: string; description: string}[] = [
+  {
+    title: 'Coinleague',
+    description:
+      'Welcome to Coinleague, the on-chain crypto price prediction game. Test your knowledge and skills, play levels from Beginner to Grand master.',
+  },
+  {
+    title: 'Maximum control over your finances',
+    description:
+      'Use the buttons to swap, buy or bridge Matic to play, all from within this website.',
+  },
+  {
+    title: 'Enjoy game and join community',
+    description:
+      'Detailed instructions on how to play can be found in the menu on the right, join the Discord for community and help.',
+  },
+  {
+    title: "Play with your NFT's ",
+    description: "CoinLeague NFT's with instant in game utility.",
+  },
 ];
 
 interface WelcomeDialogProps extends DialogProps {}
@@ -89,7 +112,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
       onClose({}, 'backdropClick');
     }
 
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, [onClose, history]);
 
   const handleChangeIndex = useCallback((newIndex: number) => {
@@ -118,57 +141,54 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
     <Dialog
       {...props}
       fullWidth
-      maxWidth={'sm'}
+      fullScreen={isMobile}
+      maxWidth='sm'
       classes={{paper: classes.dialogPaper}}>
+      {onClose && (
+        <DialogTitle>
+          <IconButton
+            aria-label='close'
+            className={classes.closeButton}
+            onClick={() => onClose({}, 'backdropClick')}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+      )}
       <Slider
         slideCount={4}
         index={index}
         onChangeIndex={handleChangeIndex}
         onSelectIndex={handleSelectIndex}
         onNext={handleNext}
-        interval={20000}
-        onPrevious={handlePrevious}>
-        <Box>
+        onPrevious={handlePrevious}
+        description={SLIDES_TEXTS[index].description}
+        title={SLIDES_TEXTS[index].title}
+        onStart={handleGoLogin}>
+        <Box m={1}>
           <LazyImage
             src={require('assets/images/slides/welcome/01_welcome.svg')}
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={require('assets/images/slides/welcome/02_on_polygon.svg')}
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={require('assets/images/slides/welcome/03_how_to_play.svg')}
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
             src={require('assets/images/slides/welcome/04_NFT.svg')}
             className={classes.slide}
           />
         </Box>
       </Slider>
-      <Box p={4}>
-        <Grid container alignItems='center' alignContent='center' spacing={4}>
-          <Grid item xs={isMobile ? 12 : true}>
-            {DESCRIPTIONS[index]}
-          </Grid>
-          <Grid item xs={isMobile ? 12 : undefined}>
-            <Button
-              fullWidth={isMobile}
-              onClick={handleGoLogin}
-              variant='outlined'
-              color='primary'>
-              Get Started
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
     </Dialog>
   );
 };

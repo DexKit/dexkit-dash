@@ -1,6 +1,6 @@
-import {Coin, Token} from 'types/app';
-import {ChainId} from 'types/blockchain';
-import {Network} from './Bitquery';
+import { Coin, Token } from 'types/app';
+import { ChainId } from 'types/blockchain';
+import { Network } from './Bitquery';
 
 export const ETH_SYMBOL_URL =
   'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
@@ -56,6 +56,20 @@ const MATIC: Token = {
   address: 'matic',
 };
 
+const AVALANCHE: Token = {
+  name: 'Avalanche',
+  symbol: 'AVAX',
+  decimals: 18,
+  address: 'avax',
+};
+
+const FANTOM: Token = {
+  name: 'Fantom',
+  symbol: 'FTM',
+  decimals: 18,
+  address: 'ftm',
+};
+
 export const ETHEREUM_NATIVE_COINS_BY_CHAIN = {
   [ChainId.Mainnet]: ETH,
   [ChainId.Rinkeby]: ETH,
@@ -67,4 +81,6 @@ export const ETHEREUM_NATIVE_COINS_BY_CHAIN = {
   [ChainId.BinanceTest]: BNB,
   [ChainId.Mumbai]: MATIC,
   [ChainId.Matic]: MATIC,
+  [ChainId.Fantom]: FANTOM,
+  [ChainId.Avalanche]: AVALANCHE,
 };

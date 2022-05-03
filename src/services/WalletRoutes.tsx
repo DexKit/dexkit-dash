@@ -8,6 +8,8 @@ import AppContext from '../@crema/utility/AppContext';
 import {AppState} from '../redux/store';
 import AppContextPropsType from '../types/AppContextPropsType';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {NavStyle} from 'shared/constants/AppEnums';
 
 interface AuthRoutesProps {
   children: ReactNode;
@@ -17,7 +19,7 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   const {pathname} = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
-  const {routes} = useContext<AppContextPropsType>(AppContext);
+  const {routes, changeNavStyle} = useContext<AppContextPropsType>(AppContext);
 
   const ethAccount = useSelector<
     AppState,
@@ -49,6 +51,18 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   }, [dispatch, initialPath, pathname, ethAccount]);
 
   useEffect(() => {
+    if (pathname === LOGIN_WALLET_ROUTE) {
+      if (changeNavStyle) {
+        changeNavStyle(NavStyle.EMPTY_LAYOUT);
+      }
+    } else {
+      if (changeNavStyle) {
+        changeNavStyle(NavStyle.MINI_SIDEBAR_TOGGLE);
+      }
+    }
+  }, [pathname, changeNavStyle]);
+
+  useEffect(() => {
     if (
       !ethAccount &&
       !defaultAccount &&
@@ -56,14 +70,9 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
       currentRoute.auth.length >= 1 &&
       currentRoute.auth.includes('wallet')
     ) {
-      history.push('/onboarding/login-wallet');
+      history.push(LOGIN_WALLET_ROUTE);
     } else if (pathname === '/no-wallet' && ethAccount) {
-      // @ts-ignore
-      if (pathname === '/') {
-        history.push('/wallet');
-      }
-      // @ts-ignore
-      else if (initialPath !== '/no-wallet') {
+      if (initialPath !== '/no-wallet') {
         history.push(initialPath);
       } else {
         history.push('/wallet');
@@ -76,14 +85,9 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
       currentRoute.auth.length >= 1 &&
       currentRoute.auth.includes('connect-wallet')
     ) {
-      history.push('/onboarding/login-wallet');
+      history.push(LOGIN_WALLET_ROUTE);
     } else if (pathname === '/connect-wallet' && ethAccount) {
-      // @ts-ignore
-      if (pathname === '/') {
-        history.push('/wallet');
-      }
-      // @ts-ignore
-      else if (initialPath !== '/no-wallet') {
+      if (initialPath !== '/no-wallet') {
         history.push(initialPath);
       } else {
         history.push('/wallet');

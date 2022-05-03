@@ -22,14 +22,9 @@ const Suspense: React.FC<SuspenseProps> = ({children}) => {
           left={0}
           right={0}
           bottom={0}>
-       
-              <LeagueLogoImage />
+          <LeagueLogoImage />
 
-              <CircularProgress color={'primary'} />
-        
-    
-        
-   
+          <CircularProgress color={'primary'} />
         </Box>
       }>
       {children}

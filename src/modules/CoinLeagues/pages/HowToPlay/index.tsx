@@ -43,7 +43,7 @@ const HowToPlay = () => {
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant='h6' style={{margin: 5}}>
+          <Typography variant='h5' style={{margin: 5}}>
             <IntlMessages id='app.coinLeagues.howToPlay' />
           </Typography>
         </Box>

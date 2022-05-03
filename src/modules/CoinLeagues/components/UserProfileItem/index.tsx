@@ -10,8 +10,8 @@ import {Avatar, Link} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import {getPublicIPFSPath, isIPFS} from 'utils/ipfs';
-import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {isAddress} from 'utils/ethers';
 
 const useStyles = makeStyles((theme) => ({
   profileImageContainer: {
@@ -37,8 +37,8 @@ interface Props {
 
 const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   const classes = useStyles();
-  const accountLabels = useLabelAccounts();
-  if (profile) {
+
+  if (profile !== undefined) {
     return (
       <Grid alignItems='center' alignContent='center' container spacing={4}>
         <Grid item>
@@ -58,7 +58,7 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
             color='inherit'
             component={RouterLink}
             to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
-            <Typography style={{color: '#fff'}}>{profile.username}</Typography>
+            <Typography color='inherit'>{profile.username}</Typography>
           </Link>
         </Grid>
       </Grid>
@@ -66,14 +66,9 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
   } else {
     let label: string | undefined;
     const bitboyMember = GET_BITBOY_NAME(address);
+
     if (bitboyMember) {
       label = bitboyMember.label;
-    } else {
-      label =
-        accountLabels &&
-        accountLabels.find(
-          (a) => a.address.toLowerCase() === address.toLowerCase(),
-        )?.label;
     }
 
     return (
@@ -81,8 +76,10 @@ const UserProfileItem: React.FC<Props> = ({address, profile}) => {
         color='inherit'
         component={RouterLink}
         to={`${COINLEAGUE_PROFILE_ROUTE}/${address}`}>
-        <Typography style={{color: '#fff'}}>
-          {label ? label : truncateAddress(address)}
+        <Typography variant='body1'>
+          {label && isAddress(label)
+            ? truncateAddress(label)
+            : truncateAddress(address)}
         </Typography>
       </Link>
     );

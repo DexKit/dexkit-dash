@@ -14,7 +14,10 @@ import {initialUrl} from '../shared/constants/AppConst';
 //import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
 
+import {squidLeagueConfigs} from './SquidLeague';
+
 import {settingsConfig} from './Settings';
+import {nftLeagueConfig} from './NFTLeague';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -31,6 +34,8 @@ const routeConfigs = [
   //...kittygotchiConfig,
   //...profileConfig,
   ...settingsConfig,
+  ...nftLeagueConfig,
+  ...squidLeagueConfigs,
 ];
 
 const routes = [

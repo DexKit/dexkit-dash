@@ -1,17 +1,30 @@
 import {makeStyles} from '@material-ui/core';
-import {ThemeMode} from '../../../../shared/constants/AppEnums';
-import {CremaTheme} from '../../../../types/AppContextPropsType';
+import {ThemeMode} from 'shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
+    dexkitIcon: {
+      '& path': {
+        fill: ({themeMode}: {themeMode: any}) =>
+          themeMode === ThemeMode.LIGHT
+            ? theme.palette.primary.main
+            : theme.palette.common.white,
+      },
+    },
+    icon: {
+      '& path': {
+        stroke: theme.palette.text.primary,
+      },
+    },
     avatar: {
-      border: ' 1px solid #525C75',
-      backgroundColor: '#2E3243',
+      backgroundColor: theme.palette.background.default,
       width: theme.spacing(12),
       height: theme.spacing(12),
     },
     avatarButton: {
       borderRadius: '50%',
+      border: `1px solid ${theme.palette.divider}`,
     },
     drawer: {
       width: '100%',
@@ -163,12 +176,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       },
     },
     sidebarBg: {
-      backgroundColor: (props: {themeMode: ThemeMode}) =>
-        props.themeMode === ThemeMode.SEMI_DARK
-          ? theme.palette.sidebar.bgColor
-          : props.themeMode === ThemeMode.LIGHT
-          ? 'white'
-          : '#313541',
+      backgroundColor: theme.palette.background.paper,
     },
     scrollAppSidebar: {
       paddingTop: 8,
@@ -191,8 +199,22 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     sidebarStandard: {
       height: '100%',
       width: '100%',
-      color: 'white',
       overflow: 'hidden',
+    },
+    badgeRoot: {
+      padding: theme.spacing(2),
+      borderRadius: theme.shape.borderRadius,
+    },
+    switchNetworkButton: {
+      textTransform: 'uppercase',
+      padding: theme.spacing(4),
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderRadius: theme.shape.borderRadius,
+      border: `1px solid ${theme.palette.divider}`,
+      background: theme.palette.background.paper,
     },
   };
 });

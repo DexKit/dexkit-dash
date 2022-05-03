@@ -128,8 +128,8 @@ export function Competition() {
               </Box>
               <Typography variant='h5'>
                 <IntlMessages
-                  id='app.coinLeagues.mostJoinerCompetition'
-                  defaultMessage={'Most Joiner Competition'}
+                  id='app.coinLeagues.competition'
+                  defaultMessage={'Competition'}
                 />
               </Typography>
               <Box p={2}>
