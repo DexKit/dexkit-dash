@@ -1,27 +1,32 @@
-import {makeStyles} from '@material-ui/core/styles';
+import {alpha, makeStyles, lighten} from '@material-ui/core/styles';
 import {useContext} from 'react';
 import AppContext from '../../../utility/AppContext';
 import {Fonts, ThemeMode} from '../../../../shared/constants/AppEnums';
-import AppContextPropsType, {
-  CremaTheme,
-} from '../../../../types/AppContextPropsType';
+import AppContextPropsType from '../../../../types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: CremaTheme) => {
+const useStyles = makeStyles((theme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
   return {
-    item: {
-      paddingLeft: 0,
+    item: {},
+    arrowIcon: {
+      '& path': {
+        stroke: theme.palette.text.primary,
+      },
     },
     itemIcon: {
-      paddingRight: 16,
-      paddingLeft: 16,
+      background: lighten(theme.palette.background.paper, 0.1),
+      width: theme.spacing(10),
+      height: theme.spacing(10),
+      padding: theme.spacing(2),
+      borderRadius: '50%',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
     },
     svgActive: {
       '& > path': {
-        fill: '#FFA552',
+        fill: theme.palette.primary.main,
       },
     },
     navItem: {
@@ -57,24 +62,24 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         '& .nav-item-text': {
           fontFamily: Fonts.MEDIUM,
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
 
         '& .nav-item-icon': {
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
 
         '& .nav-item-icon-arrow': {
           color:
-            themeMode === ThemeMode.LIGHT ? theme.palette.primary.main : '#fff',
+            themeMode === ThemeMode.LIGHT ? theme.palette.text.primary : '#fff',
         },
       },
       '& .nav-item-icon': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
       },
       '& .nav-item-text': {
-        color: theme.palette.sidebar.textColor,
+        color: theme.palette.text.primary,
         fontSize: 18,
       },
     },
@@ -104,14 +109,18 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     listItemText: {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      fontSize: 18,
-      fontWeight: 500,
-      lineHeight: 18,
+      fontWeight: 400,
+      color: theme.palette.text.primary,
     },
     hiddenOverflow: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+    },
+    divider: {
+      backgroundColor: alpha(theme.palette.divider, 0.05),
+      marginRight: theme.spacing(4),
+      marginLeft: theme.spacing(4),
     },
   };
 });

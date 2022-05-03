@@ -3,6 +3,8 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import {CircularProgress, Divider, useTheme} from '@material-ui/core';
+
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -19,24 +21,20 @@ import TableContainer from '@material-ui/core/TableContainer';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
-
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
 import {
   ExplorerURL,
-  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+  GET_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GameType} from 'types/coinsleague';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
-import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 
 import {useNotifications} from 'hooks/useNotifications';
@@ -44,8 +42,16 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {getTransactionScannerUrl} from 'utils/blockchain';
-import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import {ExpandLess, ExpandMore} from '@material-ui/icons';
+import {truncateAddress} from 'utils';
+import ViewCoinListItem from '../ViewCoinsModal/ViewCoinItem';
+
+import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {Alert} from '@material-ui/lab';
+import {useMobile} from 'hooks/useMobile';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -97,6 +103,8 @@ interface Props {
   account?: string;
   type?: GameType;
   profile?: GameProfile;
+  prizePool?: number;
+  currentPlayers?: number;
 }
 
 const getIconByCoin = (
@@ -124,10 +132,20 @@ const getIconSymbol = (
 const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
-  const {id, account, winner, data, type, profile} = props;
+  const {id, account, winner, data, type, profile, prizePool, currentPlayers} =
+    props;
+
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
+  const theme = useTheme();
+
+  const {coinSymbol} = useLeaguesChainInfo();
+
+  const isMobile = useMobile();
+
+  const [expanded, setExpanded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
@@ -149,7 +167,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     SubmitState.None,
   );
 
-  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
+  const {multiplier, tooltipMessage} = useMultipliers(id);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -182,13 +200,9 @@ function OnePlayerTable(props: Props): JSX.Element {
     }
   }, [isWinner, winner, data]);
 
-  const [openViewDialog, setOpenViewDialog] = useState(false);
-  const onCloseViewCoinsDialog = useCallback(() => {
-    setOpenViewDialog(false);
-  }, []);
-
-  const onViewCoins = useCallback((c: any) => {
-    setOpenViewDialog(true);
+  const handleCloseError = useCallback(() => {
+    setSubmitState(SubmitState.None);
+    setErrorMessage(undefined);
   }, []);
 
   const onClaimGame = useCallback(
@@ -216,11 +230,13 @@ function OnePlayerTable(props: Props): JSX.Element {
           setSubmitState(SubmitState.Confirmed);
           refetch();
         };
-        const onError = () => {
+        const onError = (e: any) => {
           setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
+          if (e.message) {
+            setErrorMessage(e.message);
+          } else {
+            setErrorMessage(String(e));
+          }
         };
 
         onClaimCallback(account, {
@@ -275,11 +291,14 @@ function OnePlayerTable(props: Props): JSX.Element {
       window.open(`${ExplorerURL[chainId]}${tx}`);
     }
   }, [tx, chainId]);
+
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
         let label;
+
         const bitboyMember = GET_BITBOY_NAME(d.hash);
+
         if (bitboyMember) {
           label = bitboyMember.label;
         } else {
@@ -287,6 +306,7 @@ function OnePlayerTable(props: Props): JSX.Element {
             ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
             : d.hash;
         }
+
         const currentFeedPrice = currentPrices?.filter((f) =>
           d.coins
             .concat(d.captainCoin ? d.captainCoin : [])
@@ -337,7 +357,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores && scores.reduce((p, c) => p + c);
+          const score = scores.length > 0 ? scores.reduce((p, c) => p + c) : 0;
           return {
             ...d,
             account: d.hash,
@@ -400,147 +420,122 @@ function OnePlayerTable(props: Props): JSX.Element {
     }
   }, [playerRowData, account, type]);
 
+  const allCoins = useMemo(() => {
+    const chain = GET_LEAGUES_CHAIN_ID(chainId);
+
+    if (
+      playerData?.coins &&
+      playerData?.captainCoin &&
+      allFeeds &&
+      allFeeds.length
+    ) {
+      const coinsWithFeeds = allFeeds.filter((cf) =>
+        playerData?.coins
+          .concat(playerData?.captainCoin)
+          .map((c) => c?.toLowerCase())
+          .includes(cf?.address?.toLowerCase()),
+      );
+      const coinsList = PriceFeeds[chain].filter((c) =>
+        coinsWithFeeds
+          .map((cf) => cf?.address?.toLowerCase())
+          .includes(c?.address?.toLowerCase()),
+      );
+      return [playerData?.captainCoin]
+        .concat(playerData?.coins)
+        .map((c) => {
+          return {
+            coin: coinsList.find(
+              (cl) => cl.address.toLowerCase() === c.toLowerCase(),
+            ),
+            isCaptain:
+              c.toLowerCase() === playerData?.captainCoin.toLowerCase(),
+            feed: coinsWithFeeds.find(
+              (cl) => cl.address.toLowerCase() === c.toLowerCase(),
+            ),
+            currentFeed: currentPrices?.find(
+              (cl) => cl.feed.toLowerCase() === c.toLowerCase(),
+            ),
+          };
+        })
+        .filter((c) => c.coin && c.feed) as {
+        coin: CoinFeed;
+        feed: CoinFeedOnChain;
+        currentFeed: any;
+        isCaptain: boolean;
+      }[];
+    }
+    return [];
+  }, [allFeeds, currentPrices, chainId, playerData]);
+
+  const gameStarted = useMemo(() => {
+    return game?.started && !game.finished && !game.aborted;
+  }, [game]);
+
   return (
     <>
-      <ViewCoinLeagueDialog
-        open={openViewDialog}
-        onClose={onCloseViewCoinsDialog}
-        coins={playerData?.coins || []}
-        captainCoin={playerData?.captainCoin}
-        id={id}
-        playerAddress={playerData?.hash}
-      />
-      <TableContainer className={classes.container} component={Paper}>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.position' />
-              </TableCell>
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.captain' />
-              </TableCell>
-              {playerData?.coins && playerData?.coins.length > 0 && (
-                <TableCell className={classes.header}>
-                  <IntlMessages id='app.coinLeagues.coins' />
-                </TableCell>
-              )}
-              <TableCell className={classes.header}>
-                <IntlMessages id='app.coinLeagues.score' />
-              </TableCell>
-              {(canClaim || claimed) && (
-                <TableCell className={classes.header}>
-                  <IntlMessages id='app.coinLeagues.action' />
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {!playerData && (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className={classes.noBorder}
-                  style={{textAlign: 'center', color: '#ffa552'}}>
-                  <Typography variant='h5'>
-                    <IntlMessages id='app.coinLeagues.noDataFound' />!
+      <Paper>
+        <Box p={4}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Typography variant='subtitle1'>
+                <IntlMessages
+                  id='coinLeague.yourCoins'
+                  defaultMessage='Your Coins'
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                container
+                spacing={2}
+                alignItems='center'
+                alignContent='center'>
+                <Grid item>
+                  <Chip
+                    variant='outlined'
+                    size='small'
+                    style={{color: theme.palette.primary.main}}
+                    label={
+                      isBalanceVisible
+                        ? `${(playerData?.place || 0) + 1}º`
+                        : '..'
+                    }
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Typography variant='body1'>
+                    {playerData?.profile !== undefined
+                      ? playerData.profile.username
+                      : truncateAddress(playerData?.hash || '')}
                   </Typography>
-                </TableCell>
-              </TableRow>
-            )}
+                </Grid>
+                <Grid item>
+                  <IconButton onClick={() => setExpanded((value) => !value)}>
+                    {expanded ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
             {playerData && (
-              <TableRow>
-                <TableCell className={classes.noBorder}>
-                  <Box display={'flex'} alignItems={'center'}>
-                    <Chip
-                      className={classes.chip}
-                      label={
-                        isBalanceVisible ? `${playerData.place + 1}º` : '..'
-                      }
-                    />
-
-                    {/*data && <Chip className={classes.chip} label={`${1}º`} />*/}
-                    {isBalanceVisible ? (
-                      <UserProfileItem
-                        address={playerData.account}
-                        profile={playerData.profile}
-                      />
-                    ) : (
-                      <Typography style={{color: '#fff'}}>
-                        &nbsp; *****...****
-                      </Typography>
-                    )}
-                  </Box>
-                </TableCell>
-
-                <TableCell className={classes.noBorder}>
-                  <Box display={'flex'} alignItems={'center'}>
-                    {chainId &&
-                      IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                      playerData?.captainCoin && (
-                        <>
-                          {isBalanceVisible ? (
-                            <Tooltip title={tooltipMessage(account)}>
-                              <Badge
-                                color={'primary'}
-                                overlap='circular'
-                                badgeContent={
-                                  !loadingMultiplier &&
-                                  multiplier(account).toFixed(3)
-                                }>
-                                <Avatar
-                                  className={classes.chip}
-                                  src={getIconByCoin(
-                                    playerData?.captainCoin,
-                                    chainId,
-                                  )}
-                                  style={{height: 35, width: 35}}>
-                                  {getIconSymbol(
-                                    playerData?.captainCoin,
-                                    chainId,
-                                  )}
-                                </Avatar>
-                              </Badge>
-                            </Tooltip>
-                          ) : (
-                            <Badge color={'primary'} overlap='circular'>
-                              <Avatar
-                                className={classes.chip}
-                                style={{height: 35, width: 35}}
-                              />
-                            </Badge>
-                          )}
-                          {playerData?.coins.length === 0 && (
-                            <IconButton
-                              onClick={() => onViewCoins(playerData.coins)}>
-                              <RemoveRedEye
-                                style={{
-                                  color: '#fff',
-                                  marginLeft: 10,
-                                  alignSelf: 'center',
-                                }}
-                              />
-                            </IconButton>
-                          )}
-                        </>
-                      )}
-                  </Box>
-                </TableCell>
-
-                {playerData?.coins.length > 0 && (
-                  <TableCell className={classes.noBorder}>
-                    <Box display={'flex'} alignItems={'center'}>
-                      <AvatarGroup max={10} spacing={17}>
-                        {chainId &&
-                          IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                          playerData?.coins.map((coin) =>
+              <Grid item xs={12}>
+                <Grid container spacing={4} justifyContent='space-between'>
+                  <Grid item>
+                    {playerData.coins?.length > 0 &&
+                      (isMobile ? (
+                        <AvatarGroup max={10} spacing={17}>
+                          {playerData?.coins.map((coin) =>
                             isBalanceVisible ? (
                               <Avatar
                                 className={classes.chip}
-                                src={getIconByCoin(coin, chainId)}
+                                src={getIconByCoin(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
                                 style={{height: 35, width: 35}}>
-                                {getIconSymbol(coin, chainId)}
+                                {getIconSymbol(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
                               </Avatar>
                             ) : (
                               <Badge color={'primary'} overlap='circular'>
@@ -551,94 +546,220 @@ function OnePlayerTable(props: Props): JSX.Element {
                               </Badge>
                             ),
                           )}
-                      </AvatarGroup>
-                      {playerData?.coins && playerData?.coins.length > 0 && (
-                        <IconButton
-                          onClick={() => onViewCoins(playerData.coins)}>
-                          <RemoveRedEye
-                            style={{
-                              color: '#fff',
-                              marginLeft: 10,
-                              alignSelf: 'center',
-                            }}
-                          />
-                        </IconButton>
-                      )}
-                    </Box>
-                  </TableCell>
-                )}
-
-                <TableCell className={classes.noBorder}>
-                  {isBalanceVisible ? (
-                    <Chip
-                      clickable
-                      style={{
-                        background: '#343A49',
-                        color: playerData?.score > 0 ? '#0e0' : '#e00',
-                      }}
-                      label={`${
-                        playerData?.score >= 0 ? '+' : ''
-                      }${playerData?.score?.toFixed(3)}%`}
-                    />
-                  ) : (
-                    <Chip clickable label={`...%`} />
-                  )}
-                </TableCell>
-
-                {(canClaim || claimed || canWithdraw) && (
-                  <TableCell className={classes.noBorder}>
-                    {canClaim && (
-                      <Grid
-                        container
-                        justifyContent={'center'}
-                        alignContent={'center'}
-                        alignItems={'center'}>
-                        <Grid item xs={12} md={12}>
-                          {tx && (
-                            <Button variant={'text'} onClick={goToExplorer}>
-                              {submitState === SubmitState.Submitted ? (
-                                <IntlMessages id='app.coinLeagues.submittedTx' />
-                              ) : submitState === SubmitState.Error ? (
-                                <IntlMessages id='app.coinLeagues.txError' />
-                              ) : submitState === SubmitState.Confirmed ? (
-                                <IntlMessages id='app.coinLeagues.confirmedTx' />
-                              ) : (
-                                ''
-                              )}
-                            </Button>
+                        </AvatarGroup>
+                      ) : (
+                        <Grid container spacing={3}>
+                          {playerData?.coins.map((coin) =>
+                            isBalanceVisible ? (
+                              <Grid item>
+                                <Avatar
+                                  className={classes.chip}
+                                  src={getIconByCoin(
+                                    coin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
+                                  style={{height: 35, width: 35}}>
+                                  {getIconSymbol(
+                                    coin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
+                                </Avatar>
+                              </Grid>
+                            ) : (
+                              <Grid item>
+                                <Badge color='primary' overlap='circular'>
+                                  <Avatar
+                                    className={classes.chip}
+                                    style={{height: 35, width: 35}}
+                                  />
+                                </Badge>
+                              </Grid>
+                            ),
                           )}
                         </Grid>
-                        <Grid item xs={12} md={12}>
-                          <Button
-                            onClick={onClaimGame}
-                            fullWidth
-                            disabled={submitState !== SubmitState.None}
-                            variant={'contained'}
-                            color={
-                              submitState === SubmitState.Error
-                                ? 'default'
-                                : 'primary'
-                            }>
-                            <ButtonState
-                              state={submitState}
-                              defaultMsg={
-                                messages['app.coinLeagues.claim'] as string
+                      ))}
+                  </Grid>
+                  <Grid item>
+                    {isBalanceVisible ? (
+                      <Chip
+                        clickable
+                        style={{
+                          color:
+                            playerData?.score > 0
+                              ? theme.palette.success.main
+                              : theme.palette.error.main,
+                        }}
+                        label={`${
+                          playerData?.score >= 0 ? '+' : ''
+                        }${playerData?.score?.toFixed(3)}%`}
+                      />
+                    ) : (
+                      <Chip clickable label={`...%`} />
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+            {expanded && (
+              <Grid item xs={12}>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.coin'
+                            defaultMessage='Coin'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.startPrice'
+                            defaultMessage='Start Price'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.endPrice'
+                            defaultMessage='End Price'
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <IntlMessages
+                            id='coinLeague.score'
+                            defaultMessage='Score'
+                          />
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {allCoins?.map((coin, index) => (
+                        <ViewCoinListItem
+                          coin={coin.coin}
+                          feedOnchain={coin.feed}
+                          currentPrice={coin.currentFeed}
+                          started={gameStarted}
+                          key={index}
+                          isCaptain={coin.isCaptain}
+                          playerAddress={playerData?.hash}
+                          multipliers={multiplier}
+                          tooltipMessage={tooltipMessage}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            )}
+
+            {(canClaim || claimed || canWithdraw) && (
+              <>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <Typography variant='subtitle1'>
+                        <IntlMessages
+                          id='coinLeague.prize'
+                          defaultMessage='Prize'
+                        />
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary'>
+                        <IntlMessages
+                          id='coinLeague.congratulationsYourWonInFirstPlace'
+                          defaultMessage={`Congratulations, you won in ${
+                            (playerData?.place || 0) + 1
+                          }° place`}
+                        />
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant='caption' color='textSecondary'>
+                        {(playerData?.place || 0) + 1}th{' '}
+                        <IntlMessages
+                          id='coinLeauge.place'
+                          defaultMessage='Place'
+                        />
+                      </Typography>
+                      <Typography variant='h5'>
+                        {currentPlayers === 2 ? (
+                          <>
+                            {(prizePool || 0) * 0.9} {coinSymbol}
+                          </>
+                        ) : (
+                          <>
+                            {playerData?.place === 0 && (
+                              <>
+                                {(prizePool || 0) * 0.6 * 0.9} {coinSymbol}
+                              </>
+                            )}
+
+                            {playerData?.place === 1 && (
+                              <>
+                                {(prizePool || 0) * 0.3 * 0.9} {coinSymbol}
+                              </>
+                            )}
+
+                            {playerData?.place === 2 && (
+                              <>
+                                {(prizePool || 0) * 0.1 * 0.9} {coinSymbol}
+                              </>
+                            )}
+                          </>
+                        )}
+                      </Typography>
+                    </Grid>
+                    {canClaim && (
+                      <Grid item xs={12}>
+                        <Grid
+                          container
+                          justifyContent='center'
+                          alignContent='center'
+                          alignItems='center'>
+                          {submitState === SubmitState.Error && (
+                            <Grid item xs={12}>
+                              <Alert
+                                severity='error'
+                                onClose={handleCloseError}>
+                                {errorMessage}
+                              </Alert>
+                            </Grid>
+                          )}
+
+                          <Grid item xs={12}>
+                            <Button
+                              onClick={onClaimGame}
+                              startIcon={
+                                submitState !== SubmitState.None ? (
+                                  <CircularProgress
+                                    color='inherit'
+                                    size='1rem'
+                                  />
+                                ) : undefined
                               }
-                              confirmedMsg={
-                                messages['app.coinLeagues.claimed'] as string
-                              }
-                            />
-                          </Button>
+                              disabled={submitState !== SubmitState.None}
+                              variant='contained'
+                              color='primary'>
+                              <IntlMessages
+                                id='coinLeague.claim'
+                                defaultMessage='Claim'
+                              />
+                            </Button>
+                          </Grid>
                         </Grid>
                       </Grid>
                     )}
+                  </Grid>
+                  <Grid item xs={12}>
                     {canWithdraw && !alreadyWithdrawed && (
                       <Grid
                         container
-                        justifyContent={'center'}
-                        alignContent={'center'}
-                        alignItems={'center'}>
-                        <Grid item xs={12} md={12}>
+                        justifyContent='center'
+                        alignContent='center'
+                        alignItems='center'>
+                        <Grid item xs={12}>
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
                               {submitWithdrawState === SubmitState.Submitted ? (
@@ -658,7 +779,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                           <Button
                             onClick={onWithdrawGame}
                             fullWidth
-                            variant={'contained'}
+                            variant='contained'
                             disabled={submitWithdrawState !== SubmitState.None}
                             color={
                               submitWithdrawState === SubmitState.Error
@@ -678,15 +799,27 @@ function OnePlayerTable(props: Props): JSX.Element {
                         </Grid>
                       </Grid>
                     )}
-                    {claimed && <IntlMessages id='app.coinLeagues.claimed' />}
-                    {alreadyWithdrawed && 'Withdrawed'}
-                  </TableCell>
+
+                    {alreadyWithdrawed && (
+                      <IntlMessages
+                        id='coinLeague.withdrawed'
+                        defaultMessage='Withdrawed'
+                      />
+                    )}
+                  </Grid>
+                </Grid>
+                {claimed && (
+                  <Grid item xs={12}>
+                    <Button variant='contained' disabled>
+                      <IntlMessages id='app.coinLeagues.claimed' />
+                    </Button>
+                  </Grid>
                 )}
-              </TableRow>
+              </>
             )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </Grid>
+        </Box>
+      </Paper>
     </>
   );
 }

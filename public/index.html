@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico"/>
-    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"/>
-    <meta name="theme-color" content="#0A8FDC"/>
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png"/>
-    <meta name="description" content="Coin League"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry,drawing&key=AIzaSyBtgCpqXBu7Mdl2bzhhHnutAroyEteQo9s"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com"> 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#0A8FDC" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta name="description" content="Coin League" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places,geometry,drawing&key=AIzaSyBtgCpqXBu7Mdl2bzhhHnutAroyEteQo9s"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -30,118 +47,149 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Coinleague</title>
-    <meta name="title" content="Coinleague:  NFT price prediction game Running on BSC and Polygon">
-    <meta name="description" content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion.">
+    <meta
+      name="title"
+      content="Coinleague:  NFT price prediction game Running on BSC and Polygon"
+    />
+    <meta
+      name="description"
+      content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion."
+    />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://coinleague.com/">
-    <meta property="og:title" content="Coinleague:  NFT price prediction game Running on BSC and Polygon ">
-    <meta property="og:description" content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion.">
-    <meta property="og:image" content="https://coinleague.com/images/dashboard.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://coinleague.com/" />
+    <meta
+      property="og:title"
+      content="Coinleague:  NFT price prediction game Running on BSC and Polygon "
+    />
+    <meta
+      property="og:description"
+      content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion."
+    />
+    <meta
+      property="og:image"
+      content="https://coinleague.com/images/dashboard.png"
+    />
     <meta property="fb:app_id" content="2358774107692244" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://coinleague.com/">
-    <meta property="twitter:title" content="Coinleague:  NFT price prediction game Running on BSC and Polygon ">
-    <meta property="twitter:description" content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion. ">
-    <meta property="twitter:image" content="https://coinleague.com/images/dashboard.png">
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://coinleague.com/" />
+    <meta
+      property="twitter:title"
+      content="Coinleague:  NFT price prediction game Running on BSC and Polygon "
+    />
+    <meta
+      property="twitter:description"
+      content="The fairest Play to Earn blockchain game running in the Polygon network. Compete with your friends and colleagues to establish yourself as the cryptocurrency price prediction champion. "
+    />
+    <meta
+      property="twitter:image"
+      content="https://coinleague.com/images/dashboard.png"
+    />
 
-    <meta name="keywords" content="dex,decentralized exchange,erc20, bsc, polyong, matic, cryptocurrency trading,0xproject,ethereum,altcoins,lending,funding,margin,loans, uniswap, balance, protocol analytics, dexkit, price prediction ">
+    <meta
+      name="keywords"
+      content="dex,decentralized exchange,erc20, bsc, polyong, matic, cryptocurrency trading,0xproject,ethereum,altcoins,lending,funding,margin,loans, uniswap, balance, protocol analytics, dexkit, price prediction "
+    />
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-        .crema-loader-bg {
-            flex: 1;
-            display: flex;
-            position: relative;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            background-size: cover;
-            background-color: #1f1d2b;
-        }
+      .crema-loader-bg {
+        flex: 1;
+        display: flex;
+        position: relative;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        background-size: cover;
+        background-color: #1f1d2b;
+      }
 
-        .crema-loader {
-            position: relative;
-            margin: 0 auto;
-            width: 40px;
+      @keyframes dash {
+        0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
         }
+        50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35px;
+        }
+        100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124px;
+        }
+      }
 
-        .circular {
-            animation: rotate 2s linear infinite;
-            height: 40px;
-            transform-origin: center center;
-            width: 40px;
-            margin: auto;
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
         }
+      }
 
-        .path {
-            stroke-dasharray: 5, 200;
-            stroke-dashoffset: 0;
-            animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
-            stroke-linecap: round;
+      @keyframes dash {
+        0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
         }
+        50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35px;
+        }
+        100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124px;
+        }
+      }
 
-        @keyframes rotate {
-            100% {
-                transform: rotate(360deg);
-            }
+      @keyframes color {
+        100%,
+        0% {
+          stroke: white;
         }
-
-        @keyframes dash {
-            0% {
-                stroke-dasharray: 1, 200;
-                stroke-dashoffset: 0;
-            }
-            50% {
-                stroke-dasharray: 89, 200;
-                stroke-dashoffset: -35px;
-            }
-            100% {
-                stroke-dasharray: 89, 200;
-                stroke-dashoffset: -124px;
-            }
-        }
-
-        @keyframes color {
-            100%, 0% {
-                stroke: white;
-            }
-        }
+      }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBL8W1FHRX"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-FBL8W1FHRX"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
-    
+
       gtag('config', 'G-FBL8W1FHRX');
     </script>
-
-</head>
-<body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root">
-    <div class="crema-loader-bg">
-        
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="crema-loader-bg">
         <div class="crema-loader">
-            <div class="circular">
-                <svg class="circular" viewBox="25 25 50 50">
-                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
-                </svg>
-            
-         </div>
-
+          <div class="circular">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                stroke-width="3"
+                stroke-miterlimit="10"
+              />
+            </svg>
+          </div>
         </div>
       </div>
-</div>
-<!--
+    </div>
+    <!--
   This HTML file is a template.
   If you open it directly in the browser, you will see an empty page.
 
@@ -151,5 +199,5 @@
   To begin the development, run `npm start` or `yarn start`.
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
-</body>
+  </body>
 </html>

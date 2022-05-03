@@ -2,14 +2,12 @@ import React, {useCallback} from 'react';
 
 import {
   Box,
-  IconButton,
   Button,
   Typography,
   DialogProps,
   Dialog,
   DialogContent,
   DialogActions,
-  DialogTitle,
   makeStyles,
   Divider,
   CircularProgress,
@@ -19,15 +17,15 @@ import {
 import {DollarSquareIcon} from 'shared/components/Icons';
 import clsx from 'clsx';
 
-import CloseIcon from '@material-ui/icons/Close';
 import {useWeb3} from 'hooks/useWeb3';
 import {getNetworkName} from 'shared/constants/Bitquery';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
     '& > path': {
-      stroke: '#fff',
+      stroke: theme.palette.text.primary,
     },
   },
   iconLarge: {
@@ -62,31 +60,14 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
 
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <DollarSquareIcon
-                className={clsx(classes.icon, classes.iconSmall)}
-              />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='app.wizard.creatingToken' />
-            </Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        icon={
+          <DollarSquareIcon className={clsx(classes.icon, classes.iconSmall)} />
+        }
+        title={<IntlMessages id='app.wizard.creatingToken' />}
+        onClose={handleClose}
+      />
+
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>

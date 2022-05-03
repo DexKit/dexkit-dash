@@ -9,7 +9,7 @@ import {getImageFromTraitIcon} from '../utils';
 
 const useStyles = makeStyles((theme) => ({
   circle: {
-    backgroundColor: theme.palette.grey[700],
+    backgroundColor: theme.palette.background.default,
     display: 'flex',
     alignItems: 'center',
     alignContent: 'center',
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(16),
     height: theme.spacing(16),
     '&:hover': {
-      backgroundColor: theme.palette.grey[600],
+      backgroundColor: theme.palette.action.hover,
     },
   },
   button: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selectedCircle: {
-    backgroundColor: theme.palette.grey[600],
+    backgroundColor: theme.palette.action.selected,
     display: 'flex',
     alignItems: 'center',
     alignContent: 'center',
@@ -38,9 +38,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
     width: theme.spacing(16),
     height: theme.spacing(16),
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: theme.palette.common.white,
+    border: `1px solid ${theme.palette.divider}`,
     '&:hover': {
       backgroundColor: theme.palette.grey[700],
     },

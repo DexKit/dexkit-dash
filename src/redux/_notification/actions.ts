@@ -1,22 +1,9 @@
 import {Dispatch} from 'react';
 import {AppActions} from 'types';
-import {fetchError, fetchStart, fetchSuccess} from '../_common/actions';
 import {Notification} from 'types/models/Notification';
-import {
-  NotificationAction,
-  UpdateNotification,
-} from 'types/actions/Notification.actions';
-import {NotificationType, NotificationPosition} from 'services/notification';
+import {NotificationAction} from 'types/actions/Notification.actions';
 
-export const onNotificationList = () => {
-  return (dispatch: Dispatch<AppActions>) => {};
-};
-
-export const onAddNotification = (
-  notifications: Notification[],
-  type = NotificationType.INFO,
-  position = NotificationPosition.BOTTOM_RIGHT,
-) => {
+export const onAddNotification = (notifications: Notification[]) => {
   return (dispatch: Dispatch<AppActions>) => {
     dispatch({
       type: NotificationAction.ADD_NOTIFICATION,
@@ -25,71 +12,18 @@ export const onAddNotification = (
   };
 };
 
-export const onGetNotification = (id: string | number | symbol) => {
-  return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.GET_NOTIFICATION, payload: id});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
-  };
-};
-
 export const onRemoveNotification = (id: string | number | symbol) => {
   return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.REMOVE_NOTIFICATION, payload: id});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
-  };
-};
-
-export const onCheckNotification = (id: string | number | symbol) => {
-  return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.CHECK_NOTIFICATION, payload: id});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
-  };
-};
-
-export const onUncheckedNotification = (id: string | number | symbol) => {
-  return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.UNCHECKED_NOTIFICATION, payload: id});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
-  };
-};
-
-export const onCheckAllNotification = () => {
-  return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.CHECK_ALL_NOTIFICATION});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
+    dispatch({type: NotificationAction.REMOVE_NOTIFICATION, payload: id});
   };
 };
 
 export const updateNotification = (
+  index: number,
   notification: Notification,
-): UpdateNotification => {
+) => {
   return {
     type: NotificationAction.UPDATE_NOTIFICATION,
-    payload: notification,
+    payload: {notification, index},
   };
 };

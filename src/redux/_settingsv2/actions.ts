@@ -1,5 +1,5 @@
-import {createAction} from '@reduxjs/toolkit';
-import {CustomAsset} from './types';
+import { createAction } from '@reduxjs/toolkit';
+import { CustomAsset } from './types';
 
 export interface TokenParams {
   name: string;
@@ -19,6 +19,7 @@ export interface NetworkParams {
   nativeTokenSymbol: string;
   rpcUrl: string;
   explorerUrl?: string;
+  networkImg?: string;
 }
 
 export const addCustomNetwork = createAction<NetworkParams>(

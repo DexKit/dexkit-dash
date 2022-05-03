@@ -1,16 +1,15 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import {alpha, ButtonBase, Chip, Tooltip} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
@@ -24,80 +23,132 @@ import IconButton from '@material-ui/core/IconButton';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {Paper} from '@material-ui/core';
+import {Share as ShareIcon} from '@material-ui/icons';
+import {FormattedMessage, useIntl} from 'react-intl';
+
+import {ReactComponent as CoinIcon} from '../../assets/coin.svg';
+import {ReactComponent as ProfileTwoUserIcon} from '../../assets/profile-2user.svg';
+import {ReactComponent as ReceiveSquareIcon} from '../../assets/receive-square.svg';
+import {ReactComponent as SendSquareIcon} from '../../assets/send-square.svg';
+import {ReactComponent as TimerIcon} from '../../assets/timer.svg';
+import {ReactComponent as ChartSquareIcon} from '../../assets/chart-square.svg';
+
+import {withStyles} from '@material-ui/styles';
+import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#2e3243',
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+  timer: {
+    background: theme.palette.background.paper,
     padding: theme.spacing(2),
-  },
-  containerPrize: {
-    color: '#fff',
-    borderRadius: 6,
-    background: '#1c2650',
-    padding: theme.spacing(2),
-  },
-  button: {
-    fontWeight: 500,
-    borderRadius: 6,
-    fontSize: '1rem',
-    background: '#ffa552',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    color: 'black',
-  },
-  innerContent: {
-    fontSize: '0.8rem',
-    padding: theme.spacing(1),
-    justifyContent: 'space-between',
-  },
-  smallContent: {
-    fontSize: '14px',
-    paddingBottom: theme.spacing(3),
+    borderRadius: theme.shape.borderRadius * 2,
   },
 }));
 
+const JoinGameButton = withStyles((theme) => ({
+  root: {
+    width: '100%',
+    display: 'flex',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    borderRadius: theme.shape.borderRadius,
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+}))(ButtonBase);
+
 interface Props {
-  id: string;
-  game: GameGraph;
-  onClick: (address: string) => void;
+  id?: string;
+  game?: GameGraph;
+  onClick?: (address: string) => void;
+  onShare?: (id?: string) => void;
   btnMessage?: string;
+  loading?: boolean;
 }
 
-function CardGame(props: Props): JSX.Element {
-  const {game, onClick} = props;
+const CardGame: React.FC<Props> = ({
+  game,
+  onClick,
+  btnMessage,
+  loading,
+  onShare,
+}) => {
   const classes = useStyles();
+
+  const {formatMessage} = useIntl();
+
+  const theme = useTheme();
+
   const {chainId, coinSymbol} = useLeaguesChainInfo();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(game.amount_to_play.toNumber()  );*/
+
   const [countdown, setCountdown] = useState<number>();
-  const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
-  );
-  const entryAmount = ethers.utils.formatEther(game.entry);
-  const time = Number(game.duration);
-  const coins = Number(game.numCoins);
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
+
+  const prizeTotalValue = useMemo(() => {
+    if (game) {
+      return ethers.utils.formatEther(
+        BigNumber.from(game?.entry).mul(BigNumber.from(game.numPlayers)),
+      );
+    }
+
+    return '';
+  }, [game]);
+
+  const time = useMemo(() => {
+    if (game) {
+      return Number(game.duration);
+    }
+
+    return 0;
+  }, [game]);
+
+  const coins = useMemo(() => {
+    if (game) {
+      return Number(game.numCoins);
+    }
+
+    return 0;
+  }, [game]);
+
+  const gameLevel =
+    game !== undefined
+      ? GET_GAME_LEVEL(BigNumber.from(game.entry), chainId)
+      : '';
+
   const [openShowGameMetadataModal, setOpenShowGameMetadataModal] =
     useState(false);
   // Format number values
-  const entriesIn = strPad(Number(game.currentPlayers) || 0);
-  const entriesOut = strPad(Number(game.numPlayers) || 0);
+
+  const entriesIn = strPad(Number(game?.currentPlayers) || 0);
+  const entriesOut = strPad(Number(game?.numPlayers) || 0);
+
   /* eslint-disable */
   const onClickEnter = useCallback(
     (ev: any) => {
-      onClick(game.intId);
+      if (onClick && game != undefined) {
+        onClick(game.intId);
+      }
     },
-    [game.intId],
+    [game, onClick],
   );
 
   useInterval(
     () => {
       const startTime = Math.floor(
-        Number(game.startsAt || 0) - Math.round(new Date().getTime() / 1000),
+        Number(game?.startsAt || 0) - Math.round(new Date().getTime() / 1000),
       );
       setCountdown(startTime);
     },
@@ -106,132 +157,306 @@ function CardGame(props: Props): JSX.Element {
   );
 
   return (
-    <Container
-      className={game.title ? classes.containerPrize : classes.container}
-      maxWidth='xs'>
-      {game.title ? (
-        <Box
-          display={'flex'}
-          alignItems={'center'}
-          justifyContent={'space-between'}>
-          <Typography variant='subtitle2'>
-            ID# {game.intId} {game.title ? `- ${game.title} ` : null}
-          </Typography>
-          <IconButton
-            onClick={() => setOpenShowGameMetadataModal(true)}
-            size={'small'}>
-            <CrownIcon />
-          </IconButton>
-          <ViewGameMetadataModal
-            open={openShowGameMetadataModal}
-            setOpen={setOpenShowGameMetadataModal}
-            gameMetadata={game}
-          />
-        </Box>
-      ) : (
-        <Typography variant='subtitle2'>ID# {game.intId}</Typography>
-      )}
-
-      <Grid container className={classes.innerContent}>
-        <Grid xs={6} item>
-          <Box display={'flex'} alignItems={'center'}>
-            <SendIcon />
-            <Box display={'flex'} alignItems={'center'} pl={1}>
-              <Grid
-                container
-                justifyContent={'center'}
-                alignItems={'center'}
-                spacing={1}>
-                <Grid xs={12} item>
-                  <Typography
-                    variant='subtitle2'
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    {gameLevel}
-                  </Typography>
-                  <Typography
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {coinSymbol}
-                  </Typography>
-                </Grid>
+    <Paper
+      style={
+        game?.title
+          ? {borderColor: theme.palette.primary.main, borderWidth: 2}
+          : undefined
+      }>
+      <Box px={4} py={2} bgcolor={alpha(theme.palette.background.default, 0.6)}>
+        {game?.title ? (
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='space-between'>
+            <Typography variant='subtitle2'>
+              #{game?.intId} - ${game?.title}
+            </Typography>
+            <IconButton
+              onClick={() => setOpenShowGameMetadataModal(true)}
+              size='small'>
+              <CrownIcon className={classes.icon} />
+            </IconButton>
+            <ViewGameMetadataModal
+              open={openShowGameMetadataModal}
+              setOpen={setOpenShowGameMetadataModal}
+              gameMetadata={game}
+            />
+          </Box>
+        ) : (
+          <Box
+            display='flex'
+            alignItems='center'
+            alignContent=''
+            justifyContent='space-between'>
+            <Typography variant='subtitle2'>
+              {loading ? <Skeleton /> : <>#{game?.intId}</>}{' '}
+            </Typography>
+            {!loading && (
+              <Button
+                onClick={() => {
+                  if (onShare) {
+                    onShare(game?.intId);
+                  }
+                }}
+                startIcon={<ShareIcon className={classes.icon} />}>
+                <FormattedMessage
+                  id='coinLeague.share'
+                  defaultMessage='Share'
+                />
+              </Button>
+            )}
+          </Box>
+        )}
+      </Box>
+      <Box p={4}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography
+                  variant='caption'
+                  color='textSecondary'
+                  gutterBottom>
+                  <IntlMessages
+                    id='app.coinLeagues.maxPrize'
+                    defaultMessage='Max Prize'
+                  />
+                </Typography>
               </Grid>
-            </Box>
-          </Box>
+              <Grid item xs={12}>
+                <Typography variant='h5'>
+                  {loading ? (
+                    <Skeleton />
+                  ) : (
+                    <>
+                      {prizeTotalValue}{' '}
+                      <Typography
+                        component='span'
+                        variant='inherit'
+                        color='textSecondary'>
+                        {coinSymbol}
+                      </Typography>
+                    </>
+                  )}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography
+                  variant='caption'
+                  color='textSecondary'
+                  gutterBottom>
+                  <IntlMessages
+                    id='app.coinLeagues.gameType'
+                    defaultMessage='Game Type'
+                  />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.gameLevel'
+                          defaultMessage='Game Level'
+                        />
+                      }>
+                      <ChartSquareIcon className={classes.icon} />
+                    </Tooltip>
+                  }
+                  label={loading ? <Skeleton /> : gameLevel}
+                  variant='outlined'
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.type'
+                          defaultMessage='Type'
+                        />
+                      }>
+                      {loading ? (
+                        <Skeleton variant='circle' width='1rem' height='1rem' />
+                      ) : game?.type === 'Bull' ? (
+                        <SendSquareIcon className={classes.icon} />
+                      ) : (
+                        <ReceiveSquareIcon className={classes.icon} />
+                      )}
+                    </Tooltip>
+                  }
+                  variant='outlined'
+                  label={
+                    loading ? (
+                      <Skeleton />
+                    ) : (
+                      <span
+                        style={{
+                          color:
+                            game?.type === 'Bull'
+                              ? theme.palette.success.main
+                              : theme.palette.error.main,
+                        }}>
+                        {game?.type === 'Bull' ? 'Bull' : 'Bear'}
+                      </span>
+                    )
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography
+                  variant='caption'
+                  color='textSecondary'
+                  gutterBottom>
+                  <IntlMessages
+                    id='app.coinLeagues.information'
+                    defaultMessage='Information'
+                  />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.numberOfCoins'
+                          defaultMessage='Number of Coins'
+                        />
+                      }>
+                      <CoinIcon className={classes.icon} />
+                    </Tooltip>
+                  }
+                  variant='outlined'
+                  label={loading ? <Skeleton /> : strPad(coins)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.duration'
+                          defaultMessage='Duration'
+                        />
+                      }>
+                      <TimerIcon className={classes.icon} />
+                    </Tooltip>
+                  }
+                  variant='outlined'
+                  label={loading ? <Skeleton /> : GET_LABEL_FROM_DURATION(time)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={
+                    <Tooltip
+                      title={
+                        <IntlMessages
+                          id='coinLeague.players'
+                          defaultMessage='Players'
+                        />
+                      }>
+                      <ProfileTwoUserIcon className={classes.icon} />
+                    </Tooltip>
+                  }
+                  variant='outlined'
+                  label={
+                    loading ? (
+                      <Skeleton />
+                    ) : (
+                      <>
+                        {entriesIn}/{entriesOut}{' '}
+                        <IntlMessages
+                          id='coinLeague.players'
+                          defaultMessage='Players'
+                        />
+                      </>
+                    )
+                  }
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid xs={6} item>
-          <Box
-            display={'flex'}
-            justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
-            <Typography variant='subtitle2'>
-              <IntlMessages id='app.coinLeagues.gameTime' />:
-            </Typography>
-            <Typography variant='subtitle2' style={{fontWeight: 500}}>
-              &nbsp;{GET_LABEL_FROM_DURATION(time)}
-            </Typography>
-          </Box>
-          <Box
-            display={'flex'}
-            justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
-            <Typography variant='subtitle2'>
-              {' '}
-              &nbsp;
-              <IntlMessages id='app.coinLeagues.type' />:
-            </Typography>
-            <Typography
-              variant='subtitle2'
-              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
-              &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
-            </Typography>
-          </Box>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        className={`${classes.innerContent} ${classes.smallContent}`}>
-        <Grid item>
-          <Typography variant='subtitle2'>
-            <IntlMessages id='app.coinLeagues.starts' />:
-          </Typography>
-          {countdown && countdown > 0 ? (
-            <CardTimer time={countdown} />
-          ) : (
-            <Typography variant='subtitle2'>
-              <IntlMessages id='app.coinLeagues.ready' />:
-            </Typography>
-          )}
-        </Grid>
-        <Grid item>
-          <Typography variant='subtitle2'>
-            <IntlMessages id='app.coinLeagues.entries' />
-          </Typography>
-          <Typography variant='subtitle2'>
-            {entriesIn}/{entriesOut}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant='subtitle2'>
-            <IntlMessages id='app.coinLeagues.coins' />
-          </Typography>
-          <Typography variant='subtitle2'>{strPad(coins)}</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant='subtitle2'>
-            {' '}
-            <IntlMessages id='app.coinLeagues.maxPrizePool' />
-          </Typography>
-          <Typography variant='subtitle2'>
-            {prizeTotalValue} {coinSymbol}
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || <IntlMessages id='app.coinLeagues.enterGame' />}
-      </Button>
-    </Container>
+      </Box>
+      {!loading && (
+        <Box p={4} bgcolor={alpha(theme.palette.background.default, 0.6)}>
+          <Grid container spacing={4}>
+            {!game?.startedAt && (
+              <Grid item xs={12}>
+                <Box className={classes.timer}>
+                  <Typography
+                    style={
+                      countdown !== undefined && countdown > 0
+                        ? {color: theme.palette.primary.main}
+                        : {color: theme.palette.success.main}
+                    }
+                    variant='body1'
+                    align='center'>
+                    {countdown !== undefined && countdown > 0 ? (
+                      <>
+                        <IntlMessages
+                          id='coinLeague.startsIn'
+                          defaultMessage='Starts in'
+                        />
+                        : <CardTimer time={countdown} />
+                      </>
+                    ) : (
+                      <IntlMessages
+                        id='coinLeague.readyToPlay'
+                        defaultMessage='Ready to Play'
+                      />
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <JoinGameButton color='primary' onClick={onClickEnter}>
+                <Box>
+                  <Typography
+                    style={{textTransform: 'uppercase', fontWeight: 500}}
+                    variant='body1'>
+                    {game?.startedAt ? (
+                      formatMessage({
+                        id: 'app.coinLeagues.viewGame',
+                        defaultMessage: 'View Game',
+                      })
+                    ) : (
+                      <IntlMessages
+                        id='app.coinLeagues.joinGame'
+                        defaultMessage='Join Game'
+                      />
+                    )}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography
+                    style={{textTransform: 'uppercase', fontWeight: 500}}
+                    variant='body1'>
+                    {ethers.utils.formatEther(game?.entry || 0)} {coinSymbol}
+                  </Typography>
+                </Box>
+              </JoinGameButton>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+    </Paper>
   );
-}
+};
 
 export default CardGame;

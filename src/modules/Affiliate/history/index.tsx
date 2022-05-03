@@ -1,7 +1,6 @@
 import React from 'react';
 import TransactionTable from './TransactionTable';
-import {Box, makeStyles, Toolbar, Typography} from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
+import {Box, Typography, Grid} from '@material-ui/core';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
@@ -17,41 +16,28 @@ interface Props {
   onChangePerPage: (newPerPage: number) => void;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  toolbar: {
-    padding: '0 24px',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-}));
-
 const AffiliateHistory: React.FC<Props> = (props: Props) => {
-
-  const classes = useStyles();
-
   return (
-    <>
-      <Toolbar className={classes.toolbar}>
+    <Grid container spacing={4}>
+      <Grid item xs={12}>
         <Box
-          display={'flex'}
-          justifyContent={'flex-start'}
-          alignItems={'center'}>
-          <Typography variant='h5' display={'block'} align={'center'}>
+          display='flex'
+          alignItems='center'
+          alignContent='center'
+          justifyContent='space-between'>
+          <Typography variant='subtitle1'>
             <IntlMessages id='app.affiliate.tradeHistory' />
           </Typography>
+          <Box>
+            <FilterList />
+            <FilterMenu />
+          </Box>
         </Box>
-        <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-          <FilterList />
-          <FilterMenu />
-        </Box>
-      </Toolbar>
-      <TransactionTable {...props} />
-    </>
-    // </AppCard>
+      </Grid>
+      <Grid item xs={12}>
+        <TransactionTable {...props} />
+      </Grid>
+    </Grid>
   );
 };
 

@@ -36,10 +36,6 @@ interface CremaPalette extends Palette {
     dark: string;
     contrastText: string;
   };
-  sidebar: {
-    bgColor: string;
-    textColor: string;
-  };
   text: {
     primary: string;
     secondary: string;

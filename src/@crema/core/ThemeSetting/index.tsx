@@ -123,7 +123,7 @@ const ThemeSetting: React.FC<ThemeSettingProps> = (props) => {
   const updateThemeColors = (colorSet: any) => {
     theme.palette.primary.main = colorSet.PrimaryColor;
     theme.palette.secondary.main = colorSet.SecondaryColor;
-    theme.palette.sidebar.bgColor = colorSet.SidebarColor;
+    theme.palette.background.paper = colorSet.SidebarColor;
     updateTheme!(theme);
     updatePrimaryColor!(colorSet.PrimaryColor);
     updateSecondaryColor!(colorSet.SecondaryColor);

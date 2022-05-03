@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   itemText: {
     whiteSpace: 'nowrap',
@@ -51,9 +54,11 @@ const SwapButton = () => {
       </Backdrop>
 
       <Box display='flex' flexDirection='column' alignItems='center'>
-        <RoundedIconButton onClick={onSwap}>
-          <MoneySendIcon className={classes.icon} />
-        </RoundedIconButton>
+        <Box mb={1}>
+          <RoundedIconButton onClick={onSwap}>
+            <MoneySendIcon className={classes.icon} />
+          </RoundedIconButton>
+        </Box>
         <Typography variant='caption' className={classes.itemText}>
           Swap
         </Typography>

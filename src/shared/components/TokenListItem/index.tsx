@@ -23,15 +23,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   paper: {
-    backgroundColor: '#252836',
-    borderRadius: 6,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
     display: 'block',
     textAlign: 'left',
     cursor: 'pointer',
   },
   noClickablePaper: {
-    backgroundColor: '#252836',
-    borderRadius: 6,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
     display: 'block',
     textAlign: 'left',
   },
@@ -85,13 +85,19 @@ export const TokenListItem = (props: TokenListItemProps) => {
   const {usdFormatter} = useUSDFormatter();
 
   return (
-    <Paper onClick={handleClick} className={isCustomNetwork ? classes.noClickablePaper : classes.paper}>
+    <Paper
+      onClick={handleClick}
+      className={isCustomNetwork ? classes.noClickablePaper : classes.paper}>
       <Box p={4}>
         <Grid container alignItems='center' justify='space-between'>
           <Grid item>
             <Grid container alignItems='center' spacing={2}>
               <Grid item>
-                <TokenLogo token0={address || ''} networkName={network} logoURL0={logo} />
+                <TokenLogo
+                  token0={address || ''}
+                  networkName={network}
+                  logoURL0={logo}
+                />
               </Grid>
               <Grid item>
                 <Tooltip title={name}>

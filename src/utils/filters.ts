@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 interface Filters {
   id: string;
   type: string;
@@ -21,3 +23,23 @@ export const getFilterValueById = (id: string, filters?: Filters[]) => {
     return null;
   }
 };
+
+export function groupItems(items: {timestamp?: number}[]) {
+  const groups = items.reduce((groups: any, item) => {
+    const date = moment(item.timestamp).format('YYYY-MM-DD');
+
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(item);
+    return groups;
+  }, {});
+
+  // Edit: to add it in the array format instead
+  return Object.keys(groups).map((date) => {
+    return {
+      date,
+      items: groups[date],
+    };
+  });
+}

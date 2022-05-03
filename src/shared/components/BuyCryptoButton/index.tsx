@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   itemText: {
     whiteSpace: 'nowrap',
@@ -82,9 +85,11 @@ const BuyCryptoButton = (props: Props) => {
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
-      <RoundedIconButton onClick={handleClick}>
-        <CardIcon className={classes.icon} />
-      </RoundedIconButton>
+      <Box mb={1}>
+        <RoundedIconButton onClick={handleClick}>
+          <CardIcon className={classes.icon} />
+        </RoundedIconButton>
+      </Box>
       <Typography variant='caption' className={classes.itemText}>
         {btnMsg || 'Buy Crypto'}
       </Typography>

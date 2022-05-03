@@ -48,6 +48,7 @@ import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {useChainInfo} from 'hooks/useChainInfo';
+import IntlMessages from '@crema/utility/IntlMessages';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -103,8 +104,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     },
     walletBalance: {
       padding: theme.spacing(2),
-      backgroundColor: '#252836',
-      borderRadius: 8,
+      borderRadius: theme.shape.borderRadius,
     },
     visibilityButton: {
       width: theme.spacing(4),
@@ -177,7 +177,7 @@ const WalletInfo: React.FC<Props> = (props) => {
 
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     if (onClick) {
       onClick();
     }
@@ -185,7 +185,7 @@ const WalletInfo: React.FC<Props> = (props) => {
 
   const onGoToLoginWallet = () => {
     handleClose();
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     if (onClick) {
       onClick();
     }
@@ -273,10 +273,11 @@ const WalletInfo: React.FC<Props> = (props) => {
                   )}
                 </ButtonBase>
                 <CopyButton
+                  color='inherit'
                   size='small'
                   copyText={defaultAccount || ''}
                   tooltip='Copied!'>
-                  <FileCopy color='inherit' style={{fontSize: 16}} />
+                  <FileCopy style={{fontSize: 16}} />
                 </CopyButton>
               </Box>
             </Grid>
@@ -350,7 +351,10 @@ const WalletInfo: React.FC<Props> = (props) => {
         size={isMobile ? 'small' : 'large'}
         onClick={onGoToManageWallet}
         startIcon={<WalletAddIcon />}>
-        Connect wallet
+        <IntlMessages
+          id='common.connectWallet'
+          defaultMessage='Connect Wallet'
+        />
       </Button>
     </Box>
   ) : null;

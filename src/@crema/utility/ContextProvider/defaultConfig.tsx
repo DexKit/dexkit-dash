@@ -124,7 +124,7 @@ const defaultConfig: any = {
     },
   },
   themeStyle: ThemeStyle.MODERN,
-  themeMode: ThemeMode.SEMI_DARK,
+  themeMode: ThemeMode.LIGHT,
   navStyle: NavStyle.MINI_SIDEBAR_TOGGLE,
   layoutType: LayoutType.FULL_WIDTH,
   footerType: FooterType.FLUID,

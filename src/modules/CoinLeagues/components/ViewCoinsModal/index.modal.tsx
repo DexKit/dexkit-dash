@@ -22,7 +22,7 @@ import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 
@@ -37,7 +37,7 @@ interface Props extends DialogProps {
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, coins, id, captainCoin, playerAddress} = props;
   const {messages} = useIntl();
-  const { chainId } = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(id);
   const {multiplier, tooltipMessage} = useMultipliers(id);
@@ -92,6 +92,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
     }
     return [];
   }, [coins, allFeeds, currentPrices, chainId, captainCoin]);
+
   const gameStarted = useMemo(() => {
     return game?.started && !game.finished && !game.aborted;
   }, [game]);
@@ -161,7 +162,10 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           />
         </Box>
         {filteredCoins.length === 0 ? (
-          <Typography variant='body1'> <IntlMessages id='app.coinLeagues.noCoinsFound' /></Typography>
+          <Typography variant='body1'>
+            {' '}
+            <IntlMessages id='app.coinLeagues.noCoinsFound' />
+          </Typography>
         ) : (
           <List>
             {filteredCoins.map((coin, i) => (

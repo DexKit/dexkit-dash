@@ -2,12 +2,12 @@ import React from 'react';
 
 import {
   Box,
-  ButtonBase,
-  ButtonBaseProps,
+  ButtonProps,
   withStyles,
   makeStyles,
   Chip,
   Typography,
+  Button,
 } from '@material-ui/core';
 import {Token} from 'types/app';
 import {
@@ -16,18 +16,14 @@ import {
 } from 'shared/constants/Blockchain';
 
 const CustomButtom = withStyles((theme) => ({
-  root: {
+  label: {
     textTransform: 'uppercase',
-    width: '100%',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing(4),
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: 'rgba(82, 92, 117, 0.5)',
-    border: '1px solid #525C75',
   },
-}))(ButtonBase);
+}))(Button);
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -37,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface SelectTokenButtonProps extends ButtonBaseProps {
+interface SelectTokenButtonProps extends ButtonProps {
   token?: Token;
   onClick: () => void;
 }
@@ -47,7 +43,7 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
   const classes = useStyles();
 
   return (
-    <CustomButtom onClick={onClick}>
+    <CustomButtom variant='outlined' fullWidth onClick={onClick}>
       {token ? (
         <>
           <Box display='flex' alignItems='center' alignContent='center'>
@@ -68,9 +64,13 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
               <Box>
                 <Chip
                   size='small'
-                  label={token?.isCustomNetwork ? token.networkName : GET_CHAIN_ID_NAME( 
-                    GET_CHAIN_FROM_NETWORK(token?.networkName),
-                  )}
+                  label={
+                    token?.isCustomNetwork
+                      ? token.networkName
+                      : GET_CHAIN_ID_NAME(
+                          GET_CHAIN_FROM_NETWORK(token?.networkName),
+                        )
+                  }
                 />
               </Box>
             </Box>

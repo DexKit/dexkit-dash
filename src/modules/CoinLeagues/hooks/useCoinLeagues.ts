@@ -1,13 +1,17 @@
-import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCallback, useMemo } from 'react';
-import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCallback, useMemo} from 'react';
+import {useQuery} from 'react-query';
+import {useParams} from 'react-router-dom';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
 
-import { Web3State } from 'types/blockchain';
-import { COIN_LEAGUES_FACTORY_ADDRESS, COIN_LEAGUES_NFT_FACTORY_ADDRESS, DISABLE_CHAMPIONS_ID } from '../constants';
+import {Web3State} from 'types/blockchain';
+import {
+  COIN_LEAGUES_FACTORY_ADDRESS,
+  COIN_LEAGUES_NFT_FACTORY_ADDRESS,
+  DISABLE_CHAMPIONS_ID,
+} from '../constants';
 import {
   claim,
   getCoinFeeds,
@@ -30,8 +34,8 @@ import {
   GET_LEAGUES_CHAIN_ID,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from '../utils/constants';
-import { useIsNFTGame } from './useCoinLeaguesFactory';
-import { useLeaguesChainInfo } from './useLeaguesChainInfo';
+import {useIsNFTGame} from './useCoinLeaguesFactory';
+import {useLeaguesChainInfo} from './useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -45,25 +49,24 @@ interface CallbackProps {
  * @returns
  */
 export const useCoinLeagues = (id?: string) => {
-  const { web3State, account,  getProvider } = useWeb3();
-  const { chainId } = useLeaguesChainInfo();
-  
+  const {web3State, account, getProvider} = useWeb3();
+  const {chainId} = useLeaguesChainInfo();
+
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
   );
   const chainProvider = getProvider();
 
-  const { room } = useParams<{ room: string }>();
+  const {room} = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame();
-
 
   const factoryAddress = useMemo(() => {
     return room
       ? room
       : isNFTGame
-        ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFTGame]);
 
   const addressQuery = useQuery(
@@ -81,7 +84,6 @@ export const useCoinLeagues = (id?: string) => {
       return addressQuery.data;
     }
   }, [addressQuery.data]);
-
 
   const winnerQuery = useQuery(['GET_WINNER', address, account], () => {
     if (!address || !account || web3State !== Web3State.Done) {
@@ -129,6 +131,7 @@ export const useCoinLeagues = (id?: string) => {
     },
     [web3State, address, chainProvider],
   );
+
   const onClaimCallback = useCallback(
     async (winner: string, callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done || !address) {
@@ -241,18 +244,18 @@ export const useCoinLeagues = (id?: string) => {
 };
 
 export const useChampionsRoom = (id?: string, isNFT = false) => {
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
   );
-  const { room } = useParams<{ room: string }>();
+  const {room} = useParams<{room: string}>();
   const factoryAddress = useMemo(() => {
     return room
       ? room
       : isNFT
-        ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFT]);
   const addressQuery = useQuery(
     ['GET_ADDRESS_GAME', id, factoryAddress],
@@ -266,26 +269,57 @@ export const useChampionsRoom = (id?: string, isNFT = false) => {
 
   return useQuery(['GET_CHAMPIONS_ROOM', isNFT, addressQuery.data], () => {
     if (!isNFT || !addressQuery.data || !provider) {
-      return
+      return;
     }
     return getChampionRoom(addressQuery.data, provider);
-
-  })
-
-}
+  });
+};
 
 export const useCoinLeaguesCallbacks = (address?: string) => {
-  const { web3State, chainId } = useWeb3();
+  const {web3State, chainId, getProvider} = useWeb3();
   const isNFTGame = useIsNFTGame();
-  const { room } = useParams<{ room: string }>();
+  const {room} = useParams<{room: string}>();
 
   const factoryAddress = useMemo(() => {
     return room
       ? room
       : isNFTGame
-        ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFTGame]);
+
+  const onJoinGameCallback = useCallback(
+    async (
+      feeds: string[],
+      amount: string,
+      captainCoin: string,
+      callbacks?: CallbackProps,
+      affiliate = ZERO_ADDRESS,
+      championId = DISABLE_CHAMPIONS_ID,
+    ) => {
+      if (web3State !== Web3State.Done || !address) {
+        return;
+      }
+      try {
+        const tx = await joinGame(
+          address,
+          feeds,
+          amount,
+          captainCoin,
+          getProvider(),
+          affiliate || ZERO_ADDRESS,
+          championId,
+        );
+        callbacks?.onSubmit(tx.hash);
+        await tx.wait();
+        callbacks?.onConfirmation(tx.hash);
+      } catch (e) {
+        console.log(e);
+        callbacks?.onError(e);
+      }
+    },
+    [web3State, address, getProvider],
+  );
 
   const onStartGameCallback = useCallback(
     async (callbacks?: CallbackProps) => {
@@ -362,11 +396,12 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
     onStartGameCallback,
     onEndGameCallback,
     onAbortGameCallback,
+    onJoinGameCallback,
   };
 };
 
 export const useCoinLeaguesWinner = (address?: string) => {
-  const { web3State, account, getProvider } = useWeb3();
+  const {web3State, account, getProvider} = useWeb3();
   const winnerQuery = useQuery(
     ['GET_WINNER', address, account, web3State],
     () => {

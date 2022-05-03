@@ -26,7 +26,7 @@ import {useAccountLabel} from 'hooks/useAccountLabel';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { useChainInfo } from 'hooks/useChainInfo';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -146,10 +146,12 @@ const ActiveChainBalance = () => {
                                 style={{fontSize: 16}}
                               />
                             </CopyButton>
-                            <IconButton
-                              onClick={handleShowAccounts}
-                              size='small'>
-                              <KeyboardArrowDownIcon />
+                            <IconButton onClick={handleToggleVisibility}>
+                              {isBalanceVisible ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
                             </IconButton>
                           </Typography>
                         </Box>
@@ -170,12 +172,8 @@ const ActiveChainBalance = () => {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {isBalanceVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
+                    <IconButton onClick={handleShowAccounts}>
+                      <KeyboardArrowDownIcon />
                     </IconButton>
                   </Grid>
                 </Grid>

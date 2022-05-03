@@ -47,9 +47,11 @@ export const ShareButton = (props: Props) => {
   return (
     <>
       <Box display='flex' flexDirection='column' alignItems='center'>
-        <RoundedIconButton onClick={toggleShareModal}>
-          <Share className={classes.icon} />
-        </RoundedIconButton>
+        <Box mb={1}>
+          <RoundedIconButton onClick={toggleShareModal}>
+            <Share className={classes.icon} />
+          </RoundedIconButton>
+        </Box>
         <Typography variant='caption'>Share</Typography>
       </Box>
       <Dialog

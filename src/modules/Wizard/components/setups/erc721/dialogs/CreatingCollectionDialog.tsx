@@ -3,7 +3,6 @@ import {
   DialogProps,
   Dialog,
   DialogContent,
-  DialogTitle,
   Typography,
   Grid,
   Stepper,
@@ -14,16 +13,15 @@ import {
   useTheme,
   CircularProgress,
   Button,
-  IconButton,
   Link,
   Box,
+  Divider,
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 
 import HelpIcon from '@material-ui/icons/Help';
-import CloseIcon from '@material-ui/icons/Close';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 import {ContractStatus} from 'modules/Wizard/types';
@@ -38,6 +36,7 @@ import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import ReplayIcon from '@material-ui/icons/Replay';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 interface CreatingCollectionBackdropProps extends DialogProps {
   step: ContractStatus;
@@ -101,29 +100,12 @@ export const CreatingCollectionDialog = (
 
   return (
     <Dialog {...props}>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <NoteAddIcon className={clsx(classes.icon)} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='app.wizard.createCollection' />
-            </Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        icon={<NoteAddIcon className={clsx(classes.icon)} />}
+        title={<IntlMessages id='app.wizard.createCollection' />}
+        onClose={handleClose}
+      />
+      <Divider />
       <DialogContent>
         <Stepper activeStep={step} orientation='vertical'>
           <Step>
