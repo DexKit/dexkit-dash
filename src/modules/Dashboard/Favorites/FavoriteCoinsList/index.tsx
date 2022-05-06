@@ -2,7 +2,7 @@ import React from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {Box, Grid, Link, Typography, Paper} from '@material-ui/core';
+import {Box, Grid, Link, Typography} from '@material-ui/core';
 
 import {FavoriteCoin} from 'redux/_ui/reducers';
 
@@ -41,28 +41,26 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
         ) : (
           <Grid item xs={12}>
             <Box>
-              <Paper>
-                <Box py={4}>
-                  <Box
-                    display='flex'
-                    py={4}
-                    alignItems='center'
-                    alignContent='center'
-                    justifyContent='center'>
-                    <FavoritesEmptyImage />
-                  </Box>
-                  <Typography gutterBottom variant='body1' align='center'>
-                    <IntlMessages id='app.dashboard.dontHaveFavorites' />
-                  </Typography>
-                  <Typography variant='body2' align='center' color='primary'>
-                    <Link
-                      to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
-                      component={RouterLink}>
-                      <IntlMessages id='app.dashboard.goToExplorer' />
-                    </Link>
-                  </Typography>
+              <Box py={4}>
+                <Box
+                  display='flex'
+                  py={4}
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='center'>
+                  <FavoritesEmptyImage />
                 </Box>
-              </Paper>
+                <Typography gutterBottom variant='body1' align='center'>
+                  <IntlMessages id='app.dashboard.dontHaveFavorites' />
+                </Typography>
+                <Typography variant='body2' align='center' color='primary'>
+                  <Link
+                    to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+                    component={RouterLink}>
+                    <IntlMessages id='app.dashboard.goToExplorer' />
+                  </Link>
+                </Typography>
+              </Box>
             </Box>
           </Grid>
         )}

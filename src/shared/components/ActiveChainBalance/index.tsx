@@ -16,7 +16,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {truncateIsAddress} from 'utils';
 
 import {StatusSquare} from '../StatusSquare';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
@@ -173,7 +173,7 @@ const ActiveChainBalance = () => {
                   </Grid>
                   <Grid item>
                     <IconButton onClick={handleShowAccounts}>
-                      <KeyboardArrowDownIcon />
+                      <ArrowBackIosIcon style={{transform: 'rotate(270deg'}} />
                     </IconButton>
                   </Grid>
                 </Grid>

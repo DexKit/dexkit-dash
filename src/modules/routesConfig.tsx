@@ -260,7 +260,7 @@ const useRoutesConfig = (): NavItemProps[] => {
       children: [
         {
           id: 'manage-app',
-          title: 'Manage',
+          title: 'Manage Apps',
           messageId: 'sidebar.myapps.manage',
           type: 'item',
           customIcon: true,
@@ -294,8 +294,8 @@ const useRoutesConfig = (): NavItemProps[] => {
       children: [
         {
           id: 'settings-general',
-          title: 'General',
-          messageId: 'sidebar.settings.general',
+          title: 'Settings',
+          messageId: 'app.settings.settings',
           type: 'item',
           customIcon: true,
           icon: 'settings-4',

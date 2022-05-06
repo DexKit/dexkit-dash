@@ -163,26 +163,24 @@ export const TransactionsTab: React.FC<Props> = () => {
   } else {
     return (
       <Box py={4}>
-        <Paper>
-          <Box py={4}>
-            <Grid
-              container
-              spacing={4}
-              alignItems='center'
-              alignContent='center'
-              justifyContent='center'
-              direction='column'>
-              <Grid item>
-                <WalletEmptyImage />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5' align='center'>
-                  <IntlMessages id='app.wallet.noTransactionsYet' />
-                </Typography>
-              </Grid>
+        <Box py={4}>
+          <Grid
+            container
+            spacing={4}
+            alignItems='center'
+            alignContent='center'
+            justifyContent='center'
+            direction='column'>
+            <Grid item>
+              <WalletEmptyImage />
             </Grid>
-          </Box>
-        </Paper>
+            <Grid item>
+              <Typography variant='h5' align='center'>
+                <IntlMessages id='app.wallet.noTransactionsYet' />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     );
   }

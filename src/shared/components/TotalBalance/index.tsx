@@ -33,7 +33,7 @@ import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
@@ -389,7 +389,7 @@ const TotalBalance = (props: Props) => {
                                       ? theme.palette.success.main
                                       : theme.palette.error.main,
                                 }}
-                                variant={'body1'}>
+                                variant={'body2'}>
                                 {usdTotalPercentage.toFixed(2)}%
                               </Typography>
                             </Grid>
@@ -411,7 +411,7 @@ const TotalBalance = (props: Props) => {
                   </Grid>
                   <Grid item>
                     <IconButton onClick={handleShowAccounts} size={'medium'}>
-                      <KeyboardArrowDownIcon />
+                      <ArrowBackIosIcon style={{transform: 'rotate(270deg'}} />
                     </IconButton>
                   </Grid>
                 </Grid>

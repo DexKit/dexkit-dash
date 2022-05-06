@@ -36,7 +36,7 @@ import {Empty} from 'shared/components/Empty';
 const PAGES = [4, 8, 16, 32, 64];
 
 export const NFTLeagueIndex = () => {
-  const {messages, formatMessage} = useIntl();
+  const {formatMessage} = useIntl();
   const {chainId} = useWeb3();
 
   const [rowsPerPage, setRowsPerPage] = useState(PAGES[0]);
@@ -131,7 +131,10 @@ export const NFTLeagueIndex = () => {
           <Grid item xs={12}>
             <PageHeader
               useBackUriFromRouter={true}
-              title={messages['nftLeague.games'] as string}
+              title={formatMessage({
+                id: 'nftleague.page.title',
+                defaultMessage: 'NFT League',
+              })}
               breadcrumbs={[
                 {caption: 'Wallet', uri: '/'},
                 {caption: 'NFT League', uri: '/nft-league'},

@@ -38,7 +38,7 @@ import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import useDiscord from 'hooks/useDiscord';
+
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGame';
 import TickerTapeTV from '../../components/TickerTapeTV';
@@ -73,7 +73,6 @@ const JoinGames = () => {
 
   const classes = useStyles();
 
-  useDiscord();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
   const dispatch = useDispatch();

@@ -4,6 +4,7 @@ import { ChainId, Web3State } from 'types/blockchain';
 import { SQUID_LEAGUE_FACTORY_ADDRESS } from '../constants';
 
 import { getLastGameId } from '../services/squidGameFactory';
+import { isSupportedBlockchain } from '../utils/blockchain';
 
 export const useLastGameId = () => {
     const { web3State, getProvider, chainId } = useWeb3();
@@ -11,7 +12,7 @@ export const useLastGameId = () => {
     return useQuery(
         ['GET_SQUID_LEAGUE_LAST_GAME_ID', chainId],
         async () => {
-            if (web3State !== Web3State.Done || !chainId) {
+            if (web3State !== Web3State.Done || !chainId || !isSupportedBlockchain(chainId)) {
                 return;
             }
             const gameAddress = SQUID_LEAGUE_FACTORY_ADDRESS[chainId as ChainId.Mumbai];

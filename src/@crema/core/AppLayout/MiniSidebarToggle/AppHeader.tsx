@@ -28,8 +28,8 @@ import {
   ButtonBase,
   Badge,
   Paper,
+  IconButton,
 } from '@material-ui/core';
-import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -280,7 +280,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  <DexkitLogoIconImage className={classes.dexkitIcon} />
+                  <Box pl={4} pt={3}>
+                    <DexkitLogoIconImage className={classes.dexkitIcon} />
+                  </Box>
                 </Grid>
                 <Grid item>
                   <Grid
@@ -305,7 +307,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                     <Grid item>
-                      <AppBarButton onClick={handleMobileMenuToggle}>
+                      <IconButton onClick={handleMobileMenuToggle}>
                         <Badge
                           variant='dot'
                           color='primary'
@@ -317,7 +319,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           }>
                           <MenuIcon />
                         </Badge>
-                      </AppBarButton>
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>

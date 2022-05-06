@@ -21,8 +21,8 @@ export const ExploreGames = () => {
           <PageHeader
             useBackUriFromRouter={true}
             title={formatMessage({
-              id: 'squidLeague.games',
-              defaultMessage: 'SquidLeague Game',
+              id: 'squidLeague.explore',
+              defaultMessage: 'Explore',
             })}
             breadcrumbs={[
               {caption: 'Wallet', uri: '/'},

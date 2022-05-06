@@ -10,7 +10,6 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {useTheme} from '@material-ui/core';
@@ -251,7 +250,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                           )}
                         </>
                       ) : (
-                        <Paper>
+                        <>
                           <Box p={4}>
                             <Box
                               display='flex'
@@ -279,7 +278,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                               </Link>
                             </Typography>
                           </Box>
-                        </Paper>
+                        </>
                       )}
                     </Grid>
                   </Grid>

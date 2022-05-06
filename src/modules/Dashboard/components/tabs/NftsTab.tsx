@@ -1,7 +1,6 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-import Paper from '@material-ui/core/Paper';
 import {AppState} from 'redux/store';
 import Box from '@material-ui/core/Box';
 import React, {useState, useCallback, useEffect, useMemo} from 'react';
@@ -512,26 +511,24 @@ export const NftsTab: React.FC = () => {
             </Grid>
           </Grid>
         ) : (
-          <Paper>
-            <Box py={4}>
-              <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignContent='center'
-                    alignItems='center'>
-                    <NFTEmptyStateImage />
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography align='center' variant='h5'>
-                    <IntlMessages id='nfts.wallet.noItemsFound' />
-                  </Typography>
-                </Grid>
+          <Box py={4}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  justifyContent='center'
+                  alignContent='center'
+                  alignItems='center'>
+                  <NFTEmptyStateImage />
+                </Box>
               </Grid>
-            </Box>
-          </Paper>
+              <Grid item xs={12}>
+                <Typography align='center' variant='h5'>
+                  <IntlMessages id='nfts.wallet.noItemsFound' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
         )}
       </Box>
     </>
