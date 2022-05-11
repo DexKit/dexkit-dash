@@ -268,16 +268,18 @@ const WalletInfo: React.FC<Props> = (props) => {
               </Box>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box mr={1}>
-                  <Typography variant='caption'>
-                    {ethBalanceValue
-                      ? isBalanceVisible
-                        ? ethBalanceValue.toFixed(4)
-                        : '****.**'
-                      : isBalanceVisible
-                      ? ethBalance && tokenAmountInUnits(ethBalance)
-                      : '****.**'}{' '}
-                    {tokenSymbol}{' '}
-                  </Typography>
+                  {tokenSymbol && (
+                    <Typography variant='caption'>
+                      {ethBalanceValue
+                        ? isBalanceVisible
+                          ? ethBalanceValue.toFixed(4)
+                          : '****.**'
+                        : isBalanceVisible
+                        ? ethBalance && tokenAmountInUnits(ethBalance)
+                        : '****.**'}{' '}
+                      {tokenSymbol}{' '}
+                    </Typography>
+                  )}
                 </Box>
                 <ButtonBase
                   className={classes.visibilityButton}
