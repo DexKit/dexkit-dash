@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       },
     },
     avatar: {
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: theme.palette.background.paper,
       width: theme.spacing(12),
       height: theme.spacing(12),
     },
