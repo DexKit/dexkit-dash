@@ -195,7 +195,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         alignItems='center'
                         justify='space-between'>
                         <Grid item>
-                          <Typography variant='body1' style={{fontWeight: 600}}>
+                          <Typography variant='h6'>
                             <IntlMessages id='app.dashboard.favorites' />
                           </Typography>
                         </Grid>
@@ -204,6 +204,9 @@ const WalletTabs: React.FC<Props> = (props) => {
                             to='/favorite-coins'
                             component={RouterLink}
                             size='small'
+                            style={{
+                              textTransform: 'none',
+                            }}
                             endIcon={<KeyboardArrowRightIcon />}>
                             <IntlMessages id='app.dashboard.viewMore' />
                           </Button>
@@ -262,7 +265,8 @@ const WalletTabs: React.FC<Props> = (props) => {
                             </Box>
                             <Typography
                               gutterBottom
-                              variant='body1'
+                              variant='body2'
+                              color='textSecondary'
                               align='center'>
                               <IntlMessages id='app.dashboard.youDontHaveFavoritesYet' />
                               .

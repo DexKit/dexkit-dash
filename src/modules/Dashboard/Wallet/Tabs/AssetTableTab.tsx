@@ -51,13 +51,13 @@ export const AssetTableTab = (props: Props) => {
             <WalletEmptyImage />
           </Box>
           <Box mb={4}>
-            <Typography align='center' variant='h5'>
+            <Typography align='center' variant='body2' color={'textSecondary'}>
               <IntlMessages id='app.dashboard.noAssets' />
             </Typography>
           </Box>
           <Button
-            variant='outlined'
-            color={'primary'}
+            variant='contained'
+            color='primary'
             startIcon={<MonetizationOnIcon />}
             onClick={handleTransak}>
             <IntlMessages id='app.dashboard.buyCrypto' />

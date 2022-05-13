@@ -127,13 +127,16 @@ export const Nfts: React.FC = () => {
 
   const handleNftTokenSubmit = useCallback(() => {
     if (chainId && nftTokenValues.tokenId && nftTokenValues.address) {
-      addAsset({
-        tokenId: nftTokenValues.tokenId,
-        contractAddress: nftTokenValues.address,
-        chainId: chainId,
-      });
-      importNftDialogToggler.set(false);
-      setNftTokenValues(ASSET_VALUES_EMTPY);
+      addAsset
+        .mutateAsync({
+          tokenId: nftTokenValues.tokenId,
+          contractAddress: nftTokenValues.address,
+          chainId: chainId,
+        })
+        .then(() => {
+          importNftDialogToggler.set(false);
+          setNftTokenValues(ASSET_VALUES_EMTPY);
+        });
     }
   }, [addAsset, nftTokenValues, chainId, importNftDialogToggler]);
 
@@ -222,6 +225,10 @@ export const Nfts: React.FC = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const handleResetNFT = useCallback(() => {
+    addAsset.reset();
+  }, [addAsset]);
+
   return (
     <>
       <Menu
@@ -285,6 +292,7 @@ export const Nfts: React.FC = () => {
         values={nftTokenValues}
         onChange={handleAddNftChange}
         onSubmit={handleNftTokenSubmit}
+        onReset={handleResetNFT}
       />
       <ConfirmRemoveAssetDialog
         dialogProps={{

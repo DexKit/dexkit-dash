@@ -124,11 +124,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const handleSelectChain = useCallback(
-    async (chainId: number) => {
+    async (_chainId: number) => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(_chainId);
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
@@ -136,7 +136,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         const provider = getProvider();
 
         try {
-          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+          const customIndex = networks.findIndex((n) => n.chainId === _chainId);
 
           if (customIndex > -1) {
             const params: {
@@ -181,13 +181,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               params: [params],
             });
           } else {
-            await switchChain(provider, chainId);
+            await switchChain(provider, _chainId);
           }
 
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         }
       }

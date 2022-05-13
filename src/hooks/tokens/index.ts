@@ -1,21 +1,23 @@
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
-import {useQuery} from 'react-query';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
-
-import {ethers} from 'ethers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
 
 import {
   addCustomAsset,
   addCustomToken,
   removeCustomAsset,
 } from 'redux/_settingsv2/actions';
-import {getTokenBalanceOf} from 'services/blockchain/balances';
-import {ERC721Abi} from 'contracts/abis/ERC721Abi';
-import {getNormalizedUrl} from 'utils/browser';
-import {getTokenMetadata} from 'services/nfts';
-import {AssetData} from 'modules/Dashboard/types';
+import { getTokenBalanceOf } from 'services/blockchain/balances';
+import { ERC721Abi } from 'contracts/abis/ERC721Abi';
+import { getNormalizedUrl } from 'utils/browser';
+import { getTokenMetadata } from 'services/nfts';
+import { AssetData } from 'modules/Dashboard/types';
+import { getMulticallFromProvider } from 'services/multicall';
+import { Interface } from 'ethers/lib/utils';
+import { CallInput } from '@indexed-finance/multicall';
+import { providers } from 'ethers';
 
 // por chain ID
 // por redes a parte da evm
@@ -24,17 +26,17 @@ import {AssetData} from 'modules/Dashboard/types';
 // flags para historico.
 //usar token list
 export function useCustomTokenList() {
-  const {tokens} = useSelector<AppState, AppState['settingsv2']>(
-    ({settingsv2}) => settingsv2,
+  const { tokens } = useSelector<AppState, AppState['settingsv2']>(
+    ({ settingsv2 }) => settingsv2,
   );
 
-  return {tokens};
+  return { tokens };
 }
 
 const USE_TOKEN_BALANCE = 'USE_TOKEN_BALANCE';
 
 export function useTokenBalance(contractAddress: string, account?: string) {
-  const {chainId, getProvider} = useWeb3();
+  const { chainId, getProvider } = useWeb3();
 
   const query = useQuery(
     [USE_TOKEN_BALANCE, contractAddress, account, chainId],
@@ -66,36 +68,62 @@ export function useAddCustomToken() {
     [dispatch],
   );
 
-  return {addToken};
+  return { addToken };
 }
 
 export function useAddCustomAsset() {
   const dispatch = useDispatch();
 
-  const {getProvider} = useWeb3();
+  const { getProvider } = useWeb3();
 
-  const addAsset = useCallback(
+  const addAsset = useMutation(
     async (params: {
       contractAddress: string;
       tokenId: string;
       chainId: number;
     }) => {
-      const {contractAddress, tokenId} = params;
+      const { contractAddress, tokenId } = params;
+      const pr = new providers.Web3Provider(getProvider());
+      const multicall = await getMulticallFromProvider(pr);
+      const iface = new Interface(ERC721Abi);
+      let calls: CallInput[] = [];
+      calls.push({
+        interface: iface,
+        target: contractAddress,
+        function: 'tokenURI',
+        args: [tokenId],
+      });
 
-      const contract = new ethers.Contract(
-        contractAddress,
-        ERC721Abi,
-        new ethers.providers.Web3Provider(getProvider()),
-      );
+      calls.push({
+        interface: iface,
+        target: contractAddress,
+        function: 'ownerOf',
+        args: [tokenId],
+      });
 
-      const uri = await contract.tokenURI(tokenId);
+      calls.push({
+        interface: iface,
+        target: contractAddress,
+        function: 'name',
+
+      });
+
+      calls.push({
+        interface: iface,
+        target: contractAddress,
+        function: 'symbol',
+      });
+
+      const response = await multicall.multiCall(calls);
+      const [, results] = response;
+
+
+      const uri = results[0];
+      const owner = results[1];
+      const collectionName = results[2];
+      const symbol = results[3];
 
       const tokenMetadata = await getTokenMetadata(uri);
-
-      const owner = await contract.ownerOf(tokenId);
-
-      const collectionName = await contract.name();
-      const symbol = await contract.symbol();
 
       const data: AssetData = {
         collectionName,
@@ -110,28 +138,29 @@ export function useAddCustomAsset() {
         owner,
       };
 
-      dispatch(addCustomAsset({...params, metadata: data}));
-    },
-    [dispatch, getProvider],
+      dispatch(addCustomAsset({ ...params, metadata: data }));
+
+    }
   );
-  return {addAsset};
+
+  return { addAsset };
 }
 
 export function useRemoveCustomAsset() {
   const dispatch = useDispatch();
 
   const removeAsset = useCallback(
-    (params: {contractAddress: string; tokenId: string; chainId: number}) => {
+    (params: { contractAddress: string; tokenId: string; chainId: number }) => {
       dispatch(removeCustomAsset(params));
     },
     [dispatch],
   );
-  return {removeAsset};
+  return { removeAsset };
 }
 
 export function useAssetList() {
-  const {assets} = useSelector<AppState, AppState['settingsv2']>(
-    ({settingsv2}) => settingsv2,
+  const { assets } = useSelector<AppState, AppState['settingsv2']>(
+    ({ settingsv2 }) => settingsv2,
   );
 
   return {
