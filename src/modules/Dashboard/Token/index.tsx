@@ -34,7 +34,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
 import {useStyles} from './index.style';
-import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import {Share} from '@material-ui/icons';
 import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
@@ -206,13 +205,10 @@ const TokenPage = () => {
                     flexDirection='column'
                     alignItems='center'>
                     <Box mb={1}>
-                      <RoundedIconButton onClick={toggleShare}>
+                      <IconButton onClick={toggleShare}>
                         <Share className={classes.icon} />
-                      </RoundedIconButton>
+                      </IconButton>
                     </Box>
-                    <Typography variant='caption'>
-                      <IntlMessages id='app.dashboard.share' />
-                    </Typography>
                   </Box>
                 </Grid>
               </Grid>

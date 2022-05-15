@@ -117,10 +117,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 
 interface Props {
   onClick?: () => void;
+  openAccountManagerOnClick?: boolean;
 }
 
 const WalletInfo: React.FC<Props> = (props) => {
-  const {onClick} = props;
+  const {onClick, openAccountManagerOnClick} = props;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -132,7 +133,11 @@ const WalletInfo: React.FC<Props> = (props) => {
   const accountsModal = useAccountsModal();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    if (openAccountManagerOnClick) {
+      accountsModal.setShow(true);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const history = useHistory();
@@ -233,7 +238,7 @@ const WalletInfo: React.FC<Props> = (props) => {
             container
             alignItems='stretch'
             alignContent='center'
-            spacing={2}>
+            spacing={3}>
             <Grid item>
               <Tooltip
                 title={connected ? 'Wallet Connected' : 'Wallet Not Connected'}>
@@ -245,23 +250,36 @@ const WalletInfo: React.FC<Props> = (props) => {
               </Tooltip>
             </Grid>
             <Grid item>
-              <Typography variant='body1'>
-                {isBalanceVisible
-                  ? truncateIsAddress(defaultAccountLabel)
-                  : '******'}{' '}
-              </Typography>
+              <Box display='flex'>
+                <Typography variant='body1'>
+                  {isBalanceVisible
+                    ? truncateIsAddress(defaultAccountLabel)
+                    : '******'}{' '}
+                </Typography>
+                <Box pl={1}>
+                  <CopyButton
+                    color='inherit'
+                    size='small'
+                    copyText={defaultAccount || ''}
+                    tooltip='Copied!'>
+                    <FileCopy style={{fontSize: 16}} />
+                  </CopyButton>
+                </Box>
+              </Box>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box mr={1}>
-                  <Typography variant='caption'>
-                    {ethBalanceValue
-                      ? isBalanceVisible
-                        ? ethBalanceValue.toFixed(4)
-                        : '****.**'
-                      : isBalanceVisible
-                      ? ethBalance && tokenAmountInUnits(ethBalance)
-                      : '****.**'}{' '}
-                    {tokenSymbol}{' '}
-                  </Typography>
+                  {tokenSymbol && (
+                    <Typography variant='caption'>
+                      {ethBalanceValue !== undefined
+                        ? isBalanceVisible
+                          ? ethBalanceValue.toFixed(4)
+                          : '****.**'
+                        : isBalanceVisible
+                        ? ethBalance && tokenAmountInUnits(ethBalance)
+                        : '****.**'}{' '}
+                      {tokenSymbol}{' '}
+                    </Typography>
+                  )}
                 </Box>
                 <ButtonBase
                   className={classes.visibilityButton}
@@ -272,20 +290,13 @@ const WalletInfo: React.FC<Props> = (props) => {
                     <VisibilityOffIcon fontSize='inherit' />
                   )}
                 </ButtonBase>
-                <CopyButton
-                  color='inherit'
-                  size='small'
-                  copyText={defaultAccount || ''}
-                  tooltip='Copied!'>
-                  <FileCopy style={{fontSize: 16}} />
-                </CopyButton>
               </Box>
             </Grid>
           </Grid>
         </Grid>
         <Grid item>
           <Box className={classes.pointer} color={'text.primary'}>
-            <IconButton size='small' onClick={handleClick}>
+            <IconButton size='medium' onClick={handleClick}>
               <ExpandMoreIcon />
             </IconButton>
             <Menu

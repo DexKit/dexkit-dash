@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { AVAX_NETWORK, FANTOM_NETWORK } from 'shared/constants/Blockchain';
 import { isAddressEqual } from 'utils/blockchain';
 
 import {
@@ -18,7 +19,7 @@ export interface SettingsV2State {
 
 const initialState: SettingsV2State = {
   tokens: [],
-  networks: [],
+  networks: [AVAX_NETWORK, FANTOM_NETWORK],
   assets: [],
 };
 

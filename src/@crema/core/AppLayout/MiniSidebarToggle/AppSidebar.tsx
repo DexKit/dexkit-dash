@@ -25,7 +25,7 @@ import {ReactComponent as NotificationIcon} from 'assets/images/menu/notificatio
 import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
 
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-
+import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import {
@@ -42,7 +42,6 @@ import {
 
 import {Link as RouterLink} from 'react-router-dom';
 
-import {ReactComponent as MenuCloseIcon} from 'assets/images/menu/menu.svg';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 
 import {useWeb3} from 'hooks/useWeb3';
@@ -293,8 +292,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleToggleDrawer} size='small'>
-                      <MenuCloseIcon className={classes.icon} />
+                    <IconButton onClick={handleToggleDrawer} size='medium'>
+                      <CloseRoundedIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -336,7 +335,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
 
                           {!isOnLoginPage() || account ? (
                             <Grid item xs>
-                              <WalletInfo onClick={handleToggleDrawer} />
+                              <WalletInfo
+                                onClick={handleToggleDrawer}
+                                openAccountManagerOnClick={true}
+                              />
                             </Grid>
                           ) : null}
                         </Grid>

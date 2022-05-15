@@ -33,8 +33,6 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import useDiscord from 'hooks/useDiscord';
-
 import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
@@ -54,7 +52,6 @@ const MyGames = () => {
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
-  useDiscord();
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);

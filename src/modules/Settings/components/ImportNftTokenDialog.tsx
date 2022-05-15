@@ -33,6 +33,7 @@ interface Props {
   values: ImportNftTokenValues;
   onChange: (key: string, value: string) => void;
   onSubmit: () => void;
+  onReset: () => void;
   loading?: boolean;
   error?: Error;
 }
@@ -44,6 +45,7 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
   values,
   loading,
   error,
+  onReset,
 }) => {
   const {onClose} = dialogProps;
 
@@ -169,11 +171,19 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Typography gutterBottom align='center' variant='h6'></Typography>
-            <Typography
-              align='center'
-              variant='body1'
-              color='textSecondary'></Typography>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'>
+              <Button onClick={onReset} variant='contained' color={'primary'}>
+                {' '}
+                <IntlMessages
+                  id='common.tryAgain'
+                  defaultMessage={'Try Again'}
+                />
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </Box>

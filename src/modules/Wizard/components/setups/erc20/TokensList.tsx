@@ -89,7 +89,7 @@ export const TokensList = () => {
               <NFTEmptyStateImage />
             </Box>
           </Grid>
-          <Typography variant='h5'>
+          <Typography variant='body2' color={'textSecondary'}>
             <IntlMessages id='app.wizard.noTokensYet' />
           </Typography>
         </Grid>

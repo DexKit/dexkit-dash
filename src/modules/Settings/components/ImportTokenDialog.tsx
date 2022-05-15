@@ -76,22 +76,23 @@ export const ImportTokenDialog: React.FC<Props> = ({
       <Box py={4}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
+            <Grid item xs={12}>
+              <TextField
+                name='address'
+                value={values.address}
+                onChange={handleChange}
+                label={messages['app.settings.contractAddress'] as string}
+                variant='outlined'
+                fullWidth
+              />
+            </Grid>
             <TextField
               name='name'
               value={values.name}
               onChange={handleChange}
               label={messages['app.settings.name'] as string}
               variant='outlined'
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name='address'
-              value={values.address}
-              onChange={handleChange}
-              label={messages['app.settings.contractAddress'] as string}
-              variant='outlined'
+              disabled={true}
               fullWidth
             />
           </Grid>
@@ -103,6 +104,7 @@ export const ImportTokenDialog: React.FC<Props> = ({
               onChange={handleChange}
               label={messages['app.settings.symbol'] as string}
               variant='outlined'
+              disabled={true}
               fullWidth
             />
           </Grid>
@@ -114,6 +116,7 @@ export const ImportTokenDialog: React.FC<Props> = ({
               onChange={handleChange}
               label={messages['app.settings.decimals'] as string}
               variant='outlined'
+              disabled={true}
               fullWidth
             />
           </Grid>

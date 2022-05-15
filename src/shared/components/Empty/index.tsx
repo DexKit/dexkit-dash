@@ -28,10 +28,10 @@ export const Empty = (props: Props) => {
         </Grid>
         <Grid item xs={12}>
           <Typography
-            style={{textTransform: 'uppercase'}}
             gutterBottom
             align='center'
-            variant='h5'>
+            variant='body2'
+            color={'textSecondary'}>
             {title}
           </Typography>
           <Typography align='center'>{message}</Typography>

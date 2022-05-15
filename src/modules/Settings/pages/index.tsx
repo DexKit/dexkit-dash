@@ -29,11 +29,7 @@ import {
   Link,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import {
-  useAddCustomToken,
-  useCustomTokenList,
-  useAddCustomAsset,
-} from 'hooks/tokens';
+import {useAddCustomToken, useCustomTokenList} from 'hooks/tokens';
 import {
   useAddCustomNetwork,
   useCustomNetworkList,
@@ -48,9 +44,6 @@ import {
   NetworkFormDialog,
   NetworkFormState,
 } from '../components/NetworkFormDialog';
-import ImportNftTokenDialog, {
-  ImportNftTokenValues,
-} from '../components/ImportNftTokenDialog';
 import ImportTokenDialog, {
   ImportTokenValues,
 } from '../components/ImportTokenDialog';
@@ -98,8 +91,6 @@ export const Settings: React.FC = () => {
   const {tokens} = useCustomTokenList();
   const isMobile = useMobile();
 
-  const {addAsset} = useAddCustomAsset();
-
   const {removeNetwork} = useRemoveCustomNetwork();
 
   const {darkMode} = useSelector<AppState, AppState['settings']>(
@@ -124,7 +115,6 @@ export const Settings: React.FC = () => {
   }, [history]);
 
   const importDialogToggler = useToggler(false);
-  const importNftDialogToggler = useToggler(false);
   const addNetworkDialogToggler = useToggler(false);
 
   const [tokenValues, setTokenValues] =
@@ -135,11 +125,6 @@ export const Settings: React.FC = () => {
   );
 
   const tokenInfo = useTokenInfo(address);
-
-  const [nftTokenValues, setNftTokenValues] = useState<ImportNftTokenValues>({
-    address: '',
-    tokenId: '',
-  });
 
   const handleLazySetAddress = useCallback(
     _.debounce((address: string) => {
@@ -159,14 +144,6 @@ export const Settings: React.FC = () => {
       }
     },
     [tokenValues, handleLazySetAddress],
-  );
-
-  const handleAddNftChange = useCallback(
-    (key: string, value: string) => {
-      console.log('he');
-      setNftTokenValues({...nftTokenValues, [key]: value.trim()});
-    },
-    [nftTokenValues],
   );
 
   const handleEditNetwork = useCallback(
@@ -237,16 +214,6 @@ export const Settings: React.FC = () => {
       handleCloseTokenImport();
     }
   }, [addToken, tokenValues, chainId, handleCloseTokenImport]);
-
-  const handleNftTokenSubmit = useCallback(() => {
-    if (chainId && nftTokenValues.tokenId && nftTokenValues.address) {
-      addAsset({
-        tokenId: nftTokenValues.tokenId,
-        contractAddress: nftTokenValues.address,
-        chainId: chainId,
-      });
-    }
-  }, [addAsset, nftTokenValues, chainId]);
 
   const handleOpenImportToken = useCallback(() => {
     importDialogToggler.set(true);
@@ -491,16 +458,6 @@ export const Settings: React.FC = () => {
         onSubmit={handleTokenSubmit}
         onChange={handleAddTokenChange}
       />
-      <ImportNftTokenDialog
-        dialogProps={{
-          open: importNftDialogToggler.show,
-          maxWidth: 'xs',
-          fullWidth: true,
-        }}
-        values={nftTokenValues}
-        onChange={handleAddNftChange}
-        onSubmit={handleNftTokenSubmit}
-      />
       <ConfirmRemoveNetworkDialog
         dialogProps={{
           open: networkRemoveDialogToggler.show,
@@ -552,18 +509,6 @@ export const Settings: React.FC = () => {
           <Grid item xs={12} sm={3}>
             <Card>
               <List disablePadding>
-                {/*   <ListItem
-                  divider
-                  button
-                  selected={menuSelected === MENU_CUSTOM_TOKENS}
-                  onClick={() => setMenuSelected(MENU_CUSTOM_TOKENS)}>
-                  <ListItemIcon>
-                    <AttachMoneyIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={messages['app.settings.customTokens'] as string}
-                  />
-            </ListItem> */}
                 <ListItem
                   button
                   selected={menuSelected === MENU_LANGUAGE}
@@ -602,6 +547,18 @@ export const Settings: React.FC = () => {
                     }
                   />
                 </ListItem>
+                {/*  <ListItem
+                  divider
+                  button
+                  selected={menuSelected === MENU_CUSTOM_TOKENS}
+                  onClick={() => setMenuSelected(MENU_CUSTOM_TOKENS)}>
+                  <ListItemIcon>
+                    <AttachMoneyIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={messages['app.settings.customTokens'] as string}
+                  />
+                </ListItem> */}
               </List>
             </Card>
           </Grid>

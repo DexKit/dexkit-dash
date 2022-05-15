@@ -38,7 +38,7 @@ import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import useDiscord from 'hooks/useDiscord';
+
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGame from 'modules/CoinLeagues/components/CardGame';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
@@ -85,8 +85,6 @@ const GamesList = () => {
   const isMobile = useMobile();
 
   const classes = useStyles();
-
-  useDiscord();
 
   const isNFTGame = useMemo(() => {
     if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
@@ -361,7 +359,7 @@ const GamesList = () => {
                 </IconButton>
                 <Box pr={2} pl={2}>
                   <Typography variant='h5'>
-                    Coin League {isNFTGame && '- NFT Room'}
+                    {!isNFTGame && 'Coin League'} {isNFTGame && 'NFT Room'}
                   </Typography>
                 </Box>
 

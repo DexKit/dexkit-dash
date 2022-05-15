@@ -64,7 +64,7 @@ export const CollectionsList = () => {
               <NFTEmptyStateImage />
             </Box>
           </Grid>
-          <Typography variant='h5'>
+          <Typography variant='body2' color={'textSecondary'}>
             <IntlMessages id='app.wizard.noCollectionsYet' />
           </Typography>
         </Grid>

@@ -32,21 +32,18 @@ export const MyGames = () => {
             ]}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            {!isSupportedBlockchain(chainId) && (
-              <NetworkSupportCard
-                supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS}
-              />
-            )}
-
-            <Grid item xs={12}>
-              {isSupportedBlockchain(chainId) && (
-                <MyGamesTable account={account} />
-              )}
-            </Grid>
+        {!isSupportedBlockchain(chainId) && (
+          <Grid item xs={12}>
+            <NetworkSupportCard
+              supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS}
+            />
           </Grid>
-        </Grid>
+        )}
+        {isSupportedBlockchain(chainId) && (
+          <Grid item xs={12}>
+            <MyGamesTable account={account} />
+          </Grid>
+        )}
       </Grid>
     </MainLayout>
   );

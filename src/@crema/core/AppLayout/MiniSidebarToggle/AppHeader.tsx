@@ -28,8 +28,8 @@ import {
   ButtonBase,
   Badge,
   Paper,
+  IconButton,
 } from '@material-ui/core';
-import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -124,11 +124,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const handleSelectChain = useCallback(
-    async (chainId: number) => {
+    async (_chainId: number) => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(_chainId);
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
@@ -136,7 +136,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         const provider = getProvider();
 
         try {
-          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+          const customIndex = networks.findIndex((n) => n.chainId === _chainId);
 
           if (customIndex > -1) {
             const params: {
@@ -181,13 +181,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               params: [params],
             });
           } else {
-            await switchChain(provider, chainId);
+            await switchChain(provider, _chainId);
           }
 
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         }
       }
@@ -280,7 +280,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  <DexkitLogoIconImage className={classes.dexkitIcon} />
+                  <Box pl={4} pt={3}>
+                    <DexkitLogoIconImage className={classes.dexkitIcon} />
+                  </Box>
                 </Grid>
                 <Grid item>
                   <Grid
@@ -294,7 +296,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         to='/profile'
                         component={RouterLink}>
                         <Avatar
-                          className={classes.avatar}
+                          classes={{fallback: classes.fallback}}
                           src={
                             account && chainId
                               ? kittygotchiProfile.getDefault(account, chainId)
@@ -305,7 +307,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                     <Grid item>
-                      <AppBarButton onClick={handleMobileMenuToggle}>
+                      <IconButton onClick={handleMobileMenuToggle}>
                         <Badge
                           variant='dot'
                           color='primary'
@@ -317,7 +319,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           }>
                           <MenuIcon />
                         </Badge>
-                      </AppBarButton>
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>

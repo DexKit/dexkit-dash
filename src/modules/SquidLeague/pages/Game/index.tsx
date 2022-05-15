@@ -1,5 +1,5 @@
-import Paper from '@material-ui/core/Paper';
 import {useWeb3} from 'hooks/useWeb3';
+import {Title} from 'modules/SquidLeague/components/Title';
 import {SQUID_LEAGUE_SUPPORTED_NETWORKS} from 'modules/SquidLeague/constants';
 import {useGameAddress} from 'modules/SquidLeague/hooks/useGameAddress';
 import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
@@ -24,22 +24,24 @@ export const Game = () => {
   const {chainId} = useWeb3();
   const gameDataQuery = useOnChainGameData(gameAddressQuery.data);
 
-  console.log(chainId);
-
   return (
     <>
       {!isSupportedBlockchain(chainId) && (
-        <NetworkSupportCard supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS} />
+        <MainLayout>
+          <Title />
+          <NetworkSupportCard
+            supportedChains={SQUID_LEAGUE_SUPPORTED_NETWORKS}
+          />
+        </MainLayout>
       )}
 
-      {gameDataQuery.isError && (
+      {gameDataQuery.isError && isSupportedBlockchain(chainId) && (
         <MainLayout>
-          <Paper>
-            <Empty
-              title='Squid League: Error '
-              message='Error fetching game, please reload page'
-            />
-          </Paper>
+          <Title />
+          <Empty
+            title='Squid League: Error '
+            message='Error fetching game, please reload page'
+          />
         </MainLayout>
       )}
 

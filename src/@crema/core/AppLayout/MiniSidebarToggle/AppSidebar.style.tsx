@@ -18,9 +18,14 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       },
     },
     avatar: {
-      backgroundColor: theme.palette.background.default,
+      borderColor: theme.palette.divider,
       width: theme.spacing(12),
       height: theme.spacing(12),
+    },
+    fallback: {
+      '& path': {
+        fill: theme.palette.text.primary,
+      },
     },
     avatarButton: {
       borderRadius: '50%',
