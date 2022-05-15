@@ -58,10 +58,10 @@ const TransferTable: React.FC<Props> = ({
         </TableContainer>
         {data && data.length === 0 && (
           <Typography
-            variant='h5'
+            variant='body2'
+            color={'textSecondary'}
             display={'block'}
-            align={'center'}
-            color={'primary'}>
+            align={'center'}>
             You don't have made transfers with this wallet yet
           </Typography>
         )}
@@ -107,7 +107,7 @@ const TransferTable: React.FC<Props> = ({
             <WalletEmptyImage />
           </Grid>
           <Grid item>
-            <Typography variant='h5' align='center'>
+            <Typography variant='body2' align='center' color={'textSecondary'}>
               <IntlMessages id='app.wallet.youDontHaveTransfersYet' />
             </Typography>
           </Grid>

@@ -103,7 +103,7 @@ export const NFTLeagueCreateGamePage = () => {
 
   const [transactionHash, setTransactionHash] = useState<string>();
 
-  const {messages} = useIntl();
+  const {messages, formatMessage} = useIntl();
 
   const handleClearError = useCallback(() => {
     setErrorMessage(undefined);
@@ -322,7 +322,10 @@ export const NFTLeagueCreateGamePage = () => {
                 <Grid item xs={12} container spacing={4}>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      label={messages['nftLeague.entryAmount'] as string}
+                      label={formatMessage({
+                        id: 'nftLeague.entryAmount',
+                        defaultMessage: 'Entry amount (Matic)',
+                      })}
                       fullWidth
                       value={formik.values.entryAmount}
                       onChange={formik.handleChange}
@@ -342,7 +345,10 @@ export const NFTLeagueCreateGamePage = () => {
                         <IntlMessages id='nftLeague.duration' />
                       </InputLabel>
                       <Select
-                        label={messages['nftLeague.duration'] as string}
+                        label={formatMessage({
+                          id: 'nftLeague.duration',
+                          defaultMessage: 'Duration',
+                        })}
                         fullWidth
                         value={formik.values.duration}
                         onChange={formik.handleChange}

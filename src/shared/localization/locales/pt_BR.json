@@ -590,7 +590,7 @@
   "app.charts": "Gráficos",
   "app.exit": "Sair",
   "app.defiAssets": "Ativos Defi",
-  "app.noAssets": "Nenhum Ativo",
+  "app.noAssets": "Você não tem nenhum ativo ainda.",
   "app.youDontHaveFavoritesYet": "Você ainda não tem favoritos",
   "app.redirectingToWallet": "Redirecionando para a Carteira",
   "app.youDontHaveDefiAssets": "Você não tem ativos DEFI",

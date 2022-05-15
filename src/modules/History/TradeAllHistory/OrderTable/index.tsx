@@ -5,7 +5,6 @@ import {
   Table,
   TableHead,
   TableBody,
-  Paper,
   TablePagination,
   Typography,
 } from '@material-ui/core';
@@ -43,26 +42,27 @@ const TransactionTable: React.FC<Props> = ({
   if (data && data.length === 0) {
     return (
       <Box py={4}>
-        <Paper>
-          <Box py={4}>
-            <Grid
-              container
-              spacing={4}
-              alignItems='center'
-              alignContent='center'
-              justifyContent='center'
-              direction='column'>
-              <Grid item>
-                <WalletEmptyImage />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5' align='center'>
-                  <IntlMessages id='app.wallet.youDontHaveTradesYet' />
-                </Typography>
-              </Grid>
+        <Box py={4}>
+          <Grid
+            container
+            spacing={4}
+            alignItems='center'
+            alignContent='center'
+            justifyContent='center'
+            direction='column'>
+            <Grid item>
+              <WalletEmptyImage />
             </Grid>
-          </Box>
-        </Paper>
+            <Grid item>
+              <Typography
+                variant='body2'
+                align='center'
+                color={'textSecondary'}>
+                <IntlMessages id='app.wallet.youDontHaveTradesYet' />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     );
   }

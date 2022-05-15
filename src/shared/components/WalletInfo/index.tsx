@@ -270,7 +270,7 @@ const WalletInfo: React.FC<Props> = (props) => {
                 <Box mr={1}>
                   {tokenSymbol && (
                     <Typography variant='caption'>
-                      {ethBalanceValue
+                      {ethBalanceValue !== undefined
                         ? isBalanceVisible
                           ? ethBalanceValue.toFixed(4)
                           : '****.**'

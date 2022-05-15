@@ -296,7 +296,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         to='/profile'
                         component={RouterLink}>
                         <Avatar
-                          className={classes.avatar}
+                          classes={{fallback: classes.fallback}}
                           src={
                             account && chainId
                               ? kittygotchiProfile.getDefault(account, chainId)

@@ -171,7 +171,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
         },*/
-        {
+        /*  {
           id: 'coinleague.how-to-play',
           title: 'How To Play',
           messageId: 'sidebar.howToPlay',
@@ -179,7 +179,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'question',
           url: `${COINSLEAGUE_ROUTE}/how-to-play`,
-        },
+        },*/
         {
           id: 'coinleague.affiliate',
           title: 'Coinleague Affiliate',
@@ -200,7 +200,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    {
+    /*  {
       id: 'squidLeague',
       title: 'SquidLeague',
       messageId: 'sidebar.squidLeague',
@@ -234,7 +234,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/squid-league/my-games',
         },
       ],
-    },
+    },*/
     {
       id: 'nftLeague',
       title: 'NftLeague',

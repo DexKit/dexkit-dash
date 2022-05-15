@@ -50,7 +50,11 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
                   justifyContent='center'>
                   <FavoritesEmptyImage />
                 </Box>
-                <Typography gutterBottom variant='body1' align='center'>
+                <Typography
+                  gutterBottom
+                  variant='body2'
+                  align='center'
+                  color={'textSecondary'}>
                   <IntlMessages id='app.dashboard.dontHaveFavorites' />
                 </Typography>
                 <Typography variant='body2' align='center' color='primary'>

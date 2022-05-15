@@ -292,7 +292,7 @@ export const LoginWallet = (props: Props) => {
                   </Grid>
                 </Box>
               </Grid>
-              {account && (
+              {false && (
                 <Grid item xs={12}>
                   <Alert severity='info' variant='outlined'>
                     <Typography variant='body1'>

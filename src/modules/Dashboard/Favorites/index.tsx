@@ -71,19 +71,9 @@ export const Favorites = () => {
             <ArrowBackIcon />
           </IconButton>
         </Box>
-        <Grid container>
-          <Grid item xs={12}>
-            <Box
-              display='flex'
-              alignItems='center'
-              alignContent='center'
-              flexDirection={'column'}>
-              <Typography variant='h5'>
-                <IntlMessages id='app.common.favorites' />
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
+        <Typography variant='h5'>
+          <IntlMessages id='app.common.favorites' />
+        </Typography>
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>

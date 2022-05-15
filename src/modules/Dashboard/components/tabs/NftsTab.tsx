@@ -533,7 +533,10 @@ export const NftsTab: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={12}>
-                <Typography align='center' variant='h5'>
+                <Typography
+                  align='center'
+                  variant='body2'
+                  color={'textSecondary'}>
                   <IntlMessages id='nfts.wallet.noItemsFound' />
                 </Typography>
               </Grid>
