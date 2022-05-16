@@ -6,15 +6,14 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import FormControl from '@material-ui/core/FormControl';
-import Link from '@material-ui/core/Link';
 
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
 import {useIntl} from 'react-intl';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import AffiliateTotalCard from './components/AffiliateTotalCard';
 import {Skeleton} from '@material-ui/lab';
 import AffiliateHistory from './history';
@@ -34,7 +33,6 @@ import {AFFILIATE_FIELD} from 'modules/CoinLeagues/constants';
 import {RoomType} from 'modules/CoinLeagues/constants/enums';
 import {ethers} from 'ethers';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
-import {useMobile} from 'hooks/useMobile';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
@@ -48,7 +46,6 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 const AffiliatePage: React.FC = () => {
   const history = useHistory();
   const {messages} = useIntl();
-  const isMobile = useMobile();
 
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
@@ -107,20 +104,6 @@ const AffiliatePage: React.FC = () => {
   return (
     <Box py={4}>
       <Grid container spacing={4}>
-        {!isMobile && (
-          <Grid item xs={12}>
-            <Breadcrumbs>
-              <Link to={COINSLEAGUE_ROUTE} component={RouterLink}>
-                <Typography variant='body2' color='textSecondary'>
-                  CoinLeague
-                </Typography>
-              </Link>
-              <Typography variant='body2'>
-                {messages['affiliate.page.title']}
-              </Typography>
-            </Breadcrumbs>
-          </Grid>
-        )}
         <Grid item xs={12} sm={10}>
           <Box display='flex' alignItems={'center'}>
             <IconButton onClick={handleBack}>

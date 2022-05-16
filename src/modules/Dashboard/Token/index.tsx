@@ -3,19 +3,17 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 
 import {
-  Link,
   Grid,
   Box,
   IconButton,
   Card,
-  Breadcrumbs,
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
 } from '@material-ui/core';
 
-import {useHistory, Link as RouterLink} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -164,18 +162,6 @@ const TokenPage = () => {
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>
               <Grid container spacing={2}>
-                {!isMobile && (
-                  <Grid item xs={12}>
-                    <Breadcrumbs aria-label='breadcrumb'>
-                      <Link component={RouterLink} to='/wallet' color='inherit'>
-                        <IntlMessages id='app.dashboard.wallet' />
-                      </Link>
-                      <Typography variant='body2' color='inherit'>
-                        <IntlMessages id='app.dashboard.trade' />
-                      </Typography>
-                    </Breadcrumbs>
-                  </Grid>
-                )}
                 <Grid item xs={12}>
                   <Grid container spacing={2} alignItems='center'>
                     <Grid item>

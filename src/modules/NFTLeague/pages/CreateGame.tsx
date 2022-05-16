@@ -417,7 +417,7 @@ export const NFTLeagueCreateGamePage = () => {
                           name='rarity'>
                           {GET_CHAMPIONS_COINS(chainId).map(
                             (coin: string, index: number) => (
-                              <MenuItem value={index}>{coin}</MenuItem>
+                              <MenuItem value={index + 1}>{coin}</MenuItem>
                             ),
                           )}
                         </Select>

@@ -3,11 +3,9 @@ import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Badge,
-  Breadcrumbs,
   Grid,
   IconButton,
   InputAdornment,
-  Link,
   makeStyles,
   TextField,
   Typography,
@@ -28,8 +26,7 @@ import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skel
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Empty} from 'shared/components/Empty';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE} from 'shared/constants/routes';
+import {useHistory} from 'react-router-dom';
 import {Search} from '@material-ui/icons';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
@@ -53,7 +50,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
-import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -79,7 +75,6 @@ const JoinGames = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const filtersState = useGamesFilters();
-  const isMobile = useMobile();
 
   const waitingGamesQuery = useCoinLeagueGames(
     {
@@ -178,23 +173,6 @@ const JoinGames = () => {
         </Grid>
 
         <Grid item xs={12}>
-          {!isMobile && (
-            <Grid item xs={12} sm={12} xl={12}>
-              <Grid container>
-                <Breadcrumbs>
-                  <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                    <IntlMessages id='app.coinLeagues.dashboard' />
-                  </Link>
-                  <Link
-                    color='inherit'
-                    component={RouterLink}
-                    to={listGamesRoute}>
-                    <IntlMessages id='app.coinLeagues.games' />
-                  </Link>
-                </Breadcrumbs>
-              </Grid>
-            </Grid>
-          )}
           <Grid container justifyContent='space-between'>
             <Grid item>
               <Grid

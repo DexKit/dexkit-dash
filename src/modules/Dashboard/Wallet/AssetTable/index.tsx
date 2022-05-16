@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {
+  Button,
   Checkbox,
   FormControlLabel,
   FormGroup,
@@ -78,6 +79,16 @@ const AssetTable: React.FC<AssetTableProps> = ({
   const [search, setSearch] = useState('');
 
   const {messages} = useIntl();
+
+  const resetFiltersState = useCallback(
+    (e) => {
+      setShowZero(!showZero);
+      setFilter('all');
+      setSearch('');
+      setOrderBy(TokenOrderBy.UsdAmount);
+    },
+    [showZero],
+  );
 
   const onSetShowZero = useCallback(() => {
     setShowZero(!showZero);
@@ -191,7 +202,6 @@ const AssetTable: React.FC<AssetTableProps> = ({
               </Box>
               <Divider />
             </Grid>
-
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
                 <IntlMessages id='app.dashboard.network' />
@@ -240,7 +250,6 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 variant='outlined'
@@ -281,6 +290,37 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12}>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox value={showZero} onClick={onSetShowZero} />
+                  }
+                  label={<IntlMessages id='app.dashboard.showZeroValueCoin' />}
+                />
+              </FormGroup>
+            </Grid>{' '}
+            <Grid item xs={12}>
+              <Box display={'flex'}>
+                <Box pr={6}>
+                  <Button variant='contained' onClick={handleToggleFilters}>
+                    <IntlMessages
+                      id='common.return'
+                      defaultMessage={'Return'}
+                    />
+                  </Button>
+                </Box>
+                <Button
+                  variant='contained'
+                  color={'primary'}
+                  onClick={resetFiltersState}>
+                  <IntlMessages
+                    id='common.clearAll'
+                    defaultMessage={'Clear All'}
+                  />
+                </Button>
+              </Box>
+            </Grid>{' '}
           </Grid>
         </Box>
       </Drawer>
@@ -300,18 +340,6 @@ const AssetTable: React.FC<AssetTableProps> = ({
 
             <Grid item xs={isMobile ? 12 : undefined}>
               <Grid container spacing={2} alignItems='center'>
-                <Grid item>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox value={showZero} onClick={onSetShowZero} />
-                      }
-                      label={
-                        <IntlMessages id='app.dashboard.showZeroValueCoin' />
-                      }
-                    />
-                  </FormGroup>
-                </Grid>
                 <Grid item xs>
                   <TextField
                     value={search}

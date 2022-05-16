@@ -10,7 +10,7 @@ import languageData from '@crema/core/LanguageSwitcher/data';
 import TranslateIcon from '@material-ui/icons/Translate';
 import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
 import {ReactComponent as EmptyWallet} from 'assets/images/icons/empty-wallet.svg';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {
   Box,
   Fade,
@@ -25,8 +25,6 @@ import {
   Divider,
   Typography,
   List,
-  Breadcrumbs,
-  Link,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {useAddCustomToken, useCustomTokenList} from 'hooks/tokens';
@@ -56,7 +54,6 @@ import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {WALLET_ROUTE} from 'shared/constants/routes';
-import {useMobile} from 'hooks/useMobile';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDarkMode} from 'redux/actions';
@@ -89,7 +86,6 @@ export const Settings: React.FC = () => {
   const {addToken} = useAddCustomToken();
   const {addNetwork} = useAddCustomNetwork();
   const {tokens} = useCustomTokenList();
-  const isMobile = useMobile();
 
   const {removeNetwork} = useRemoveCustomNetwork();
 
@@ -478,18 +474,6 @@ export const Settings: React.FC = () => {
       />
       <Box>
         <Grid container spacing={4}>
-          {!isMobile && (
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' to='/' component={RouterLink}>
-                  <IntlMessages id='app.dashboard' />
-                </Link>
-                <Typography color='inherit'>
-                  <IntlMessages id='app.settings.settings' />
-                </Typography>
-              </Breadcrumbs>
-            </Grid>
-          )}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box

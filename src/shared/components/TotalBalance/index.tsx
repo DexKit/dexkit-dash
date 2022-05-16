@@ -318,7 +318,7 @@ const TotalBalance = (props: Props) => {
         </Grid>
       </Backdrop>
       <Box>
-        <Grid container spacing={2} alignItems='center' justify='space-between'>
+        <Grid container spacing={4} alignItems='center' justify='space-between'>
           <Grid item xs={isMobile ? 12 : undefined} sm={4}>
             <Paper>
               <Box p={4}>
@@ -418,7 +418,7 @@ const TotalBalance = (props: Props) => {
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={isMobile ? 12 : undefined}>
+          <Grid item xs={isMobile ? 12 : undefined} sm={6}>
             <TradeToolsSection
               onSend={handleShowSender}
               onReceive={handleShowReceiver}

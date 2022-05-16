@@ -24,7 +24,6 @@ export function GET_NFT_LEAGUE_FACTORY_ADDRESS(chainId?: ChainId) {
 
 export const CHAMPIONS_COINS = {
   [ChainId.Mumbai]: [
-    'Bittoken',
     'Bitcoin',
     'Ethereum',
     'ChainLink',
@@ -35,7 +34,6 @@ export const CHAMPIONS_COINS = {
   ],
   [ChainId.Binance]: [],
   [ChainId.Matic]: [
-    'Bittoken',
     'Bitcoin',
     'Ethereum',
     'ChainLink',

@@ -1,14 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {
-  Grid,
-  Breadcrumbs,
-  Link,
-  IconButton,
-  Typography,
-  Divider,
-} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
+import {Grid, IconButton, Typography, Divider} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -20,7 +13,6 @@ import {
   useRanking,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {ethers} from 'ethers';
@@ -40,7 +32,6 @@ export function Ranking() {
   const [value, setValue] = React.useState(RankingType.MostWinner);
   const rankingQuery = useRanking(value, isNFT, chainId);
 
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const {account} = useWeb3();
 
   const history = useHistory();
@@ -61,18 +52,6 @@ export function Ranking() {
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          {!isMobile && (
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link
-                  color='inherit'
-                  component={RouterLink}
-                  to={listGamesRoute}>
-                  <IntlMessages id='app.coinLeagues.coinLeague' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
-          )}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box

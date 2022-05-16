@@ -136,7 +136,7 @@ const WalletInfo: React.FC<Props> = (props) => {
     if (openAccountManagerOnClick) {
       accountsModal.setShow(true);
     } else {
-      setAnchorEl(event.currentTarget);
+      accountsModal.setShow(true);
     }
   };
 

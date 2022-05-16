@@ -8,14 +8,13 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import FormControl from '@material-ui/core/FormControl';
-import Link from '@material-ui/core/Link';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
 import {useWeb3} from '../../../hooks/useWeb3';
 import {useDefaultAccount} from '../../../hooks/useDefaultAccount';
@@ -29,14 +28,12 @@ import IntlMessages from '../../../@crema/utility/IntlMessages';
 import {ChainId} from 'types/blockchain';
 
 import {useChainInfo} from 'hooks/useChainInfo';
-import {useMobile} from 'hooks/useMobile';
 import {WALLET_ROUTE} from 'shared/constants/routes';
 import IconButton from '@material-ui/core/IconButton';
 import AffiliateAddressCard from '../components/AffiliateAddressCard';
 import {InputAdornment, InputLabel, Paper, TextField} from '@material-ui/core';
 
 const AffiliatePage: React.FC = () => {
-  const isMobile = useMobile();
   const history = useHistory();
   const {messages} = useIntl();
 
@@ -120,15 +117,6 @@ const AffiliatePage: React.FC = () => {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Grid container alignItems='center' alignContent='center' spacing={2}>
-            {!isMobile && (
-              <Grid item xs={12}>
-                <Breadcrumbs>
-                  <Link color='inherit' component={RouterLink} to='/wallet'>
-                    <IntlMessages id='app.affiliate.page.dashboard' />
-                  </Link>
-                </Breadcrumbs>
-              </Grid>
-            )}
             <Grid item>
               <IconButton size='small' onClick={handleBack}>
                 <ArrowBackIcon />

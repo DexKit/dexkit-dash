@@ -2,15 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {
-  Breadcrumbs,
-  Button,
-  Grid,
-  Hidden,
-  IconButton,
-  Link,
-  Typography,
-} from '@material-ui/core';
+import {Button, Grid, Hidden, IconButton, Typography} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import FormControl from '@material-ui/core/FormControl';
@@ -20,8 +12,8 @@ import {SupportedNetworkType} from 'types/blockchain';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useHistory} from 'react-router-dom';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -41,13 +33,11 @@ import {RoomType} from 'modules/CoinLeagues/constants/enums';
 
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
-import {useMobile} from 'hooks/useMobile';
 
 const MyGames = () => {
   const history = useHistory();
   const {account} = useWeb3();
   const {coinSymbol} = useLeaguesChainInfo();
-  const isMobile = useMobile();
 
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
@@ -86,23 +76,6 @@ const MyGames = () => {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
-      {!isMobile && (
-        <Grid item xs={12} sm={12} xl={12}>
-          <Grid container>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                <IntlMessages id='app.coinLeagues.dashboard' />
-              </Link>
-              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                <IntlMessages id='app.coinLeagues.games' />
-              </Link>
-              <Typography>
-                <IntlMessages id='app.coinLeagues.myGames' />
-              </Typography>
-            </Breadcrumbs>
-          </Grid>
-        </Grid>
-      )}
       <Hidden smUp={true}>
         <Grid item xs={12}>
           <img

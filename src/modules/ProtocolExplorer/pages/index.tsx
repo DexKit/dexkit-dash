@@ -22,12 +22,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import {useTheme} from '@material-ui/core';
@@ -236,21 +234,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
             <Grid container justify='space-between' alignItems='center'>
               <Grid item>
                 <Grid container spacing={2}>
-                  {!isMobile && (
-                    <Grid item xs={12}>
-                      <Breadcrumbs aria-label='breadcrumb'>
-                        <Link
-                          color='inherit'
-                          component={RouterLink}
-                          to='/wallet'>
-                          <IntlMessages id='app.protocolExplorer.wallet' />
-                        </Link>
-                        <Typography variant='body2' color='inherit'>
-                          <IntlMessages id='app.protocolExplorer.explorer' />
-                        </Typography>
-                      </Breadcrumbs>
-                    </Grid>
-                  )}
                   <Grid item xs={12}>
                     <Grid
                       container

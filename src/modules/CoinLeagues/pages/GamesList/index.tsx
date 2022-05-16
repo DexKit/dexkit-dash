@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Badge from '@material-ui/core/Badge';
 import Hidden from '@material-ui/core/Hidden';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Link from '@material-ui/core/Link';
+
 import Typography from '@material-ui/core/Typography';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
@@ -22,12 +22,8 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
-import {
-  COINLEAGUENFT_ROUTE,
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {useHistory, useLocation} from 'react-router-dom';
+import {COINLEAGUENFT_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {Search} from '@material-ui/icons';
@@ -319,20 +315,6 @@ const GamesList = () => {
         <Grid item xs={12}>
           <TickerTapeTV />
         </Grid>
-
-        {!isMobile && (
-          <Grid item xs={12}>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                <IntlMessages id='app.coinLeagues.dashboard' />
-              </Link>
-              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                <IntlMessages id='app.coinLeagues.games' />
-              </Link>
-            </Breadcrumbs>
-          </Grid>
-        )}
-
         {/*<Hidden smUp={true}>
           <Grid item xs={12}>
             <Box display={'flex'} justifyContent={'center'}>

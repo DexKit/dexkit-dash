@@ -125,7 +125,7 @@ const WalletTabs: React.FC<Props> = (props) => {
               <IntlMessages id='app.dashboard.wallet' />
             </Typography>
           </Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={8}>
             <Grid item xs={12} md={12}>
               {error && !data ? (
                 <ErrorView message={error.message} />
@@ -138,9 +138,102 @@ const WalletTabs: React.FC<Props> = (props) => {
                 />
               )}
             </Grid>
+            <Grid item xs={12} sm={12}>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Grid container alignItems='center' justify='space-between'>
+                    <Grid item>
+                      <Typography variant='h6'>
+                        <IntlMessages id='app.dashboard.favorites' />
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        to='/favorite-coins'
+                        component={RouterLink}
+                        size='small'
+                        style={{
+                          textTransform: 'none',
+                        }}
+                        endIcon={<KeyboardArrowRightIcon />}>
+                        <IntlMessages id='app.dashboard.viewMore' />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  {favoritesWithMarket.data.length > 0 ? (
+                    <>
+                      {favoritesWithMarket.loading ? (
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        <Grid container spacing={2}>
+                          {favoritesWithMarket.data.map((favorite, index) => (
+                            <Grid item xs={12} key={index}>
+                              <FavoriteListItem
+                                coin={favorite.coin}
+                                amount={favorite.market?.current_price || 0}
+                                dayChange={
+                                  favorite.market
+                                    ?.price_change_percentage_24h || 0
+                                }
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Box p={4}>
+                        <Box
+                          display='flex'
+                          py={4}
+                          alignItems='center'
+                          alignContent='center'
+                          justifyContent='center'>
+                          <FavoritesEmptyImage />
+                        </Box>
+                        <Typography
+                          gutterBottom
+                          variant='body2'
+                          color='textSecondary'
+                          align='center'>
+                          <IntlMessages id='app.dashboard.youDontHaveFavoritesYet' />
+                          .
+                        </Typography>
+                        <Typography
+                          variant='body2'
+                          align='center'
+                          color='primary'>
+                          <Link
+                            to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+                            component={RouterLink}>
+                            <IntlMessages id='app.dashboard.goToExplorer' />
+                          </Link>
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={12}>
                   <Grid container spacing={4}>
                     <Grid item xs={isMobile ? 12 : undefined}>
                       <CustomTabs
@@ -184,106 +277,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                       <TabPanel value='trade-history'>
                         <TradeHistoryTab address={defaultAccount} />
                       </TabPanel>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <Grid
-                        container
-                        alignItems='center'
-                        justify='space-between'>
-                        <Grid item>
-                          <Typography variant='h6'>
-                            <IntlMessages id='app.dashboard.favorites' />
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Button
-                            to='/favorite-coins'
-                            component={RouterLink}
-                            size='small'
-                            style={{
-                              textTransform: 'none',
-                            }}
-                            endIcon={<KeyboardArrowRightIcon />}>
-                            <IntlMessages id='app.dashboard.viewMore' />
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      {favoritesWithMarket.data.length > 0 ? (
-                        <>
-                          {favoritesWithMarket.loading ? (
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                            </Grid>
-                          ) : (
-                            <Grid container spacing={2}>
-                              {favoritesWithMarket.data.map(
-                                (favorite, index) => (
-                                  <Grid item xs={12} key={index}>
-                                    <FavoriteListItem
-                                      coin={favorite.coin}
-                                      amount={
-                                        favorite.market?.current_price || 0
-                                      }
-                                      dayChange={
-                                        favorite.market
-                                          ?.price_change_percentage_24h || 0
-                                      }
-                                    />
-                                  </Grid>
-                                ),
-                              )}
-                            </Grid>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <Box p={4}>
-                            <Box
-                              display='flex'
-                              py={4}
-                              alignItems='center'
-                              alignContent='center'
-                              justifyContent='center'>
-                              <FavoritesEmptyImage />
-                            </Box>
-                            <Typography
-                              gutterBottom
-                              variant='body2'
-                              color='textSecondary'
-                              align='center'>
-                              <IntlMessages id='app.dashboard.youDontHaveFavoritesYet' />
-                              .
-                            </Typography>
-                            <Typography
-                              variant='body2'
-                              align='center'
-                              color='primary'>
-                              <Link
-                                to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
-                                component={RouterLink}>
-                                <IntlMessages id='app.dashboard.goToExplorer' />
-                              </Link>
-                            </Typography>
-                          </Box>
-                        </>
-                      )}
                     </Grid>
                   </Grid>
                 </Grid>
