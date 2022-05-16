@@ -23,7 +23,6 @@ import {Months} from 'modules/CoinLeagues/constants';
 import {ChainId} from 'types/blockchain';
 
 export function Competition() {
-  const isMobile = useMobile();
   const [month, setMonth] = useState(Months.May);
   const isNFT = false;
 

@@ -41,6 +41,27 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.21'
+          id='panelv0.0.6.21-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.21 - 16-05-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Improved layout</Typography>
+            <Typography className={classes.item}>
+              Added Coinleague back to main app
+            </Typography>
+            <Typography className={classes.item}>
+              Added NFT League Battle
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.20'
           id='panelv0.0.6.20-header'>
           <Typography className={classes.heading}>
@@ -110,7 +131,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.16'
@@ -135,7 +156,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.15'
