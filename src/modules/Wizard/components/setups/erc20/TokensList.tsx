@@ -82,6 +82,7 @@ export const TokensList = () => {
           direction='column'>
           <Grid item xs={12}>
             <Box
+              pb={2}
               display='flex'
               justifyContent='center'
               alignContent='center'

@@ -1,13 +1,4 @@
-import {
-  Box,
-  Grid,
-  Card,
-  Typography,
-  IconButton,
-  Tooltip,
-  Divider,
-  CardHeader,
-} from '@material-ui/core';
+import {Box, Grid, Typography, IconButton, Tooltip} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
 import React, {useCallback} from 'react';
 import {useHistory} from 'react-router';
@@ -75,67 +66,69 @@ export default () => {
         </Grid>
       </Box>
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={6}>
-          <Card>
-            <CardHeader
-              title={messages['app.wizard.myCollections']}
-              subheader={messages['app.wizard.createAndManageYourCollections']}
-              subheaderTypographyProps={{
-                variant: 'body2',
-                color: 'textSecondary',
-              }}
-              action={
-                <Tooltip
-                  title={
-                    isNotConnected ? (
-                      <IntlMessages id='app.wizard.notConnected' />
-                    ) : (
-                      ''
-                    )
-                  }>
-                  <IconButton
-                    disabled={isNotConnected}
-                    color='primary'
-                    onClick={handleCreateCollection}>
-                    <Add />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-            <Divider />
-            <CollectionsList />
-          </Card>
+        <Grid item xs={12} sm={12}>
+          <Box display={'flex'} justifyContent={'space-between'} p={2}>
+            <Box>
+              <Typography variant={'h6'}>
+                {' '}
+                {messages['app.wizard.myCollections']}{' '}
+              </Typography>
+              <Typography color={'textSecondary'} variant={'body2'}>
+                {' '}
+                {messages['app.wizard.createAndManageYourCollections']}{' '}
+              </Typography>
+            </Box>
+            <Box>
+              <Tooltip
+                title={
+                  isNotConnected ? (
+                    <IntlMessages id='app.wizard.notConnected' />
+                  ) : (
+                    ''
+                  )
+                }>
+                <IconButton
+                  disabled={isNotConnected}
+                  color='primary'
+                  onClick={handleCreateCollection}>
+                  <Add />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+          <CollectionsList />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Card>
-            <CardHeader
-              title={messages['app.wizard.myTokens']}
-              subheader={messages['app.wizard.createAndManageYourTokens']}
-              subheaderTypographyProps={{
-                variant: 'body2',
-                color: 'textSecondary',
-              }}
-              action={
-                <Tooltip
-                  title={
-                    isNotConnected ? (
-                      <IntlMessages id='app.wizard.notConnected' />
-                    ) : (
-                      ''
-                    )
-                  }>
-                  <IconButton
-                    disabled={isNotConnected}
-                    color='primary'
-                    onClick={handleCreateToken}>
-                    <Add />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-            <Divider />
-            <TokensList />
-          </Card>
+        <Grid item xs={12} sm={12}>
+          <Box display={'flex'} justifyContent={'space-between'} p={2}>
+            <Box>
+              <Typography variant={'h6'}>
+                {' '}
+                {messages['app.wizard.myTokens']}{' '}
+              </Typography>
+              <Typography color={'textSecondary'} variant={'body2'}>
+                {' '}
+                {messages['app.wizard.createAndManageYourTokens']}{' '}
+              </Typography>
+            </Box>
+            <Box>
+              <Tooltip
+                title={
+                  isNotConnected ? (
+                    <IntlMessages id='app.wizard.notConnected' />
+                  ) : (
+                    ''
+                  )
+                }>
+                <IconButton
+                  disabled={isNotConnected}
+                  color='primary'
+                  onClick={handleCreateToken}>
+                  <Add />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+          <TokensList />
         </Grid>
       </Grid>
     </Box>

@@ -1840,7 +1840,7 @@
   "app.kittygotchi.mintKittygotchi": "Mint Kittygotchi",
   "app.kittygotchi.mintingYourKittygotchi": "Minting your kittygotchi",
   "app.wizard.wizard": "Wizard",
-  "app.wizard.noCollectionsYet": "No Collections yet",
+  "app.wizard.noCollectionsYet": "No collections yet",
   "app.wizard.noTokensYet": "No tokens yet",
   "app.wizard.typeOfSmartContract": "What type of smart contract do you need?",
   "app.wizard.cancel": "Cancel",
