@@ -8,6 +8,7 @@ import Wizard from '../_wizard/reducers';
 import Swap from '../_swap/reducers';
 import Kittygotchi from '../_kittygotchi/reducers';
 import SettingsV2 from '../_settingsv2/reducers';
+import Transactions from '../_transactions/reducers';
 
 const reducers = {
   common: Common,
@@ -20,6 +21,7 @@ const reducers = {
   kittygotchi: Kittygotchi,
   ui: UI,
   swap: Swap,
+  transactions: Transactions,
 };
 
 export default reducers;

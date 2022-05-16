@@ -33,7 +33,7 @@ import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   usdAmount: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 600,
   },
   usdAmountSign: {
@@ -318,7 +318,7 @@ const TotalBalance = (props: Props) => {
         </Grid>
       </Backdrop>
       <Box>
-        <Grid container spacing={2} alignItems='center' justify='space-between'>
+        <Grid container spacing={4} alignItems='center' justify='space-between'>
           <Grid item xs={isMobile ? 12 : undefined} sm={4}>
             <Paper>
               <Box p={4}>
@@ -337,13 +337,18 @@ const TotalBalance = (props: Props) => {
                         )}
                       </Grid>
                       <Grid item>
-                        <Box display='flex' alignItems='center'>
-                          <Typography variant='body2'>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          justifyContent={'flex-start'}>
+                          <Typography variant='body2' color={'textSecondary'}>
                             <span>
                               {isBalanceVisible
                                 ? truncateIsAddress(defaultAccountLabel)
                                 : '******'}{' '}
                             </span>
+                          </Typography>
+                          <Box pl={2} pr={2}>
                             <CopyButton
                               size='small'
                               copyText={address || ''}
@@ -353,15 +358,14 @@ const TotalBalance = (props: Props) => {
                                 style={{fontSize: 16}}
                               />
                             </CopyButton>
-                            <IconButton
-                              onClick={handleShowAccounts}
-                              size='small'>
-                              <KeyboardArrowDownIcon />
-                            </IconButton>
-                          </Typography>
+                          </Box>
                         </Box>
 
-                        <Grid container spacing={2}>
+                        <Grid
+                          container
+                          spacing={2}
+                          alignContent={'center'}
+                          alignItems='center'>
                           <Grid item>
                             <Typography className={classes.usdAmount}>
                               {loadingUsd || loading ? (
@@ -385,29 +389,36 @@ const TotalBalance = (props: Props) => {
                                       ? theme.palette.success.main
                                       : theme.palette.error.main,
                                 }}
-                                variant={'h6'}>
+                                variant={'body2'}>
                                 {usdTotalPercentage.toFixed(2)}%
                               </Typography>
                             </Grid>
                           )}
+                          <Grid item>
+                            <IconButton
+                              onClick={handleToggleVisibility}
+                              size='small'>
+                              {isBalanceVisible ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </IconButton>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {isBalanceVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
+                    <IconButton onClick={handleShowAccounts} size={'medium'}>
+                      <ArrowBackIosIcon style={{transform: 'rotate(270deg'}} />
                     </IconButton>
                   </Grid>
                 </Grid>
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={isMobile ? 12 : undefined}>
+          <Grid item xs={isMobile ? 12 : undefined} sm={6}>
             <TradeToolsSection
               onSend={handleShowSender}
               onReceive={handleShowReceiver}

@@ -22,8 +22,12 @@ export const GameOrderBySelect = (props: Props) => {
   );
 
   return (
-    <FormControl fullWidth>
-      <Select onChange={handleChange} value={value}>
+    <FormControl variant='outlined' fullWidth>
+      <Select
+        variant='outlined'
+        fullWidth
+        onChange={handleChange}
+        value={value}>
         {GET_GAME_ORDER_OPTIONS().map((option, index) => (
           <MenuItem value={option.value} key={index}>
             <IntlMessages id={option.messageId} />

@@ -1,8 +1,7 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
 
-import {AppContext} from '@crema';
 import {useWeb3} from 'hooks/useWeb3';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 
@@ -14,10 +13,9 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import {useTheme} from '@material-ui/core';
+import {Paper, useTheme} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import AppContextPropsType from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectTokenV2 from './SelectTokenV2';
 import {ModalOrderData} from 'types/models/ModalOrderData';
@@ -48,6 +46,8 @@ import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 import {useHistory} from 'react-router-dom';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {FEATURE_TRADE_COINS_ZRX} from 'utils/features';
 
 interface Props {
   chainId: number | undefined;
@@ -82,11 +82,10 @@ const MarketForm: React.FC<Props> = (props) => {
     onChangeDisableReceiveCallback,
   } = props;
 
-  const {theme: creamaTheme} = useContext<AppContextPropsType>(AppContext);
   const theme = useTheme();
 
   const classes = useStyles();
-  const {messages} = useIntl();
+  const {messages, formatMessage} = useIntl();
 
   const network = useNetwork();
   const history = useHistory();
@@ -135,17 +134,23 @@ const MarketForm: React.FC<Props> = (props) => {
     if (disableSelect) {
       if (disableSelect === 'to') {
         setDisableSelect('from');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('from')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('from');
         }
       } else {
         setDisableSelect('to');
-        if(onChangeDisableReceiveCallback){
-          onChangeDisableReceiveCallback('to')
+        if (onChangeDisableReceiveCallback) {
+          onChangeDisableReceiveCallback('to');
         }
       }
     }
-  }, [tokenFrom, tokenTo, onChangeToken, onSwitchTokensCallback, onChangeDisableReceiveCallback]);
+  }, [
+    tokenFrom,
+    tokenTo,
+    onChangeToken,
+    onSwitchTokensCallback,
+    onChangeDisableReceiveCallback,
+  ]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
     tokenTo?.address || tokenTo?.symbol,
@@ -314,7 +319,7 @@ const MarketForm: React.FC<Props> = (props) => {
   let errorMessage = null;
   const notConnected = web3State !== Web3State.Done;
   const handleConnectWallet = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, []);
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
@@ -359,6 +364,11 @@ const MarketForm: React.FC<Props> = (props) => {
     errorMessage = `${messages['app.dashboard.switchTo']} ${FORMAT_NETWORK_NAME(
       networkName,
     )} ${messages['app.dashboard.networkInYourWallet']}`;
+  } else if (!FEATURE_TRADE_COINS_ZRX(chainId)) {
+    errorMessage = formatMessage({
+      id: 'common.networkNotSupported',
+      defaultMessage: 'Network not supported',
+    });
   }
   const {usdFormatter} = useUSDFormatter();
 
@@ -526,10 +536,7 @@ const MarketForm: React.FC<Props> = (props) => {
               {(priceQuoteTo || priceQuoteFrom) && (
                 <Grid item xs={12}>
                   <Box>
-                    <Accordion
-                      style={{
-                        backgroundColor: creamaTheme.palette.sidebar.bgColor,
-                      }}>
+                    <Accordion component={Paper} variant='outlined'>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls='panel1a-content'

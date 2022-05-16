@@ -9,6 +9,7 @@ import {
   makeStyles,
   ButtonBase,
   Paper,
+  Chip,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import {Link as RouterLink} from 'react-router-dom';
@@ -57,6 +58,10 @@ import {chainIdToSlug, slugToChainId} from 'utils/nft';
 import {ChainId} from 'types/blockchain';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
+import NFTLeagueGamesTable from 'modules/NFTLeague/components/NFTLeagueGamesTable';
+import SquidLeagueMyGamesTable from 'modules/SquidLeague/components/MyGamesTable';
+
+import {GameStatus as NFTLeagueGameStatus} from 'modules/NFTLeague/constants/enum';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -109,6 +114,10 @@ export const ProfilePage: React.FC = () => {
   const championsBalance = useChampionBalance({chainId, account: address});
 
   const {messages} = useIntl();
+
+  const [nftLeagueStatus, setNftLeagueStatus] = useState<
+    NFTLeagueGameStatus | undefined
+  >();
 
   const [selectedGame, setSelectedGame] = useState<CoinLeagueGames>(
     CoinLeagueGames.CoinLeague,
@@ -204,8 +213,8 @@ export const ProfilePage: React.FC = () => {
               <IconButton onClick={handleBack}>
                 <ArrowBackIcon />
               </IconButton>
-              <Typography variant='h6' style={{margin: 5}}>
-                <IntlMessages id='app.coinLeagues.profile' />
+              <Typography variant='h5'>
+                <IntlMessages id='sidebar.app.profile' />
               </Typography>
             </Box>
           </Grid>
@@ -423,8 +432,8 @@ export const ProfilePage: React.FC = () => {
               <MenuItem value={CoinLeagueGames.CoinLeagueNFT}>
                 Coin League NFT
               </MenuItem>
-              {/* <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
-              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>*/}
+              <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
+              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>
             </Select>
           </Grid>
           <Grid item xs={12}>
@@ -568,11 +577,121 @@ export const ProfilePage: React.FC = () => {
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <MyGamesTable
-              address={address}
-              isNFT={selectedGame === CoinLeagueGames.CoinLeagueNFT}
-            />
+            {selectedGame === CoinLeagueGames.NFTLeague && (
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Grid container justifyContent='center'>
+                    <Grid item>
+                      <Grid
+                        container
+                        spacing={2}
+                        justifyContent='center'
+                        alignItems='center'
+                        alignContent='center'>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              nftLeagueStatus === undefined
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.all' />}
+                            onClick={() => setNftLeagueStatus(undefined)}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              nftLeagueStatus === NFTLeagueGameStatus.Waiting
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.waiting' />}
+                            onClick={() =>
+                              setNftLeagueStatus(NFTLeagueGameStatus.Waiting)
+                            }
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              nftLeagueStatus === NFTLeagueGameStatus.Started
+                                ? 'primary'
+                                : 'default'
+                            }
+                            label={<IntlMessages id='nftLeague.inProgress' />}
+                            onClick={() =>
+                              setNftLeagueStatus(NFTLeagueGameStatus.Started)
+                            }
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              nftLeagueStatus === NFTLeagueGameStatus.Aborted
+                                ? 'primary'
+                                : 'default'
+                            }
+                            onClick={() =>
+                              setNftLeagueStatus(NFTLeagueGameStatus.Aborted)
+                            }
+                            label={<IntlMessages id='nftLeague.aborted' />}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            variant='outlined'
+                            color={
+                              nftLeagueStatus === NFTLeagueGameStatus.Ended
+                                ? 'primary'
+                                : 'default'
+                            }
+                            onClick={() =>
+                              setNftLeagueStatus(NFTLeagueGameStatus.Ended)
+                            }
+                            label={<IntlMessages id='nftLeague.ended' />}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <NFTLeagueGamesTable
+                    filters={{status: nftLeagueStatus, account: address}}
+                  />
+                </Grid>
+              </Grid>
+            )}
+            {(selectedGame === CoinLeagueGames.CoinLeague ||
+              selectedGame === CoinLeagueGames.CoinLeagueNFT) && (
+              <MyGamesTable
+                address={address}
+                isNFT={selectedGame === CoinLeagueGames.CoinLeagueNFT}
+              />
+            )}
           </Grid>
+          {selectedGame === CoinLeagueGames.SquidGame && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant='h5'>
+                  <IntlMessages id='app.coinLeague.gameHistory' />
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <SquidLeagueMyGamesTable account={address} />
+              </Grid>
+            </>
+          )}
         </Grid>
       </MainLayout>
     </>

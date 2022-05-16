@@ -44,6 +44,7 @@ import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade
 import {limitFormStyles as useStyles} from './index.styles';
 import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 import {useHistory} from 'react-router-dom';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 interface Props {
   chainId: number | undefined;
@@ -228,7 +229,7 @@ const LimitForm: React.FC<Props> = (props) => {
   let errorMessage: string | undefined;
 
   const handleConnectWallet = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, []);
 
   const connectButton = (

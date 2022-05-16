@@ -11,7 +11,6 @@ import {MetamaskSubprovider} from '@0x/subproviders';
 import {EIP712TypedData} from '@0x/types';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 
-import {NotificationType} from 'services/notification';
 import {Notification as CustomNotification} from 'types/models/Notification';
 import {ConfigFile, WhitelabelTypes} from 'types/myApps';
 import {onAddNotification} from 'redux/actions';
@@ -129,9 +128,7 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
                       title: 'Error',
                       body: 'Config error! Do you have KIT?',
                     };
-                    dispatch(
-                      onAddNotification([notification], NotificationType.ERROR),
-                    );
+                    dispatch(onAddNotification([notification]));
                   });
               });
           }

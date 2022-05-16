@@ -31,6 +31,7 @@ export enum NavStyle {
   H_DEFAULT = 'h-default',
   HOR_LIGHT_NAV = 'hor-light-nav',
   HOR_DARK_LAYOUT = 'hor-dark-layout',
+  EMPTY_LAYOUT = 'empty-layout'
 }
 
 export enum FooterType {
@@ -53,11 +54,11 @@ export enum RouteTransition {
 }
 
 export enum Fonts {
-  LIGHT = 'Noto Sans',
-  REGULAR = 'Noto Sans',
-  MEDIUM = 'Noto Sans',
-  BOLD = 'Noto Sans',
-  EXTRA_BOLD = 'Noto Sans',
+  LIGHT = 'Sora',
+  REGULAR = 'Sora',
+  MEDIUM = 'Sora',
+  BOLD = 'Sora',
+  EXTRA_BOLD = 'Sora',
 }
 
 export enum CoinIcons {
@@ -83,6 +84,8 @@ export enum EthereumNetwork {
   ethereum = 'ethereum',
   goerli = 'goerli',
   matic = 'matic',
+  avalanche = 'avalanche',
+  fantom = 'fantom'
 }
 
 export enum MainnetNetwork {

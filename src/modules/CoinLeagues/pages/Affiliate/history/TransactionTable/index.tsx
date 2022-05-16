@@ -82,11 +82,11 @@ const TransactionTable: React.FC<Props> = ({
         </Table>
         {isLoading && <Loader />}
       </Box>
-      <Box display={'flex'} justifyContent={'center'}>
+      <Box display='flex' justifyContent='center'>
         {(!data || (data && data.length === 0)) && (
           <Empty
             title={'No affiliates entries'}
-            message={'Start create games or share link for users to join'}
+            message={'Share the link for users to join'}
           />
         )}
       </Box>

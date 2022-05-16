@@ -2,12 +2,8 @@ import React, {useCallback} from 'react';
 import ReceiverForm from './ReceiverForm';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
-  Box,
-  Typography,
   makeStyles,
-  IconButton,
   useTheme,
   useMediaQuery,
   Chip,
@@ -16,8 +12,8 @@ import {ImportWhiteIcon} from 'shared/components/Icons';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 
-import CloseIcon from '@material-ui/icons/Close';
-import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -34,6 +30,8 @@ interface Props {
 const Receiver: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {open, onClose} = props;
+
+  const {formatMessage} = useIntl();
 
   const handleClose = useCallback(
     (e) => {
@@ -56,35 +54,12 @@ const Receiver: React.FC<Props> = (props) => {
       open={open}
       onClose={onClose}
       fullScreen={isMobile}>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <ImportWhiteIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Receive' />
-            </Typography>
-          </Box>
-          <Box alignContent='center' alignItems='center' display='flex'>
-            <Box
-              alignContent='center'
-              alignItems='center'
-              display='flex'
-              mr={2}>
-              <Chip size='small' label={chainName} />
-            </Box>
-            <IconButton size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        icon={<ImportWhiteIcon className={classes.icon} />}
+        title={formatMessage({id: 'common.receive', defaultMessage: 'Receive'})}
+        chip={<Chip size='small' label={chainName} />}
+        onClose={handleClose}
+      />
       <DialogContent dividers>
         <ReceiverForm />
       </DialogContent>

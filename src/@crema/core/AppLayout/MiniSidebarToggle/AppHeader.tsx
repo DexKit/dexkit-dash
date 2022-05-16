@@ -1,21 +1,21 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useState, useCallback, useEffect, useContext} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
-import { setWeb3State, toggleNavCollapsed } from '../../../../redux/actions';
-import { useDispatch } from 'react-redux';
+import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
-import { useCustomNetworkList } from 'hooks/network';
+import {useCustomNetworkList} from 'hooks/network';
 
 import WalletInfo from 'shared/components/WalletInfo';
 
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 
 import clsx from 'clsx';
 
@@ -26,36 +26,42 @@ import {
   useMediaQuery,
   Container,
   ButtonBase,
+  Badge,
+  Paper,
   IconButton,
 } from '@material-ui/core';
-import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { ReactComponent as DexkitLogoImage } from 'assets/images/dexkit-logo.svg';
-import { ReactComponent as DexkitLogoIconImage } from 'assets/images/dexkit-logo-icon.svg';
+import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
+import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
 
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
-import { switchChain } from 'utils/wallet';
-import { GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider } from 'services/magic';
-import { Web3State } from 'types/blockchain';
-import { useMagicProvider } from 'hooks/provider/useMagicProvider';
+import {switchChain} from 'utils/wallet';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+import {Web3State} from 'types/blockchain';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
-import { useProfileKittygotchi } from '../../../../modules/Profile/hooks/index';
+import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
-import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
-import { useKittygotchiV2, useKittygotchiList } from 'modules/Kittygotchi/hooks';
-import { useChainInfo } from 'hooks/useChainInfo';
-interface AppHeaderProps { }
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
+import {useChainInfo} from 'hooks/useChainInfo';
+import {AppState} from 'redux/store';
+import AppContext from '@crema/utility/AppContext';
+import AppContextPropsType from 'types/AppContextPropsType';
+interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const { chainId, getProvider, account } = useWeb3();
-  const { onSwitchMagicNetwork } = useMagicProvider();
+  const {chainId, getProvider, account} = useWeb3();
+  const {onSwitchMagicNetwork} = useMagicProvider();
 
-  const classes = useStyles();
+  const {themeMode} = useContext<AppContextPropsType>(AppContext);
+
+  const classes = useStyles({themeMode});
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -73,10 +79,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{vertical: 'top', horizontal: 'right'}}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{vertical: 'top', horizontal: 'right'}}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}>
       <MenuItem className={classes.menuItemRoot}>
@@ -111,18 +117,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   // };
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
-  const { networks } = useCustomNetworkList();
+  const {networks} = useCustomNetworkList();
 
   const handleCloseSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(false);
   }, []);
 
   const handleSelectChain = useCallback(
-    async (chainId: number) => {
+    async (_chainId: number) => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(_chainId);
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
@@ -130,7 +136,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         const provider = getProvider();
 
         try {
-          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+          const customIndex = networks.findIndex((n) => n.chainId === _chainId);
 
           if (customIndex > -1) {
             const params: {
@@ -175,13 +181,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               params: [params],
             });
           } else {
-            await switchChain(provider, chainId);
+            await switchChain(provider, _chainId);
           }
 
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         }
       }
@@ -236,7 +242,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     /* eslint-disable */
   }, [chainId, account]);
 
-  const { chainName } = useChainInfo();
+  const {chainName} = useChainInfo();
+
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
 
   return (
     <>
@@ -254,23 +264,25 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           style={
             !isMobile
               ? {
-                paddingLeft: theme.spacing(8),
-                paddingRight: theme.spacing(8),
-              }
+                  paddingLeft: theme.spacing(8),
+                  paddingRight: theme.spacing(8),
+                }
               : {
-                paddingLeft: theme.spacing(2),
-                paddingRight: theme.spacing(2),
-              }
+                  paddingLeft: theme.spacing(2),
+                  paddingRight: theme.spacing(2),
+                }
           }>
           {isMobile ? (
-            <Box>
+            <Box px={2}>
               <Grid
                 container
                 justify='space-between'
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  {isMobile ? <DexkitLogoIconImage /> : <DexkitLogoImage />}
+                  <Box pl={4} pt={3}>
+                    <DexkitLogoIconImage className={classes.dexkitIcon} />
+                  </Box>
                 </Grid>
                 <Grid item>
                   <Grid
@@ -278,58 +290,36 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {isMetamask() || isMagicProvider() ? (
-                      <Grid item>
-                        {chainId !== undefined ? (
-                          <Grid item>
-                            <ButtonBase
-                              onClick={handleOpenSwitchNetwork}
-                              className={classes.switchNetworkButton}>
-                              <Box className={classes.badgeRoot}>
-                                {chainName}
-                                <IconButton size='small'>
-                                  <ExpandMoreIcon />
-                                </IconButton>
-                              </Box>
-                            </ButtonBase>
-                          </Grid>
-                        ) : null}
-                      </Grid>
-                    ) : (
-                      chainId && (
-                        <Grid item>
-                          <Box
-                            className={classes.badgeRoot}
-                            display={'flex'}
-                            alignItems={'center'}>
-                            {chainName}
-                          </Box>
-                        </Grid>
-                      )
-                    )}
-                    <Grid item>
-                      <Notifications />
-                    </Grid>
                     <Grid item>
                       <ButtonBase
                         className={classes.avatarButton}
                         to='/profile'
                         component={RouterLink}>
                         <Avatar
-                          className={classes.avatar}
+                          classes={{fallback: classes.fallback}}
                           src={
                             account && chainId
                               ? kittygotchiProfile.getDefault(account, chainId)
-                                ?.image
+                                  ?.image
                               : undefined
                           }
                         />
                       </ButtonBase>
                     </Grid>
                     <Grid item>
-                      <AppBarButton onClick={handleMobileMenuToggle}>
-                        <MenuIcon />
-                      </AppBarButton>
+                      <IconButton onClick={handleMobileMenuToggle}>
+                        <Badge
+                          variant='dot'
+                          color='primary'
+                          badgeContent={
+                            notifications.filter(
+                              (notification) =>
+                                notification?.check === undefined,
+                            ).length
+                          }>
+                          <MenuIcon />
+                        </Badge>
+                      </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -343,7 +333,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               spacing={2}>
               <Grid item>
                 <Box mr={4}>
-                  <DexkitLogoImage />
+                  <DexkitLogoImage className={classes.dexkitIcon} />
                 </Box>
               </Grid>
               <Grid item xs>
@@ -365,7 +355,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   alignItems='center'
                   alignContent='center'>
                   {chainId !== undefined &&
-                    (isMetamask() || isMagicProvider()) ? (
+                  (isMetamask() || isMagicProvider()) ? (
                     <Grid item>
                       <ButtonBase
                         onClick={handleOpenSwitchNetwork}
@@ -393,7 +383,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
-                      <WalletInfo />
+                      <Paper>
+                        <WalletInfo />
+                      </Paper>
                     </Grid>
                   ) : null}
                   <Grid item>
@@ -405,11 +397,12 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       to='/profile'
                       component={RouterLink}>
                       <Avatar
+                        classes={{fallback: classes.fallback}}
                         className={classes.avatar}
                         src={
                           account && chainId
                             ? kittygotchiProfile.getDefault(account, chainId)
-                              ?.image
+                                ?.image
                             : undefined
                         }
                       />

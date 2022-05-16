@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Badge from '@material-ui/core/Badge';
 import Hidden from '@material-ui/core/Hidden';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Link from '@material-ui/core/Link';
+
 import Typography from '@material-ui/core/Typography';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
@@ -18,32 +18,23 @@ import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
-import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
-import {makeStyles} from '@material-ui/core/styles';
 
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
-import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
-import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
-import {
-  COINLEAGUENFT_ROUTE,
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {useHistory, useLocation} from 'react-router-dom';
+import {COINLEAGUENFT_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-//import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import useDiscord from 'hooks/useDiscord';
+
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGame from 'modules/CoinLeagues/components/CardGame';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
@@ -61,24 +52,17 @@ import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
 import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
+import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
+import {IconButton, makeStyles, TextField} from '@material-ui/core';
+import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
 import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    padding: theme.spacing(2),
-    backgroundColor: '#1F1D2B',
-  },
-  chip: {
-    color: '#fff',
-    background: '#1F1D2B',
-    border: '2px solid #2e3243',
-  },
-  createGame: {
-    padding: theme.spacing(3),
-  },
-  tabs: {
-    maxWidth: '450px',
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
 }));
 
@@ -88,7 +72,6 @@ enum Tabs {
 }
 
 const GamesList = () => {
-  const classes = useStyles();
   const history = useHistory();
   const {messages} = useIntl();
   const {pathname} = useLocation();
@@ -97,7 +80,7 @@ const GamesList = () => {
   const defaultAccount = useDefaultAccount();
   const isMobile = useMobile();
 
-  useDiscord();
+  const classes = useStyles();
 
   const isNFTGame = useMemo(() => {
     if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
@@ -276,8 +259,51 @@ const GamesList = () => {
     filterToggler.set(true);
   }, [filterToggler]);
 
+  const handleShowCreateGameModal = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const shareDialogToggler = useToggler();
+
+  const [shareSelectedId, setShareSelectedId] = useState<string>();
+
+  const handleShareGame = useCallback(
+    (id) => {
+      setShareSelectedId(id);
+      shareDialogToggler.set(true);
+    },
+    [shareDialogToggler],
+  );
+
+  const handleCloseShareDialog = useCallback(() => {
+    setShareSelectedId(undefined);
+    shareDialogToggler.set(false);
+  }, [shareDialogToggler]);
+
+  const handleBack = useCallback(
+    (ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(listGamesRoute);
+      }
+      //history.push(listGamesRoute)
+    },
+    [listGamesRoute, history],
+  );
+
   return (
     <>
+      <CoinLeagueShareDialog
+        dialogProps={{
+          open: shareDialogToggler.show,
+          onClose: handleCloseShareDialog,
+          fullWidth: true,
+          maxWidth: 'sm',
+          fullScreen: isMobile,
+        }}
+        id={shareSelectedId}
+      />
       <GameFilterDrawer
         show={filterToggler.show}
         onClose={filterToggler.toggle}
@@ -289,84 +315,91 @@ const GamesList = () => {
         <Grid item xs={12}>
           <TickerTapeTV />
         </Grid>
-
-        {!isMobile && (
-          <Grid item xs={12}>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                <IntlMessages id='app.coinLeagues.dashboard' />
-              </Link>
-              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                <IntlMessages id='app.coinLeagues.games' />
-              </Link>
-            </Breadcrumbs>
-          </Grid>
-        )}
-
-        <Hidden smUp={true}>
+        {/*<Hidden smUp={true}>
           <Grid item xs={12}>
             <Box display={'flex'} justifyContent={'center'}>
-              {/*<img
+              <img
               src={CoinsLeagueBanner}
               style={{borderRadius: '12px'}}
               alt={'banner'}
-        />*/}
+        />
               <AAdsCoinleagueBanner type={2} />
             </Box>
+        </Grid>
+        </Hidden>*/}
+        <Grid item xs={12}>
+          <Grid
+            container
+            alignItems='center'
+            alignContent='center'
+            spacing={4}
+            justifyContent='space-between'>
+            <Grid item>
+              <Box display={'flex'} alignItems={'center'}>
+                <IconButton onClick={handleBack}>
+                  <ArrowBackIcon />
+                </IconButton>
+                <Box pr={2} pl={2}>
+                  <Typography variant='h5'>
+                    {!isNFTGame && 'Coin League'} {isNFTGame && 'NFT Room'}
+                  </Typography>
+                </Box>
+
+                <ChainSelect />
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+                <Box pr={2}>
+                  <SwapButton />
+                </Box>
+                <Box pr={2}>
+                  <ShareButton shareText={`Coin league Games`} />
+                </Box>
+                <Box pr={2}>
+                  <BuyCryptoButton
+                    btnMsg={`Buy ${coinSymbol}`}
+                    defaultCurrency={coinSymbol}
+                  />
+                </Box>
+                <Box pr={2}>
+                  <MaticBridgeButton />
+                </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Hidden>
-        <Grid item xs={12} xl={6} sm={6}>
-          <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5'>
-              Coin League {isNFTGame && '- NFT Room'}
-            </Typography>
-            <Box p={2}>
-              <ChainSelect />
-            </Box>
-          </Box>
         </Grid>
-        <Grid item xs={12} sm={6} xl={6}>
-          <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-            <Box pr={2}>
-              <SwapButton />
-            </Box>
-            <Box pr={2}>
-              <ShareButton shareText={`Coin league Games`} />
-            </Box>
-            <Box pr={2}>
-              <BuyCryptoButton
-                btnMsg={`Buy ${coinSymbol}`}
-                defaultCurrency={coinSymbol}
-              />
-            </Box>
-            <Box pr={2}>
-              <MaticBridgeButton />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          {account ? (
-            <ActiveChainBalance />
-          ) : (
-            <Button
-              variant={'contained'}
-              onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-              <IntlMessages id='common.connectWallet' />:{' '}
-            </Button>
-          )}
-        </Grid>
-        <Hidden xsDown={true}>
-          <Grid item xs={12} sm={8}>
-            {/*<img
-              src={CoinsLeagueBanner}
-              style={{borderRadius: '12px'}}
-              alt={'Coinleague Banner'}
-          />*/}
-          <Box display={'flex'} justifyContent={'center'}>
-            <AAdsCoinleagueBanner />
-            </Box>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justifyContent='space-between'
+            spacing={4}
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              {account ? (
+                <ActiveChainBalance />
+              ) : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
+                  <IntlMessages id='common.connectWallet' />:
+                </Button>
+              )}
+            </Grid>
+            <Hidden xsDown={true}>
+              <Grid item xs={8}>
+                {/* <img
+                  src={CoinsLeagueBanner}
+                  style={{borderRadius: '12px'}}
+                  alt={'Coinleague Banner'}
+              />*/}
+                <AAdsCoinleagueBanner />
+              </Grid>
+            </Hidden>
           </Grid>
-        </Hidden>
+        </Grid>
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>
@@ -389,13 +422,17 @@ const GamesList = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.slice(0, 6).map((g, id) => (
               <Grid item xs={12} sm={4} md={4} lg={3} xl={2} key={id}>
-                <SmallCardGame game={g} key={id} onClick={onClickEnterGame} />
+                <SmallCardGame
+                  game={g}
+                  onClick={onClickEnterGame}
+                  onShare={handleShareGame}
+                />
               </Grid>
             ))}
             {isLoadingStarted &&
-              [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={2} xl={2} key={i}>
-                  <SmallCardGameSkeleton />
+              new Array(4).fill(null).map((v, i) => (
+                <Grid item xs={12} sm={3} key={i}>
+                  <SmallCardGame loading />
                 </Grid>
               ))}
             {!isLoadingStarted && !gamesInProgress?.length && (
@@ -414,11 +451,10 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container alignItems={'center'} spacing={2}>
+          <Grid container alignItems='center' spacing={4}>
             <Grid item xs={12} sm={6}>
               <CustomTabs
                 value={value}
-                className={classes.tabs}
                 onChange={handleChange}
                 variant='standard'
                 TabIndicatorProps={{
@@ -431,15 +467,18 @@ const GamesList = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <ContainedInput
+              <TextField
                 value={search}
                 onChange={handleSearch}
                 placeholder='Search'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <Search />
-                  </InputAdornment>
-                }
+                variant='outlined'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
               />
             </Grid>
@@ -447,13 +486,15 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button
-            className={classes.createGame}
-            fullWidth
-            variant={'contained'}
-            onClick={() => setOpen(true)}>
-            {'CREATE GAME'}
-          </Button>
+          <CreateGameButton
+            onClick={handleShowCreateGameModal}
+            subtitle={
+              <IntlMessages
+                id='coinLeague.coinLeague'
+                defaultMessage='Coin League'
+              />
+            }
+          />
         </Grid>
 
         <Grid item xs={12}>
@@ -462,7 +503,7 @@ const GamesList = () => {
             alignContent='center'
             alignItems='center'
             justifyContent='space-between'
-            spacing={2}>
+            spacing={4}>
             <Grid item>
               {value === Tabs.Games ? (
                 <Typography variant='h6'>
@@ -484,7 +525,7 @@ const GamesList = () => {
                 </Typography>
               )}
             </Grid>*/}
-            <Grid item>
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
                   <Chip
@@ -498,6 +539,7 @@ const GamesList = () => {
                     }
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -506,6 +548,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -514,6 +557,7 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleBitBoy}
                     color={filtersState.isBitboy ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -522,22 +566,18 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleJackpot}
                     color={filtersState.isJackpot ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              {/* <GameOrderByDropdown
-                onSelectGameOrder={(value) => setOrderByGame(value)}
-              /> */}
-
+            <Grid item xs={isMobile ? 12 : undefined}>
               <Grid
                 alignItems='center'
                 alignContent='center'
-                justifyContent='center'
                 container
                 spacing={2}>
-                <Grid item>
+                <Grid item xs={isMobile}>
                   <GameOrderBySelect
                     value={filtersState.orderByGame}
                     onChange={handleChangeOrderBy}
@@ -549,7 +589,7 @@ const GamesList = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -562,14 +602,19 @@ const GamesList = () => {
           <Grid item xs={12}>
             <Grid container spacing={4}>
               {gamesToJoin?.map((g, id) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                  <CardGame game={g} id={g.id} onClick={onClickEnterGame} />
+                <Grid item xs={12} sm={4} key={id}>
+                  <CardGame
+                    game={g}
+                    id={g.id}
+                    onClick={onClickEnterGame}
+                    onShare={handleShareGame}
+                  />
                 </Grid>
               ))}
               {isLoadingCreated &&
-                [1, 2, 3].map((v, i) => (
-                  <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                    <CardGameSkeleton />
+                new Array(3).fill(null).map((v, i) => (
+                  <Grid item xs={12} sm={4} key={i}>
+                    <CardGame loading />
                   </Grid>
                 ))}
               {!isLoadingCreated && !gamesToJoin?.length && (

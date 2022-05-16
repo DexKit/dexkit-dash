@@ -22,51 +22,49 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { useTheme } from '@material-ui/core';
+import {useTheme} from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
-import { EthereumNetwork, EXCHANGE, ThemeMode } from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, ThemeMode} from 'shared/constants/AppEnums';
 
-import { useTokenInfo } from 'hooks/useTokenInfo';
-import { AppContext } from '@crema';
-import { Skeleton } from '@material-ui/lab';
+import {useTokenInfo} from 'hooks/useTokenInfo';
+import {AppContext} from '@crema';
+import {Skeleton} from '@material-ui/lab';
 
 import AppContextPropsType from 'types/AppContextPropsType';
 
 import CoinTools from 'shared/components/CoinTools';
-import { useAllBalance } from 'hooks/balance/useAllBalance';
-import { Analytics } from '../components/analytics';
-import { useTokenMarket } from 'hooks/protocolExplorer/useTokenMarket';
-import { ReactComponent as GraphicsIcon } from '../../../assets/images/icons/stats-chart.svg';
-import { ReactComponent as ArrowDownIcon } from '../../../assets/images/icons/arrow-down.svg';
-import { Pairs } from '../components/pairs';
+import {useAllBalance} from 'hooks/balance/useAllBalance';
+import {Analytics} from '../components/analytics';
+import {useTokenMarket} from 'hooks/protocolExplorer/useTokenMarket';
+import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
+import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
+import {Pairs} from '../components/pairs';
 
-import { useStyles } from './index.style';
-import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import {useStyles} from './index.style';
+import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 import TokenCard from 'shared/components/TokenCard';
 import TokenLogo from 'shared/components/TokenLogo';
-import { useFavoritesWithMarket } from 'hooks/useFavoritesWithMarket';
-import { useDispatch } from 'react-redux';
-import { toggleFavoriteCoin } from 'redux/_ui/actions';
-import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
-import { Token } from 'types/app';
-import { useTokenLists } from 'hooks/useTokenLists';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
+import {useDispatch} from 'react-redux';
+import {toggleFavoriteCoin} from 'redux/_ui/actions';
+import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
+import {Token} from 'types/app';
+import {useTokenLists} from 'hooks/useTokenLists';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
-import { watchAsset } from 'utils/wallet';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {watchAsset} from 'utils/wallet';
+import {useWeb3} from 'hooks/useWeb3';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
 import SelectTokenBalanceDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
-import { useMobile } from 'hooks/useMobile';
+import {useMobile} from 'hooks/useMobile';
 
 type Params = {
   address: string;
@@ -76,9 +74,9 @@ type TokenProps = RouteComponentProps<Params> & PropsWithChildren<Params>;
 
 const Explorer: React.FC<TokenProps> = (props) => {
   const {
-    match: { params },
+    match: {params},
   } = props;
-  const { getProvider } = useWeb3();
+  const {getProvider} = useWeb3();
   const dispatch = useDispatch();
   const isMobile = useMobile();
 
@@ -91,16 +89,16 @@ const Explorer: React.FC<TokenProps> = (props) => {
     data: favoritesWithMarket,
   } = useFavoritesWithMarket();
 
-  const { address } = params;
+  const {address} = params;
   const history = useHistory();
   const searchParams = new URLSearchParams(history.location.search);
   const account = useDefaultAccount();
   const balances = useAllBalance(account);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
-    EthereumNetwork.ethereum,
+      EthereumNetwork.ethereum,
   );
-  const { tokenInfo, loading: loadingToken } = useTokenInfo(address);
+  const {tokenInfo, loading: loadingToken} = useTokenInfo(address);
   const {
     loading: loadingTokenMarket,
     loadingPrice,
@@ -112,36 +110,35 @@ const Explorer: React.FC<TokenProps> = (props) => {
   useEffect(() => {
     if (searchNetwork !== networkName) {
       setNetworkName(
-        (searchNetwork as EthereumNetwork) ??
-        EthereumNetwork.ethereum,
+        (searchNetwork as EthereumNetwork) ?? EthereumNetwork.ethereum,
       );
     }
   }, [searchNetwork, networkName]);
 
-
-  const { data } = useCoingeckoTokenInfo(address, networkName);
+  const {data} = useCoingeckoTokenInfo(address, networkName);
 
   const onMakeFavorite = () => {
     if (tokenInfo && data) {
-      dispatch(toggleFavoriteCoin({ ...tokenInfo, ...data }));
+      dispatch(toggleFavoriteCoin({...tokenInfo, ...data}));
     }
   };
 
-  const { theme: cremaTheme } = useContext<AppContextPropsType>(AppContext);
+  const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
   const isDark = cremaTheme.palette.type === ThemeMode.DARK;
 
   const Chart = (
     <Paper className={classes.paperChart}>
       {loadingToken || !tokenInfo ? (
-        <Grid item xs={12} md={12} style={{ height: 450 }}>
+        <Grid item xs={12} md={12} style={{height: 450}}>
           <Skeleton variant='rect' height={450} />
         </Grid>
       ) : (
         tokenInfo && (
-          <Grid item xs={12} md={12} style={{ height: 450 }}>
+          <Grid item xs={12} md={12} style={{height: 450}}>
             <BitqueryTVChartContainer
-              symbol={`${networkName}:${tokenInfo.symbol.toUpperCase()}:${tokenInfo.address
-                }`}
+              symbol={`${networkName}:${tokenInfo.symbol.toUpperCase()}:${
+                tokenInfo.address
+              }`}
               darkMode={isDark}
             />
           </Grid>
@@ -152,7 +149,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const [showSelectTokens, setShowSelectTokens] = useState(false);
 
-  const { binanceTokens, ethTokens, maticTokens } = useTokenLists();
+  const {binanceTokens, ethTokens, maticTokens} = useTokenLists();
 
   const handleToggleSelectToken = useCallback(() => {
     setShowSelectTokens((value) => !value);
@@ -169,23 +166,34 @@ const Explorer: React.FC<TokenProps> = (props) => {
     }
   }, [getProvider, tokenInfo]);
 
-  const handleSelectToken = useCallback((token: Token) => {
-    setShowSelectTokens(false);
+  const handleSelectToken = useCallback(
+    (token: Token) => {
+      setShowSelectTokens(false);
 
-    let isEthereum = token.symbol.toUpperCase() === 'ETH' && token.networkName === EthereumNetwork.ethereum;
-    let isPolygon = token.symbol.toUpperCase() === 'MATIC' && token.networkName === EthereumNetwork.matic;
-    let isBsc = token.symbol.toUpperCase() === 'BNB' && token.networkName === EthereumNetwork.bsc;
+      let isEthereum =
+        token.symbol.toUpperCase() === 'ETH' &&
+        token.networkName === EthereumNetwork.ethereum;
+      let isPolygon =
+        token.symbol.toUpperCase() === 'MATIC' &&
+        token.networkName === EthereumNetwork.matic;
+      let isBsc =
+        token.symbol.toUpperCase() === 'BNB' &&
+        token.networkName === EthereumNetwork.bsc;
 
-    if (isEthereum) {
-      history.push(`/explorer/eth?network=${token?.networkName}`);
-    } else if (isPolygon) {
-      history.push(`/explorer/matic?network=${token?.networkName}`);
-    } else if (isBsc) {
-      history.push(`/explorer/bnb?network=${token?.networkName}`);
-    } else {
-      history.push(`/explorer/${token.address}?network=${token?.networkName}`);
-    }
-  }, [history]);
+      if (isEthereum) {
+        history.push(`/explorer/eth?network=${token?.networkName}`);
+      } else if (isPolygon) {
+        history.push(`/explorer/matic?network=${token?.networkName}`);
+      } else if (isBsc) {
+        history.push(`/explorer/bnb?network=${token?.networkName}`);
+      } else {
+        history.push(
+          `/explorer/${token.address}?network=${token?.networkName}`,
+        );
+      }
+    },
+    [history],
+  );
 
   const handleEthereum = useCallback(() => {
     history.push(
@@ -204,7 +212,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
   }, [history, data]);
 
   const handleGoBack = useCallback(() => {
-    history.push('/wallet');
+    history.goBack();
   }, [history]);
 
   return (
@@ -226,16 +234,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
             <Grid container justify='space-between' alignItems='center'>
               <Grid item>
                 <Grid container spacing={2}>
-                  {!isMobile && <Grid item xs={12}>
-                    <Breadcrumbs aria-label='breadcrumb'>
-                      <Link color='inherit' component={RouterLink} to='/wallet'>
-                        <IntlMessages id='app.protocolExplorer.wallet' />
-                      </Link>
-                      <Typography variant='body2' color='inherit'>
-                        <IntlMessages id='app.protocolExplorer.explorer' />
-                      </Typography>
-                    </Breadcrumbs>
-                  </Grid>}
                   <Grid item xs={12}>
                     <Grid
                       container
@@ -367,7 +365,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 <Grid item xs={12}>
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography variant='body1' style={{ fontWeight: 600 }}>
+                      <Typography variant='body1' style={{fontWeight: 600}}>
                         <IntlMessages id='app.protocolExplorer.favorites' />
                       </Typography>
                     </AccordionSummary>

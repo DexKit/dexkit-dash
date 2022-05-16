@@ -1,6 +1,6 @@
 {
   "name": "dexkit-dash",
-  "version": "0.0.6.20",
+  "version": "0.0.6.19.19",
   "private": true,
   "jest": {
     "testEnvironment": "node"
@@ -76,6 +76,7 @@
     "formik": "^2.1.4",
     "graphql": "^15.3.0",
     "history": "4.7.2",
+    "humanize-duration": "^3.27.1",
     "immutable": "3.8.1",
     "install": "^0.13.0",
     "intl-messageformat": "^9.4.4",
@@ -202,6 +203,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.+(ts|tsx)\"",
+    "extract": "formatjs extract",
     "precommit": "lint-staged",
     "lang-diff": "ts-node src/scripts/local-files-diff.ts",
     "apollo:get-schema": "npx apollo service:download --endpoint=https://graphql.bitquery.io graphql-schema.json",
@@ -226,6 +228,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.1",
+    "@formatjs/cli": "^4.8.2",
     "@testing-library/dom": "^7.29.4",
     "@types/bip32": "^2.0.0",
     "@types/bip39": "^3.0.0",

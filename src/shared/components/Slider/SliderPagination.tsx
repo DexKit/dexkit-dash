@@ -1,4 +1,5 @@
 import {Box, makeStyles} from '@material-ui/core';
+import {useMobile} from 'hooks/useMobile';
 import React from 'react';
 import SliderPaginationDot from './SliderPaginationDot';
 
@@ -25,8 +26,13 @@ export const SliderPagination = (props: SliderPaginationProps) => {
   const {dots, index, onSelectIndex} = props;
 
   const classes = useStyles();
+
+  const isMobile = useMobile();
+
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      justifyContent={isMobile ? 'center' : undefined}>
       {new Array(dots).fill(null).map((item, itemIndex) => (
         <div
           onClick={() => {

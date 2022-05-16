@@ -53,8 +53,7 @@ import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
-    border: ' 1px solid #525C75',
-    backgroundColor: '#2E3243',
+    backgroundColor: theme.palette.background.default,
     width: theme.spacing(28),
     height: theme.spacing(28),
     [theme.breakpoints.up('sm')]: {

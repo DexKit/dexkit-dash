@@ -27,7 +27,7 @@ const SidebarColorPicker: React.FC<SidebarColorPickerProps> = (props) => {
     cpColor: {
       width: 30,
       height: 16,
-      backgroundColor: theme.palette.sidebar.bgColor,
+      backgroundColor: theme.palette.background.paper,
       border: `solid 1px ${grey[100]}`,
       marginRight: 10,
       [theme.breakpoints.up('xl')]: {
@@ -56,7 +56,6 @@ const SidebarColorPicker: React.FC<SidebarColorPickerProps> = (props) => {
           <SketchPicker
             color={sidebarColor}
             onChangeComplete={(color) => {
-              theme.palette.sidebar.bgColor = color.hex;
               updateTheme!(theme);
               updateSidebarColor!(color.hex);
             }}

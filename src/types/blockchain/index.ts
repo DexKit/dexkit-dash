@@ -1,5 +1,5 @@
-import {GetAllMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { GetAllMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 export type MyBalances = GetAllMyBalance_ethereum_address_balances & {
   network: EthereumNetwork;
@@ -19,6 +19,8 @@ export enum ChainId {
   Binance = 56,
   BinanceTest = 97,
   Matic = 137,
+  Avalanche = 43114,
+  Fantom = 250,
   Mumbai = 80001,
 }
 
@@ -30,6 +32,7 @@ export enum Web3State {
   Connecting = 'Connecting',
   Locked = 'Locked',
 }
+
 /**
  * To distinguish between BTC, DOGE and ETH like networks: Matic, BSC, Avalanche
  */

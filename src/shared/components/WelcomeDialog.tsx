@@ -2,26 +2,34 @@ import React, {useCallback, useState} from 'react';
 
 import {
   Box,
-  Grid,
-  Button,
   Dialog,
   DialogProps,
   CircularProgress,
+  DialogTitle,
+  IconButton,
 } from '@material-ui/core';
-
+import CloseIcon from '@material-ui/icons/Close';
 import Slider from './Slider';
-import {makeStyles} from '@material-ui/styles';
-import {useMobile} from 'hooks/useMobile';
+import {makeStyles} from '@material-ui/core';
 
 import {useHistory} from 'react-router';
+import {useMobile} from 'hooks/useMobile';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   slide: {
     width: '100%',
     height: 'auto',
   },
   dialogPaper: {
     overflow: 'inherit',
+    borderRadius: theme.shape.borderRadius,
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
   },
 }));
 
@@ -66,11 +74,27 @@ const LazyImage = (props: LazyImageProps) => {
   );
 };
 
-const DESCRIPTIONS = [
-  'Welcome to Super App DexKit. A platform oriented to productivity and ease of use: you will be able to manage all your ERC, BEP and POLY assets from any device connected to the internet.',
-  'Buy, trade or swap crypto from the platform and manage them as you prefer. DeFi allow the user to have maximum control in its finances.',
-  'Enjoy all your NFTs: As designer or enthusiast, you will be able to see all your non fungible tokens in just one place, no matter the Blockchain. ',
-  'Affiliate Program: earn passive incomes inviting your friends to use the platform. You will be provided with your unique Affiliate link to share and track your earnings from referrals.',
+const SLIDES_TEXTS: {title: string; description: string}[] = [
+  {
+    title: 'Super App Dexkit',
+    description:
+      'You can manage all your ERC, BEP and POLY assets from any internet connected device.',
+  },
+  {
+    title: 'Maximum control over your finances',
+    description:
+      'Buy, trade or exchange cryptocurrencies from the platform and manage them as you prefer.',
+  },
+  {
+    title: 'Enjoy all your NFTs',
+    description:
+      'As a designer or enthusiast, you will be able to see all your non-fungible tokens in just one place, no matter the Blockchain.',
+  },
+  {
+    title: 'Affiliate program',
+    description:
+      'Earn passive income by inviting your friends to use the platform.',
+  },
 ];
 
 interface WelcomeDialogProps extends DialogProps {}
@@ -89,7 +113,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
       onClose({}, 'backdropClick');
     }
 
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, [onClose, history]);
 
   const handleChangeIndex = useCallback((newIndex: number) => {
@@ -118,57 +142,70 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
     <Dialog
       {...props}
       fullWidth
-      maxWidth={'sm'}
+      fullScreen={isMobile}
+      maxWidth='sm'
       classes={{paper: classes.dialogPaper}}>
+      {onClose && (
+        <DialogTitle>
+          <IconButton
+            aria-label='close'
+            className={classes.closeButton}
+            onClick={() => onClose({}, 'backdropClick')}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+      )}
       <Slider
         slideCount={4}
         index={index}
         onChangeIndex={handleChangeIndex}
         onSelectIndex={handleSelectIndex}
         onNext={handleNext}
-        interval={5000}
-        onPrevious={handlePrevious}>
-        <Box>
+        onPrevious={handlePrevious}
+        description={SLIDES_TEXTS[index].description}
+        title={SLIDES_TEXTS[index].title}
+        onStart={handleGoLogin}>
+        <Box m={1}>
           <LazyImage
-            src={require('assets/images/slides/welcome/trade-slide.svg')}
+            src={
+              isMobile
+                ? require('assets/images/slides/welcome/slide-1-mobile.png')
+                : require('assets/images/slides/welcome/slide-1.png')
+            }
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
-            src={require('assets/images/slides/welcome/wallet-slide.svg')}
+            src={
+              isMobile
+                ? require('assets/images/slides/welcome/slide-2-mobile.png')
+                : require('assets/images/slides/welcome/slide-2.png')
+            }
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
-            src={require('assets/images/slides/welcome/nft-slide.svg')}
+            src={
+              isMobile
+                ? require('assets/images/slides/welcome/slide-3-mobile.png')
+                : require('assets/images/slides/welcome/slide-3.png')
+            }
             className={classes.slide}
           />
         </Box>
-        <Box>
+        <Box m={1}>
           <LazyImage
-            src={require('assets/images/slides/welcome/others-slide.svg')}
+            src={
+              isMobile
+                ? require('assets/images/slides/welcome/slide-4-mobile.png')
+                : require('assets/images/slides/welcome/slide-4.png')
+            }
             className={classes.slide}
           />
         </Box>
       </Slider>
-      <Box p={4}>
-        <Grid container alignItems='center' alignContent='center' spacing={4}>
-          <Grid item xs={isMobile ? 12 : true}>
-            {DESCRIPTIONS[index]}
-          </Grid>
-          <Grid item xs={isMobile ? 12 : undefined}>
-            <Button
-              fullWidth={isMobile}
-              onClick={handleGoLogin}
-              variant='outlined'
-              color='primary'>
-              Get Started
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
     </Dialog>
   );
 };

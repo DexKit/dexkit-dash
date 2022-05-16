@@ -57,6 +57,7 @@ export const CollectionsList = () => {
           direction='column'>
           <Grid item xs={12}>
             <Box
+              pb={2}
               display='flex'
               justifyContent='center'
               alignContent='center'
@@ -64,7 +65,7 @@ export const CollectionsList = () => {
               <NFTEmptyStateImage />
             </Box>
           </Grid>
-          <Typography variant='h5'>
+          <Typography variant='body2' color={'textSecondary'}>
             <IntlMessages id='app.wizard.noCollectionsYet' />
           </Typography>
         </Grid>

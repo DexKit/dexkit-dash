@@ -6,9 +6,15 @@ import {Box, makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   square: {
-    height: '100%',
+    height: '70%',
     width: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
+  },
+  bound: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    paddingRight: theme.spacing(1),
   },
 }));
 
@@ -22,13 +28,15 @@ export const StatusSquare = React.forwardRef((props: Props, ref) => {
   const classes = useStyles();
   //@ts-ignore
   return (
-    <Box
-      {...props}
-      className={classes.square}
-      style={{backgroundColor: color}}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      ref={ref}
-    />
+    <Box className={classes.bound}>
+      <Box
+        {...props}
+        className={classes.square}
+        style={{backgroundColor: color}}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        ref={ref}
+      />
+    </Box>
   );
 });

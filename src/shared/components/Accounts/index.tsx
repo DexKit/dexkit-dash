@@ -1,8 +1,16 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
-import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Snackbar,
+  CircularProgress,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from '@material-ui/core';
 
 import {useTheme} from '@material-ui/core/styles';
 
@@ -32,10 +40,10 @@ import {Alert} from '@material-ui/lab';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
-import ContainedInput from 'shared/components/ContainedInput';
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
-import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const Accounts = () => {
   const theme = useTheme();
@@ -68,8 +76,6 @@ const Accounts = () => {
 
   const {web3State, account} = useWeb3();
 
-  const addressInputRef = useRef<HTMLInputElement>();
-
   const onChangeAddress = (
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
@@ -100,14 +106,14 @@ const Accounts = () => {
       );
 
       setAddNew(false);
-      setAddress(undefined);
+      setAddress('');
     }
   }, [address, dispatch, addAccounts]);
 
   const accountsModal = useAccountsModal();
 
   const handleConnectWeb3 = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
     accountsModal.setShow(false);
   }, []);
 
@@ -169,7 +175,10 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          Address copied!
+          <IntlMessages
+            id={'accounts.addressCopied'}
+            defaultMessage={'Address copied!'}
+          />
         </Alert>
       </Snackbar>
     );
@@ -234,27 +243,31 @@ const Accounts = () => {
     },
     [selectedAccounts],
   );
+  const allAccounts = wallet[selectedNetwork];
 
   // TODO: put a confirm modal before this
   const handleRemoveMultiple = useCallback(() => {
+    const totalRemovedAccounts = selectedAccounts.length;
     for (let account of selectedAccounts) {
       dispatch(removeAccount({account: account, type: selectedNetwork}));
 
       let newAccounts = [...selectedAccounts];
 
       let index = selectedAccounts.findIndex(
-        (another) => another.address === another.address,
+        (another) =>
+          another.address.toLowerCase() === account.address.toLowerCase(),
       );
 
       if (index > -1) {
         newAccounts.splice(index, 1);
         setSelectedAccounts(newAccounts);
-        if(newAccounts.length === 0){
-          history.push(LOGIN_WALLET_ROUTE);
-        }
       }
     }
-  }, [selectedAccounts, history]);
+    // If we removed all accounts, just send to login wallet route
+    if (totalRemovedAccounts === allAccounts.length) {
+      history.push(LOGIN_WALLET_ROUTE);
+    }
+  }, [selectedAccounts, history, allAccounts]);
 
   return (
     <Box pt={{xl: 4}}>
@@ -263,7 +276,12 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='body1'>Add new account</Typography>
+              <Typography variant='body1'>
+                <IntlMessages
+                  id={'accounts.addNew'}
+                  defaultMessage={'Add new account'}
+                />{' '}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid
@@ -272,42 +290,44 @@ const Accounts = () => {
                 container
                 spacing={2}>
                 <Grid item xs>
-                  <ContainedInput
+                  <TextField
+                    variant='outlined'
                     placeholder='Address'
                     fullWidth
-                    ref={(ref: any) => {
-                      addressInputRef.current = ref;
+                    value={address}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <Tooltip
+                            title={
+                              <IntlMessages
+                                id={'accounts.addValid'}
+                                defaultMessage={'Add valid account'}
+                              />
+                            }>
+                            <IconButton
+                              onClick={handleAddAccount}
+                              disabled={
+                                address === '' ||
+                                address === undefined ||
+                                error !== undefined
+                              }>
+                              <AddIcon
+                                color={
+                                  address !== '' &&
+                                  address !== undefined &&
+                                  !error
+                                    ? 'primary'
+                                    : 'inherit'
+                                }
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
                     }}
-                    /*endAdornment={
-                      <InputAdornment position='end' onClick={handlePaste}>
-                        <Tooltip title={'Paste valid account'}>
-                          <IconButton aria-label='paste' color='primary'>
-                            <CallReceivedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    }*/
                     onChange={onChangeAddress}
                   />
-                </Grid>
-                <Grid item>
-                  <Tooltip title={'Add valid account'}>
-                    <SquaredIconButton
-                      onClick={handleAddAccount}
-                      disabled={
-                        address === '' ||
-                        address === undefined ||
-                        error !== undefined
-                      }>
-                      <AddIcon
-                        color={
-                          address !== '' && address !== undefined && !error
-                            ? 'primary'
-                            : 'inherit'
-                        }
-                      />
-                    </SquaredIconButton>
-                  </Tooltip>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
@@ -340,15 +360,32 @@ const Accounts = () => {
           </SwipeableViews>
         </Grid> */}
         <Grid item xs={12}>
-          <Typography variant='body1'>Manage Accounts</Typography>
+          <Box pt={2}>
+            <Typography variant='body1'>
+              <IntlMessages
+                id={'accounts.manageAccounts'}
+                defaultMessage={'Manage accounts'}
+              />
+            </Typography>
+          </Box>
         </Grid>
+        {!account && (
+          <Grid item xs={12}>
+            {connectButton}
+          </Grid>
+        )}
+
         <Grid item xs={12}>
           <Box
             display='flex'
             justifyContent='space-between'
             alignItems='center'>
             <Typography variant='body1'>
-              {wallet[selectedNetwork].length} Accounts
+              {wallet[selectedNetwork].length}{' '}
+              <IntlMessages
+                id={'accounts.accounts'}
+                defaultMessage={'Accounts'}
+              />
             </Typography>
 
             {selectActive ? (
@@ -384,21 +421,43 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             {wallet[selectedNetwork].map((a, index: number) => (
-              <Grid item xs={12} key={index}>
-                <AccountListItem
-                  account={a}
-                  isConnected={
-                    a.address.toLowerCase() === account?.toLowerCase()
-                  }
-                  onLabelChange={handleLabelChange}
-                  onOpenMenu={handleOpenMenu}
-                  isDefault={index == 0}
-                  selectActive={selectActive}
-                  onSelect={handleSelect}
-                  selected={isAccountSelected(a)}
-                  onMakeDefault={handleMakeDefault}
-                />
-              </Grid>
+              <>
+                {index === 0 && (
+                  <Grid item xs={12}>
+                    <IntlMessages
+                      id={'accounts.defaultAccount'}
+                      defaultMessage={'Default account'}
+                    />
+                  </Grid>
+                )}
+
+                {index === 1 && (
+                  <Grid item xs={12}>
+                    <Box pt={2}>
+                      <IntlMessages
+                        id={'accounts.otherAccounts'}
+                        defaultMessage={'Other accounts'}
+                      />
+                    </Box>
+                  </Grid>
+                )}
+
+                <Grid item xs={12} key={index}>
+                  <AccountListItem
+                    account={a}
+                    isConnected={
+                      a.address.toLowerCase() === account?.toLowerCase()
+                    }
+                    onLabelChange={handleLabelChange}
+                    onOpenMenu={handleOpenMenu}
+                    isDefault={index === 0}
+                    selectActive={selectActive}
+                    onSelect={handleSelect}
+                    selected={isAccountSelected(a)}
+                    onMakeDefault={handleMakeDefault}
+                  />
+                </Grid>
+              </>
             ))}
           </Grid>
         </Grid>

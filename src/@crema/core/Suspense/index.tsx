@@ -1,12 +1,15 @@
 import React, {ReactNode} from 'react';
 import {Player} from '@lottiefiles/react-lottie-player';
 import Box from '@material-ui/core/Box';
+import {useTheme} from '@material-ui/core';
 
 interface SuspenseProps {
   children: ReactNode;
 }
 
 const Suspense: React.FC<SuspenseProps> = ({children}) => {
+  const theme = useTheme();
+
   return (
     <React.Suspense
       fallback={
@@ -26,7 +29,7 @@ const Suspense: React.FC<SuspenseProps> = ({children}) => {
             loop
             src='https://assets7.lottiefiles.com/packages/lf20_bdqop5la.json'
             style={{width: '100%', height: '100%'}}
-            background={'#1f1d2b'}
+            background={theme.palette.background.default}
           />
         </Box>
       }>

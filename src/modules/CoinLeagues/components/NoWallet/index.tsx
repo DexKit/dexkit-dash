@@ -11,13 +11,14 @@ import {ReactComponent as EmptyWallet} from 'assets/images/icons/empty-wallet.sv
 import {useHistory} from 'react-router-dom';
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 const NoWallet = () => {
   const history = useHistory();
   const {messages} = useIntl();
 
   const handleConnectWallet = useCallback(() => {
-    history.push('/onboarding/login-wallet');
+    history.push(LOGIN_WALLET_ROUTE);
   }, []);
 
   return (

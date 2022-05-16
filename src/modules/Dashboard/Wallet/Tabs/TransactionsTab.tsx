@@ -23,9 +23,9 @@ import TransactionTableRow from 'modules/Dashboard/components/TransactionTableRo
 import React, {useState, useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {WalletEmptyImage} from 'shared/components/Icons';
+import {Transaction} from 'redux/_transactions/types';
 
 const INITIAL_PAGE_SIZE = 5;
 
@@ -39,12 +39,8 @@ const PAGE_SIZES = [
 export interface Props {}
 
 export const TransactionsTab: React.FC<Props> = () => {
-  const {notifications} = useSelector<AppState, AppState['notification']>(
-    ({notification}) => ({
-      notifications: notification.notifications.filter(
-        (n) => n.type === NotificationType.TRANSACTION,
-      ),
-    }),
+  const {transactions} = useSelector<AppState, AppState['transactions']>(
+    ({transactions}) => transactions,
   );
 
   const [itemsPerPage, setItemsPerPage] = useState(INITIAL_PAGE_SIZE);
@@ -59,7 +55,11 @@ export const TransactionsTab: React.FC<Props> = () => {
   }, []);
 
   const paginate = useCallback(
-    (array: any[], page_size: number, page_number: number) => {
+    <T extends unknown>(
+      array: T[],
+      page_size: number,
+      page_number: number,
+    ): T[] => {
       return array.slice(
         (page_number - 1) * page_size,
         page_number * page_size,
@@ -76,7 +76,7 @@ export const TransactionsTab: React.FC<Props> = () => {
     setPage((value) => value - 1);
   }, []);
 
-  if (notifications.length > 0) {
+  if (transactions !== undefined && transactions?.length > 0) {
     return (
       <Grid container spacing={4}>
         <Grid item xs={12}>
@@ -101,28 +101,20 @@ export const TransactionsTab: React.FC<Props> = () => {
                 <TableCell></TableCell>
               </TableHead>
               <TableBody>
-                {paginate(notifications, itemsPerPage, page).map(
-                  (notification, index: number) => (
+                {paginate<Transaction>(transactions, itemsPerPage, page).map(
+                  (transaction, index: number) => (
                     <TransactionTableRow
-                      title={notification.title}
-                      chainId={
-                        (notification.metadata as TxNotificationMetadata)
-                          .chainId
-                      }
+                      title={transaction.title}
+                      chainId={transaction.chainId}
                       date={
-                        notification?.timestamp
-                          ? moment(notification?.timestamp).format(
-                              'DD/MM/YYYY hh:mm:ss',
+                        transaction?.timestamp
+                          ? moment(transaction?.timestamp).format(
+                              'DD/MM/YYYY HH:mm:ss',
                             )
                           : ''
                       }
-                      hash={
-                        (notification.metadata as TxNotificationMetadata)
-                          .transactionHash
-                      }
-                      status={
-                        (notification.metadata as TxNotificationMetadata).status
-                      }
+                      hash={transaction.hash}
+                      status={transaction.status}
                       key={index}
                     />
                   ),
@@ -157,7 +149,7 @@ export const TransactionsTab: React.FC<Props> = () => {
               <IconButton
                 disabled={
                   page >= 1 &&
-                  paginate(notifications, itemsPerPage, page).length <
+                  paginate(transactions, itemsPerPage, page).length <
                     itemsPerPage
                 }
                 onClick={handleGoNext}>
@@ -171,26 +163,24 @@ export const TransactionsTab: React.FC<Props> = () => {
   } else {
     return (
       <Box py={4}>
-        <Paper>
-          <Box py={4}>
-            <Grid
-              container
-              spacing={4}
-              alignItems='center'
-              alignContent='center'
-              justifyContent='center'
-              direction='column'>
-              <Grid item>
-                <WalletEmptyImage />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5' align='center'>
-                  <IntlMessages id='app.wallet.noTransactionsYet' />
-                </Typography>
-              </Grid>
+        <Box py={4}>
+          <Grid
+            container
+            spacing={4}
+            alignItems='center'
+            alignContent='center'
+            justifyContent='center'
+            direction='column'>
+            <Grid item>
+              <WalletEmptyImage />
             </Grid>
-          </Box>
-        </Paper>
+            <Grid item>
+              <Typography variant='h5' align='center'>
+                <IntlMessages id='app.wallet.noTransactionsYet' />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     );
   }

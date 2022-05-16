@@ -1,10 +1,23 @@
 import {fade, makeStyles} from '@material-ui/core/styles';
+import {ThemeMode} from 'shared/constants/AppEnums';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
+  dexkitIcon: {
+    '& path': {
+      fill: ({themeMode}: {themeMode: any}) =>
+        themeMode === ThemeMode.LIGHT
+          ? theme.palette.primary.main
+          : theme.palette.common.white,
+    },
+  },
+  fallback: {
+    '& path': {
+      fill: theme.palette.text.primary,
+    },
+  },
   avatar: {
-    border: ' 1px solid #525C75',
-    backgroundColor: '#2E3243',
+    borderColor: theme.palette.divider,
     width: theme.spacing(12),
     height: theme.spacing(12),
   },
@@ -16,6 +29,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   avatarButton: {
     borderRadius: '50%',
+    border: `1px solid ${theme.palette.divider}`,
   },
   appToolbar: {
     paddingLeft: 20,
@@ -52,7 +66,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   search: {
     position: 'relative',
-    borderRadius: theme.overrides.MuiCard.root.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -115,9 +129,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   badgeRoot: {
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#252836',
+    backgroundColor: theme.palette.background.paper,
   },
   switchNetworkButton: {
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
   },
 }));

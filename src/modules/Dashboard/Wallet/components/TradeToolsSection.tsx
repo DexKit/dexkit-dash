@@ -38,13 +38,14 @@ interface TradeToolsSectionProps {
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
   isTrade?: boolean;
+  disableAccounts?: boolean;
 }
 
-const StyledMenu = withStyles({
+const StyledMenu = withStyles((theme) => ({
   paper: {
-    border: '1px solid #d3d4d5',
+    border: `1px solid ${theme.palette.divider}`,
   },
-})((props: MenuProps) => (
+}))((props: MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
@@ -74,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& > path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   container: {
     justifyContent: 'flex-start',
@@ -108,6 +112,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     onMakeFavorite,
     isFavorite,
     isTrade = true,
+    disableAccounts,
   } = props;
 
   const accountsModal = useAccountsModal();
@@ -120,14 +125,13 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
-  },[setAnchorEl]);
+  }, [setAnchorEl]);
 
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
   }, [accountsModal]);
 
   const classes = useStyles();
-
 
   const theme = useTheme();
 
@@ -156,15 +160,17 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         {onMakeFavorite ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton
-                style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
-                onClick={onMakeFavorite}>
-                {isFavorite ? (
-                  <HeartPurpleIcon className={classes.icon} />
-                ) : (
-                  <HeartEmptyIcon className={classes.icon} />
-                )}
-              </RoundedIconButton>
+              <Box mb={1}>
+                <RoundedIconButton
+                  style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
+                  onClick={onMakeFavorite}>
+                  {isFavorite ? (
+                    <HeartPurpleIcon className={classes.icon} />
+                  ) : (
+                    <HeartEmptyIcon className={classes.icon} />
+                  )}
+                </RoundedIconButton>
+              </Box>
               <Typography variant='caption'>
                 <IntlMessages id='app.dashboard.favorite' />
               </Typography>
@@ -175,9 +181,11 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         {onShare ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onShare}>
-                <ArrowRedoOutlinedIcon className={classes.icon} />
-              </RoundedIconButton>
+              <Box mb={1}>
+                <RoundedIconButton onClick={onShare}>
+                  <ArrowRedoOutlinedIcon className={classes.icon} />
+                </RoundedIconButton>
+              </Box>
               <Typography variant='caption'>
                 <IntlMessages id='app.dashboard.share' />
               </Typography>
@@ -187,38 +195,51 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         {isTrade ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onTrade}>
-                <BitcoinConvertWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption'> <IntlMessages id='app.dashboard.trade' /></Typography>
+              <Box mb={1}>
+                <RoundedIconButton onClick={onTrade}>
+                  <BitcoinConvertWhiteIcon className={classes.icon} />
+                </RoundedIconButton>
+              </Box>
+              <Typography variant='caption'>
+                <IntlMessages id='app.dashboard.trade' />
+              </Typography>
             </Box>
           </Box>
         ) : null}
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onSwap}>
-              <MoneySendIcon className={classes.icon} />
-            </RoundedIconButton>
+            <Box mb={1}>
+              <RoundedIconButton onClick={onSwap}>
+                <MoneySendIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
             <Typography variant='caption' className={classes.itemText}>
               <IntlMessages id='app.dashboard.swap' />
             </Typography>
           </Box>
         </Box>
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={handleShowAccounts}>
-              <WalletSearchIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption' className={classes.itemText}>
-              <IntlMessages id='app.dashboard.accounts' />
-            </Typography>
+        {!disableAccounts && (
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <Box mb={1}>
+                <RoundedIconButton onClick={handleShowAccounts}>
+                  <WalletSearchIcon className={classes.icon} />
+                </RoundedIconButton>
+              </Box>
+              <Typography variant='caption' className={classes.itemText}>
+                <IntlMessages id='app.dashboard.accounts' />
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
+
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onSend}>
-              <ExportWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
+            <Box mb={1}>
+              <RoundedIconButton onClick={onSend}>
+                <ExportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
             <Typography variant='caption' className={classes.itemText}>
               <IntlMessages id='app.dashboard.send' />
             </Typography>
@@ -226,10 +247,11 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         </Box>
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onReceive}>
-              <ImportWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
-
+            <Box mb={1}>
+              <RoundedIconButton onClick={onReceive}>
+                <ImportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
             <Typography variant='caption' className={classes.itemText}>
               <IntlMessages id='app.dashboard.receive' />
             </Typography>
@@ -237,9 +259,11 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         </Box>
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={handleClick}>
-              <AddCircleIcon className={classes.icon} />
-            </RoundedIconButton>
+            <Box mb={1}>
+              <RoundedIconButton onClick={handleClick}>
+                <AddCircleIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
             <Typography variant='caption' className={classes.itemText}>
               <IntlMessages id='app.dashboard.buyCrypto' />
             </Typography>

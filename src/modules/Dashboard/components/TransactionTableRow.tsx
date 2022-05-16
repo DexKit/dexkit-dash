@@ -13,6 +13,7 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import {useCustomNetworkList} from 'hooks/network';
 import {useChainInfo} from 'hooks/useChainInfo';
 import React from 'react';
+import {TransactionStatus} from 'redux/_transactions/types';
 import CopyButton from 'shared/components/CopyButton';
 import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
 import {truncateAddress} from 'utils';
@@ -20,7 +21,7 @@ import {truncateAddress} from 'utils';
 export interface Props {
   hash: string;
   date: string;
-  status: string;
+  status: TransactionStatus;
   chainId: number;
   title: string;
 }
@@ -49,12 +50,12 @@ export const TransactionTableRow: React.FC<Props> = ({
       </TableCell>
       <TableCell>{date}</TableCell>
       <TableCell>
-        {status === 'done' ? (
+        {status === TransactionStatus.Confirmed ? (
           <CheckCircle style={{color: theme.palette.success.main}} />
-        ) : status === 'failed' ? (
+        ) : status === TransactionStatus.Failed ? (
           <Error style={{color: theme.palette.error.main}} />
         ) : (
-          <CircularProgress color='primary' />
+          <CircularProgress size='1rem' color='primary' />
         )}
       </TableCell>
       <TableCell>

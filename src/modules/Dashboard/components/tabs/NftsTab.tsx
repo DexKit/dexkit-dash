@@ -1,7 +1,6 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-import Paper from '@material-ui/core/Paper';
 import {AppState} from 'redux/store';
 import Box from '@material-ui/core/Box';
 import React, {useState, useCallback, useEffect, useMemo} from 'react';
@@ -169,13 +168,16 @@ export const NftsTab: React.FC = () => {
 
   const handleNftTokenSubmit = useCallback(() => {
     if (chainId && nftTokenValues.tokenId && nftTokenValues.address) {
-      addAsset({
-        tokenId: nftTokenValues.tokenId,
-        contractAddress: nftTokenValues.address,
-        chainId: chainId,
-      });
-      importNftDialogToggler.set(false);
-      setNftTokenValues(ASSET_VALUES_EMTPY);
+      addAsset
+        .mutateAsync({
+          tokenId: nftTokenValues.tokenId,
+          contractAddress: nftTokenValues.address,
+          chainId: chainId,
+        })
+        .then(() => {
+          importNftDialogToggler.set(false);
+          setNftTokenValues(ASSET_VALUES_EMTPY);
+        });
     }
   }, [addAsset, nftTokenValues, chainId, importNftDialogToggler]);
 
@@ -344,6 +346,10 @@ export const NftsTab: React.FC = () => {
     return newAssets;
   }, [assets, filterParams]);
 
+  const handleResetNFT = useCallback(() => {
+    addAsset.reset();
+  }, [addAsset]);
+
   return (
     <>
       <Menu
@@ -409,6 +415,9 @@ export const NftsTab: React.FC = () => {
         values={nftTokenValues}
         onChange={handleAddNftChange}
         onSubmit={handleNftTokenSubmit}
+        loading={addAsset.isLoading}
+        error={addAsset.isError as any}
+        onReset={handleResetNFT}
       />
       <ConfirmRemoveAssetDialog
         dialogProps={{
@@ -512,26 +521,27 @@ export const NftsTab: React.FC = () => {
             </Grid>
           </Grid>
         ) : (
-          <Paper>
-            <Box py={4}>
-              <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignContent='center'
-                    alignItems='center'>
-                    <NFTEmptyStateImage />
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography align='center' variant='h5'>
-                    <IntlMessages id='nfts.wallet.noItemsFound' />
-                  </Typography>
-                </Grid>
+          <Box py={4}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  justifyContent='center'
+                  alignContent='center'
+                  alignItems='center'>
+                  <NFTEmptyStateImage />
+                </Box>
               </Grid>
-            </Box>
-          </Paper>
+              <Grid item xs={12}>
+                <Typography
+                  align='center'
+                  variant='body2'
+                  color={'textSecondary'}>
+                  <IntlMessages id='nfts.wallet.noItemsFound' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
         )}
       </Box>
     </>

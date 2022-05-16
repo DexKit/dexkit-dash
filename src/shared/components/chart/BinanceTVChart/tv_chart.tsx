@@ -35,6 +35,7 @@ export interface ChartContainerProps {
   studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides'];
   containerId: ChartingLibraryWidgetOptions['container_id'];
   darkMode: boolean;
+  backgroundColor?: string;
 }
 
 export interface ChartContainerState {
@@ -105,7 +106,9 @@ export default class TVChartContainer extends React.PureComponent<
 
     if (this.props.darkMode) {
       widgetOptions.overrides = {
-        'paneProperties.background': '#181a1f',
+        'paneProperties.background': this.props.backgroundColor
+          ? this.props.backgroundColor
+          : '#181a1f',
       };
     }
 
@@ -147,7 +150,9 @@ export default class TVChartContainer extends React.PureComponent<
 
         if (this.props.darkMode) {
           this._tvWidget.applyOverrides({
-            'paneProperties.background': '#181a1f',
+            'paneProperties.background': this.props.backgroundColor
+              ? this.props.backgroundColor
+              : '#181a1f',
           });
         } else {
           this._tvWidget.applyOverrides({

@@ -3,24 +3,17 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {useIntl} from 'react-intl';
 
 import {
-  Link,
-  Button,
   Grid,
   Box,
   IconButton,
   Card,
-  Breadcrumbs,
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Paper,
-  Backdrop,
-  CircularProgress,
-  useTheme,
 } from '@material-ui/core';
 
-import {useHistory, Link as RouterLink} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -39,7 +32,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
 import {useStyles} from './index.style';
-import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import {Share} from '@material-ui/icons';
 import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
@@ -49,9 +41,7 @@ import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
-import {FEATURE_TRADE_COINS_ZRX} from 'utils/features';
-import {useChainInfo} from 'hooks/useChainInfo';
-import {Web3State} from 'types/blockchain';
+import {WALLET_ROUTE} from 'shared/constants/routes';
 
 const TokenPage = () => {
   const history = useHistory();
@@ -76,7 +66,7 @@ const TokenPage = () => {
     );
   }, [searchParams, networkName]);
 
-  const {account: web3Account, chainId, onConnectWeb3, web3State} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
@@ -147,131 +137,19 @@ const TokenPage = () => {
     return `${getWindowUrl()}/trade?${searchParams.toString()}`;
   }, [history.location.search]);
 
-  const handleGoClick = useCallback(() => {
-    history.push('/wallet');
-  }, [history]);
-
-  const handleConnectWallet = useCallback(() => {
-    onConnectWeb3();
-  }, []);
-
-  const handleGoToWallet = useCallback(() => {
-    history.push('/wallet');
-  }, [history]);
-
-  const theme = useTheme();
-  const {chainName} = useChainInfo();
+  const handleGoClick = useCallback(
+    (_ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(WALLET_ROUTE);
+      }
+    },
+    [history],
+  );
 
   return (
     <>
-      <Backdrop
-        className={classes.backdrop}
-        open={
-          chainId !== undefined &&
-          chainId > 0 &&
-          !FEATURE_TRADE_COINS_ZRX(chainId)
-        }>
-        <Box p={4}>
-          <Grid
-            container
-            alignItems='center'
-            alignContent='center'
-            justifyContent='center'>
-            <Grid item xs={12} sm={5}>
-              <Paper>
-                <Box p={4}>
-                  <Grid
-                    container
-                    spacing={4}
-                    direction='column'
-                    alignItems='center'
-                    alignContent='center'
-                    justifyContent='center'>
-                    <Grid item>
-                      <Typography gutterBottom align='center' variant='h5'>
-                        {chainName ? (
-                          <>
-                            {chainName}{' '}
-                            <IntlMessages id='app.wallet.networkIsNotSupported' />{' '}
-                          </>
-                        ) : (
-                          <IntlMessages id='app.wallet.youNetworkIsNotSupported' />
-                        )}
-                      </Typography>
-                      <Typography
-                        color='textSecondary'
-                        align='center'
-                        variant='body2'>
-                        <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant='outlined'
-                        onClick={handleGoToWallet}
-                        color='primary'
-                        fullWidth>
-                        <IntlMessages id='app.wallet.goToWallet' />
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Box>
-      </Backdrop>
-      <Backdrop className={classes.backdrop} open={!chainId}>
-        <Grid
-          container
-          alignItems='center'
-          alignContent='center'
-          justifyContent='center'>
-          <Grid item xs={12} sm={4}>
-            <Paper>
-              <Box p={4}>
-                <Grid
-                  container
-                  spacing={4}
-                  direction='column'
-                  alignItems='center'
-                  alignContent='center'
-                  justifyContent='center'>
-                  <Grid item>
-                    <Typography gutterBottom align='center' variant='h5'>
-                      <IntlMessages id='app.wallet.youAreOffline' />
-                    </Typography>
-                    <Typography
-                      color='textSecondary'
-                      align='center'
-                      variant='body2'>
-                      <IntlMessages id='app.wallet.pleaseConnectYourWalletToTrade' />
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleConnectWallet}
-                      disabled={web3State === Web3State.Connecting}
-                      startIcon={
-                        web3State === Web3State.Connecting ? (
-                          <CircularProgress
-                            size={theme.spacing(6)}
-                            color='inherit'
-                          />
-                        ) : undefined
-                      }
-                      color='primary'
-                      variant='contained'
-                      fullWidth>
-                      <IntlMessages id='app.connectWallet' />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Backdrop>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
@@ -284,18 +162,6 @@ const TokenPage = () => {
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>
               <Grid container spacing={2}>
-                {!isMobile && (
-                  <Grid item xs={12}>
-                    <Breadcrumbs aria-label='breadcrumb'>
-                      <Link component={RouterLink} to='/wallet' color='inherit'>
-                        <IntlMessages id='app.dashboard.wallet' />
-                      </Link>
-                      <Typography variant='body2' color='inherit'>
-                        <IntlMessages id='app.dashboard.trade' />
-                      </Typography>
-                    </Breadcrumbs>
-                  </Grid>
-                )}
                 <Grid item xs={12}>
                   <Grid container spacing={2} alignItems='center'>
                     <Grid item>
@@ -324,12 +190,11 @@ const TokenPage = () => {
                     display='flex'
                     flexDirection='column'
                     alignItems='center'>
-                    <RoundedIconButton onClick={toggleShare}>
-                      <Share className={classes.icon} />
-                    </RoundedIconButton>
-                    <Typography variant='caption'>
-                      <IntlMessages id='app.dashboard.share' />
-                    </Typography>
+                    <Box mb={1}>
+                      <IconButton onClick={toggleShare}>
+                        <Share className={classes.icon} />
+                      </IconButton>
+                    </Box>
                   </Box>
                 </Grid>
               </Grid>
@@ -401,14 +266,14 @@ const TokenPage = () => {
                     />
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+                {/*    <Grid item xs={12}>
                   <HistoryTables
                     account={account}
                     networkName={networkName}
                     address={address}
                   />
                 </Grid>
-                {/*   <Grid item xs={12}>
+                 <Grid item xs={12}>
                   <InfoTab error={error} loading={loading} data={data} />
                 </Grid> */}
               </>

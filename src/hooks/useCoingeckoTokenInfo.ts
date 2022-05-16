@@ -1,15 +1,18 @@
-import {Web3Wrapper} from '@0x/web3-wrapper';
-import {useQuery} from 'react-query';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { useQuery } from 'react-query';
 import {
   COINGECKO_URL,
+  getCoingeckoContractUrlFromChainId,
   getCoingeckoContractUrlFromNetwork,
 } from 'shared/constants/AppConst';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { ChainId } from 'types/blockchain';
+import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
 
 export const useCoingeckoTokenInfo = (
   address?: string,
   network?: EthereumNetwork,
+  chainId?: ChainId,
 ) => {
   const tokenInfoQuery = useQuery(
     ['GetCoingeckoTokenInfo', address, network],
@@ -34,7 +37,7 @@ export const useCoingeckoTokenInfo = (
         ) {
           url = `${getCoingeckoContractUrlFromNetwork(
             EthereumNetwork.ethereum,
-          )}/${address}`;
+          )}/${address.toLowerCase()}`;
         }
 
         if (
@@ -43,7 +46,7 @@ export const useCoingeckoTokenInfo = (
         ) {
           url = `${getCoingeckoContractUrlFromNetwork(
             EthereumNetwork.bsc,
-          )}/${address}`;
+          )}/${address.toLowerCase()}`;
         }
 
         if (
@@ -52,14 +55,21 @@ export const useCoingeckoTokenInfo = (
         ) {
           url = `${getCoingeckoContractUrlFromNetwork(
             EthereumNetwork.matic,
-          )}/${address}`;
+          )}/${address.toLowerCase()}`;
         }
+        if (chainId && Web3Wrapper.isAddress(address ?? '')) {
+          url = `${getCoingeckoContractUrlFromChainId(
+            chainId,
+          )}/${address.toLowerCase()}`;
+        }
+
+
         return fetch(url)
           .then((r) => r.json())
           .then((r) => r as CoinDetailCoinGecko);
       }
     },
-    {staleTime: 60 * 60},
+    { staleTime: 60 * 60 },
   );
 
   return {

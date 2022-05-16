@@ -16,7 +16,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {truncateIsAddress} from 'utils';
 
 import {StatusSquare} from '../StatusSquare';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
@@ -26,7 +26,7 @@ import {useAccountLabel} from 'hooks/useAccountLabel';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { useChainInfo } from 'hooks/useChainInfo';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -146,10 +146,12 @@ const ActiveChainBalance = () => {
                                 style={{fontSize: 16}}
                               />
                             </CopyButton>
-                            <IconButton
-                              onClick={handleShowAccounts}
-                              size='small'>
-                              <KeyboardArrowDownIcon />
+                            <IconButton onClick={handleToggleVisibility}>
+                              {isBalanceVisible ? (
+                                <VisibilityIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
                             </IconButton>
                           </Typography>
                         </Box>
@@ -170,12 +172,8 @@ const ActiveChainBalance = () => {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {isBalanceVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
+                    <IconButton onClick={handleShowAccounts}>
+                      <ArrowBackIosIcon style={{transform: 'rotate(270deg'}} />
                     </IconButton>
                   </Grid>
                 </Grid>

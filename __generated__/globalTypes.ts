@@ -18,6 +18,9 @@ export enum EthereumNetwork {
   ethereum = "ethereum",
   goerli = "goerli",
   matic = "matic",
+  avalanche = 'avalanche',
+  fantom = 'fantom'
+
 }
 
 export enum Network {

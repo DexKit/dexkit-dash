@@ -1,24 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Badge,
-  Breadcrumbs,
   Grid,
-  Hidden,
   IconButton,
   InputAdornment,
-  Link,
+  makeStyles,
+  TextField,
   Typography,
 } from '@material-ui/core';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
-import { SupportedNetworkType } from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 import FormControl from '@material-ui/core/FormControl';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -26,52 +25,56 @@ import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { Empty } from 'shared/components/Empty';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { HOME_ROUTE } from 'shared/constants/routes';
-import ContainedInput from 'shared/components/ContainedInput';
-import { Search } from '@material-ui/icons';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
-import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
+import {Empty} from 'shared/components/Empty';
+import {useHistory} from 'react-router-dom';
+import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import { ShareButton } from 'shared/components/ShareButton';
-import useDiscord from 'hooks/useDiscord';
-import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
+import {ShareButton} from 'shared/components/ShareButton';
+
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGame';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import SwapButton from 'shared/components/SwapButton';
-import { GameOrderBy, RoomType } from 'modules/CoinLeagues/constants/enums';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {GameOrderBy, RoomType} from 'modules/CoinLeagues/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import { useToggler } from 'hooks/useToggler';
+import {useToggler} from 'hooks/useToggler';
 
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
-import { useMobile } from 'hooks/useMobile';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
+  },
+}));
 
 const JoinGames = () => {
   const history = useHistory();
-  const { account } = useWeb3();
-  const { coinSymbol } = useLeaguesChainInfo();
+  const {account} = useWeb3();
+  const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
-  useDiscord();
+  const classes = useStyles();
+
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const filtersState = useGamesFilters();
-  const isMobile = useMobile();
 
   const waitingGamesQuery = useCoinLeagueGames(
     {
@@ -82,7 +85,7 @@ const JoinGames = () => {
     isNFT,
   );
 
-  const { listGamesRoute, enterGameRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const gamesToJoin = useMemo(() => {
     if (waitingGamesQuery.data) {
       return waitingGamesQuery.data.games.filter(
@@ -168,98 +171,84 @@ const JoinGames = () => {
         <Grid item xs={12} sm={12} xl={12}>
           <TickerTapeTV />
         </Grid>
-        {!isMobile && <Grid item xs={12} sm={12} xl={12}>
-          <Grid container>
-            <Breadcrumbs>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                <IntlMessages id='app.coinLeagues.dashboard' />
-              </Link>
-              <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                <IntlMessages id='app.coinLeagues.games' />
-              </Link>
-              <Typography>
-                {' '}
-                <IntlMessages id='app.coinLeagues.discoverGames' />
-              </Typography>
-            </Breadcrumbs>
+
+        <Grid item xs={12}>
+          <Grid container justifyContent='space-between'>
+            <Grid item>
+              <Grid
+                container
+                spacing={4}
+                alignItems='center'
+                alignContent='center'>
+                <Grid item>
+                  <IconButton size='small' onClick={handleBack}>
+                    <ArrowBackIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <Typography variant='h5'>
+                    <IntlMessages
+                      id='app.coinLeagues.discoverGames'
+                      defaultMessage={'Discover Games'}
+                    />
+                  </Typography>
+                </Grid>
+                <Grid>
+                  <FormControl>
+                    <Select
+                      variant='outlined'
+                      value={room}
+                      onChange={(e) => setRoom(e.target.value as RoomType)}
+                      renderValue={(value) => <> {value}</>}>
+                      <MenuItem value={RoomType.Main}>
+                        {RoomType.Main}{' '}
+                      </MenuItem>
+                      <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <ChainSelect />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+                <Box pr={2}>
+                  <SwapButton />
+                </Box>
+                <Box pr={2}>
+                  <ShareButton shareText={`Coin leagues Games`} />
+                </Box>
+                <Box pr={2}>
+                  <BuyCryptoButton
+                    btnMsg={`Buy ${coinSymbol}`}
+                    defaultCurrency={coinSymbol}
+                  />
+                </Box>
+                <Box pr={2}>
+                  <MaticBridgeButton />
+                </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>}
-        <Hidden smUp={true}>
-          <Grid item xs={12}>
-            <img
-              src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
-              alt={'Coinleague Banner'}
-            />
-          </Grid>
-        </Hidden>
-        <Grid item xs={12} sm={3} xl={4}>
-          <Box display={'flex'} alignItems={'center'}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant='h5'>
-              {' '}
-              <IntlMessages id='app.coinLeagues.discoverGames' />
-            </Typography>
-            <Box p={2}>
-              <FormControl>
-                <Select
-                  variant='outlined'
-                  value={room}
-                  onChange={(e) => setRoom(e.target.value as RoomType)}
-                  renderValue={(value) => <> {value}</>}>
-                  <MenuItem value={RoomType.Main}>{RoomType.Main} </MenuItem>
-                  <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-            <Box p={2}>
-              <ChainSelect />
-            </Box>
-          </Box>
-        </Grid>
-        <Hidden xsDown={true}>
-          <Grid item xs={12} sm={5} xl={4}>
-            <img
-              src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
-              alt={'Coinleague Banner'}
-            />
-          </Grid>
-        </Hidden>
-        <Grid item xs={12} sm={4} xl={4}>
-          <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-            <Box pr={2}>
-              <SwapButton />
-            </Box>
-            <Box pr={2}>
-              <ShareButton shareText={`Coin leagues Games`} />
-            </Box>
-            <Box pr={2}>
-              <BuyCryptoButton
-                btnMsg={`Buy ${coinSymbol}`}
-                defaultCurrency={coinSymbol}
-              />
-            </Box>
-            <Box pr={2}>
-              <MaticBridgeButton />
-            </Box>
-          </Box>
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
 
         <Grid item xs={12} sm={6}>
-          <ContainedInput
+          <TextField
             value={search}
+            variant='outlined'
             onChange={handleSearch}
             placeholder={messages['app.coinLeagues.search'] as string}
-            startAdornment={
-              <InputAdornment position='start'>
-                <Search />
-              </InputAdornment>
-            }
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
             fullWidth
           />
         </Grid>
@@ -288,6 +277,7 @@ const JoinGames = () => {
                     size='small'
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -297,6 +287,7 @@ const JoinGames = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
                 <Grid item>
@@ -306,6 +297,7 @@ const JoinGames = () => {
                     clickable
                     onClick={handleToggleBitBoy}
                     color={filtersState.isBitboy ? 'primary' : 'default'}
+                    variant='outlined'
                   />
                 </Grid>
               </Grid>
@@ -333,7 +325,7 @@ const JoinGames = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon className={classes.icon} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -362,7 +354,7 @@ const JoinGames = () => {
                   title={messages['app.coinLeagues.noGamesJoin'] as string}
                   message={
                     messages[
-                    'app.coinLeagues.askAdminCreateGamesJoin'
+                      'app.coinLeagues.askAdminCreateGamesJoin'
                     ] as string
                   }
                 />

@@ -9,7 +9,6 @@ import {Token} from 'types/app';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
-import {NotificationType} from 'services/notification';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
@@ -70,7 +69,7 @@ const LimitStep: React.FC<Props> = (props) => {
             title: messages['app.dashboard.limitOrder'] as string,
             body: messages['app.dashboard.orderSuccessPlaced'] as string,
           };
-          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
+          dispatch(onAddNotification([notification]));
 
           onNext(true);
         })

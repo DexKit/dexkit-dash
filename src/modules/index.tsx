@@ -19,7 +19,10 @@ import {onboardingConfig} from './Onboarding';
 import {kittygotchiConfig} from './Kittygotchi';
 import {profileConfig} from './Profile';
 
+import {squidLeagueConfigs} from './SquidLeague';
+
 import {settingsConfig} from './Settings';
+import {nftLeagueConfig} from './NFTLeague';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -36,6 +39,8 @@ const routeConfigs = [
   ...kittygotchiConfig,
   ...profileConfig,
   ...settingsConfig,
+  ...nftLeagueConfig,
+  ...squidLeagueConfigs,
 ];
 
 const routes = [

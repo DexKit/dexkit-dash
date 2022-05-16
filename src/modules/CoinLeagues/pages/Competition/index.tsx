@@ -1,14 +1,7 @@
 import React, {useMemo, useState} from 'react';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {
-  Grid,
-  Breadcrumbs,
-  Link,
-  IconButton,
-  Typography,
-  Divider,
-} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
+import {Grid, IconButton, Typography, Divider} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -20,12 +13,10 @@ import {
   useRankingCompetion,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
 
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {BigNumber, ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
-import {useMobile} from 'hooks/useMobile';
 import RankingButtonSkeleton from 'modules/CoinLeagues/components/RankingButton/index.skeleton';
 import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
 import {Months} from 'modules/CoinLeagues/constants';
@@ -42,8 +33,6 @@ export function Competition() {
     ChainId.Matic,
     month,
   );
-
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const {account} = useWeb3();
 
   const history = useHistory();
@@ -103,18 +92,6 @@ export function Competition() {
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          {!isMobile && (
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link
-                  color='inherit'
-                  component={RouterLink}
-                  to={listGamesRoute}>
-                  <IntlMessages id='app.coinLeagues.coinLeague' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
-          )}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box
@@ -128,8 +105,8 @@ export function Competition() {
               </Box>
               <Typography variant='h5'>
                 <IntlMessages
-                  id='app.coinLeagues.mostJoinerCompetition'
-                  defaultMessage={'Most Joiner Competition'}
+                  id='app.coinLeagues.competition'
+                  defaultMessage={'Competition'}
                 />
               </Typography>
               <Box p={2}>

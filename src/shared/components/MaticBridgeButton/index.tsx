@@ -8,6 +8,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    '& path': {
+      stroke: theme.palette.text.primary,
+    },
   },
   itemText: {
     whiteSpace: 'nowrap',
@@ -28,9 +31,11 @@ const MaticBridgeButton = (props: Props) => {
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
-      <RoundedIconButton onClick={handleBuyCrypto}>
-        <ProgrammingArrowsIcon className={classes.icon} />
-      </RoundedIconButton>
+      <Box mb={1}>
+        <RoundedIconButton onClick={handleBuyCrypto}>
+          <ProgrammingArrowsIcon className={classes.icon} />
+        </RoundedIconButton>
+      </Box>
       <Typography variant='caption' className={classes.itemText}>
         Bridge
       </Typography>

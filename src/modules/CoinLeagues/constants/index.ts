@@ -48,7 +48,8 @@ export const CREATOR_PRIZES_ADDRESSES = [
   '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
   '0xA27e256CDD086eF88953b941582bB651582c1454',
   '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f',
-  '0xA5bdC63A85f889076C17177290BD90Ebd2140966'
+  '0xD50E4D1E0b49eb64a6bF2f48731c035E8948D219',
+  '0xA5bdC63A85f889076C17177290BD90Ebd2140966',
 ];
 
 export const BITBOY_TEAM = [
@@ -653,7 +654,7 @@ export const CHAMPIONS: { [key: number]: string } = {
   // [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Binance]: '',
-  [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
+  [ChainId.Mumbai]: '0x05b93425E4b44c9042Ed97b7A332aB1575EbD25d',
 };
 
 export const SALE_EARLY_FIRST_ROUND_DATE: { [key: number]: number } = {
@@ -745,7 +746,9 @@ export enum Months {
   // March = 3,
 }
 
-export const BLOCK_TIMESTAMP_COMPETION: { [key: string]: { [key: number]: number } } = {
+export const BLOCK_TIMESTAMP_COMPETION: {
+  [key: string]: { [key: number]: number };
+} = {
   [Months.March]: {
     [ChainId.Mumbai]: 0,
     [ChainId.Matic]: 25464624,
@@ -762,4 +765,3 @@ export const BLOCK_TIMESTAMP_COMPETION: { [key: string]: { [key: number]: number
     [ChainId.Binance]: 0,
   }
 };
-
