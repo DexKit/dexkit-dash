@@ -1,6 +1,6 @@
-import {Notification} from 'types/models/Notification';
+import { Notification } from 'types/models/Notification';
 
-import {NotificationType, NotificationPosition} from 'services/notification';
+import { NotificationType, NotificationPosition } from 'services/notification';
 
 export enum NotificationAction {
   GET_NOTIFICATION = 'GET_NOTIFICATION',
@@ -11,6 +11,8 @@ export enum NotificationAction {
   CHECK_ALL_NOTIFICATION = 'CHECK_ALL_NOTIFICATION',
   NOTIFICATION_LIST = 'NOTIFICATION_LIST',
   UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION',
+  SEEN_NOTIFICATION = 'SEEN_NOTIFICATION',
+
 }
 
 export interface GetNotification {

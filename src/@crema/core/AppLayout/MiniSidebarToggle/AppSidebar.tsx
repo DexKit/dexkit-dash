@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Navigation from '../../Navigation/VerticleNav';
 import {
   onRemoveNotification,
+  onSeenNotification,
   setWeb3State,
   toggleNavCollapsed,
 } from '../../../../redux/actions';
@@ -101,9 +102,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
   );
 
   const handleChangeTab = useCallback(
-    (event: React.ChangeEvent<{}>, newValue: 'notifications' | 'menu') =>
-      setSelectedTab(newValue),
-    [],
+    (event: React.ChangeEvent<{}>, newValue: 'notifications' | 'menu') => {
+      setSelectedTab(newValue);
+      if (newValue === 'notifications') {
+        dispatch(onSeenNotification());
+      }
+    },
+    [dispatch],
   );
 
   const notificationsState = useSelector<AppState, AppState['notification']>(
@@ -388,11 +393,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
                       <Badge
                         variant='dot'
                         color='primary'
-                        badgeContent={
-                          notifications.filter(
-                            (notification) => notification?.check === undefined,
-                          ).length
-                        }>
+                        badgeContent={notificationsState.notificationsNotSeen}>
                         <NotificationIcon className={classes.icon} />
                       </Badge>
                     }
