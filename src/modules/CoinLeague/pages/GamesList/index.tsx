@@ -12,16 +12,16 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 
 import {useIntl} from 'react-intl';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
-import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
+import CreateGameModal from 'modules/CoinLeague/components/CreateGameModal';
 
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
-import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
+import SmallCardGame from 'modules/CoinLeague/components/SmallCardGame';
 import {useHistory, useLocation} from 'react-router-dom';
 import {COINLEAGUENFT_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
@@ -35,27 +35,27 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 
-import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
-import CardGame from 'modules/CoinLeagues/components/CardGame';
-import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
-import {GameLevel, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
+import CardGame from 'modules/CoinLeague/components/CardGame';
+import {GamesEnded} from 'modules/CoinLeague/components/GamesEnded';
+import {GameLevel, GameOrderBy} from 'modules/CoinLeague/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
-import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import GameFilterDrawer from 'modules/CoinLeague/components/GameFilterDrawer';
+import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
+import GameOrderBySelect from 'modules/CoinLeague/components/GameOrderBySelect';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {useGamesMetadata} from 'modules/CoinLeague/hooks/useGameMetadata';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
-import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
+import CreateGameButton from 'modules/CoinLeague/components/v2/CreateGameButton';
 import {IconButton, makeStyles, TextField} from '@material-ui/core';
-import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
-import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
+import CoinLeagueShareDialog from 'modules/CoinLeague/components/CoinLeagueShareDialog';
+import {AAdsCoinleagueBanner} from 'modules/CoinLeague/components/AAds';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({

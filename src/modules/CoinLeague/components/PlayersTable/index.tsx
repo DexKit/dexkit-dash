@@ -11,21 +11,21 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import {lighten, makeStyles} from '@material-ui/core/styles';
 
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {PriceFeeds} from 'modules/CoinLeague/constants';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 import {GameType} from 'types/coinsleague';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
 import Badge from '@material-ui/core/Badge';
-import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
-import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
+import {GET_BITBOY_NAME} from 'modules/CoinLeague/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import UserProfileItem from '../UserProfileItem';
-import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import {GameProfile} from 'modules/CoinLeague/utils/types';
 import {
   Box,
   Collapse,

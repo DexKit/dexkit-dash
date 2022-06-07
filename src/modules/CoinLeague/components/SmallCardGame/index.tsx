@@ -11,9 +11,9 @@ import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
 import {CardTimer} from '../CardTimer';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {GameGraph} from 'modules/CoinLeague/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {Skeleton} from '@material-ui/lab';
 
 import {Share as ShareIcon} from '@material-ui/icons';
@@ -24,7 +24,7 @@ import {ReactComponent as ReceiveSquareIcon} from '../../assets/receive-square.s
 import {ReactComponent as SendSquareIcon} from '../../assets/send-square.svg';
 import {ReactComponent as TimerIcon} from '../../assets/timer.svg';
 import {ReactComponent as ChartSquareIcon} from '../../assets/chart-square.svg';
-import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeagues/utils/time';
+import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeague/utils/time';
 
 interface Props {
   game?: GameGraph;

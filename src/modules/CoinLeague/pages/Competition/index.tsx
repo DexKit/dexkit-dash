@@ -7,19 +7,19 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import RankingButton from 'modules/CoinLeagues/components/RankingLeaguesButton';
+import RankingButton from 'modules/CoinLeague/components/RankingLeaguesButton';
 import {
   RankingType,
   useRankingCompetion,
-} from 'modules/CoinLeagues/hooks/useRankingLeagues';
+} from 'modules/CoinLeague/hooks/useRankingLeagues';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {BigNumber, ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
-import RankingButtonSkeleton from 'modules/CoinLeagues/components/RankingButton/index.skeleton';
-import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
-import {Months} from 'modules/CoinLeagues/constants';
+import RankingButtonSkeleton from 'modules/CoinLeague/components/RankingButton/index.skeleton';
+import {useGameProfilesState} from 'modules/CoinLeague/hooks/useGameProfilesState';
+import {Months} from 'modules/CoinLeague/constants';
 import {ChainId} from 'types/blockchain';
 
 export function Competition() {

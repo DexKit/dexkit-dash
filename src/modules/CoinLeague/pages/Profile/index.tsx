@@ -16,47 +16,47 @@ import {Link as RouterLink} from 'react-router-dom';
 
 import {Skeleton} from '@material-ui/lab';
 
-import {ProfileImage} from 'modules/CoinLeagues/components/Profile/ProfileImage';
+import {ProfileImage} from 'modules/CoinLeague/components/Profile/ProfileImage';
 import React, {useState, useCallback, useEffect} from 'react';
 import MainLayout from 'shared/components/layouts/main';
 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Edit, Share} from '@material-ui/icons';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ProfileStatsPill from 'modules/CoinLeagues/components/Profile/ProfileStatsPill';
+import ProfileStatsPill from 'modules/CoinLeague/components/Profile/ProfileStatsPill';
 import {
   CupStatsIcon,
   DiscoverStatsIcon,
-} from 'modules/CoinLeagues/components/Profile/icons';
+} from 'modules/CoinLeague/components/Profile/icons';
 
 // import {CoinStack} from 'modules/CoinLeagues/components/Profile/CoinStack';
 import {useHistory, useParams} from 'react-router';
-import {usePlayerProfileStats} from 'modules/CoinLeagues/hooks/usePlayerProfileStats';
+import {usePlayerProfileStats} from 'modules/CoinLeague/hooks/usePlayerProfileStats';
 import {truncateAddress} from 'utils';
 import {isAddress} from 'web3-utils';
 
 import {ethers} from 'ethers';
 import {useIntl} from 'react-intl';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {CoinLeagueGames} from 'modules/CoinLeagues/utils/types';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {CoinLeagueGames} from 'modules/CoinLeague/utils/types';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useMobile} from 'hooks/useMobile';
-import ProfileShareDialog from 'modules/CoinLeagues/components/Profile/ProfileShareDialog';
+import ProfileShareDialog from 'modules/CoinLeague/components/Profile/ProfileShareDialog';
 import {useToggler} from 'hooks/useToggler';
 import {
   coinLeagueGamesToSlug,
   reduceAddress,
   slugToCoinLeagueGame,
-} from 'modules/CoinLeagues/utils/game';
-import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
+} from 'modules/CoinLeague/utils/game';
+import MyGamesTable from 'modules/CoinLeague/components/MyGamesTable';
 import CopyButton from 'shared/components/CopyButton';
 import {useWeb3} from 'hooks/useWeb3';
-import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {useProfileGame} from 'modules/CoinLeague/hooks/useGameProfile';
 import {getNormalizedUrl} from 'utils/browser';
-import {useChampionBalance} from 'modules/CoinLeagues/hooks/champions';
+import {useChampionBalance} from 'modules/CoinLeague/hooks/champions';
 import {chainIdToSlug, slugToChainId} from 'utils/nft';
 import {ChainId} from 'types/blockchain';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import NFTLeagueGamesTable from 'modules/NFTLeague/components/NFTLeagueGamesTable';
 import SquidLeagueMyGamesTable from 'modules/SquidLeague/components/MyGamesTable';

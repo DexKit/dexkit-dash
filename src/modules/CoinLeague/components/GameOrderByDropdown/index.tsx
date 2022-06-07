@@ -8,8 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';*/
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeagues/utils/game';
-import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeague/utils/game';
+import {GameOrderBy} from 'modules/CoinLeague/constants/enums';
 
 interface Props {
   onSelectGameOrder: (value: GameOrderBy) => void;

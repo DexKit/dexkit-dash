@@ -17,19 +17,19 @@ import MainLayout from 'shared/components/layouts/main';
 
 import {Link as RouterLink} from 'react-router-dom';
 import {HOME_ROUTE} from 'shared/constants/routes';
-import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {useProfileGame} from 'modules/CoinLeague/hooks/useGameProfile';
 import {isAddress} from 'web3-utils';
-import {reduceAddress} from 'modules/CoinLeagues/utils/game';
+import {reduceAddress} from 'modules/CoinLeague/utils/game';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
+import ChampionCard from 'modules/CoinLeague/components/champions/ChampionCard';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 import {
   useChampionBalance,
   useMyChampions,
-} from 'modules/CoinLeagues/hooks/champions';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+} from 'modules/CoinLeague/hooks/champions';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {useDebounce} from 'hooks/useDebounce';
 
 import SearchIcon from '@material-ui/icons/Search';

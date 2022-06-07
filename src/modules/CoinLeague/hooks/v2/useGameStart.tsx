@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react';
 import {Game} from 'types/coinsleague';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useCoinLeaguesCallbacks} from '../useCoinLeagues';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useIntl} from 'react-intl';

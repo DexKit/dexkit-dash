@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CardPrizeSkeleton(): JSX.Element {
   const classes = useStyles();
-  const { coinSymbol } = useLeaguesChainInfo();
+  const {coinSymbol} = useLeaguesChainInfo();
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>

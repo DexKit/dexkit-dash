@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {strPad} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeague/utils/time';
 
 export function CardTimer(props: {time: number}) {
   const time = props.time;

@@ -10,7 +10,7 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 
 type Props = {
   handleDelete: (index: number) => void;

@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import {Skeleton} from '@material-ui/lab';
-import {useChampionMetadataQuery} from 'modules/CoinLeagues/hooks/champions';
+import {useChampionMetadataQuery} from 'modules/CoinLeague/hooks/champions';
 import React from 'react';
 import {getNormalizedUrl} from 'utils/browser';
 

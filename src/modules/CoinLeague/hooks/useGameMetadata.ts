@@ -1,7 +1,7 @@
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
-import {useQuery} from 'react-query';
-import {RoomType} from '../constants/enums';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback } from 'react';
+import { useQuery } from 'react-query';
+import { RoomType } from '../constants/enums';
 import {
   getGameMetadata,
   getGamesMetadata,
@@ -9,8 +9,8 @@ import {
   signUpdate,
   update,
 } from '../services/gameMetadataApi';
-import {useIsNFTGame} from './useCoinLeaguesFactory';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { useIsNFTGame } from './useCoinLeaguesFactory';
+import { useLeaguesChainInfo } from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: (hash?: string) => void;
@@ -19,8 +19,8 @@ interface CallbackProps {
 }
 
 export const useGameMetadataUpdater = () => {
-  const {getProvider, account} = useWeb3();
-  const {chainId} = useLeaguesChainInfo();
+  const { getProvider, account } = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const isNFT = useIsNFTGame();
   const chainProvider = getProvider();
   const onPostMetadata = useCallback(
@@ -61,11 +61,11 @@ export const useGameMetadataUpdater = () => {
     [chainProvider, chainId, isNFT, account],
   );
 
-  return {onPostMetadata};
+  return { onPostMetadata };
 };
 
 export const useGameMetadataDeleteCallback = () => {
-  const {getProvider, chainId, account} = useWeb3();
+  const { getProvider, chainId, account } = useWeb3();
   const isNFT = useIsNFTGame();
   const chainProvider = getProvider();
   const onDeleteGameMetadata = useCallback(
@@ -105,12 +105,12 @@ export const useGameMetadataDeleteCallback = () => {
     [chainProvider, chainId, isNFT, account],
   );
 
-  return {onDeleteGameMetadata};
+  return { onDeleteGameMetadata };
 };
 
 export const useGameMetadata = (id: string) => {
   const isNFT = useIsNFTGame();
-  const {chainId} = useLeaguesChainInfo();
+  const { chainId } = useLeaguesChainInfo();
   return useQuery(['GET_GAME_METADATA', id, chainId], () => {
     return getGameMetadata(id, isNFT ? RoomType.NFT : RoomType.Main, chainId);
   });
@@ -118,7 +118,7 @@ export const useGameMetadata = (id: string) => {
 
 export const useGamesMetadata = (ids?: string) => {
   const isNFT = useIsNFTGame();
-  const {chainId} = useLeaguesChainInfo();
+  const { chainId } = useLeaguesChainInfo();
   return useQuery(['GET_GAMES_METADATA', ids, chainId], () => {
     if (!ids) {
       return;

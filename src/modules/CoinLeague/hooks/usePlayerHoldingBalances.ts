@@ -5,7 +5,7 @@ import { ChainId } from 'types/blockchain';
 import { getPlayerMultipliers } from '../services/coinLeagues';
 import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
 import { useCoinLeagues } from './useCoinLeagues';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { useLeaguesChainInfo } from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean) => {
   const { chainId } = useLeaguesChainInfo();
@@ -25,7 +25,7 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
         // @ts-ignore
         game.players,
         provider,
-         // @ts-ignore
+        // @ts-ignore
         chainId || ChainId.Matic,
       );
     },

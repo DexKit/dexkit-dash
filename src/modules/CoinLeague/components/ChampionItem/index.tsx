@@ -2,10 +2,10 @@ import Paper from '@material-ui/core/Paper';
 import React, {useCallback} from 'react';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
 import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
-import { getNormalizedUrl } from 'utils/browser';
-import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
-import { getChampionsMultiplier } from 'modules/CoinLeagues/utils/champions';
-import { BigNumber } from 'ethers';
+import {getNormalizedUrl} from 'utils/browser';
+import {ChampionMetaItem} from 'modules/CoinLeague/utils/types';
+import {getChampionsMultiplier} from 'modules/CoinLeague/utils/champions';
+import {BigNumber} from 'ethers';
 
 type Props = {
   handleDelete: () => void;
@@ -51,7 +51,11 @@ export const ChampionItem = (props: Props) => {
       <Grid container alignItems='center' spacing={4}>
         <Grid item>
           <Box className={classes.coinContainer}>
-            <img src={champion?.image ? getNormalizedUrl(champion?.image) : ''} className={classes.coin} alt={'Champion'} />
+            <img
+              src={champion?.image ? getNormalizedUrl(champion?.image) : ''}
+              className={classes.coin}
+              alt={'Champion'}
+            />
           </Box>
         </Grid>
 
@@ -62,7 +66,8 @@ export const ChampionItem = (props: Props) => {
         </Grid>
         <Grid item>
           <Typography variant='body2' color='textSecondary'>
-            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))} Multiplier
+            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))}{' '}
+            Multiplier
           </Typography>
         </Grid>
         <Grid item>

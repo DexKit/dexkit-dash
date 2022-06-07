@@ -8,8 +8,8 @@ import {
   getEventAccessDate,
   getEventCurrentRound,
   getEventEarlyAccessDate,
-} from 'modules/CoinLeagues/utils/champions';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+} from 'modules/CoinLeague/utils/champions';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface CountdownCardCardProps {
   elegible?: boolean;
@@ -23,7 +23,7 @@ export const EarlyAccessCountdownSection = (props: CountdownCardCardProps) => {
 
   const isMobile = useMobile();
 
-  const { chainId } = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
 
   return (
     <Grid container spacing={4}>

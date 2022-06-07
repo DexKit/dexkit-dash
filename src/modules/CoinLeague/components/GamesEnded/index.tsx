@@ -6,14 +6,14 @@ import {Grid} from '@material-ui/core';
 
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import {Empty} from 'shared/components/Empty';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
+import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
 import {useHistory} from 'react-router-dom';
 import CardGameSkeleton from '../CardGame/index.skeleton';
 import CardGameV2 from '../CardGame';
 import {useWeb3} from 'hooks/useWeb3';
-import {GameFiltersState} from 'modules/CoinLeagues/hooks/useGamesFilter';
-import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import {GameFiltersState} from 'modules/CoinLeague/hooks/useGamesFilter';
+import {useGamesMetadata} from 'modules/CoinLeague/hooks/useGameMetadata';
 
 interface Props {
   filters: GameFiltersState;
@@ -37,16 +37,14 @@ export const GamesEnded = (props: Props) => {
   const endedGamesIds = useMemo(() => {
     if (endedGamesData) {
       if (endedGamesData.length) {
-        return endedGamesData?.map(g => g.intId).reduce((p, c) => `${p},${c}`);
+        return endedGamesData
+          ?.map((g) => g.intId)
+          .reduce((p, c) => `${p},${c}`);
       }
     }
-  }, [endedGamesData])
-
-
+  }, [endedGamesData]);
 
   const gamesMetadata = useGamesMetadata(endedGamesIds);
-
-
 
   const onClickEnterGame = useCallback(
     (id: string) => {
@@ -55,39 +53,44 @@ export const GamesEnded = (props: Props) => {
     [enterGameRoute, history],
   );
 
- 
-
   const endedGames = useMemo(() => {
     if (gamesEndedQuery.data) {
       if (gamesMetadata.data) {
         const metadata = gamesMetadata.data;
         // We merge the metadata with the game
-        return gamesEndedQuery.data.games.map(g => {
-          const withMetadata = metadata.find(m => Number(m.gameId) === Number(g.intId));
-          if (withMetadata) {
-            return {
-              ...withMetadata,
-              ...g,
+        return gamesEndedQuery.data.games
+          .map((g) => {
+            const withMetadata = metadata.find(
+              (m) => Number(m.gameId) === Number(g.intId),
+            );
+            if (withMetadata) {
+              return {
+                ...withMetadata,
+                ...g,
+              };
+            } else {
+              return g;
             }
-          } else {
-            return g;
-          }
-        }).filter(g => {
-          if (filters.isJackpot) {
-            return !!g.title;
-          }
-          return true;
-        }).filter(
-          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '' ) !== -1
-        )
+          })
+          .filter((g) => {
+            if (filters.isJackpot) {
+              return !!g.title;
+            }
+            return true;
+          })
+          .filter(
+            (g) =>
+              g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !==
+              -1,
+          );
       } else {
         return gamesEndedQuery.data.games.filter(
-          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
+          (g) =>
+            g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
         );
       }
     }
   }, [search, gamesEndedQuery.data, gamesMetadata.data, filters.isJackpot]);
-
 
   return (
     <Grid item xs={12}>

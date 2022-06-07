@@ -34,35 +34,35 @@ import {
   GET_EVENT_HOLDING_AMOUNT,
   getMaxSupplyForRound,
   IS_CHAMPIONS_NETWORK_ENABLED,
-} from 'modules/CoinLeagues/utils/champions';
+} from 'modules/CoinLeague/utils/champions';
 
 import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {IS_CHAMPIONS_SUPPORTED_NETWORK} from 'modules/CoinLeagues/utils/champions';
+import {IS_CHAMPIONS_SUPPORTED_NETWORK} from 'modules/CoinLeague/utils/champions';
 
-import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
-import EarlyAccessCountdownSection from 'modules/CoinLeagues/components/champions/EarlyAccessCountdownSection';
-import MintChampionDialog from 'modules/CoinLeagues/components/champions/dialogs/MintChampionDialog';
+import ChampionCard from 'modules/CoinLeague/components/champions/ChampionCard';
+import EarlyAccessCountdownSection from 'modules/CoinLeague/components/champions/EarlyAccessCountdownSection';
+import MintChampionDialog from 'modules/CoinLeague/components/champions/dialogs/MintChampionDialog';
 import {useToggler} from 'hooks/useToggler';
 import {
   useChampionMint,
   useChampionsTotalSupply,
   useChampionTokenHolding,
   useMyChampions,
-} from 'modules/CoinLeagues/hooks/champions';
+} from 'modules/CoinLeague/hooks/champions';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import {leftPad} from 'utils';
 import {
   EARLY_ACCESS_BITT_AMOUNT,
   EARLY_ACCESS_KIT_AMOUNT,
-} from 'modules/CoinLeagues/constants';
-import {MintChampionButton} from 'modules/CoinLeagues/components/champions/buttons/MintChampionButton';
+} from 'modules/CoinLeague/constants';
+import {MintChampionButton} from 'modules/CoinLeague/components/champions/buttons/MintChampionButton';
 import {getEventHoldingAmount} from '../../utils/champions';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {switchChain} from 'utils/wallet';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';

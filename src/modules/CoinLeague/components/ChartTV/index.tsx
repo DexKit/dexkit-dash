@@ -1,16 +1,15 @@
-import { MaticPriceFeeds } from 'modules/CoinLeagues/constants';
+import {MaticPriceFeeds} from 'modules/CoinLeague/constants';
 import React from 'react';
-import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
+import {AdvancedRealTimeChart} from 'react-ts-tradingview-widgets';
 
-interface Props{
+interface Props {
   symbol?: string;
   height?: string;
   width?: string;
 }
 
-
-const ChartTV  = (props: Props) => {
-  const {symbol, height, width } = props;
+const ChartTV = (props: Props) => {
+  const {symbol, height, width} = props;
   const symbols = MaticPriceFeeds.filter((s) => s.tv).map(
     (s) => s.tv,
   ) as string[];

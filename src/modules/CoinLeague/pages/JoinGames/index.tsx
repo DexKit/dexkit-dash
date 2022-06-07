@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 
-import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
+import GameFilterDrawer from 'modules/CoinLeague/components/GameFilterDrawer';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
@@ -21,8 +21,8 @@ import {SupportedNetworkType} from 'types/blockchain';
 import FormControl from '@material-ui/core/FormControl';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
-import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
-import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
+import CreateGameModal from 'modules/CoinLeague/components/CreateGameModal';
+import CardGameSkeleton from 'modules/CoinLeague/components/CardGame/index.skeleton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Empty} from 'shared/components/Empty';
@@ -36,20 +36,20 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 
-import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
-import CardGameV2 from 'modules/CoinLeagues/components/CardGame';
+import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
+import CardGameV2 from 'modules/CoinLeague/components/CardGame';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import SwapButton from 'shared/components/SwapButton';
-import {GameOrderBy, RoomType} from 'modules/CoinLeagues/constants/enums';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
-import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
+import {GameOrderBy, RoomType} from 'modules/CoinLeague/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
+import GameOrderBySelect from 'modules/CoinLeague/components/GameOrderBySelect';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {useToggler} from 'hooks/useToggler';
 
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 
 const useStyles = makeStyles((theme) => ({
   icon: {

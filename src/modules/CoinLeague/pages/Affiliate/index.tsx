@@ -23,19 +23,19 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {
   useAffiliateEntries,
   useAffiliatePlayer,
-} from 'modules/CoinLeagues/hooks/useAffiliate';
+} from 'modules/CoinLeague/hooks/useAffiliate';
 import {
   COINLEAGUENFT_ROUTE,
   COINSLEAGUE_ROUTE,
   BASE_PATH_ROUTE,
 } from 'shared/constants/routes';
-import {AFFILIATE_FIELD} from 'modules/CoinLeagues/constants';
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import {AFFILIATE_FIELD} from 'modules/CoinLeague/constants';
+import {RoomType} from 'modules/CoinLeague/constants/enums';
 import {ethers} from 'ethers';
-import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {InputAdornment, InputLabel, Paper, TextField} from '@material-ui/core';
 import {isAddress} from 'utils/ethers';

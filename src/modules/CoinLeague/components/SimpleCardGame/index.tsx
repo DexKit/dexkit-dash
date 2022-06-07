@@ -6,9 +6,9 @@ import {ethers} from 'ethers';
 import {Grid, Typography, Box, Paper} from '@material-ui/core';
 
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeague/utils/time';
+import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface Props {
   address: string;

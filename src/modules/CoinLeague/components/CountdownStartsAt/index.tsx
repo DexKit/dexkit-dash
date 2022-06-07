@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
 import {useCountdown} from 'hooks/utils/useCountdown';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import {strPad} from 'modules/CoinLeagues/utils/time';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
+import {strPad} from 'modules/CoinLeague/utils/time';
 
 interface Props {
   id: string;

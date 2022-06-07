@@ -18,9 +18,9 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {getWindowUrl} from 'utils/browser';
 import {ChainId} from 'types/blockchain';
-import {coinLeagueGamesToSlug} from 'modules/CoinLeagues/utils/game';
+import {coinLeagueGamesToSlug} from 'modules/CoinLeague/utils/game';
 import {chainIdToSlug} from 'utils/nft';
-import {CoinLeagueGames} from 'modules/CoinLeagues/utils/types';
+import {CoinLeagueGames} from 'modules/CoinLeague/utils/types';
 
 interface Props {
   dialogProps: DialogProps;

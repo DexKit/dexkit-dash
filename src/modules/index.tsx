@@ -6,7 +6,7 @@ import {errorPagesConfigs} from './ErrorPages';
 
 import {dashBoardConfigs} from './Dashboard';
 
-import {coinLeaguesConfigs} from './CoinLeagues';
+import {coinLeaguesConfigs} from './CoinLeague';
 import {changelogConfigs} from './Changelog';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';

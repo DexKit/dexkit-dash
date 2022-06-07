@@ -33,7 +33,7 @@ import * as yup from 'yup';
 
 import {useModuleStyle} from '../styles/index';
 import {useBattleFactoryCallbacks} from '../hooks/useBattleFactoryCallbacks';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {ethers} from 'ethers';
 import {Alert} from '@material-ui/lab';
 import CreateGameDialog from '../components/CreateGameDialog';

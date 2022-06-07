@@ -1,5 +1,5 @@
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useMemo} from 'react';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback, useMemo } from 'react';
 import {
   createGame,
   getCreatedGamesAddressFromFactory,
@@ -7,16 +7,16 @@ import {
   getGamesAddressFromFactory,
   getStartedGamesAddressFromFactory,
   getTotalGamesFromFactory,
-} from 'modules/CoinLeagues/services/coinLeaguesFactory';
-import {Web3State} from 'types/blockchain';
-import {GameParams} from 'types/coinsleague';
-import {getGamesData} from '../services/coinLeagues';
-import {useQuery} from 'react-query';
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
-import {useLocation, useParams} from 'react-router-dom';
-import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+} from 'modules/CoinLeague/services/coinLeaguesFactory';
+import { Web3State } from 'types/blockchain';
+import { GameParams } from 'types/coinsleague';
+import { getGamesData } from '../services/coinLeagues';
+import { useQuery } from 'react-query';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
+import { useLocation, useParams } from 'react-router-dom';
+import { COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE } from 'shared/constants/routes';
 import {
   COIN_LEAGUES_FACTORY_ADDRESS,
   COIN_LEAGUES_NFT_FACTORY_ADDRESS,
@@ -30,7 +30,7 @@ interface CallbackProps {
 }
 
 export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
-  const { room } = useParams<{room: string}>();
+  const { room } = useParams<{ room: string }>();
   const isNFTGame = useIsNFTGame() || isNFT;
   const { chainFromSearchName } = useLeaguesChainInfo();
 
@@ -42,12 +42,12 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
         if (isNFTGame) {
           return `${COINLEAGUENFT_ROUTE}/${address}`;
         } else {
-          if(chainFromSearchName ){
+          if (chainFromSearchName) {
             return `${COINSLEAGUE_ROUTE}/${address}?network=${chainFromSearchName}`;
-          }else{
+          } else {
             return `${COINSLEAGUE_ROUTE}/${address}`;
-          } 
-         
+          }
+
         }
       }
     },
@@ -61,9 +61,9 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}/active-games`;
       } else {
-        if(chainFromSearchName){
-         return `${COINSLEAGUE_ROUTE}/active-games?network=${chainFromSearchName}`;
-        }else{
+        if (chainFromSearchName) {
+          return `${COINSLEAGUE_ROUTE}/active-games?network=${chainFromSearchName}`;
+        } else {
           return `${COINSLEAGUE_ROUTE}/active-games`;
         }
       }
@@ -77,9 +77,9 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}`;
       } else {
-        if(chainFromSearchName){
-         return `${COINSLEAGUE_ROUTE}?network=${chainFromSearchName}`;
-        }else{
+        if (chainFromSearchName) {
+          return `${COINSLEAGUE_ROUTE}?network=${chainFromSearchName}`;
+        } else {
           return `${COINSLEAGUE_ROUTE}`;
         }
       }
@@ -100,7 +100,7 @@ export const useCoinLeaguesFactory = () => {
     GET_LEAGUES_CHAIN_ID(chainId),
   );
 
-  const {room} = useParams<{room: string}>();
+  const { room } = useParams<{ room: string }>();
   const factoryAddress = useMemo(() => {
     return room
       ? room
@@ -240,16 +240,16 @@ export const useCoinLeaguesFactory = () => {
 };
 
 export const useCoinLeaguesFactoryCreateGameCallback = () => {
-  const {web3State, chainId, getProvider} = useWeb3();
-  const {room} = useParams<{room: string}>();
+  const { web3State, chainId, getProvider } = useWeb3();
+  const { room } = useParams<{ room: string }>();
   const isNFTGame = useIsNFTGame();
   const chainProvider = getProvider();
   const factoryAddress = useMemo(() => {
     return room
       ? room
       : isNFTGame
-      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+        ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFTGame]);
 
   const onGameCreateCallback = useCallback(
@@ -281,14 +281,14 @@ export const useCoinLeaguesFactoryTotalGames = () => {
     GET_LEAGUES_CHAIN_ID(chainId),
   );
 
-  const {room} = useParams<{room: string}>();
+  const { room } = useParams<{ room: string }>();
   const isNFTGame = useIsNFTGame();
   const factoryAddress = useMemo(() => {
     return room
       ? room
       : isNFTGame
-      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+        ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFTGame]);
 
   const totalGamesQuery = useQuery(['GetTotalGames', factoryAddress], () => {
@@ -296,7 +296,7 @@ export const useCoinLeaguesFactoryTotalGames = () => {
     if (!factoryAddress || !provider) {
       return;
     }
-    
+
     return getTotalGamesFromFactory(factoryAddress, provider);
   });
   return {
@@ -307,7 +307,7 @@ export const useCoinLeaguesFactoryTotalGames = () => {
 };
 
 export const useIsNFTGame = () => {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   return useMemo(() => {
     if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
       return true;

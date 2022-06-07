@@ -11,14 +11,14 @@ import {
 import Box from '@material-ui/core/Box';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import ChartTV from 'modules/CoinLeagues/components/ChartTV';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
+import ChartTV from 'modules/CoinLeague/components/ChartTV';
 
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useWindowSize } from 'hooks/useWindowSize';
-import { useMobile } from 'hooks/useMobile';
+import {useWindowSize} from 'hooks/useWindowSize';
+import {useMobile} from 'hooks/useMobile';
 import {useSelector} from 'react-redux';
 import {AppState} from '../../../../redux/store';
 
@@ -33,19 +33,20 @@ export function TradingAnalysis() {
     ({settings}) => settings,
   );
 
-
   const widthComp = isMobile ? 0 : navCollapsed ? 150 : 450;
   const heightComp = isMobile ? 0 : 150;
 
   return (
     <Grid container spacing={4}>
-    {!isMobile &&  <Grid item xs={12}>
-        <Breadcrumbs>
-          <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-            Coin League
-          </Link>
-        </Breadcrumbs>
-      </Grid>}
+      {!isMobile && (
+        <Grid item xs={12}>
+          <Breadcrumbs>
+            <Link color='inherit' component={RouterLink} to={listGamesRoute}>
+              Coin League
+            </Link>
+          </Breadcrumbs>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Box display='flex' alignItems='center' alignContent='center'>
           <Box display='flex' alignItems='center' alignContent='center' mr={2}>
@@ -71,38 +72,62 @@ export function TradingAnalysis() {
       </Grid>
       {charts === 2 && width && height && (
         <>
-          <Grid item xs={12} md={6}  >
-            <ChartTV height={`${(height - heightComp)}px`} width={`${(width - widthComp)/2}px`} />
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              height={`${height - heightComp}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
           </Grid>
-          <Grid item xs={12} md={6} >
-            <ChartTV symbol={'COINBASE:ETHUSD'}  height={`${(height-heightComp)}px`} width={`${(width-widthComp)/2}px`}/>
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              symbol={'COINBASE:ETHUSD'}
+              height={`${height - heightComp}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
           </Grid>
         </>
       )}
-       {charts === 1 && width && height  && (
+      {charts === 1 && width && height && (
         <>
           <Grid item xs={12} md={6}>
-            <ChartTV  height={`${height - heightComp}px`} width={`${(width-widthComp)}px`} />
-          </Grid>
-        </>
-      )}   
-       {charts === 4 && width && height && (
-        <>
-          <Grid item xs={12} md={6} >
-            <ChartTV  height={`${(height - heightComp)/2}px`} width={`${(width-widthComp)/2}px`} />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <ChartTV symbol={'COINBASE:ETHUSD'}  height={`${(height - heightComp)/2}px`} width={`${(width-widthComp)/2}px`} />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <ChartTV symbol={'BINANCE:BNBUSD'}  height={`${(height - heightComp)/2}px`} width={`${(width-widthComp)/2}px`} />
-          </Grid>
-          <Grid item xs={12} md={6} >
-            <ChartTV symbol={'BINANCE:SOLUSD'}  height={`${(height - heightComp)/2}px`} width={`${(width-widthComp)/2}px`} />
+            <ChartTV
+              height={`${height - heightComp}px`}
+              width={`${width - widthComp}px`}
+            />
           </Grid>
         </>
       )}
-     
+      {charts === 4 && width && height && (
+        <>
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              height={`${(height - heightComp) / 2}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              symbol={'COINBASE:ETHUSD'}
+              height={`${(height - heightComp) / 2}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              symbol={'BINANCE:BNBUSD'}
+              height={`${(height - heightComp) / 2}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <ChartTV
+              symbol={'BINANCE:SOLUSD'}
+              height={`${(height - heightComp) / 2}px`}
+              width={`${(width - widthComp) / 2}px`}
+            />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 }

@@ -20,7 +20,7 @@ import {useOnChainGameData} from 'modules/SquidLeague/hooks/useOnChainGameData';
 import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCurrentRoundGame';
 import {GameState} from 'modules/SquidLeague/utils/types';
 
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants/PriceFeeds/matic';
+import {MaticPriceFeeds} from 'modules/CoinLeague/constants/PriceFeeds/matic';
 import {useWeb3} from 'hooks/useWeb3';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';

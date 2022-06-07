@@ -24,11 +24,11 @@ import {
   GameLevel,
   GameType,
   NumberOfPLayers,
-} from 'modules/CoinLeagues/constants/enums';
-import {GameFiltersState} from 'modules/CoinLeagues/hooks/useGamesFilter';
+} from 'modules/CoinLeague/constants/enums';
+import {GameFiltersState} from 'modules/CoinLeague/hooks/useGamesFilter';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
-import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeagues/utils/game';
+import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeague/utils/game';
 
 interface Props {
   show: boolean;

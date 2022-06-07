@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import {makeStyles} from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import {truncateAddress} from 'utils';
-import {GET_CREATOR_LABELS} from 'modules/CoinLeagues/utils/game';
+import {GET_CREATOR_LABELS} from 'modules/CoinLeague/utils/game';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 
 const useStyles = makeStyles((theme) => ({

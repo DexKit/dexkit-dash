@@ -21,11 +21,11 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {SelectChampionListItem} from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
-import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
+import {useMyChampions} from 'modules/CoinLeague/hooks/champions';
 import {
   ChampionMetaItem,
   CoinLeaguesChampion,
-} from 'modules/CoinLeagues/utils/types';
+} from 'modules/CoinLeague/utils/types';
 import {Link as RouterLink} from 'react-router-dom';
 
 interface Props extends DialogProps {

@@ -1,11 +1,9 @@
-import { Box, makeStyles, useTheme, Grid, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
-import { getNormalizedUrl } from 'utils/browser';
-import {
-  ChampionMetaItem
-} from 'modules/CoinLeagues/utils/types';
-import { getChampionsMultiplier } from 'modules/CoinLeagues/utils/champions';
-import { BigNumber } from 'ethers';
+import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
+import React, {useCallback} from 'react';
+import {getNormalizedUrl} from 'utils/browser';
+import {ChampionMetaItem} from 'modules/CoinLeague/utils/types';
+import {getChampionsMultiplier} from 'modules/CoinLeague/utils/champions';
+import {BigNumber} from 'ethers';
 export interface Props {
   champion: ChampionMetaItem;
   onClick: (championId: ChampionMetaItem) => void;
@@ -38,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectChampionListItem = (props: Props) => {
-  const { champion, onClick, style } = props;
+  const {champion, onClick, style} = props;
   const theme = useTheme();
   const classes = useStyles();
   const handleClick = useCallback(() => {
@@ -48,12 +46,16 @@ export const SelectChampionListItem = (props: Props) => {
   return (
     <Box
       onClick={handleClick}
-      style={{ ...style, padding: theme.spacing(2) }}
+      style={{...style, padding: theme.spacing(2)}}
       className={classes.item}>
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-            <img alt={champion?.name} src={champion?.image ? getNormalizedUrl(champion?.image) : ''} className={classes.token} />
+            <img
+              alt={champion?.name}
+              src={champion?.image ? getNormalizedUrl(champion?.image) : ''}
+              className={classes.token}
+            />
           </Box>
         </Grid>
 
@@ -63,12 +65,12 @@ export const SelectChampionListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item>
-          {champion?.rarity &&
+          {champion?.rarity && (
             <Typography variant='body2' color='textSecondary'>
-              {getChampionsMultiplier(BigNumber.from(champion?.rarity))} Multiplier
-            </Typography>}
-
-
+              {getChampionsMultiplier(BigNumber.from(champion?.rarity))}{' '}
+              Multiplier
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Box>

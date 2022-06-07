@@ -3,8 +3,8 @@ import {Button, CircularProgress, Grid, makeStyles} from '@material-ui/core';
 import {Delete, Edit} from '@material-ui/icons';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {useGameEnd} from 'modules/CoinLeagues/hooks/v2/useGameEnd';
-import {useGameStart} from 'modules/CoinLeagues/hooks/v2/useGameStart';
+import {useGameEnd} from 'modules/CoinLeague/hooks/v2/useGameEnd';
+import {useGameStart} from 'modules/CoinLeague/hooks/v2/useGameStart';
 import React, {useCallback, useState, useMemo} from 'react';
 import {Game} from 'types/coinsleague';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import {GameProfile} from 'modules/CoinLeague/utils/types';
 import Grid from '@material-ui/core/Grid';
 import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -10,7 +10,7 @@ import {Avatar, Link} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';
 import {getPublicIPFSPath, isIPFS} from 'utils/ipfs';
-import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {GET_BITBOY_NAME} from 'modules/CoinLeague/utils/game';
 import {isAddress} from 'utils/ethers';
 
 const useStyles = makeStyles((theme) => ({

@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {useHistory} from 'react-router-dom';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';

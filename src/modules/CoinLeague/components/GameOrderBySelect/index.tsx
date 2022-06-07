@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 
 import {Select, MenuItem, FormControl} from '@material-ui/core';
 
-import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeagues/utils/game';
-import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeague/utils/game';
+import {GameOrderBy} from 'modules/CoinLeague/constants/enums';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {

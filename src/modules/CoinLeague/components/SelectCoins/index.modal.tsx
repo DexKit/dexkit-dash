@@ -20,9 +20,9 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {SelectCoinListItem} from './SelectCoinItem';
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
+import {PriceFeeds} from 'modules/CoinLeague/constants';
 import {ChainId} from 'types/blockchain';
 
 function isSelected(

@@ -19,12 +19,12 @@ import TextField from '@material-ui/core/TextField';
 import {
   useGameMetadata,
   useGameMetadataUpdater,
-} from 'modules/CoinLeagues/hooks/useGameMetadata';
+} from 'modules/CoinLeague/hooks/useGameMetadata';
 import {SubmitState} from '../ButtonState';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {useIntl} from 'react-intl';

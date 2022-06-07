@@ -4,13 +4,13 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Button, Grid, Hidden, IconButton, Typography} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import {SupportedNetworkType} from 'types/blockchain';
 import Box from '@material-ui/core/Box';
-import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
+import CreateGameModal from 'modules/CoinLeague/components/CreateGameModal';
 
 import {useHistory} from 'react-router-dom';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
@@ -25,14 +25,14 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
+import MyGamesTable from 'modules/CoinLeague/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
 
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import {RoomType} from 'modules/CoinLeague/constants/enums';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 
 const MyGames = () => {
   const history = useHistory();

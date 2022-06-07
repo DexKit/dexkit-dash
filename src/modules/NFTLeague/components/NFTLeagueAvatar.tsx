@@ -1,5 +1,5 @@
 import {Avatar, AvatarProps, makeStyles} from '@material-ui/core';
-import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {useProfileGame} from 'modules/CoinLeague/hooks/useGameProfile';
 import React, {forwardRef, memo} from 'react';
 import {useHistory} from 'react-router';
 import {COINLEAGUE_PROFILE_ROUTE} from 'shared/constants/routes';

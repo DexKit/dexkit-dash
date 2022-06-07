@@ -10,13 +10,13 @@ import {
 } from '@material-ui/core';
 
 import {ViewCoinListItem} from '../ViewCoinsModal/ViewCoinItem';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import {PriceFeeds} from 'modules/CoinLeague/constants';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
+import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {

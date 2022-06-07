@@ -4,7 +4,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {
   useCoinLeagues,
   useCoinLeaguesCallbacks,
-} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -15,12 +15,12 @@ import Button from '@material-ui/core/Button';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeagues/utils/constants';
+} from 'modules/CoinLeague/utils/constants';
 import {useInterval} from 'hooks/utils/useInterval';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface Props {
   id?: string;

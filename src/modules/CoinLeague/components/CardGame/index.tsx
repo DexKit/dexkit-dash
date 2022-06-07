@@ -12,17 +12,17 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 
 import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {strPad} from 'modules/CoinLeagues/utils/time';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeague/utils/time';
+import {strPad} from 'modules/CoinLeague/utils/time';
 import {CardTimer} from '../CardTimer';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import {GameGraph} from 'modules/CoinLeague/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
 
 import ViewGameMetadataModal from '../ViewGameMetadataModal';
 import IconButton from '@material-ui/core/IconButton';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import {Share as ShareIcon} from '@material-ui/icons';
 import {FormattedMessage, useIntl} from 'react-intl';

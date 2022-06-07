@@ -14,7 +14,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
@@ -36,17 +36,17 @@ import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
-import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
+import {GameOrderBy} from 'modules/CoinLeague/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
-import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {ChainSelect} from 'modules/CoinLeagues/components/ChainSelect';
-import CardGame from 'modules/CoinLeagues/components/CardGame';
-import CoinLeagueShareDialog from 'modules/CoinLeagues/components/CoinLeagueShareDialog';
+import GameOrderBySelect from 'modules/CoinLeague/components/GameOrderBySelect';
+import GameFilterDrawer from 'modules/CoinLeague/components/GameFilterDrawer';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
+import CardGame from 'modules/CoinLeague/components/CardGame';
+import CoinLeagueShareDialog from 'modules/CoinLeague/components/CoinLeagueShareDialog';
 import {useMobile} from 'hooks/useMobile';
 
 const GamesInProgress = () => {

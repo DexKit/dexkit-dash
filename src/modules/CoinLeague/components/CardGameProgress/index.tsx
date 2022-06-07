@@ -12,10 +12,10 @@ import Box from '@material-ui/core/Box';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeague/utils/time';
+import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
+import {GameGraph} from 'modules/CoinLeague/utils/types';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -18,8 +18,8 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {useMobile} from 'hooks/useMobile';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {GameGraph} from 'modules/CoinLeague/utils/types';
 
 import {ethers} from 'ethers';
 

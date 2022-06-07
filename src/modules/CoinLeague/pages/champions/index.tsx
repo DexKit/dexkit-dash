@@ -18,10 +18,10 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
-import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
+import ChampionCard from 'modules/CoinLeague/components/champions/ChampionCard';
+import {useMyChampions} from 'modules/CoinLeague/hooks/champions';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 export const ChampionsIndex = () => {
   const history = useHistory();
   const {chainId} = useLeaguesChainInfo();

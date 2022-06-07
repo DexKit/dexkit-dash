@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import Tooltip from '@material-ui/core/Tooltip';

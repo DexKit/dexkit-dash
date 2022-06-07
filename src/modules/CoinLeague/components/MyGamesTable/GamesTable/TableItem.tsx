@@ -12,12 +12,12 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {makeStyles} from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface TableItemProps {
   row: any;
@@ -53,12 +53,10 @@ const useStyles = makeStyles((theme) => ({
 const TableItem: React.FC<TableItemProps> = ({row, isNFT}) => {
   const classes = useStyles();
   const {messages} = useIntl();
-  const { coinSymbol } = useLeaguesChainInfo();
+  const {coinSymbol} = useLeaguesChainInfo();
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
-
-
 
   const paymentTypeColor = useMemo(() => {
     switch (row.status) {

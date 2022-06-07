@@ -14,12 +14,12 @@ import {
   getChampionMetadata,
   getChampionsTotalSupply,
   mintCoinLeaguesChampion,
-} from 'modules/CoinLeagues/services/champions';
+} from 'modules/CoinLeague/services/champions';
 
 import {
   ChampionMetadata,
   CoinLeaguesChampion,
-} from 'modules/CoinLeagues/utils/types';
+} from 'modules/CoinLeague/utils/types';
 
 import {
   ApolloClient,
@@ -30,14 +30,14 @@ import {
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import { useNotifications } from 'hooks/useNotifications';
 import { NotificationType, TxNotificationMetadata } from 'types/notifications';
-import { getRarityFromBodyType } from 'modules/CoinLeagues/utils/champions';
+import { getRarityFromBodyType } from 'modules/CoinLeague/utils/champions';
 import { getTransactionScannerUrl } from 'utils/blockchain';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { useLeaguesChainInfo } from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 import {
   GET_CHAMPIONS_CONTRACT_ADDR,
   IS_CHAMPIONS_SUPPORTED_NETWORK,
-} from 'modules/CoinLeagues/utils/champions';
+} from 'modules/CoinLeague/utils/champions';
 
 import { useIntl } from 'react-intl';
 

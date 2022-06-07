@@ -22,24 +22,24 @@ import {
   useCoinLeaguesFactoryRoutes,
   useCoinLeaguesFactoryTotalGames,
   useIsNFTGame,
-} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {ButtonState} from '../ButtonState';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeagues/utils/constants';
+} from 'modules/CoinLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import {DISABLE_CHAMPIONS_ID} from 'modules/CoinLeagues/constants';
-import {GET_GAME_LEVEL_AMOUNTS_UNITS} from 'modules/CoinLeagues/utils/game';
-import {GameLevel} from 'modules/CoinLeagues/constants/enums';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {DISABLE_CHAMPIONS_ID} from 'modules/CoinLeague/constants';
+import {GET_GAME_LEVEL_AMOUNTS_UNITS} from 'modules/CoinLeague/utils/game';
+import {GameLevel} from 'modules/CoinLeague/constants/enums';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {InputLabel} from '@material-ui/core';
 

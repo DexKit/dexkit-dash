@@ -14,7 +14,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 
 import {ethers} from 'ethers';
 import {GameGraph} from 'modules/NFTLeague/utils/types';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import {EventRounded, Share as ShareIcon} from '@material-ui/icons';
 import {FormattedMessage} from 'react-intl';

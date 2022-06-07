@@ -12,13 +12,13 @@ import {
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
+import {useMyGames} from 'modules/CoinLeague/hooks/useMyGames';
 
 import {
   CoinLeagueGameStatus,
   FilterPlayerGame,
-} from 'modules/CoinLeagues/constants/enums';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+} from 'modules/CoinLeague/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';

@@ -11,11 +11,11 @@ import {
 } from '@material-ui/core';
 
 import {useMobile} from 'hooks/useMobile';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
 import CoinLeagueHistoryTableItem from './CoinLeagueHistoryTableItem';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
-import {CoinLeagueGameStatus} from 'modules/CoinLeagues/constants/enums';
+import {GameGraph} from 'modules/CoinLeague/utils/types';
+import {useMyGames} from 'modules/CoinLeague/hooks/useMyGames';
+import {CoinLeagueGameStatus} from 'modules/CoinLeague/constants/enums';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 export const CoinLeagueHistoryTable: React.FC = () => {

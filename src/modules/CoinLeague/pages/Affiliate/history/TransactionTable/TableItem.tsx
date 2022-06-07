@@ -5,10 +5,9 @@ import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import {makeStyles} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { truncateAddress } from 'utils/text';
-
+import {truncateAddress} from 'utils/text';
 
 interface Props {
   data: any;
@@ -52,9 +51,9 @@ const TableItem: React.FC<Props> = ({data, isNFT}) => {
   const classes = useStyles();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const createdFn = data.createdAt
-    ? new Date(Number(data.createdAt)*1000)
+    ? new Date(Number(data.createdAt) * 1000)
     : new Date();
- 
+
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={data.transaction?.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
@@ -63,15 +62,14 @@ const TableItem: React.FC<Props> = ({data, isNFT}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-         <Box p={2}>
-            <Link
-              color='inherit'
-              component={RouterLink}
-              to={enterGameRoute(data?.game?.intId)}>
-               {data?.game?.intId}
-            </Link>
-          </Box>
-    
+        <Box p={2}>
+          <Link
+            color='inherit'
+            component={RouterLink}
+            to={enterGameRoute(data?.game?.intId)}>
+            {data?.game?.intId}
+          </Link>
+        </Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
@@ -81,12 +79,11 @@ const TableItem: React.FC<Props> = ({data, isNFT}) => {
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
           <Link
-              color='inherit'
-              target='_blank'
-              href={`https://polygonscan.com/address/${data?.player?.id}`}>
-                {truncateAddress(data?.player?.id)}
-            </Link>
-         
+            color='inherit'
+            target='_blank'
+            href={`https://polygonscan.com/address/${data?.player?.id}`}>
+            {truncateAddress(data?.player?.id)}
+          </Link>
         </Box>
       </TableCell>
     </TableRow>

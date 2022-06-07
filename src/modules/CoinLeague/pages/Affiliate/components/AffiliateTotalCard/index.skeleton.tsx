@@ -9,7 +9,7 @@ import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {

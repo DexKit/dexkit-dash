@@ -18,13 +18,13 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CloseIcon from '@material-ui/icons/Close';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import {PriceFeeds} from 'modules/CoinLeague/constants';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
+import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 
 interface Props extends DialogProps {
   title?: string;

@@ -20,40 +20,40 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {ethers, BigNumber} from 'ethers';
-import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
-import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
-import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
+import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeague/utils/types';
+import {CoinItem} from 'modules/CoinLeague/components/CoinItem';
+import {ChampionItem} from 'modules/CoinLeague/components/ChampionItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
 import {useTheme} from '@material-ui/core';
 
 import {GameType, Player} from 'types/coinsleague';
-import PlayersTable from 'modules/CoinLeagues/components/PlayersTable';
-import OnePlayerTable from 'modules/CoinLeagues/components/OnePlayerTable';
-import {WaitingPlayers} from 'modules/CoinLeagues/components/WaitingPlayers';
+import PlayersTable from 'modules/CoinLeague/components/PlayersTable';
+import OnePlayerTable from 'modules/CoinLeague/components/OnePlayerTable';
+import {WaitingPlayers} from 'modules/CoinLeague/components/WaitingPlayers';
 import {useWeb3} from 'hooks/useWeb3';
 import {
   GET_LEAGUES_CHAIN_ID,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeagues/utils/constants';
+} from 'modules/CoinLeague/utils/constants';
 import {ChainId, SupportedNetworkType} from 'types/blockchain';
-import Countdown from 'modules/CoinLeagues/components/Countdown';
-import CountdownStartsAt from 'modules/CoinLeagues/components/CountdownStartsAt';
+import Countdown from 'modules/CoinLeague/components/Countdown';
+import CountdownStartsAt from 'modules/CoinLeague/components/CountdownStartsAt';
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
+import PlayersTableSkeleton from 'modules/CoinLeague/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
 import {
   useCoinLeaguesFactoryRoutes,
   useIsNFTGame,
-} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
@@ -61,28 +61,28 @@ import {useDispatch} from 'react-redux';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 
-import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
-import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
+import {SelectCoinLeagueDialog} from 'modules/CoinLeague/components/SelectCoins/index.modal';
+import SelectChampionDialog from 'modules/CoinLeague/components/SelectChampion/index.modal';
 import {
   AFFILIATE_FIELD,
   CREATOR_PRIZES_ADDRESSES,
   DISABLE_CHAMPIONS_ID,
-} from 'modules/CoinLeagues/constants';
-import {useTokensMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
-import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMetadataModal';
-import {useGameMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
-import ViewGameMetadataModal from 'modules/CoinLeagues/components/ViewGameMetadataModal';
-import RemoveGameMetadataModal from 'modules/CoinLeagues/components/RemoveGameMetadataModal';
+} from 'modules/CoinLeague/constants';
+import {useTokensMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
+import UpdateGameMetadataModal from 'modules/CoinLeague/components/UpdateGameMetadataModal';
+import {useGameMetadata} from 'modules/CoinLeague/hooks/useGameMetadata';
+import ViewGameMetadataModal from 'modules/CoinLeague/components/ViewGameMetadataModal';
+import RemoveGameMetadataModal from 'modules/CoinLeague/components/RemoveGameMetadataModal';
 
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {useGameProfilesState} from 'modules/CoinLeagues/hooks/useGameProfilesState';
-import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeagues/utils/time';
+import {useGameProfilesState} from 'modules/CoinLeague/hooks/useGameProfilesState';
+import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeague/utils/time';
 
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import GameActions from 'modules/CoinLeagues/components/v2/GameActions';
-import {useGameJoin} from 'modules/CoinLeagues/hooks/v2/useGameJoin';
+import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
+import GameActions from 'modules/CoinLeague/components/v2/GameActions';
+import {useGameJoin} from 'modules/CoinLeague/hooks/v2/useGameJoin';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {useMobile} from 'hooks/useMobile';
 

@@ -20,15 +20,15 @@ import {Edit} from '@material-ui/icons';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useHistory, useParams} from 'react-router';
-import {ProfileImage} from 'modules/CoinLeagues/components/Profile/ProfileImage';
+import {ProfileImage} from 'modules/CoinLeague/components/Profile/ProfileImage';
 
 import {useDebounce} from 'hooks/useDebounce';
-import {useCoinLeagueProfileChecker} from 'modules/CoinLeagues/hooks/useCoinLeagueProfileChecker';
+import {useCoinLeagueProfileChecker} from 'modules/CoinLeague/hooks/useCoinLeagueProfileChecker';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import InfoIcon from '@material-ui/icons/Info';
 import {useIntl} from 'react-intl';
-import ProfileSelectImageDialog from 'modules/CoinLeagues/components/Profile/ProfileSelectImageDialog';
+import ProfileSelectImageDialog from 'modules/CoinLeague/components/Profile/ProfileSelectImageDialog';
 
 import {useToggler} from 'hooks/useToggler';
 import {useMobile} from 'hooks/useMobile';
@@ -36,11 +36,11 @@ import {useMobile} from 'hooks/useMobile';
 import {
   useGameProfileUpdater,
   useProfileGame,
-} from 'modules/CoinLeagues/hooks/useGameProfile';
+} from 'modules/CoinLeague/hooks/useGameProfile';
 import {getNormalizedUrl} from 'utils/browser';
 import {HOME_ROUTE} from 'shared/constants/routes';
 import {isAddress} from 'web3-utils';
-import {reduceAddress} from 'modules/CoinLeagues/utils/game';
+import {reduceAddress} from 'modules/CoinLeague/utils/game';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Alert} from '@material-ui/lab';

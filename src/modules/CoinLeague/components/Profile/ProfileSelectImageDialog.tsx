@@ -19,14 +19,14 @@ import React, {useEffect, useCallback, useState} from 'react';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import ImageIcon from '@material-ui/icons/Image';
 import {useIntl} from 'react-intl';
-import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
+import {CoinLeaguesChampion} from 'modules/CoinLeague/utils/types';
 
 import ProfileImageCard from './ProfileImageCard';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {GET_CHAMPIONS_CONTRACT_ADDR} from 'modules/CoinLeagues/utils/champions';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {GET_CHAMPIONS_CONTRACT_ADDR} from 'modules/CoinLeague/utils/champions';
 import {Kittygotchi} from 'types/kittygotchi';
 import {GET_KITTYGOTCHI_CONTRACT_ADDR} from 'modules/Kittygotchi/constants';
-import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
+import {useMyChampions} from 'modules/CoinLeague/hooks/champions';
 import {useKittygotchiList} from 'modules/Kittygotchi/hooks';
 import {isAddress} from 'web3-utils';
 import {useWeb3} from 'hooks/useWeb3';

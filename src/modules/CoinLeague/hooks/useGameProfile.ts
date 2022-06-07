@@ -1,6 +1,6 @@
-import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
-import {useQuery} from 'react-query';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCallback } from 'react';
+import { useQuery } from 'react-query';
 import {
   remove,
   signUpdate,
@@ -8,7 +8,7 @@ import {
   createUsername,
   getProfile,
 } from '../services/profileApi';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { useLeaguesChainInfo } from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: (hash?: string) => void;
@@ -17,8 +17,8 @@ interface CallbackProps {
 }
 
 export const useGameProfileUpdater = () => {
-  const {getProvider, account} = useWeb3();
-  const {chainId} = useLeaguesChainInfo();
+  const { getProvider, account } = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
 
   const chainProvider = getProvider();
   const onPostMetadata = useCallback(
@@ -100,11 +100,11 @@ export const useGameProfileUpdater = () => {
     [chainProvider, chainId, account],
   );
 
-  return {onPostMetadata, onPostOnlyUsernameMetadata};
+  return { onPostMetadata, onPostOnlyUsernameMetadata };
 };
 
 export const useProfileGameDeleteCallback = () => {
-  const {getProvider, chainId, account} = useWeb3();
+  const { getProvider, chainId, account } = useWeb3();
   const chainProvider = getProvider();
   const onDeleteGameMetadata = useCallback(
     async (callbacks?: CallbackProps) => {
@@ -140,7 +140,7 @@ export const useProfileGameDeleteCallback = () => {
     [chainProvider, chainId, account],
   );
 
-  return {onDeleteGameMetadata};
+  return { onDeleteGameMetadata };
 };
 
 export const useProfileGame = (account?: string) => {
@@ -153,6 +153,6 @@ export const useProfileGame = (account?: string) => {
 
       return getProfile(account);
     },
-    {retryDelay: 30000},
+    { retryDelay: 30000 },
   );
 };

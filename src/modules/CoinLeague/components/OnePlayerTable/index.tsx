@@ -21,37 +21,37 @@ import TableContainer from '@material-ui/core/TableContainer';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {PriceFeeds} from 'modules/CoinLeague/constants';
+import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
 import {
   ExplorerURL,
   GET_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeagues/utils/constants';
+} from 'modules/CoinLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {GameType} from 'types/coinsleague';
-import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import Badge from '@material-ui/core/Badge';
 
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {GET_BITBOY_NAME} from 'modules/CoinLeague/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {getTransactionScannerUrl} from 'utils/blockchain';
-import {GameProfile} from 'modules/CoinLeagues/utils/types';
+import {GameProfile} from 'modules/CoinLeague/utils/types';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {truncateAddress} from 'utils';
 import ViewCoinListItem from '../ViewCoinsModal/ViewCoinItem';
 
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {

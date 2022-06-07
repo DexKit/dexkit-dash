@@ -7,10 +7,10 @@ import Typography from '@material-ui/core/Typography';
 
 import {Skeleton} from '@material-ui/lab';
 import {getNormalizedUrl} from 'utils/browser';
-import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
+import {CoinLeaguesChampion} from 'modules/CoinLeague/utils/types';
 import {OpenSeaIcon} from 'shared/components/Icons';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Box from '@material-ui/core/Box';
@@ -20,7 +20,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {
   GET_CHAMPIONS_CONTRACT_ADDR,
   IS_CHAMPIONS_SUPPORTED_NETWORK,
-} from 'modules/CoinLeagues/utils/champions';
+} from 'modules/CoinLeague/utils/champions';
 import {getOpenSeaLink} from 'utils/opensea';
 import {useIntl} from 'react-intl';
 

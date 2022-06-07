@@ -8,7 +8,7 @@ import {
   ButtonBase,
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {CoinFeed} from 'modules/CoinLeague/utils/types';
 
 export interface Props {
   coin: CoinFeed;
