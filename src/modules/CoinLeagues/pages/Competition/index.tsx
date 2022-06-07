@@ -23,7 +23,7 @@ import {Months} from 'modules/CoinLeagues/constants';
 import {ChainId} from 'types/blockchain';
 
 export function Competition() {
-  const [month, setMonth] = useState(Months.May);
+  const [month, setMonth] = useState(Months.June);
   const isNFT = false;
 
   const query = useRankingCompetion(
@@ -132,7 +132,10 @@ export function Competition() {
           </Grid>
           <Grid item xs={12}>
             <Typography gutterBottom variant='h6'>
-              <IntlMessages id='app.coinLeagues.ranking' />
+              <IntlMessages
+                id='app.coinLeagues.ranking'
+                defaultMessage={'Ranking'}
+              />
             </Typography>
             <Grid container spacing={4}>
               {query.isLoading &&
