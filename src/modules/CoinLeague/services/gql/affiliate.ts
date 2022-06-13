@@ -1,4 +1,4 @@
-import {gql} from 'graphql-tag';
+import { gql } from 'graphql-tag';
 
 
 export const GET_AFFILIATES_ENTRIES = gql`
@@ -14,6 +14,7 @@ export const GET_AFFILIATES_ENTRIES = gql`
           createdAt
           game{
             intId
+            coinToPlay
           }
           player{
             id

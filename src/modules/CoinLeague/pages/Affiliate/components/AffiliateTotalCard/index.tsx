@@ -6,19 +6,17 @@ import Box from '@material-ui/core/Box';
 
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {Paper} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Skeleton} from '@material-ui/lab';
 
 interface Props {
   total: string;
+  coinSymbol: string;
   loading?: boolean;
 }
 
-function AffiliateTotalCard({loading, total}: Props): JSX.Element {
-  const {coinSymbol} = useLeaguesChainInfo();
-
+function AffiliateTotalCard({loading, total, coinSymbol}: Props): JSX.Element {
   return (
     <Box p={4} component={Paper}>
       <Grid container spacing={2} alignItems='center' alignContent='center'>

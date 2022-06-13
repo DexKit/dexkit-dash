@@ -18,6 +18,7 @@ import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 interface TableItemProps {
   row: any;
@@ -53,7 +54,10 @@ const useStyles = makeStyles((theme) => ({
 const TableItem: React.FC<TableItemProps> = ({row, isNFT}) => {
   const classes = useStyles();
   const {messages} = useIntl();
-  const {coinSymbol} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
+
+  const coinToPlay = useCoinToPlay(chainId, row.coinToPlay);
+  const currencySymbol = coinToPlay?.symbol || '';
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
@@ -103,9 +107,10 @@ const TableItem: React.FC<TableItemProps> = ({row, isNFT}) => {
       if (row.earnings[0].claimed === true) {
         return (
           <Box p={2}>
-            {`${messages['app.coinLeagues.claimed']} ${ethers.utils.formatEther(
+            {`${messages['app.coinLeagues.claimed']} ${ethers.utils.formatUnits(
               row.earnings[0].amount,
-            )}  ${coinSymbol}`}
+              coinToPlay?.decimals,
+            )}  ${currencySymbol}`}
           </Box>
         );
       } else {
@@ -122,7 +127,14 @@ const TableItem: React.FC<TableItemProps> = ({row, isNFT}) => {
       }
     }
     return null;
-  }, [row.earnings, enterGameRoute, row.intId, messages, coinSymbol]);
+  }, [
+    row.earnings,
+    enterGameRoute,
+    row.intId,
+    messages,
+    currencySymbol,
+    coinToPlay,
+  ]);
 
   const withdrawed = useMemo(() => {
     if (row.status === 'Aborted') {

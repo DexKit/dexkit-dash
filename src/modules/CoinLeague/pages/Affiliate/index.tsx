@@ -42,14 +42,16 @@ import {isAddress} from 'utils/ethers';
 import {truncateAddress} from 'utils';
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import {useCoinToPlayStable} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 const AffiliatePage: React.FC = () => {
   const history = useHistory();
   const {messages} = useIntl();
 
-  const {account: web3Account} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = web3Account || defaultAccount;
+  const coinToPlay = useCoinToPlayStable(chainId);
 
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(50);
@@ -124,10 +126,12 @@ const AffiliatePage: React.FC = () => {
                 <Grid item xs={12}>
                   <AffiliateTotalCard
                     loading={queryPlayer.loading}
-                    total={ethers.utils.formatEther(
+                    total={ethers.utils.formatUnits(
                       queryPlayer.data?.player?.estimatedAffiliateEarnings ||
                         '0',
+                      coinToPlay?.decimals,
                     )}
+                    coinSymbol={coinToPlay?.symbol.toUpperCase() || ''}
                   />
                 </Grid>
                 <Grid item xs={12}>
