@@ -18,12 +18,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 
 import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import {
-  useCoinLeaguesFactoryCreateGameCallback,
   useCoinLeaguesFactoryRoutes,
   useCoinLeaguesFactoryTotalGames,
   useIsNFTGame,
 } from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
-import {GameParams} from 'types/coinsleague';
+import {GameParamsV3} from 'types/coinleague';
 import {ethers} from 'ethers';
 import {ButtonState} from '../ButtonState';
 import {
@@ -36,12 +35,16 @@ import TextField from '@material-ui/core/TextField';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import {DISABLE_CHAMPIONS_ID} from 'modules/CoinLeague/constants';
+import {
+  DISABLE_CHAMPIONS_ID,
+  StableCoinToPlay,
+} from 'modules/CoinLeague/constants';
 import {GET_GAME_LEVEL_AMOUNTS_UNITS} from 'modules/CoinLeague/utils/game';
 import {GameLevel} from 'modules/CoinLeague/constants/enums';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import {InputLabel} from '@material-ui/core';
+import {useCoinLeagueFactoryCreateGameCallback} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
 
 interface Props {
   open: boolean;
@@ -59,11 +62,11 @@ enum SubmitState {
 const CreateGameModal = (props: Props) => {
   const {open, setOpen} = props;
   const isNFTGame = useIsNFTGame();
-  const {chainId, coinSymbol} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const history = useHistory();
   const {messages} = useIntl();
   const {createNotification} = useNotifications();
-  const {onGameCreateCallback} = useCoinLeaguesFactoryCreateGameCallback();
+  const {onGameCreateCallback} = useCoinLeagueFactoryCreateGameCallback();
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -84,9 +87,20 @@ const CreateGameModal = (props: Props) => {
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
+  const stableCoin = StableCoinToPlay[chainId];
+  const stableCoinAddress = stableCoin?.address;
+  const coinSymbol = stableCoin?.symbol || '';
+
   const onCreateGame = useCallback(
     (_ev?: any) => {
-      if (totalPlayers && entryAmount && duration && coins && chainId) {
+      if (
+        totalPlayers &&
+        entryAmount &&
+        duration &&
+        coins &&
+        chainId &&
+        stableCoin
+      ) {
         setSubmittedGames(0);
         setConfirmedGames(0);
         let confirmed = 0;
@@ -139,16 +153,20 @@ const CreateGameModal = (props: Props) => {
             }, 3000);
           };
 
-          const params: GameParams = {
+          const params: GameParamsV3 = {
             numPlayers: totalPlayers,
             duration,
-            amountUnit: ethers.utils.parseEther(String(entryAmount)),
+            amountUnit: ethers.utils.parseUnits(
+              String(entryAmount),
+              stableCoin.decimals,
+            ),
             numCoins: coins,
             abortTimestamp: Math.round(startDate / 1000 + duration * 3),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
             isNFT: isNFTGame,
             championRoom: championRoom,
+            coin_to_play: stableCoin.address,
           };
           onGameCreateCallback(params, {
             onConfirmation: onConfirmTx,
@@ -223,20 +241,27 @@ const CreateGameModal = (props: Props) => {
                   value={GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Beginner,
                     chainId,
+                    stableCoinAddress,
                   )}>
                   <IntlMessages id='app.coinLeagues.beginner' /> -{' '}
-                  {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}{' '}
+                  {GET_GAME_LEVEL_AMOUNTS_UNITS(
+                    GameLevel.Beginner,
+                    chainId,
+                    stableCoinAddress,
+                  )}{' '}
                   {coinSymbol}
                 </MenuItem>
                 <MenuItem
                   value={GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Intermediate,
                     chainId,
+                    stableCoinAddress,
                   )}>
                   <IntlMessages id='app.coinLeagues.intermediate' />-{' '}
                   {GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Intermediate,
                     chainId,
+                    stableCoinAddress,
                   )}{' '}
                   {coinSymbol}
                 </MenuItem>
@@ -244,18 +269,28 @@ const CreateGameModal = (props: Props) => {
                   value={GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Advanced,
                     chainId,
+                    stableCoinAddress,
                   )}>
                   <IntlMessages id='app.coinLeagues.advanced' /> -{' '}
-                  {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Advanced, chainId)}{' '}
+                  {GET_GAME_LEVEL_AMOUNTS_UNITS(
+                    GameLevel.Advanced,
+                    chainId,
+                    stableCoinAddress,
+                  )}{' '}
                   {coinSymbol}
                 </MenuItem>
                 <MenuItem
                   value={GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Expert,
                     chainId,
+                    stableCoinAddress,
                   )}>
                   <IntlMessages id='app.coinLeagues.expert' /> -{' '}
-                  {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Expert, chainId)}{' '}
+                  {GET_GAME_LEVEL_AMOUNTS_UNITS(
+                    GameLevel.Expert,
+                    chainId,
+                    stableCoinAddress,
+                  )}{' '}
                   {coinSymbol}
                 </MenuItem>
                 <MenuItem
@@ -264,16 +299,25 @@ const CreateGameModal = (props: Props) => {
                     chainId,
                   )}>
                   <IntlMessages id='app.coinLeagues.master' /> -{' '}
-                  {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Master, chainId)}{' '}
+                  {GET_GAME_LEVEL_AMOUNTS_UNITS(
+                    GameLevel.Master,
+                    chainId,
+                    stableCoinAddress,
+                  )}{' '}
                   {coinSymbol}
                 </MenuItem>
                 <MenuItem
                   value={GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.GrandMaster,
                     chainId,
+                    stableCoinAddress,
                   )}>
                   <IntlMessages id='app.coinLeagues.grandMaster' /> -{' '}
-                  {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.GrandMaster, chainId)}{' '}
+                  {GET_GAME_LEVEL_AMOUNTS_UNITS(
+                    GameLevel.GrandMaster,
+                    chainId,
+                    stableCoinAddress,
+                  )}{' '}
                   {coinSymbol}
                 </MenuItem>
               </Select>
@@ -300,6 +344,7 @@ const CreateGameModal = (props: Props) => {
                 <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>
                 <MenuItem value={24 * 60 * 60}>24 hrs</MenuItem>
                 <MenuItem value={7 * 24 * 60 * 60}>1 week</MenuItem>
+                <MenuItem value={7 * 24 * 60 * 60 * 30}>1 month</MenuItem>
               </Select>
             </FormControl>
           </Grid>

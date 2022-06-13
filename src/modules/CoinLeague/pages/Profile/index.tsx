@@ -62,6 +62,7 @@ import NFTLeagueGamesTable from 'modules/NFTLeague/components/NFTLeagueGamesTabl
 import SquidLeagueMyGamesTable from 'modules/SquidLeague/components/MyGamesTable';
 
 import {GameStatus as NFTLeagueGameStatus} from 'modules/NFTLeague/constants/enum';
+import {useCoinToPlayStable} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -105,7 +106,10 @@ export const ProfilePage: React.FC = () => {
 
   const {account} = useWeb3();
 
-  const {coinSymbol, chainId} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
+
+  const coinToPlayStable = useCoinToPlayStable(chainId);
+  const coinSymbol = coinToPlayStable?.symbol || '';
 
   const {address} = useParams<{address: string}>();
 
@@ -502,8 +506,9 @@ export const ProfilePage: React.FC = () => {
                     <ProfileStatsPill
                       icon={<CupStatsIcon />}
                       caption={messages['app.coinLeague.totalEarned'] as string}
-                      value={`${ethers.utils.formatEther(
+                      value={`${ethers.utils.formatUnits(
                         playerStats.data?.stats?.totalEarned || '0',
+                        coinToPlayStable?.decimals,
                       )} ${coinSymbol}`}
                     />
                   </Grid>
@@ -511,8 +516,9 @@ export const ProfilePage: React.FC = () => {
                     <ProfileStatsPill
                       icon={<CupStatsIcon />}
                       caption={messages['app.coinLeague.totalSpent'] as string}
-                      value={`${ethers.utils.formatEther(
+                      value={`${ethers.utils.formatUnits(
                         playerStats.data?.stats?.totalSpent || '0',
+                        coinToPlayStable?.decimals,
                       )} ${coinSymbol}`}
                     />
                   </Grid>

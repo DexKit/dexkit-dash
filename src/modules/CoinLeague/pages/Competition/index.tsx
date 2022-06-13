@@ -21,6 +21,7 @@ import RankingButtonSkeleton from 'modules/CoinLeague/components/RankingButton/i
 import {useGameProfilesState} from 'modules/CoinLeague/hooks/useGameProfilesState';
 import {Months} from 'modules/CoinLeague/constants';
 import {ChainId} from 'types/blockchain';
+import {useCoinToPlayStable} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 export function Competition() {
   const [month, setMonth] = useState(Months.June);
@@ -33,6 +34,10 @@ export function Competition() {
     month,
   );
   const {account} = useWeb3();
+
+  const coinToPlayStable = useCoinToPlayStable(ChainId.Matic);
+  const coinSymbol = coinToPlayStable?.symbol.toUpperCase() || '';
+  const decimals = coinToPlayStable?.decimals;
 
   const history = useHistory();
   const {messages} = useIntl();
@@ -171,12 +176,16 @@ export function Competition() {
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
                       EarnedMinusSpent={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(
+                          player.EarnedMinusSpent,
+                          decimals,
+                        ),
                       )}
                       totalEarned={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       onClick={(address) => {}}
+                      coinSymbol={coinSymbol}
                     />
                   </Grid>
                 ))}

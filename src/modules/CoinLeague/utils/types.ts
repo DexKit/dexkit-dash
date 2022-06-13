@@ -20,6 +20,7 @@ export interface GameGraph {
   numPlayers: string;
   currentPlayers: string;
   entry: string;
+  coinToPlay: string;
   startedAt?: string;
   endedAt?: string;
   title?: string;

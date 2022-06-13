@@ -25,6 +25,7 @@ import {ReactComponent as SendSquareIcon} from '../../assets/send-square.svg';
 import {ReactComponent as TimerIcon} from '../../assets/timer.svg';
 import {ReactComponent as ChartSquareIcon} from '../../assets/chart-square.svg';
 import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeague/utils/time';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 interface Props {
   game?: GameGraph;
@@ -48,19 +49,27 @@ function SmallCardGame({
   onShare,
   btnMessage,
 }: Props): JSX.Element {
-  const {chainId, coinSymbol} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const [countdown, setCountdown] = useState<number>();
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(props.prizePool);*/
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game?.entry || '0'), chainId);
 
-  const prizeTotalValue = ethers.utils.formatEther(
+  const coinToPlay = useCoinToPlay(chainId, game?.coinToPlay);
+  const currencySymbol = coinToPlay?.symbol.toUpperCase() || '';
+  const gameLevel = GET_GAME_LEVEL(
+    BigNumber.from(game?.entry || '0'),
+    chainId,
+    game?.coinToPlay,
+  );
+
+  const prizeTotalValue = ethers.utils.formatUnits(
     BigNumber.from(game?.entry || 0).mul(
       BigNumber.from(game?.currentPlayers || 0),
     ),
+    coinToPlay?.decimals,
   );
 
   const entriesIn = strPad(Number(game?.currentPlayers) || 0);
@@ -159,7 +168,7 @@ function SmallCardGame({
                         component='span'
                         variant='inherit'
                         color='textSecondary'>
-                        {coinSymbol}
+                        {currencySymbol}
                       </Typography>
                     </>
                   )}

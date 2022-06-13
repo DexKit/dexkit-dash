@@ -1,4 +1,4 @@
-import {BigNumber} from 'ethers';
+import { BigNumber } from 'ethers';
 
 export interface Player {
   score: BigNumber;
@@ -30,8 +30,9 @@ export interface Game {
   aborted: boolean;
   scores_done: boolean;
   duration: BigNumber;
-  id:  BigNumber;
+  id: BigNumber;
   num_players: BigNumber;
+  coin_to_play: string;
   amount_to_play: BigNumber;
   total_amount_collected: BigNumber;
   num_coins: BigNumber;
@@ -48,6 +49,19 @@ export interface GameParams {
   abortTimestamp: number;
   startTimestamp: number;
   type: number;
+  championRoom?: number;
+  isNFT: boolean;
+}
+
+export interface GameParamsV3 {
+  numPlayers: number;
+  duration: number;
+  amountUnit: BigNumber;
+  numCoins: number;
+  abortTimestamp: number;
+  startTimestamp: number;
+  type: number;
+  coin_to_play: string;
   championRoom?: number;
   isNFT: boolean;
 }

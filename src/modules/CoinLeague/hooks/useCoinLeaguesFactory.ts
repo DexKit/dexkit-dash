@@ -9,7 +9,7 @@ import {
   getTotalGamesFromFactory,
 } from 'modules/CoinLeague/services/coinLeaguesFactory';
 import { Web3State } from 'types/blockchain';
-import { GameParams } from 'types/coinsleague';
+import { GameParams } from 'types/coinleague';
 import { getGamesData } from '../services/coinLeagues';
 import { useQuery } from 'react-query';
 import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';

@@ -716,6 +716,12 @@ export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Binance]: '0xa1B3a09D5f83a52085fd37becb229038bCeacFf3',
 };
 
+export const COIN_LEAGUES_FACTORY_ADDRESS_V3 = {
+  [ChainId.Mumbai]: '0x3Ce9b39700aED8507dd3FEa9b42dDd7FE22724bd',
+  [ChainId.Matic]: '',
+  [ChainId.Binance]: '',
+};
+
 export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
   [ChainId.Matic]: '0xeb1eb51AB02C824f0c6F43cEcb91C474E6a0Ef32',
@@ -771,3 +777,54 @@ export const BLOCK_TIMESTAMP_COMPETION: {
     [ChainId.Binance]: 0,
   }
 };
+
+export const NativeCoinAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+
+
+export interface CoinToPlayInterface {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+}
+
+export const CoinToPlay: { [key in ChainId]?: CoinToPlayInterface[] } = {
+  [ChainId.Mumbai]: [
+    {
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      name: 'Matic',
+      symbol: 'Matic',
+      decimals: 18
+    },
+    {
+      address: '0xd3FC7D494ce25303BF8BeC111310629429e6cDEA',
+      name: 'Tether',
+      symbol: 'USDT',
+      decimals: 6
+    }
+  ],
+  [ChainId.Binance]: [
+    {
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      name: 'Binance Coin',
+      symbol: 'BNB',
+      decimals: 18
+    },],
+  [ChainId.Matic]: [
+    {
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      name: 'Matic',
+      symbol: 'Matic',
+      decimals: 18
+    },
+  ]
+}
+
+export const StableCoinToPlay: { [key in ChainId]?: CoinToPlayInterface } = {
+  [ChainId.Mumbai]: {
+    address: '0xd3FC7D494ce25303BF8BeC111310629429e6cDEA',
+    name: 'Tether',
+    symbol: 'USDT',
+    decimals: 6
+  }
+}

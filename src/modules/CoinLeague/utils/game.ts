@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
-import { BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS } from '../constants';
+import { BITBOY_TEAM, CoinToPlay, CREATOR_ADDRESSES, CREATOR_LABELS, NativeCoinAddress } from '../constants';
 import {
   GameLevel,
   GameOrderBy,
@@ -124,7 +124,25 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
   }
 };
 
-export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic) => {
+export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic, coinToPlayAddress?: string) => {
+  const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase());
+  if (coinToPlay && coinToPlay.address.toLowerCase() !== NativeCoinAddress.toLowerCase()) {
+    if (entry.lt(ethers.utils.parseEther('1'))) {
+      return 'Beginner';
+    } else if (entry.lt(ethers.utils.parseEther('5'))) {
+      return 'Intermediate';
+    } else if (entry.lt(ethers.utils.parseEther('50'))) {
+      return 'Advanced';
+    } else if (entry.lt(ethers.utils.parseEther('100'))) {
+      return 'Expert';
+    } else if (entry.lt(ethers.utils.parseEther('250'))) {
+      return 'Master';
+    } else {
+      return 'Grand Master';
+    }
+  }
+
+
   if (chainId === ChainId.Binance) {
     if (entry.lt(ethers.utils.parseEther('0.02'))) {
       return 'Beginner';
@@ -159,16 +177,25 @@ export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic) => {
 export const GET_GAME_LEVEL_AMOUNTS_UNITS = (
   gameLevel: GameLevel,
   chainId = ChainId.Matic,
+  coinToPlayAddress?: string,
 ) => {
-  return ethers.utils.formatEther(GET_GAME_LEVEL_AMOUNTS(gameLevel, chainId));
+  return ethers.utils.formatEther(GET_GAME_LEVEL_AMOUNTS(gameLevel, chainId, coinToPlayAddress));
 };
 
 export const GET_GAME_LEVEL_AMOUNTS = (
   gameLevel: GameLevel,
   chainId = ChainId.Matic,
+  coinToPlayAddress?: string,
 ) => {
+  const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase());
+  const isStable = coinToPlay && coinToPlay.address.toLowerCase() !== NativeCoinAddress.toLowerCase()
+
+
   switch (gameLevel) {
     case GameLevel.Beginner:
+      if (isStable) {
+        return ethers.utils.parseEther('1');
+      }
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('1');
@@ -179,6 +206,9 @@ export const GET_GAME_LEVEL_AMOUNTS = (
       }
 
     case GameLevel.Intermediate:
+      if (isStable) {
+        return ethers.utils.parseEther('5');
+      }
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('5');
@@ -189,6 +219,9 @@ export const GET_GAME_LEVEL_AMOUNTS = (
       }
 
     case GameLevel.Advanced:
+      if (isStable) {
+        return ethers.utils.parseEther('25');
+      }
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('10');
@@ -198,6 +231,9 @@ export const GET_GAME_LEVEL_AMOUNTS = (
           return ethers.utils.parseEther('10');
       }
     case GameLevel.Expert:
+      if (isStable) {
+        return ethers.utils.parseEther('100');
+      }
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('50');
@@ -207,6 +243,10 @@ export const GET_GAME_LEVEL_AMOUNTS = (
           return ethers.utils.parseEther('50');
       }
     case GameLevel.Master:
+      if (isStable) {
+        return ethers.utils.parseEther('250');
+      }
+
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('250');
@@ -216,6 +256,9 @@ export const GET_GAME_LEVEL_AMOUNTS = (
           return ethers.utils.parseEther('250');
       }
     case GameLevel.GrandMaster:
+      if (isStable) {
+        return ethers.utils.parseEther('500');
+      }
       switch (chainId) {
         case ChainId.Matic:
           return ethers.utils.parseEther('500');
@@ -340,6 +383,7 @@ export function getGamesQuery(params: any) {
         startedAt
         startsAt
         abortedAt
+        coinToPlay
         endedAt
         ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
         ${withdrawWhereString ? renderWithdrawsField(withdrawWhereString) : ''}

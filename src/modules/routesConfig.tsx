@@ -1,4 +1,4 @@
-import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+import {COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 export interface IconProps {
   src: string;
@@ -108,7 +108,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'coinleague',
           url: `${COINSLEAGUE_ROUTE}`,
         },
-        {
+        /*   {
           id: 'coinleague.nftroom',
           title: 'NFT Room',
           messageId: 'sidebar.app.nft-room',
@@ -116,7 +116,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'game',
           url: `${COINLEAGUENFT_ROUTE}`,
-        },
+        },*/
         {
           id: 'coinleague.myprofile',
           title: 'Profile',

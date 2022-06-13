@@ -20,7 +20,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeague/utils/types';
-import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinleague';
 import {PriceFeeds} from 'modules/CoinLeague/constants';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';

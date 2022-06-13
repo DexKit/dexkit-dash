@@ -1,7 +1,7 @@
 import { CallInput } from '@indexed-finance/multicall';
 import { ContractTransaction, ethers, providers } from 'ethers';
 import { Interface } from 'ethers/lib/utils';
-import { GameParams } from 'types/coinsleague';
+import { GameParams } from 'types/coinleague';
 import coinLeaguesFactoryAbi from '../constants/ABI/coinLeaguesFactory.json';
 import coinLeagueFactoryNFTAbi from '../constants/ABI/coinLeagueFactoryNFT.json';
 import { getMulticallFromProvider } from '../../../services/multicall';

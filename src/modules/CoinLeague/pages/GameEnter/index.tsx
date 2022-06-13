@@ -20,7 +20,6 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {ethers, BigNumber} from 'ethers';
 import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeague/utils/types';
 import {CoinItem} from 'modules/CoinLeague/components/CoinItem';
@@ -30,7 +29,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
 import {useTheme} from '@material-ui/core';
 
-import {GameType, Player} from 'types/coinsleague';
+import {GameType, Player} from 'types/coinleague';
 import PlayersTable from 'modules/CoinLeague/components/PlayersTable';
 import OnePlayerTable from 'modules/CoinLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinLeague/components/WaitingPlayers';
@@ -56,7 +55,6 @@ import {
 } from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
-import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {useDispatch} from 'react-redux';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
@@ -66,7 +64,6 @@ import SelectChampionDialog from 'modules/CoinLeague/components/SelectChampion/i
 import {
   AFFILIATE_FIELD,
   CREATOR_PRIZES_ADDRESSES,
-  DISABLE_CHAMPIONS_ID,
 } from 'modules/CoinLeague/constants';
 import {useTokensMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import UpdateGameMetadataModal from 'modules/CoinLeague/components/UpdateGameMetadataModal';
@@ -85,6 +82,9 @@ import GameActions from 'modules/CoinLeague/components/v2/GameActions';
 import {useGameJoin} from 'modules/CoinLeague/hooks/v2/useGameJoin';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import {useMobile} from 'hooks/useMobile';
+import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
+import {useTokenBalanceAndAllowance} from 'modules/CoinLeague/hooks/useTokenBalanceAndAllowance';
 
 //import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 
@@ -102,9 +102,8 @@ function GameEnter(props: Props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const {account} = useWeb3();
-  const {chainId, coinSymbol} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
-  const {balance} = useActiveChainBalance();
 
   const isBalanceVisible = useIsBalanceVisible();
 
@@ -117,7 +116,7 @@ function GameEnter(props: Props) {
 
   const {messages} = useIntl();
   const {id} = params;
-  const {game, gameQuery, refetch, winner, addressQuery} = useCoinLeagues(id);
+  const {game, gameQuery, refetch, winner} = useCoinLeagueFactory(id);
 
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
 
@@ -184,8 +183,8 @@ function GameEnter(props: Props) {
             coin_feeds: p[0],
             player_address: p[1],
             captain_coin: p[2],
-            champion_id: p[3],
-            score: p[4],
+            champion_id: p[4],
+            score: p[3],
           } as Player;
         })
         .find((p) => {
@@ -206,8 +205,8 @@ function GameEnter(props: Props) {
           coin_feeds: p[0],
           player_address: p[1],
           captain_coin: p[2],
-          champion_id: p[3],
-          score: p[4],
+          champion_id: p[4],
+          score: p[3],
         } as Player;
       });
     }
@@ -310,21 +309,45 @@ function GameEnter(props: Props) {
 
   const gameJoin = useGameJoin({game, onConfirm: handleJoinConfirm});
 
+  const coinToPlay = useCoinToPlay(chainId, game?.coin_to_play);
+  const currencySymbol = coinToPlay?.symbol || '';
+
+  const coinToPlayBalanceQuery = useTokenBalanceAndAllowance(
+    coinToPlay?.address,
+  );
+  const coinToPlayBalance = coinToPlayBalanceQuery.data;
+  const isLoading = gameQuery.isLoading || coinToPlayBalanceQuery.isLoading;
+
   const onEnterGame = useCallback(() => {
-    if (amountToPlay && captainCoin && chainId) {
+    if (
+      !amountToPlay ||
+      !coinToPlay ||
+      !captainCoin ||
+      !chainId ||
+      !coinToPlayBalance
+    ) {
+      return;
+    }
+    const onJoin = () => {
       gameJoin.join(
         selectedCoins.map((c) => c.address) || [],
         amountToPlay.toString(),
         captainCoin?.address,
         isNFTGame,
         affiliateField,
-        champion?.id || DISABLE_CHAMPIONS_ID,
       );
+    };
+    // if no balance we need to approve first and then join
+    if (amountToPlay.gt(coinToPlayBalance?.allowance)) {
+      gameJoin.approveToken(coinToPlay, onJoin);
+    } else {
+      onJoin();
     }
   }, [
     gameJoin,
     amountToPlay,
-    champion,
+    coinToPlay,
+    coinToPlayBalance,
     isNFTGame,
     selectedCoins,
     captainCoin,
@@ -332,20 +355,10 @@ function GameEnter(props: Props) {
     affiliateField,
   ]);
 
-  const isLoading = gameQuery.isLoading || addressQuery.isLoading;
   const started = game?.started;
   const finished = game?.finished;
   const aborted = game?.aborted;
   const totalPlayers = game?.num_players?.toNumber();
-
-  const sufficientFunds = useMemo(() => {
-    if (amountToPlay && balance) {
-      const amount = BigNumber.from(amountToPlay);
-      const balBN = BigNumber.from(balance);
-      return balBN.gt(amount);
-    }
-    return false;
-  }, [amountToPlay, balance]);
 
   const currentPlayers = game?.players?.length;
 
@@ -362,24 +375,48 @@ function GameEnter(props: Props) {
     );
   }, [selectedCoins, numCoins, captainCoin]);
 
+  const sufficientFunds = useMemo(() => {
+    if (amountToPlay && coinToPlayBalance) {
+      const amount = BigNumber.from(amountToPlay);
+      const balBN = BigNumber.from(coinToPlayBalance.balance);
+      return balBN.gt(amount);
+    }
+    if (isLoading) {
+      return true;
+    }
+
+    return false;
+  }, [amountToPlay, coinToPlayBalance, isLoading]);
+
   const prizePool = useMemo(() => {
-    if (amountToPlay && currentPlayers) {
+    if (amountToPlay && currentPlayers && coinToPlay) {
       if (started) {
         return Number(
-          ethers.utils.formatEther(amountToPlay.mul(currentPlayers)),
+          ethers.utils.formatUnits(
+            amountToPlay.mul(currentPlayers),
+            coinToPlay.decimals,
+          ),
         );
       } else {
         if (totalPlayers) {
           return Number(
-            ethers.utils.formatEther(amountToPlay.mul(totalPlayers)),
+            ethers.utils.formatUnits(
+              amountToPlay.mul(totalPlayers),
+              coinToPlay.decimals,
+            ),
           );
         }
       }
     }
-    if (amountToPlay && totalPlayers) {
-      return Number(ethers.utils.formatEther(amountToPlay.mul(totalPlayers)));
+    if (amountToPlay && totalPlayers && coinToPlay) {
+      return Number(
+        ethers.utils.formatUnits(
+          amountToPlay.mul(totalPlayers),
+          coinToPlay.decimals,
+        ),
+      );
     }
-  }, [amountToPlay, currentPlayers, started, totalPlayers]);
+  }, [amountToPlay, currentPlayers, started, totalPlayers, coinToPlay]);
   const url = new URL(window.location.href);
 
   const urlShare = useMemo(() => {
@@ -479,7 +516,10 @@ function GameEnter(props: Props) {
           {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
             <Grid item xs={12} sm={12} xl={12}>
               <Alert severity='info'>
-                <IntlMessages id='coinLeagues.warning.connectPolygon' />
+                <IntlMessages
+                  id='coinLeagues.warning.connectPolygon'
+                  defaultMessage='Connect to Polygon'
+                />
               </Alert>
             </Grid>
           )}
@@ -575,7 +615,8 @@ function GameEnter(props: Props) {
               <Alert severity='error'>
                 <IntlMessages
                   id='coinLeague.insufficientFunds'
-                  defaultMessage='Insufficient Funds'
+                  defaultMessage={`Insufficient {coinSymbol} Funds`}
+                  values={{coinSymbol: coinToPlay?.symbol}}
                 />
               </Alert>
             </Grid>
@@ -589,7 +630,7 @@ function GameEnter(props: Props) {
                       ID
                     </Typography>
                     <Typography variant='subtitle1'>
-                      {game !== undefined ? game?.id.toNumber() : <Skeleton />}
+                      {game !== undefined ? game?.id?.toNumber() : <Skeleton />}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -633,7 +674,11 @@ function GameEnter(props: Props) {
                     </Typography>
                     <Typography variant='subtitle1'>
                       {game !== undefined ? (
-                        GET_GAME_LEVEL(game.amount_to_play, chainId)
+                        GET_GAME_LEVEL(
+                          game.amount_to_play,
+                          chainId,
+                          game.coin_to_play,
+                        )
                       ) : (
                         <Skeleton />
                       )}
@@ -649,8 +694,11 @@ function GameEnter(props: Props) {
                     <Typography variant='subtitle1'>
                       {game !== undefined ? (
                         <>
-                          {ethers.utils.formatEther(game.amount_to_play)}{' '}
-                          {coinSymbol}
+                          {ethers.utils.formatUnits(
+                            game.amount_to_play,
+                            coinToPlay?.decimals,
+                          )}{' '}
+                          {currencySymbol}
                         </>
                       ) : (
                         <Skeleton />
@@ -721,7 +769,7 @@ function GameEnter(props: Props) {
                     <Typography variant='subtitle1'>
                       {game !== undefined ? (
                         <>
-                          {prizePool} {coinSymbol}
+                          {prizePool} {currencySymbol}
                         </>
                       ) : (
                         <Skeleton />
@@ -927,7 +975,7 @@ function GameEnter(props: Props) {
                 data={players?.map((p) => {
                   return {
                     hash: p?.player_address,
-                    score: p?.score?.toNumber() || 0,
+                    score: BigNumber.from(p?.score || 0).toNumber(),
                     captainCoin: p.captain_coin,
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
@@ -955,7 +1003,7 @@ function GameEnter(props: Props) {
                     data={players.map((p) => {
                       return {
                         hash: p?.player_address,
-                        score: p?.score?.toNumber() || 0,
+                        score: BigNumber.from(p?.score || 0).toNumber(),
                         captainCoin: p.captain_coin,
                         coins: (p?.coin_feeds as unknown as string[]) || [],
                       };

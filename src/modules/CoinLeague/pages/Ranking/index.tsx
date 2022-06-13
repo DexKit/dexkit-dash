@@ -23,14 +23,18 @@ import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 import RankingButtonSkeleton from 'modules/CoinLeague/components/RankingButton/index.skeleton';
 import {useGameProfilesState} from 'modules/CoinLeague/hooks/useGameProfilesState';
+import {useCoinToPlayStable} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 export function Ranking() {
   const isMobile = useMobile();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
-  const {coinSymbol, chainId} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   const [value, setValue] = React.useState(RankingType.MostWinner);
   const rankingQuery = useRanking(value, isNFT, chainId);
+  const coinToPlayStable = useCoinToPlayStable(chainId);
+  const coinSymbol = coinToPlayStable?.symbol.toUpperCase() || '';
+  const decimals = coinToPlayStable?.decimals;
 
   const {account} = useWeb3();
 
@@ -190,12 +194,16 @@ export function Ranking() {
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalWinnedGames)}
                       EarnedMinusSpent={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(
+                          player.EarnedMinusSpent,
+                          decimals,
+                        ),
                       )}
                       totalEarned={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       onClick={(address) => {}}
+                      coinSymbol={coinSymbol}
                     />
                   </Grid>
                 ))}
@@ -239,12 +247,13 @@ export function Ranking() {
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
                       EarnedMinusSpent={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(player.EarnedMinusSpent),
                       )}
                       totalEarned={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       onClick={(address) => {}}
+                      coinSymbol={coinSymbol}
                     />
                   </Grid>
                 ))}
@@ -290,15 +299,19 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       EarnedMinusSpent={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(
+                          player.EarnedMinusSpent,
+                          decimals,
+                        ),
                       )}
                       totalEarned={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       count={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       onClick={(address) => {}}
+                      coinSymbol={coinSymbol}
                     />
                   </Grid>
                 ))}
@@ -341,15 +354,22 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       totalEarned={Number(
-                        ethers.utils.formatEther(player.totalEarned),
+                        ethers.utils.formatUnits(player.totalEarned, decimals),
                       )}
                       EarnedMinusSpent={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(
+                          player.EarnedMinusSpent,
+                          decimals,
+                        ),
                       )}
                       count={Number(
-                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                        ethers.utils.formatUnits(
+                          player.EarnedMinusSpent,
+                          decimals,
+                        ),
                       )}
                       onClick={(address) => {}}
+                      coinSymbol={coinSymbol}
                     />
                   </Grid>
                 ))}

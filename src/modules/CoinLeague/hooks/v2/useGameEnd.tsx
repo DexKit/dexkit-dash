@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react';
-import {Game} from 'types/coinsleague';
+import {Game} from 'types/coinleague';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useCoinLeaguesCallbacks} from '../useCoinLeagues';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -11,6 +10,7 @@ import {Button} from '@material-ui/core';
 import {useChainInfo} from 'hooks/useChainInfo';
 import React from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useCoinLeagueV3Callbacks} from '../useCoinLeagueFactoryV3';
 
 export function useGameEnd({
   game,
@@ -34,7 +34,7 @@ export function useGameEnd({
 
   const {createNotification} = useNotifications();
 
-  const {onEndGameCallback} = useCoinLeaguesCallbacks(game?.address);
+  const {onEndGameCallback} = useCoinLeagueV3Callbacks(game?.id.toString());
 
   const handleViewTransaction = useCallback(
     (chainId: number, hash: string) => {

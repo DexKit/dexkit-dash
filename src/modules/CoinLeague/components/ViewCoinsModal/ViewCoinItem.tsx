@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import {CoinFeed} from 'modules/CoinLeague/utils/types';
-import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinleague';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import Tooltip from '@material-ui/core/Tooltip';
 import {useMobile} from 'hooks/useMobile';

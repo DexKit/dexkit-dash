@@ -12,13 +12,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {lighten, makeStyles} from '@material-ui/core/styles';
 
 import {PriceFeeds} from 'modules/CoinLeague/constants';
-import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
-import {GameType} from 'types/coinsleague';
+import {GameType} from 'types/coinleague';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
 import Badge from '@material-ui/core/Badge';
 import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
@@ -39,6 +38,7 @@ import {useMobile} from 'hooks/useMobile';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import PlayerCoinsTable from '../v2/PlayerCoinsTable';
+import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -128,7 +128,7 @@ function PlayersTable(props: Props): JSX.Element {
   const [expanded, setExpanded] = useState<{[key: number]: boolean}>({});
 
   const accountLabels = useLabelAccounts();
-  const {game, currentPrices, allFeeds} = useCoinLeagues(id);
+  const {game, currentPrices, allFeeds} = useCoinLeagueFactory(id);
 
   const isMobile = useMobile();
 

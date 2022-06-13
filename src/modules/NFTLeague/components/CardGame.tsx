@@ -19,9 +19,9 @@ import {Paper} from '@material-ui/core';
 import {EventRounded, Share as ShareIcon} from '@material-ui/icons';
 import {FormattedMessage} from 'react-intl';
 
-import {ReactComponent as ReceiveSquareIcon} from 'modules/CoinLeagues/assets/receive-square.svg';
-import {ReactComponent as SendSquareIcon} from 'modules/CoinLeagues/assets/send-square.svg';
-import {ReactComponent as TimerIcon} from 'modules/CoinLeagues/assets/timer.svg';
+import {ReactComponent as ReceiveSquareIcon} from 'modules/CoinLeague/assets/receive-square.svg';
+import {ReactComponent as SendSquareIcon} from 'modules/CoinLeague/assets/send-square.svg';
+import {ReactComponent as TimerIcon} from 'modules/CoinLeague/assets/timer.svg';
 import {withStyles} from '@material-ui/styles';
 import {Skeleton} from '@material-ui/lab';
 import Countdown from 'shared/components/Countdown';

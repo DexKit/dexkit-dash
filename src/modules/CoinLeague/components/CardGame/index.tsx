@@ -36,6 +36,7 @@ import {ReactComponent as ChartSquareIcon} from '../../assets/chart-square.svg';
 
 import {withStyles} from '@material-ui/styles';
 import {Skeleton} from '@material-ui/lab';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -89,23 +90,25 @@ const CardGame: React.FC<Props> = ({
 
   const theme = useTheme();
 
-  const {chainId, coinSymbol} = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(game.amount_to_play.toNumber()  );*/
 
   const [countdown, setCountdown] = useState<number>();
+  const coinToPlay = useCoinToPlay(chainId, game?.coinToPlay);
 
   const prizeTotalValue = useMemo(() => {
-    if (game) {
-      return ethers.utils.formatEther(
+    if (game && coinToPlay) {
+      return ethers.utils.formatUnits(
         BigNumber.from(game?.entry).mul(BigNumber.from(game.numPlayers)),
+        coinToPlay.decimals,
       );
     }
 
     return '';
-  }, [game]);
+  }, [game, coinToPlay]);
 
   const time = useMemo(() => {
     if (game) {
@@ -125,7 +128,7 @@ const CardGame: React.FC<Props> = ({
 
   const gameLevel =
     game !== undefined
-      ? GET_GAME_LEVEL(BigNumber.from(game.entry), chainId)
+      ? GET_GAME_LEVEL(BigNumber.from(game.entry), chainId, game.coinToPlay)
       : '';
 
   const [openShowGameMetadataModal, setOpenShowGameMetadataModal] =
@@ -155,6 +158,8 @@ const CardGame: React.FC<Props> = ({
     1000,
     true,
   );
+
+  const currencySymbol = coinToPlay?.symbol.toUpperCase() || '';
 
   return (
     <Paper
@@ -235,7 +240,7 @@ const CardGame: React.FC<Props> = ({
                         component='span'
                         variant='inherit'
                         color='textSecondary'>
-                        {coinSymbol}
+                        {currencySymbol}
                       </Typography>
                     </>
                   )}
@@ -447,7 +452,11 @@ const CardGame: React.FC<Props> = ({
                   <Typography
                     style={{textTransform: 'uppercase', fontWeight: 500}}
                     variant='body1'>
-                    {ethers.utils.formatEther(game?.entry || 0)} {coinSymbol}
+                    {ethers.utils.formatUnits(
+                      game?.entry || 0,
+                      coinToPlay?.decimals,
+                    )}{' '}
+                    {currencySymbol}
                   </Typography>
                 </Box>
               </JoinGameButton>

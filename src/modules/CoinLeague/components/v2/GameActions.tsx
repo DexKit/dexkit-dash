@@ -6,7 +6,7 @@ import {useMobile} from 'hooks/useMobile';
 import {useGameEnd} from 'modules/CoinLeague/hooks/v2/useGameEnd';
 import {useGameStart} from 'modules/CoinLeague/hooks/v2/useGameStart';
 import React, {useCallback, useState, useMemo} from 'react';
-import {Game} from 'types/coinsleague';
+import {Game} from 'types/coinleague';
 
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 

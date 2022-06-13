@@ -12,7 +12,10 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 
 import {useIntl} from 'react-intl';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
+import {
+  useCoinLeaguesFactoryRoutes,
+  useIsNFTGame,
+} from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
@@ -22,8 +25,8 @@ import CreateGameModal from 'modules/CoinLeague/components/CreateGameModal';
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeague/components/SmallCardGame';
-import {useHistory, useLocation} from 'react-router-dom';
-import {COINLEAGUENFT_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useHistory} from 'react-router-dom';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {Search} from '@material-ui/icons';
@@ -74,7 +77,6 @@ enum Tabs {
 const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
-  const {pathname} = useLocation();
   const {account} = useWeb3();
   const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
@@ -82,13 +84,7 @@ const GamesList = () => {
 
   const classes = useStyles();
 
-  const isNFTGame = useMemo(() => {
-    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [pathname]);
+  const isNFTGame = useIsNFTGame();
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);

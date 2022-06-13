@@ -1,12 +1,12 @@
-import {providers} from 'ethers';
-import {ChainId} from 'types/blockchain';
+import { providers } from 'ethers';
+import { ChainId } from 'types/blockchain';
 
 export const maticNetworkProvider = new providers.JsonRpcProvider(
   'https://polygon-rpc.com/',
   137,
 );
 export const mumbaiNetworkProvider = new providers.JsonRpcProvider(
-  'https://rpc-mumbai.matic.today',
+  'https://matic-mumbai.chainstacklabs.com',
   80001,
 );
 export const bscNetworkProvider = new providers.JsonRpcProvider(

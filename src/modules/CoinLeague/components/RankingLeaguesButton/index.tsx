@@ -19,7 +19,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import UserProfileItem from '../UserProfileItem';
 import {GameProfile} from 'modules/CoinLeague/utils/types';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -56,14 +55,15 @@ interface RankingButtonProps {
   EarnedMinusSpent?: number;
   label: string;
   featured?: boolean;
+  coinSymbol: string;
 }
 
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
-  const {coinSymbol} = useLeaguesChainInfo();
   const theme = useTheme();
 
-  const {address, featured, position, label, count, profile} = props;
+  const {address, featured, position, label, count, profile, coinSymbol} =
+    props;
 
   const toggler = useToggler();
 

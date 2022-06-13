@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react';
-import {Game} from 'types/coinsleague';
+import {Game} from 'types/coinleague';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useCoinLeaguesCallbacks} from '../useCoinLeagues';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -11,6 +10,7 @@ import {useSnackbar} from 'notistack';
 import {Button} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import React from 'react';
+import {useCoinLeagueV3Callbacks} from '../useCoinLeagueFactoryV3';
 
 export function useGameStart({
   game,
@@ -35,7 +35,7 @@ export function useGameStart({
 
   const {createNotification} = useNotifications();
 
-  const {onStartGameCallback} = useCoinLeaguesCallbacks(game?.address);
+  const {onStartGameCallback} = useCoinLeagueV3Callbacks(game?.id.toString());
 
   const reset = useCallback(() => {
     setTransactionHash(undefined);

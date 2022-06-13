@@ -10,14 +10,14 @@ import {
 } from '@material-ui/core';
 
 import {ViewCoinListItem} from '../ViewCoinsModal/ViewCoinItem';
-import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeague/utils/types';
-import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinleague';
 import {PriceFeeds} from 'modules/CoinLeague/constants';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
 import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
 
 interface Props {
   id: string;
@@ -31,7 +31,7 @@ export const PlayerCoinsTable = (props: Props) => {
 
   const {chainId} = useLeaguesChainInfo();
 
-  const {allFeeds, currentPrices, game} = useCoinLeagues(id);
+  const {allFeeds, currentPrices, game} = useCoinLeagueFactory(id);
   const {multiplier, tooltipMessage} = useMultipliers(id);
 
   // We join here the Coin List with Onchain Data, we filter for the coins the player have

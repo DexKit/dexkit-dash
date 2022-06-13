@@ -69,7 +69,7 @@ const Changelog = () => {
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>Improved layout</Typography>
             <Typography className={classes.item}>
-              Added Coinleague back to main app
+              Added Coin League back to main app
             </Typography>
             <Typography className={classes.item}>
               Added NFT League Battle
@@ -186,7 +186,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
-              Added Kittygotchi on BSC, added ranking for KItty
+              Added Kittygotchi on BSC, added ranking for Kitty
             </Typography>
           </Box>
         </AccordionDetails>
@@ -354,7 +354,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
-              Removed Coinleagues and put it as standalone app
+              Removed Coin League and put it as standalone app
             </Typography>
           </Box>
         </AccordionDetails>
@@ -371,7 +371,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
-              Add Sorting on Coinleague join games. Small fix on Copy game.
+              Add Sorting on Coin League join games. Small fix on Copy game.
             </Typography>
           </Box>
         </AccordionDetails>
@@ -388,7 +388,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
-              Fix's on Coinleague
+              Fix's on Coin League
             </Typography>
           </Box>
         </AccordionDetails>
@@ -407,9 +407,9 @@ const Changelog = () => {
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>Major Rebrand</Typography>
             <Typography className={classes.item}>
-              CoinLeagues:
+              Coin League:
               <br />
-              1. Added CoinLeagues on Beta
+              1. Added Coin League on Beta
               <br />
             </Typography>
             <Typography className={classes.item}>

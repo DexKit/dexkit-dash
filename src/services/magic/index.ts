@@ -1,6 +1,6 @@
-import {OAuthExtension} from '@magic-ext/oauth';
-import {Magic} from 'magic-sdk';
-import {ChainId} from 'types/blockchain';
+import { OAuthExtension } from '@magic-ext/oauth';
+import { Magic } from 'magic-sdk';
+import { ChainId } from 'types/blockchain';
 
 const storageKeyNamespace = 'DexKitWallet:';
 const cachedNetworkMagicKey = `${storageKeyNamespace}:magic-network`;
@@ -50,7 +50,7 @@ const magicETH = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
 
 const magicRopsten = new Magic(
   process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
-    'pk_test_D1D2C225CC7848C6',
+  'pk_test_D1D2C225CC7848C6',
   {
     extensions: [new OAuthExtension()],
     network: 'ropsten',
@@ -59,12 +59,12 @@ const magicRopsten = new Magic(
 
 const magicMumbai = new Magic(
   process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
-    'pk_test_D1D2C225CC7848C6',
+  'pk_test_D1D2C225CC7848C6',
   {
     extensions: [new OAuthExtension()],
     network: {
       //rpcUrl: 'https://rpc-mainnet.matic.network',
-      rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+      rpcUrl: 'https://matic-mumbai.chainstacklabs.com',
       chainId: 80001,
     },
   },

@@ -16,6 +16,7 @@ import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeague/utils/time';
 import {GET_GAME_LEVEL} from 'modules/CoinLeague/utils/game';
 import {GameGraph} from 'modules/CoinLeague/utils/types';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -83,8 +84,12 @@ function CardGameProgress(props: Props): JSX.Element {
     currency: 'USD',
   }).format(game.amount_to_play.toNumber()  );*/
   const [countdown, setCountdown] = useState<number>();
-
-  const entryAmount = ethers.utils.formatEther(game.entry);
+  const coinToPlay = useCoinToPlay(chainId, game?.coinToPlay);
+  const currencySymbol = coinToPlay?.symbol.toUpperCase() || '';
+  const entryAmount = ethers.utils.formatUnits(
+    game.entry,
+    coinToPlay?.decimals,
+  );
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
 
@@ -113,7 +118,11 @@ function CardGameProgress(props: Props): JSX.Element {
     1000,
     true,
   );
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
+  const gameLevel = GET_GAME_LEVEL(
+    BigNumber.from(game.entry),
+    chainId,
+    game.coinToPlay,
+  );
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -136,7 +145,7 @@ function CardGameProgress(props: Props): JSX.Element {
                   </Typography>
                   <Typography
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {coinSymbol}
+                    &nbsp;{entryAmount} {currencySymbol}
                   </Typography>
                 </Grid>
               </Grid>

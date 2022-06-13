@@ -4,8 +4,8 @@ import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { ChainId } from 'types/blockchain';
 import { getPlayerMultipliers } from '../services/coinLeagues';
 import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
-import { useCoinLeagues } from './useCoinLeagues';
 import { useLeaguesChainInfo } from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import { useCoinLeagueFactory } from './useCoinLeagueFactoryV3';
 
 export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean) => {
   const { chainId } = useLeaguesChainInfo();
@@ -13,7 +13,7 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
   );
-  const { game } = useCoinLeagues(address);
+  const { game } = useCoinLeagueFactory(address);
 
   return useQuery(
     ['GET_LEAGUES_PLAYER_TOKEN_BALANCES', game?.players],

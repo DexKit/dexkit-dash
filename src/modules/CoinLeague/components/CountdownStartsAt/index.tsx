@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
 import {useCountdown} from 'hooks/utils/useCountdown';
-import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {strPad} from 'modules/CoinLeague/utils/time';
+import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
 
 interface Props {
   id: string;
@@ -22,7 +22,7 @@ function CardTimerUnstyled(props: {time: number}) {
 }
 
 function CountdownStartsAt(props: Props): JSX.Element {
-  const {game, refetch} = useCoinLeagues(props.id);
+  const {game, refetch} = useCoinLeagueFactory(props.id);
   const startTimestamp = game?.start_timestamp.toNumber();
 
   const endTime = useMemo(() => {

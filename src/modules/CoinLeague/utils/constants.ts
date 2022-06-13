@@ -1,4 +1,4 @@
-import {ChainId} from 'types/blockchain';
+import { ChainId } from 'types/blockchain';
 
 export const ExplorerURL = {
   [ChainId.Mumbai]: 'https://mumbai.polygonscan.com/tx/',
@@ -13,14 +13,15 @@ export const GET_LEAGUES_CHAIN_ID = (chainId?: ChainId) => {
   if (chainId && chainId === ChainId.Binance) {
     return ChainId.Binance;
   }
-  return ChainId.Matic;
+  // return ChainId.Matic;
+  return ChainId.Mumbai;
 };
 
 export const IS_SUPPORTED_LEAGUES_CHAIN_ID = (chainId?: ChainId) => {
   if (
-    chainId === ChainId.Mumbai ||
-    chainId === ChainId.Matic ||
-    chainId === ChainId.Binance
+    chainId === ChainId.Mumbai //||
+    // chainId === ChainId.Matic ||
+    // chainId === ChainId.Binance
   ) {
     return true;
   }

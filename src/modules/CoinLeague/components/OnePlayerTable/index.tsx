@@ -22,7 +22,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {PriceFeeds} from 'modules/CoinLeague/constants';
-import {useCoinLeagues} from 'modules/CoinLeague/hooks/useCoinLeagues';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
@@ -33,7 +32,7 @@ import {
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
-import {GameType} from 'types/coinsleague';
+import {GameType} from 'types/coinleague';
 import {useMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import Badge from '@material-ui/core/Badge';
 
@@ -48,10 +47,11 @@ import {truncateAddress} from 'utils';
 import ViewCoinListItem from '../ViewCoinsModal/ViewCoinItem';
 
 import {CoinFeed} from 'modules/CoinLeague/utils/types';
-import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinleague';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
+import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -140,8 +140,6 @@ function OnePlayerTable(props: Props): JSX.Element {
   const {chainId} = useWeb3();
   const theme = useTheme();
 
-  const {coinSymbol} = useLeaguesChainInfo();
-
   const isMobile = useMobile();
 
   const [expanded, setExpanded] = useState(false);
@@ -158,7 +156,10 @@ function OnePlayerTable(props: Props): JSX.Element {
     currentPrices,
     allFeeds,
     amountOnContract,
-  } = useCoinLeagues(id);
+  } = useCoinLeagueFactory(id);
+
+  const coinToPlay = useCoinToPlay(chainId, game?.coin_to_play);
+  const coinSymbol = coinToPlay?.symbol.toUpperCase() || '';
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
