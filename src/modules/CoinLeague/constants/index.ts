@@ -717,7 +717,7 @@ export const COIN_LEAGUES_FACTORY_ADDRESS = {
 };
 
 export const COIN_LEAGUES_FACTORY_ADDRESS_V3 = {
-  [ChainId.Mumbai]: '0x3Ce9b39700aED8507dd3FEa9b42dDd7FE22724bd',
+  [ChainId.Mumbai]: '0xb33f24f9ddc38725F2b791e63Fb26E6CEc5e842A',
   [ChainId.Matic]: '',
   [ChainId.Binance]: '',
 };
