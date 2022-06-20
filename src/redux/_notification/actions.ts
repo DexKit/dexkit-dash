@@ -18,6 +18,13 @@ export const onRemoveNotification = (id: string | number | symbol) => {
   };
 };
 
+export const onRemoveAllNotifications = () => {
+  return (dispatch: Dispatch<AppActions>) => {
+    dispatch({ type: NotificationAction.REMOVE_ALL_NOTIFICATIONS, payload: {} });
+  };
+};
+
+
 export const updateNotification = (
   index: number,
   notification: Notification,

@@ -50,6 +50,10 @@ export default (state = initialState, action: any): NotificationState => {
 
       return { ...state, notifications: newNotifications };
     }
+
+    case NotificationAction.REMOVE_ALL_NOTIFICATIONS: {
+      return { ...state, notifications: [] };
+    }
     case NotificationAction.SEEN_NOTIFICATION: {
       return { ...state, hasSeenNotification: true, notificationsNotSeen: 0 };
     }
