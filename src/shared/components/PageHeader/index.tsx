@@ -117,10 +117,7 @@ const PageHeader: React.FC<Props> = ({
         <Box className={classes.boxTitle}>
           {networkSwitcher && (
             <Box mr={3}>
-              <NetworkSwitcher
-                networkName={networkSwitcher.networkName}
-                onClick={networkSwitcher.onClick}
-              />
+              <NetworkSwitcher />
             </Box>
           )}
 

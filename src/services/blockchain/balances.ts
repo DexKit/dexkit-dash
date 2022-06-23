@@ -1,12 +1,13 @@
-import {ethers} from 'ethers';
-import {getTokenBalances} from 'services/multicall';
-import {getBalanceWithProvider} from 'services/web3modal';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {ETHEREUM_NATIVE_COINS_BY_CHAIN} from 'shared/constants/Coins';
-import {TOKENS_LIST} from 'shared/constants/tokens';
-import {ChainId, MyBalances} from 'types/blockchain';
+import { BigNumber, ethers } from 'ethers';
+import { getTokenBalances } from 'services/multicall';
+import { getBalanceWithProvider } from 'services/web3modal';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { TOKENS_LIST } from 'shared/constants/tokens';
+import { ChainId, MyBalances } from 'types/blockchain';
 
 import * as settingTypes from 'modules/Settings/types';
+import { AppNetworks } from 'shared/constants/Networks';
+
 
 export const getAllBlockchainBalances = async (
   chainId: ChainId,
@@ -45,6 +46,7 @@ export const getAllBlockchainBalances = async (
           Number(ethers.utils.formatUnits(tb[t.address] || '0', t.decimals)) ||
           0,
         valueInUsd: 0,
+        valueBN: BigNumber.from(tb[t.address] || '0'),
         __typename: 'EthereumBalance',
         network: t.name,
         price24hPercentage: 0,
@@ -66,6 +68,7 @@ export const getAllBlockchainBalances = async (
       value:
         Number(ethers.utils.formatUnits(tb[t.address] || '0', t.decimals)) || 0,
       valueInUsd: 0,
+      valueBN: BigNumber.from(tb[t.address] || '0'),
       __typename: 'EthereumBalance',
       network: t.name,
       price24hPercentage: 0,
@@ -78,7 +81,7 @@ export const getAllBlockchainBalances = async (
 
   const ethBalance = await provider.getBalance(account);
 
-  let coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
+  let coin = Object.values(AppNetworks).find(n => n?.chainId === chainId) as any;
 
   if (!coin) {
     const index = customNetworks.findIndex((n) => n.chainId === chainId);
@@ -88,35 +91,39 @@ export const getAllBlockchainBalances = async (
         name: customNetworks[index].name,
         symbol: customNetworks[index].nativeTokenSymbol,
         decimals: 18,
-        address: customNetworks[index].nativeTokenSymbol,
       };
     }
   }
-
-  const ethToken = {
-    currency: {
-      __typename: 'Currency',
-      name: coin.name,
-      symbol: coin.symbol,
-      decimals: coin.decimals,
-      address: coin.address.toLowerCase(),
-      tokenType: 'ERC20',
-    },
-    value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
-    valueInUsd: 0,
-    __typename: 'EthereumBalance',
-    network: coin.name,
-    price24hPercentage: 0,
-    chainId: chainId,
-    isCustomNetwork: true,
-  };
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  bal.push(ethToken);
-
-  return {balances: bal as MyBalances[], nftBalances: [] as MyBalances[]};
+  if (coin) {
+    const ethToken = {
+      currency: {
+        __typename: 'Currency',
+        name: coin.name,
+        symbol: coin.symbol,
+        decimals: coin.decimals,
+        address: coin.symbol.toLowerCase(),
+        tokenType: 'ERC20',
+      },
+      value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
+      valueBN: BigNumber.from(ethBalance || '0'),
+      valueInUsd: 0,
+      __typename: 'EthereumBalance',
+      network: coin.name,
+      price24hPercentage: 0,
+      chainId: chainId,
+      isCustomNetwork: true,
+    };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    bal.push(ethToken);
+  }
+  return { balances: bal as MyBalances[], nftBalances: [] as MyBalances[] };
 };
+
+
+
+
+
 
 
 export const getAllTestnetBlockchainBalances = async (
@@ -129,7 +136,7 @@ export const getAllTestnetBlockchainBalances = async (
   const [, tb] = await getTokenBalances(
     [
       ...(tokens?.map((t) => t.address) as string[]),
-   
+
     ],
     account,
     provider,
@@ -157,36 +164,37 @@ export const getAllTestnetBlockchainBalances = async (
       } as MyBalances;
     }) || [];
 
-  
+
   const bal: MyBalances[] = [...tokensWithBalance];
 
   const ethBalance = await getBalanceWithProvider(account, provider);
 
-  let coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
+  let coin = Object.values(AppNetworks).find(n => n?.chainId === chainId) as any;
 
+  if (coin) {
+    const ethToken = {
+      currency: {
+        __typename: 'Currency',
+        name: coin.name,
+        symbol: coin.symbol,
+        decimals: coin.decimals,
+        address: coin.symbol.toLowerCase(),
+        tokenType: 'ERC20',
+      },
+      value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
+      valueInUsd: 0,
+      __typename: 'EthereumBalance',
+      network: GET_NETWORK_NAME(chainId),
+      price24hPercentage: 0,
+      chainId: chainId,
+    };
 
-  const ethToken = {
-    currency: {
-      __typename: 'Currency',
-      name: coin.name,
-      symbol: coin.symbol,
-      decimals: coin.decimals,
-      address: coin.address,
-      tokenType: 'ERC20',
-    },
-    value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
-    valueInUsd: 0,
-    __typename: 'EthereumBalance',
-    network: GET_NETWORK_NAME(chainId),
-    price24hPercentage: 0,
-    chainId: chainId,
-  };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    bal.push(ethToken);
+  }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  bal.push(ethToken);
-
-  return {balances: bal as MyBalances[], nftBalances: [] as MyBalances[]};
+  return { balances: bal as MyBalances[], nftBalances: [] as MyBalances[] };
 };
 
 const ABI = [

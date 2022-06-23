@@ -59,7 +59,7 @@ import Delete from '@material-ui/icons/Delete';
 import {groupItems} from 'utils';
 import {humanizeDate} from 'utils/date';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import {useCustomNetworkList} from 'hooks/network';
+import {useAppNetworks, useCustomNetworkList} from 'hooks/network';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {Skeleton} from '@material-ui/lab';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
@@ -169,6 +169,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
   const {networks} = useCustomNetworkList();
+  const appNetworks = useAppNetworks();
 
   const handleOpenSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(true);
@@ -179,11 +180,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
   }, []);
 
   const handleSelectChain = useCallback(
-    async (chainId: number) => {
+    async (_chainId: number) => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(_chainId);
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
@@ -191,7 +192,59 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
         const provider = getProvider();
 
         try {
-          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+          const customIndex = appNetworks.findIndex(
+            (n) => n.chainId === _chainId,
+          );
+          if (customIndex > -1) {
+            const params: {
+              chainId: string; // A 0x-prefixed hexadecimal string
+              chainName: string;
+              nativeCurrency?: {
+                name: string;
+                symbol: string; // 2-6 characters long
+                decimals: number;
+              };
+              rpcUrls: string[];
+              blockExplorerUrls?: string[];
+              iconUrls?: string[]; // Currently ignored.
+            } = {
+              chainId: '0x' + appNetworks[customIndex].chainId.toString(16),
+              chainName: appNetworks[customIndex].name,
+              rpcUrls: [appNetworks[customIndex].rpcURL],
+              blockExplorerUrls: appNetworks[customIndex].explorerURL
+                ? [appNetworks[customIndex].explorerURL]
+                : undefined,
+            };
+
+            const nativeCurrency: {
+              name: string;
+              symbol: string;
+              decimals: number;
+            } = {
+              name: appNetworks[customIndex].name,
+              //@ts-ignore
+              symbol: appNetworks[customIndex].symbol,
+              decimals: 18,
+            };
+
+            nativeCurrency.symbol = appNetworks[customIndex].symbol;
+
+            params.nativeCurrency = nativeCurrency;
+
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [params],
+            });
+            dispatch(setWeb3State(Web3State.Done));
+            return;
+          }
+        } catch {
+          dispatch(setWeb3State(Web3State.Done));
+          return;
+        }
+
+        try {
+          const customIndex = networks.findIndex((n) => n.chainId === _chainId);
 
           if (customIndex > -1) {
             const params: {
@@ -235,21 +288,20 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
               method: 'wallet_addEthereumChain',
               params: [params],
             });
-          } else {
-            await switchChain(provider, chainId);
+            //  window.location.reload();
+            dispatch(setWeb3State(Web3State.Done));
+            return;
           }
-
-          window.location.reload();
-          dispatch(setWeb3State(Web3State.Done));
         } catch {
-          window.location.reload();
+          //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
+          return;
         }
+        await switchChain(provider, _chainId);
       }
     },
-    [dispatch, getProvider, onSwitchMagicNetwork, networks],
+    [dispatch, getProvider, onSwitchMagicNetwork, networks, appNetworks],
   );
-
   return (
     <>
       {chainId ? (

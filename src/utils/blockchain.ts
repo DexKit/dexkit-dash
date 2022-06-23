@@ -1,7 +1,7 @@
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {ChainId} from 'types/blockchain';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { ChainId } from 'types/blockchain';
 
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 export enum NetworkCodes {
   Ethereum = 1,
@@ -87,7 +87,7 @@ export function getTransactionScannerBaseUrl(chainId: number) {
 export function getTransactionScannerUrlV2(
   chainId: number,
   transactionHash: string,
-  networks: {chainId: number; explorerUrl: string}[],
+  networks: { chainId: number; explorerUrl: string }[],
 ) {
   const url = getTransactionScannerBaseUrl(chainId);
 
@@ -137,9 +137,17 @@ export function getScannerUrl(chainId: number) {
 
 export function getScannerUrlV2(
   chainId: number,
-  networks: {chainId: number; explorerUrl: string}[],
+  networks: { chainId: number; explorerUrl: string }[],
+  appNetworks: { chainId: number; explorerUrl: string }[],
 ) {
   const explorerUrl = getScannerUrl(chainId);
+  if (explorerUrl === '') {
+    const index = appNetworks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return appNetworks[index].explorerUrl;
+    }
+  }
 
   if (explorerUrl === '') {
     const index = networks.findIndex((n) => n.chainId === chainId);

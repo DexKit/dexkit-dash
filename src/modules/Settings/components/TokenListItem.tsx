@@ -9,9 +9,11 @@ import {
 import React from 'react';
 
 import {Skeleton} from '@material-ui/lab';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import {useTokenBalance} from 'hooks/tokens';
+import {ChainId} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -37,22 +39,34 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   contractAddress: string;
   account?: string;
+  chainId: ChainId;
   tokenSymbol: any;
   imageUrl?: string;
+  onRemove: ({
+    address,
+    chainId,
+    symbol,
+  }: {
+    address: string;
+    chainId: ChainId;
+    symbol: string;
+  }) => void;
 }
 
 export const TokenListItem: React.FC<Props> = ({
   tokenSymbol,
   imageUrl,
   account,
+  chainId,
   contractAddress,
+  onRemove,
 }) => {
   const classes = useStyles();
 
   const {data, isLoading} = useTokenBalance(contractAddress, account);
 
   return (
-    <ListItem button>
+    <ListItem>
       <ListItemIcon>
         {!isLoading ? (
           <Box className={classes.icon}>
@@ -68,8 +82,22 @@ export const TokenListItem: React.FC<Props> = ({
         primary={!isLoading ? `${data || 0} ${tokenSymbol}` : <Skeleton />}
       />
       <ListItemSecondaryAction>
-        {!isLoading ? <ChevronRightIcon /> : <Skeleton />}
+        <IconButton
+          size='small'
+          onClick={() =>
+            onRemove({
+              address: contractAddress,
+              chainId: chainId,
+              symbol: tokenSymbol,
+            })
+          }>
+          <DeleteIcon />
+        </IconButton>
       </ListItemSecondaryAction>
+
+      {/* <ListItemSecondaryAction>
+        {!isLoading ? <ChevronRightIcon /> : <Skeleton />}
+        </ListItemSecondaryAction>*/}
     </ListItem>
   );
 };
