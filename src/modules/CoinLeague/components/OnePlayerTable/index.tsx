@@ -685,7 +685,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                         />
                       </Typography>
                       <Typography variant='h5'>
-                        {currentPlayers === 2 ? (
+                        {currentPlayers === 2 || currentPlayers === 3 ? (
                           <>
                             {(prizePool || 0) * 0.9} {coinSymbol}
                           </>
