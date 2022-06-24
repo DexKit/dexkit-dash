@@ -854,6 +854,8 @@ function GameEnter(props: Props) {
                   selectedCoins.length === (game?.num_coins.toNumber() || 0) - 1
                 }
                 game={game}
+                coinToPlay={coinToPlay}
+                coinToPlayBalance={coinToPlayBalance}
                 onEnterGame={onEnterGame}
                 onRefetch={handleRefetch}
                 enterLoading={gameJoin.isLoading}

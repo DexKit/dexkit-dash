@@ -1,5 +1,12 @@
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Button, CircularProgress, Grid, makeStyles} from '@material-ui/core';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import {Delete, Edit} from '@material-ui/icons';
 import {Alert} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
@@ -14,6 +21,9 @@ import StopIcon from '@material-ui/icons/Stop';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+import {CoinToPlayInterface} from 'modules/CoinLeague/constants';
+import {BigNumber} from 'ethers';
+import {formatUnits} from 'ethers/lib/utils';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -25,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   game?: Game;
+  coinToPlay?: CoinToPlayInterface;
+  coinToPlayBalance?: {
+    balance: BigNumber;
+    allowance: BigNumber;
+  };
   canEnterGame?: boolean;
   onEnterGame: () => void;
   onEditMetadata?: () => void;
@@ -38,6 +53,8 @@ interface Props {
 export const GameActions: React.FC<Props> = ({
   game,
   canEnterGame,
+  coinToPlay,
+  coinToPlayBalance,
   onEnterGame,
   onEditMetadata,
   onShowMetadata,
@@ -51,6 +68,12 @@ export const GameActions: React.FC<Props> = ({
 
   const startTimestamp = game?.start_timestamp;
   const durationBN = game?.duration;
+
+  const formattedBalance = formatUnits(
+    coinToPlayBalance?.balance || '0',
+    coinToPlay?.decimals,
+  );
+  const currencySymbol = coinToPlay?.symbol || '';
 
   const canEndGame = useMemo(() => {
     if (startTimestamp && durationBN) {
@@ -172,24 +195,36 @@ export const GameActions: React.FC<Props> = ({
             </Grid>
             <Grid item>
               {canEnterGame && (
-                <Button
-                  fullWidth={isMobile}
-                  disabled={enterLoading}
-                  onClick={onEnterGame}
-                  variant='contained'
-                  color='primary'
-                  startIcon={
-                    enterLoading ? (
-                      <CircularProgress size='1rem' color='inherit' />
-                    ) : (
-                      <GroupAddIcon />
-                    )
-                  }>
-                  <IntlMessages
-                    id='coinLeague.enterGame'
-                    defaultMessage='Enter Game'
-                  />
-                </Button>
+                <Box
+                  display='flex'
+                  alignContent={'center'}
+                  alignItems={'center'}>
+                  {coinToPlay && coinToPlayBalance?.balance && (
+                    <Box p={2}>
+                      <Typography variant='body1'>
+                        Avl. Balance: {formattedBalance} {currencySymbol}{' '}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Button
+                    fullWidth={isMobile}
+                    disabled={enterLoading}
+                    onClick={onEnterGame}
+                    variant='contained'
+                    color='primary'
+                    startIcon={
+                      enterLoading ? (
+                        <CircularProgress size='1rem' color='inherit' />
+                      ) : (
+                        <GroupAddIcon />
+                      )
+                    }>
+                    <IntlMessages
+                      id='coinLeague.enterGame'
+                      defaultMessage='Enter Game'
+                    />
+                  </Button>
+                </Box>
               )}
               {isCanEndGameEnabled && (
                 <Button
