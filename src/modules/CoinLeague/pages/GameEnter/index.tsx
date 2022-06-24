@@ -604,6 +604,12 @@ function GameEnter(props: Props) {
                     />
                   </Grid>
                   <Grid item>
+                    <BuyCryptoButton
+                      btnMsg={`Buy ${currencySymbol || 'USDT'}`}
+                      defaultCurrency={currencySymbol.toUpperCase() || 'USDT'}
+                    />
+                  </Grid>
+                  <Grid item>
                     <MaticBridgeButton />
                   </Grid>
                 </Grid>

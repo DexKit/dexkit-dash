@@ -1,16 +1,16 @@
-import {useCallback, useState} from 'react';
-import {useWeb3} from './useWeb3';
-import {useWindowSize} from './useWindowSize';
+import { useCallback, useState } from 'react';
+import { useWeb3 } from './useWeb3';
+import { useWindowSize } from './useWindowSize';
 
 type Props = {
   defaultCurrency?: string;
 };
 
 export function useTransak(props: Props) {
-  const {defaultCurrency} = props;
+  const { defaultCurrency } = props;
   const windowSize = useWindowSize();
 
-  const {account} = useWeb3();
+  const { account } = useWeb3();
 
   const [transakClient, setTransakInstance] = useState<any>();
 
@@ -48,11 +48,10 @@ export function useTransak(props: Props) {
   const init = useCallback(() => {
     if (transakClient) {
       transakClient.init();
-    }else{
+    } else {
       import('@transak/transak-sdk')
-      .then(SDK => {
-        console.log(SDK)
-        //@ts-ignore
+        .then(SDK => {
+          //@ts-ignore
           const transak: any = new SDK.default({
             apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
             environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
@@ -72,17 +71,17 @@ export function useTransak(props: Props) {
                 ? `${windowSize.width - 10}px`
                 : '500px',
           });
-    
+
           transak.on(transak.ALL_EVENTS, transakAllEvents);
-    
+
           transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
-    
+
           transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
-    
+
           transak.init();
-    
+
           setTransakInstance(transak);
-      })
+        })
     }
   }, [transakClient, windowSize, defaultCurrency]);
 
