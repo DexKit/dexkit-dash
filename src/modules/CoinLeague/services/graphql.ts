@@ -16,7 +16,7 @@ export const getGraphClient = (isNFTGame: boolean, chainId?: ChainId,) => {
 }
 
 export const GET_GRAPHQL_CLIEN_URL_MAIN_ROOM = {
-  [ChainId.Matic]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguesv2',
+  [ChainId.Matic]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguev3',
   [ChainId.Binance]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguebsc',
   [ChainId.Mumbai]: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleaguemumbaiv3'
 }

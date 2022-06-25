@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
-import { BITBOY_TEAM, CoinToPlay, CREATOR_ADDRESSES, CREATOR_LABELS, NativeCoinAddress } from '../constants';
+import { BITBOY_TEAM, CoinToPlay, CoinToPlayInterface, CREATOR_ADDRESSES, CREATOR_LABELS, NativeCoinAddress } from '../constants';
 import {
   GameLevel,
   GameOrderBy,
@@ -179,7 +179,8 @@ export const GET_GAME_LEVEL_AMOUNTS_UNITS = (
   chainId = ChainId.Matic,
   coinToPlayAddress?: string,
 ) => {
-  return ethers.utils.formatEther(GET_GAME_LEVEL_AMOUNTS(gameLevel, chainId, coinToPlayAddress));
+  const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase()) as CoinToPlayInterface;
+  return ethers.utils.formatUnits(GET_GAME_LEVEL_AMOUNTS(gameLevel, chainId, coinToPlayAddress), coinToPlay?.decimals || 18);
 };
 
 export const GET_GAME_LEVEL_AMOUNTS = (
@@ -187,14 +188,12 @@ export const GET_GAME_LEVEL_AMOUNTS = (
   chainId = ChainId.Matic,
   coinToPlayAddress?: string,
 ) => {
-  const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase());
-  const isStable = coinToPlay && coinToPlay.address.toLowerCase() !== NativeCoinAddress.toLowerCase()
-
-
+  const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase()) as CoinToPlayInterface;
+  const isStable = coinToPlay && coinToPlay.address.toLowerCase() !== NativeCoinAddress.toLowerCase();
   switch (gameLevel) {
     case GameLevel.Beginner:
       if (isStable) {
-        return ethers.utils.parseEther('1');
+        return ethers.utils.parseUnits('0.001', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:
@@ -207,7 +206,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
 
     case GameLevel.Intermediate:
       if (isStable) {
-        return ethers.utils.parseEther('5');
+        return ethers.utils.parseUnits('5', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:
@@ -220,7 +219,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
 
     case GameLevel.Advanced:
       if (isStable) {
-        return ethers.utils.parseEther('25');
+        return ethers.utils.parseUnits('25', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:
@@ -232,7 +231,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
       }
     case GameLevel.Expert:
       if (isStable) {
-        return ethers.utils.parseEther('100');
+        return ethers.utils.parseUnits('100', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:
@@ -244,7 +243,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
       }
     case GameLevel.Master:
       if (isStable) {
-        return ethers.utils.parseEther('250');
+        return ethers.utils.parseUnits('250', coinToPlay.decimals);
       }
 
       switch (chainId) {
@@ -257,7 +256,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
       }
     case GameLevel.GrandMaster:
       if (isStable) {
-        return ethers.utils.parseEther('500');
+        return ethers.utils.parseUnits('500', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:

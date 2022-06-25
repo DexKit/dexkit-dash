@@ -718,7 +718,7 @@ export const COIN_LEAGUES_FACTORY_ADDRESS = {
 
 export const COIN_LEAGUES_FACTORY_ADDRESS_V3 = {
   [ChainId.Mumbai]: '0xb33f24f9ddc38725F2b791e63Fb26E6CEc5e842A',
-  [ChainId.Matic]: '',
+  [ChainId.Matic]: '0xCF69652a150Ce7d37E9b65E3194a51C892cEc96D',
   [ChainId.Binance]: '',
 };
 
@@ -817,12 +817,24 @@ export const CoinToPlay: { [key in ChainId]?: CoinToPlayInterface[] } = {
       symbol: 'Matic',
       decimals: 18
     },
+    {
+      address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+      name: 'Tether',
+      symbol: 'USDT',
+      decimals: 6
+    }
   ]
 }
 
 export const StableCoinToPlay: { [key in ChainId]?: CoinToPlayInterface } = {
   [ChainId.Mumbai]: {
     address: '0xd3FC7D494ce25303BF8BeC111310629429e6cDEA',
+    name: 'Tether',
+    symbol: 'USDT',
+    decimals: 6
+  },
+  [ChainId.Matic]: {
+    address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
     name: 'Tether',
     symbol: 'USDT',
     decimals: 6
