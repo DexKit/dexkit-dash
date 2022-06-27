@@ -244,9 +244,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   const {chainName} = useChainInfo();
 
-  const {notifications} = useSelector<AppState, AppState['notification']>(
-    ({notification}) => notification,
-  );
+  const {notificationsNotSeen} = useSelector<
+    AppState,
+    AppState['notification']
+  >(({notification}) => notification);
 
   return (
     <>
@@ -311,12 +312,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         <Badge
                           variant='dot'
                           color='primary'
-                          badgeContent={
-                            notifications.filter(
-                              (notification) =>
-                                notification?.check === undefined,
-                            ).length
-                          }>
+                          badgeContent={notificationsNotSeen}>
                           <MenuIcon />
                         </Badge>
                       </IconButton>
