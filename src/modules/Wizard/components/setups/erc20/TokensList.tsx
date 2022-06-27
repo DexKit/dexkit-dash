@@ -17,7 +17,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
 import {getScannerUrlV2} from 'utils/blockchain';
 
-import {useCustomNetworkList} from 'hooks/network';
+import {useAppNetworks, useCustomNetworkList} from 'hooks/network';
 
 export const TokensList = () => {
   const {list, data} = useTokensList();
@@ -25,6 +25,7 @@ export const TokensList = () => {
   const {chainId} = useWeb3();
 
   const {networks} = useCustomNetworkList();
+  const appNetworks = useAppNetworks();
 
   useEffect(() => {
     list();
@@ -40,12 +41,16 @@ export const TokensList = () => {
               chainId: n.chainId,
               explorerUrl: n.explorerUrl,
             })),
+            appNetworks.map((n) => ({
+              chainId: n.chainId,
+              explorerUrl: n.explorerURL,
+            })),
           )}/address/${address}`,
           '_blank',
         );
       }
     },
-    [networks],
+    [networks, appNetworks],
   );
 
   if (data.length > 0) {

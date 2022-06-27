@@ -41,6 +41,32 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.23'
+          id='panelv0.0.6.21-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.23 - 27-06-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added import tokens on settings page
+            </Typography>
+            <Typography className={classes.item}>
+              Added Avalanche, Fantom and OKC as default networks
+            </Typography>
+            <Typography className={classes.item}>
+              Wallet layout change
+            </Typography>
+            <Typography className={classes.item}>
+              Improved notifications modal
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.22'
           id='panelv0.0.6.22-header'>
           <Typography className={classes.heading}>
@@ -56,6 +82,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
+
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

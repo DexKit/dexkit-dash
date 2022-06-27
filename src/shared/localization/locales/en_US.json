@@ -1953,7 +1953,7 @@
   "app.onBoarding.orContinue": "Or continue",
   "app.onBoarding.connectExternal": "Connect external wallet like Metamask",
   "app.wallet.networkIsNotSupported": "is not supported",
-  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x does not support this network yet. Please, switch to Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom or Celo to trade in our app.",
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x does not support this network yet. Please, switch to Ethereum, Binance Smart Chain, Polygon to trade in our app.",
   "nftLeague.games": "Games",
   "nftLeague.game": "Game",
   "nftLeague.gameEndsIn": "Game ends in",

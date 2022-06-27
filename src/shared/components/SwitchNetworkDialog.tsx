@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   Typography,
   Box,
@@ -19,7 +19,6 @@ import {
 import Close from '@material-ui/icons/Close';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {useMobile} from 'hooks/useMobile';
-import {NetworkCodes} from 'utils/blockchain';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {isMagicProvider} from 'services/magic';
@@ -28,7 +27,11 @@ import {useToggler} from 'hooks/useToggler';
 
 import * as settingsTypes from 'modules/Settings/types';
 
-import {useCustomNetworkList, useAddCustomNetwork} from 'hooks/network';
+import {
+  useCustomNetworkList,
+  useAddCustomNetwork,
+  useAppNetworks,
+} from 'hooks/network';
 
 import AddIcon from '@material-ui/icons/Add';
 
@@ -36,6 +39,8 @@ import {
   NetworkFormDialog,
   NetworkFormState,
 } from 'modules/Settings/components/NetworkFormDialog';
+import {ChainId} from 'types/blockchain';
+import {useHistory} from 'react-router';
 
 export const ADD_NETWORK_VALUES_EMPTY: NetworkFormState = {
   chainId: '0',
@@ -92,10 +97,15 @@ const useStyles = makeStyles((theme) => ({
 interface SwitchNetworkDialogProps extends DialogProps {
   selected: number;
   onSelectChain: (chainId: number) => void;
+  useOnlyCustom?: boolean;
 }
 
 export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
-  const {onClose, onSelectChain, selected} = props;
+  const history = useHistory();
+
+  const {onClose, onSelectChain, selected, useOnlyCustom} = props;
+
+  const appNetworks = useAppNetworks();
 
   const theme = useTheme();
 
@@ -111,17 +121,12 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
 
   const isMobile = useMobile();
 
-  const handleEthereum = useCallback(() => {
-    onSelectChain(NetworkCodes.Ethereum);
-  }, [onSelectChain]);
-
-  const handleBsc = useCallback(() => {
-    onSelectChain(NetworkCodes.SmartChain);
-  }, [onSelectChain]);
-
-  const handlePolygon = useCallback(() => {
-    onSelectChain(NetworkCodes.Matic);
-  }, [onSelectChain]);
+  const handleSelectNetwork = useCallback(
+    (chainId: ChainId) => {
+      onSelectChain(chainId);
+    },
+    [onSelectChain],
+  );
 
   const {networks} = useCustomNetworkList();
 
@@ -170,8 +175,11 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
   }, [addNetwork, addNetworkDialogToggler, networkValues]);
 
   const handleOpenAddNetwork = useCallback(() => {
-    addNetworkDialogToggler.set(true);
-  }, [addNetworkDialogToggler]);
+    history.push('/settings');
+    if (onClose) {
+      onClose({}, 'backdropClick');
+    }
+  }, [history, onClose]);
 
   const handleSelectCustomNetwork = useCallback(
     async (network: settingsTypes.Network) => {
@@ -179,6 +187,16 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
     },
     [onSelectChain],
   );
+  const isMagic = isMagicProvider();
+  const nets = useMemo(() => {
+    if (isMagic) {
+      return appNetworks.filter((n) => n.supportMagic);
+    }
+    if (useOnlyCustom) {
+      return appNetworks.filter((n) => !n.usesBitquery);
+    }
+    return appNetworks;
+  }, [appNetworks, isMagic, useOnlyCustom]);
 
   return (
     <>
@@ -217,54 +235,24 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
         </DialogTitle>
         <Divider />
         <List disablePadding>
-          <ListItem
-            button
-            onClick={handleEthereum}
-            selected={NetworkCodes.Ethereum === selected}>
-            <ListItemIcon>
-              <Box className={classes.icon}>
-                <img
-                  alt=''
-                  height={theme.spacing(6)}
-                  width={theme.spacing(6)}
-                  src={require('assets/images/eth_logo.png')}
-                />
-              </Box>
-            </ListItemIcon>
-            <ListItemText primary='Ethereum' />
-          </ListItem>
-          <ListItem
-            button
-            onClick={handleBsc}
-            selected={NetworkCodes.SmartChain === selected}>
-            <ListItemIcon>
-              <Box className={classes.icon}>
-                <img
-                  alt=''
-                  height={theme.spacing(6)}
-                  width={theme.spacing(6)}
-                  src={require('assets/images/chains/binance-coin-bnb-logo.svg')}
-                />
-              </Box>
-            </ListItemIcon>
-            <ListItemText primary='Binance Smart Chain' />
-          </ListItem>
-          <ListItem
-            button
-            onClick={handlePolygon}
-            selected={NetworkCodes.Matic === selected}>
-            <ListItemIcon>
-              <Box className={classes.icon}>
-                <img
-                  alt=''
-                  height={theme.spacing(6)}
-                  width={theme.spacing(6)}
-                  src={require('assets/images/chains/polygon-matic-logo.svg')}
-                />
-              </Box>
-            </ListItemIcon>
-            <ListItemText primary='Polygon' />
-          </ListItem>
+          {nets.map((n) => (
+            <ListItem
+              button
+              onClick={() => handleSelectNetwork(n?.chainId as ChainId)}
+              selected={n.chainId === selected}>
+              <ListItemIcon>
+                <Box className={classes.icon}>
+                  <img
+                    alt={n.name}
+                    height={theme.spacing(6)}
+                    width={theme.spacing(6)}
+                    src={n.networkImage}
+                  />
+                </Box>
+              </ListItemIcon>
+              <ListItemText primary={n.name} />
+            </ListItem>
+          ))}
           <Divider />
           {/* <Divider />
         <ListItem
@@ -303,9 +291,13 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
             <List
               disablePadding
               subheader={
-                <ListSubheader component='div' id='nested-list-subheader'>
-                  <IntlMessages id='app.common.customNetworks' />
-                </ListSubheader>
+                networks.length ? (
+                  <ListSubheader component='div' id='nested-list-subheader'>
+                    <IntlMessages id='app.common.customNetworks' />
+                  </ListSubheader>
+                ) : (
+                  <></>
+                )
               }>
               <Divider />
               {networks.map((network: settingsTypes.Network, index: number) => (
@@ -325,7 +317,10 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
                 startIcon={<AddIcon />}
                 fullWidth
                 color='primary'>
-                <IntlMessages id='app.common.addCustomNetwork' />
+                <IntlMessages
+                  id='configure.networks'
+                  defaultMessage={'Configure Networks'}
+                />
               </Button>
             </Box>
           </>

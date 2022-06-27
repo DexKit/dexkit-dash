@@ -13,9 +13,10 @@ import {
 import { providers } from 'ethers';
 import { useCustomTokenList } from 'hooks/tokens';
 
-import { useCustomNetworkList } from 'hooks/network';
+import { useAppNetworks, useCustomNetworkList } from 'hooks/network';
 import { NetworkParams } from 'redux/_settingsv2/actions';
 import { SCAM_TOKENS } from 'shared/constants/tokens';
+import { AppNetworkParams } from 'shared/constants/Networks';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -48,6 +49,7 @@ export const useAllBalance = (defaultAccount?: string) => {
   const account = defaultAccount || web3Account;
 
   const { networks } = useCustomNetworkList();
+  const appNetworks = useAppNetworks();
 
   const myBalancesQuery = useQuery(
     ['GetMyBalancesQuery', account, chainId, web3State, networks, tokens],
@@ -93,6 +95,29 @@ export const useAllBalance = (defaultAccount?: string) => {
             } catch { }
           }
         }
+        const rpcNetworks = appNetworks.filter(n => !n.usesBitquery);
+
+        // Get all balances at all
+        if (rpcNetworks && rpcNetworks.length) {
+          for (let index = 0; index < rpcNetworks.length; index++) {
+            try {
+              const network = rpcNetworks[index] as AppNetworkParams;
+              const pr = new providers.JsonRpcProvider(network.rpcURL);
+              const balances = await getAllBlockchainBalances(
+                network.chainId,
+                account,
+                tokens,
+                [],
+                pr,
+              );
+
+              result = {
+                balances: [...balances.balances, ...result.balances],
+                nftBalances: [],
+              };
+            } catch { }
+          }
+        }
 
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
         const bitqueryResult = await getAllBitqueryBalances(account);
@@ -105,6 +130,10 @@ export const useAllBalance = (defaultAccount?: string) => {
     },
     { staleTime: 1000 * 20 },
   );
+
+
+
+
 
   const usdValuesQuery = useQuery(
     ['GetCoingeckoUsdValues', myBalancesQuery.data],

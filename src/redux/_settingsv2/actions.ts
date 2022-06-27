@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
+import { ChainId } from 'types/blockchain';
 import { CustomAsset } from './types';
 
 export interface TokenParams {
@@ -40,4 +41,8 @@ export const addCustomAsset = createAction<CustomAsset>(
 
 export const removeCustomAsset = createAction<CustomAsset>(
   'settingsv2/removeCustomAsset',
+);
+
+export const removeCustomToken = createAction<{ address: string, chainId: ChainId }>(
+  'settingsv2/removeCustomToken',
 );

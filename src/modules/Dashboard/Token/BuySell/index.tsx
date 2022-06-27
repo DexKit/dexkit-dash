@@ -27,6 +27,7 @@ import {
 } from 'shared/constants/Coins';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {TOKENS_LIST} from 'shared/constants/tokens';
+import {useCustomTokenList} from 'hooks/tokens';
 
 interface Props {
   disableReceive?: boolean;
@@ -98,6 +99,7 @@ const BuySell: React.FC<Props> = ({
   const tokensETH = useTokenList(EthereumNetwork.ethereum);
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
   const tokensMATIC = useTokenList(EthereumNetwork.matic);
+  const customTokens = useCustomTokenList();
 
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
@@ -126,8 +128,13 @@ const BuySell: React.FC<Props> = ({
       return;
     }
 
-    setSelect1([...tokensETH, ...tokensBSC, ...tokensMATIC]);
-  }, [networkName, tokensETH, tokensBSC, tokensMATIC, chainId]);
+    setSelect1([
+      ...tokensETH,
+      ...tokensBSC,
+      ...tokensMATIC,
+      ...customTokens.tokens,
+    ]);
+  }, [networkName, tokensETH, tokensBSC, tokensMATIC, chainId, customTokens]);
 
   // Here, we map the balances with logos from the token lists
   useEffect(() => {

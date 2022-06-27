@@ -1844,7 +1844,7 @@
   "app.onBoarding.orContinue": "Ou continua com",
   "app.onBoarding.connectExternal": "Conectar carteira externa, como por exemplo, Metamask",
   "app.wallet.networkIsNotSupported": "não é suportado",
-  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x ainda não suporta esta rede. Por favor, mude para Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom ou Celo para fazer trade em nosso aplicativo.",
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x ainda não suporta esta rede. Por favor, mude para Ethereum, Binance Smart Chain, Polygon para fazer trade em nosso aplicativo.",
   "app.coinLeagues.champion": "Campeão",
   "app.coinLeague.buyOnOpenSea": "Compre Campeão na OpenSea",
   "app.coinLeague..mintingHalted": "Criação interrompida",

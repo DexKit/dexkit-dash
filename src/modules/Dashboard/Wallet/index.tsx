@@ -138,6 +138,58 @@ const WalletTabs: React.FC<Props> = (props) => {
                 />
               )}
             </Grid>
+
+            <Grid item xs={12}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={12}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={isMobile ? 12 : undefined}>
+                      <CustomTabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='standard'
+                        TabIndicatorProps={{
+                          style: {display: 'none'},
+                        }}
+                        aria-label='wallet tabs'>
+                        <CustomTab
+                          value='assets'
+                          label={messages['app.dashboard.assets'] as string}
+                        />
+                        <CustomTab value='nfts' label={'NFTs'} />
+                        <CustomTab
+                          value='trade-history'
+                          label={messages['app.dashboard.history'] as string}
+                        />
+                      </CustomTabs>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TabPanel className={classes.zeroPadding} value='assets'>
+                        <AssetTableTab
+                          account={account as string}
+                          loading={loading}
+                          loadingUsd={loadingUsd}
+                          errorUsd={errorUsd}
+                          error={error}
+                          data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel className={classes.zeroPadding} value='nfts'>
+                        {/* <NFTTable
+                          loading={loading}
+                          error={error}
+                          balances={nftBalances}
+                        /> */}
+                        <NftsTable />
+                      </TabPanel>
+                      <TabPanel value='trade-history'>
+                        <TradeHistoryTab address={defaultAccount} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
             <Grid item xs={12} sm={12}>
               <Grid container spacing={4}>
                 <Grid item xs={12}>
@@ -228,57 +280,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                       </Box>
                     </>
                   )}
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={4}>
-                <Grid item xs={12} sm={12}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={isMobile ? 12 : undefined}>
-                      <CustomTabs
-                        value={value}
-                        onChange={handleChange}
-                        variant='standard'
-                        TabIndicatorProps={{
-                          style: {display: 'none'},
-                        }}
-                        aria-label='wallet tabs'>
-                        <CustomTab
-                          value='assets'
-                          label={messages['app.dashboard.assets'] as string}
-                        />
-                        <CustomTab value='nfts' label={'NFTs'} />
-                        <CustomTab
-                          value='trade-history'
-                          label={messages['app.dashboard.history'] as string}
-                        />
-                      </CustomTabs>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TabPanel className={classes.zeroPadding} value='assets'>
-                        <AssetTableTab
-                          account={account as string}
-                          loading={loading}
-                          loadingUsd={loadingUsd}
-                          errorUsd={errorUsd}
-                          error={error}
-                          data={data}
-                        />
-                      </TabPanel>
-                      <TabPanel className={classes.zeroPadding} value='nfts'>
-                        {/* <NFTTable
-                          loading={loading}
-                          error={error}
-                          balances={nftBalances}
-                        /> */}
-                        <NftsTable />
-                      </TabPanel>
-                      <TabPanel value='trade-history'>
-                        <TradeHistoryTab address={defaultAccount} />
-                      </TabPanel>
-                    </Grid>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
