@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
-
+import CustomIcon from 'shared/components/CustomIcon';
 import {ReactComponent as ExportIcon} from 'assets/images/export.svg';
 
 interface VerticalExternalProps {
@@ -37,18 +37,24 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
       {item.icon && (
         <ListItemIcon>
           <Box className={clsx(classes.itemIcon, 'visible-hover')}>
-            <Icon color='action'>{item.icon}</Icon>
+            {item.customIcon ? (
+              <CustomIcon icon={item.icon as string} />
+            ) : (
+              <Icon>{item.icon}</Icon>
+            )}
           </Box>
         </ListItemIcon>
       )}
       <ListItemText
-        primaryTypographyProps={{color: 'primary'}}
+        primaryTypographyProps={{color: 'textPrimary'}}
         primary={<IntlMessages id={item.messageId} />}
         classes={{primary: 'nav-item-text'}}
       />
       <ListItemSecondaryAction
         className={clsx(classes.hiddenOverflow, 'nav-item-icon-arrow')}>
-        <ExportIcon className={classes.arrowIcon} />
+        <Box pr={3}>
+          <ExportIcon className={classes.arrowIcon} />
+        </Box>
       </ListItemSecondaryAction>
     </ListItem>
   );

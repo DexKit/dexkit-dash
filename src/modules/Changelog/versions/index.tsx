@@ -41,10 +41,10 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls='panelv0.0.6.21'
+          aria-controls='panelv0.0.6.23'
           id='panelv0.0.6.21-header'>
           <Typography className={classes.heading}>
-            v0.0.6.22 - 27-06-2022{' '}
+            v0.0.6.23 - 27-06-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -64,6 +64,25 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.22'
+          id='panelv0.0.6.22-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.22 - 06-06-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Added docs</Typography>
+            <Typography className={classes.item}>
+              Updated Coin League ranking
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

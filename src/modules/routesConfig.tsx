@@ -171,15 +171,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'judge',
           url: `${COINSLEAGUE_ROUTE}/champions/event`,
         },*/
-        /*  {
+        {
           id: 'coinleague.how-to-play',
           title: 'How To Play',
           messageId: 'sidebar.howToPlay',
-          type: 'item',
+          type: 'external',
           customIcon: true,
           icon: 'question',
-          url: `${COINSLEAGUE_ROUTE}/how-to-play`,
-        },*/
+          url: `https://docs.dexkit.com/gaming/predictions-hub/coin-league/how-to-play`,
+        },
         {
           id: 'coinleague.affiliate',
           title: 'Coinleague Affiliate',
@@ -250,6 +250,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'security',
           url: '/nft-league',
         },
+        {
+          id: 'coinleague.how-to-play',
+          title: 'How To Play',
+          messageId: 'sidebar.howToPlay',
+          type: 'external',
+          customIcon: true,
+          icon: 'question',
+          url: `https://docs.dexkit.com/gaming/predictions-hub/nft-league/how-to-play`,
+        },
       ],
     },
     {
@@ -266,6 +275,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'element.plus',
           url: '/my-apps/manage',
+        },
+        {
+          id: 'docs',
+          title: 'Docs',
+          customIcon: true,
+          messageId: 'sidebar.app.docs',
+          type: 'external',
+          icon: 'question',
+          url: 'https://docs.dexkit.com/defi-products/use-cases/for-entrepreneurs',
         },
       ],
     },
@@ -340,6 +358,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'external',
           icon: 'fastfood',
           url: 'https://farm.dexkit.com',
+        },
+        {
+          id: 'docs',
+          title: 'Docs',
+          customIcon: true,
+          messageId: 'sidebar.app.docs',
+          type: 'external',
+          icon: 'question',
+          url: 'https://docs.dexkit.com',
         },
       ],
     },

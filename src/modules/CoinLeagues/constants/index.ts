@@ -742,7 +742,8 @@ export enum Months {
   February = 'February',
   March = 'March',
   April = 'April',
-  May = 'May'
+  May = 'May',
+  June = 'June'
   // March = 3,
 }
 
@@ -762,6 +763,11 @@ export const BLOCK_TIMESTAMP_COMPETION: {
   [Months.May]: {
     [ChainId.Mumbai]: 0,
     [ChainId.Matic]: 27796644,
+    [ChainId.Binance]: 0,
+  },
+  [Months.June]: {
+    [ChainId.Mumbai]: 0,
+    [ChainId.Matic]: 29015000,
     [ChainId.Binance]: 0,
   }
 };
