@@ -28,7 +28,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {groupItems} from 'utils';
 import {humanizeDate} from 'utils/date';
 import {Delete} from '@material-ui/icons';
-import {onRemoveAllNotifications, onRemoveNotification} from 'redux/actions';
+import {onRemoveNotification} from 'redux/actions';
 import CustomDialogTitle from './CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
@@ -112,13 +112,6 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
     [],
   );
 
-  const onClearAllNotifications = useCallback(() => {
-    dispatch(onRemoveAllNotifications());
-    setSelectedIndex(undefined);
-    setAnchor(undefined);
-    setMenuOpen(false);
-  }, [dispatch]);
-
   const handleRemove = useCallback(() => {
     if (selectedIndex !== undefined) {
       dispatch(onRemoveNotification(selectedIndex));
@@ -154,13 +147,6 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
               id='common.notifications'
               defaultMessage='Notifications'
             />
-          }
-          chip={
-            <Box pr={4}>
-              <Button variant={'text'} onClick={onClearAllNotifications}>
-                <IntlMessages id='clear.all' defaultMessage='Clear all' />
-              </Button>
-            </Box>
           }
           onClose={handleClose}
         />
