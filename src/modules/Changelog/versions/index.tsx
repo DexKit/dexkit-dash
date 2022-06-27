@@ -44,6 +44,32 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.21'
           id='panelv0.0.6.21-header'>
           <Typography className={classes.heading}>
+            v0.0.6.22 - 27-06-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added import tokens on settings page
+            </Typography>
+            <Typography className={classes.item}>
+              Added Avalanche, Fantom and OKC as default networks
+            </Typography>
+            <Typography className={classes.item}>
+              Wallet layout change
+            </Typography>
+            <Typography className={classes.item}>
+              Improved notifications modal
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.21'
+          id='panelv0.0.6.21-header'>
+          <Typography className={classes.heading}>
             v0.0.6.21 - 16-05-2022{' '}
           </Typography>
         </AccordionSummary>
