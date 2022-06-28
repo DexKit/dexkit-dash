@@ -53,7 +53,7 @@ export const CREATOR_PRIZES_ADDRESSES = [
 ];
 
 export const BITBOY_TEAM = [
-  {
+  /*{
     address: '0x186035678f02f19d311ad24EA73a08EA4cD7f01e',
     label: 'Justin',
   },
@@ -72,7 +72,7 @@ export const BITBOY_TEAM = [
   {
     address: '0xCB8b2c541E18AdBC8B4B8A42a3CA769f4EB72e6C',
     label: 'J Chains',
-  },
+  },*/
   {
     address: '0x1b66A204a3e4be0E75B0dE7b91BC541bB7d99c8f',
     label: 'RayPulse',
@@ -81,14 +81,14 @@ export const BITBOY_TEAM = [
 
 export const CREATOR_LABELS = [
   ...BITBOY_TEAM,
-  {
+  /*{
     address: '0xA27e256CDD086eF88953b941582bB651582c1454',
     label: 'Albert Hoffman',
   },
   {
     address: '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
     label: 'Albert Hoffman',
-  },
+  },*/
 ];
 
 export const MumbaiPriceFeeds = [
@@ -116,7 +116,7 @@ export const MumbaiPriceFeeds = [
 ];
 
 export const TRADING_VIEW_TICKERS =
-  'COINBASE:BTCUSD,COINBASE:ETHUSD,COINBASE:MATICUSD,BINANCE:1INCHUSD,FTX:AAVEUSD,COINBASE:ADAUSD,FTX:ALCXUSD,COINBASE:ALGOUSD,BINANCE:AUDUSDT,BINANCE:BALUSD,COINBASE:BATUSD,COINBASE:BCHUSD,BINANCE:BNBUSD,BITTREX:BNTUSD,GEMINI:BONDUSD,BITFINEX:BSVUSD,BINANCE:BTGUSD,BINANCE:BZRXUSD,FTX:CELUSD,COINBASE:COMPUSD,COINBASE:CRVUSD,KRAKEN:DASHUSD,BITFINEX:DOGEUSD,BITFINEX:DOTUSD,KUCOIN:DPIUSDT,BITFINEX:EOSUSD,COINBASE:ETCUSD,COINBASE:FARMUSD,BINANCE:FXSUSD,FTX:HTUSD,COINBASE:ICPUSD,COINBASE:KNCUSD,BITFINEX:LEOUSD,COINBASE:LINKUSD,COINBASE:LPTUSD,COINBASE:LTCUSD,BITFINEX:LUNAUSD,COINBASE:MANAUSD,BITTREX:MFTUSD,BINANCEUS:IOTAUSD,BINANCEUS:MKRUSD,BITFINEX:NEOUSD,COINBASE:OMGUSD,BINANCE:PAXGUSD,COINBASE:QUICKUSD,COINBASE:REPUSD,BINANCE:SANDUSD,COINBASE:SNXUSD,BINANCE:SOLUSD,FTX:SUSHIUSD,BINANCE:THETAUSD,BINANCE:TRXUSD,COINBASE:UMAUSD,COINBASE:UNIUSD,BINANCE:VETUSD,COINBASE:WBTCUSD,COINBASE:XLMUSD,BINANCE:XMRUSD,SUSHISWAP:XSUSHIUSDT,BITFINEX:XTZUSD,COINBASE:YFIUSD,COINBASE:ZECUSD,COINBASE:ZRXUSD';
+  'COINBASE:BTCUSD,COINBASE:ETHUSD,COINBASE:MATICUSD,BINANCE:1INCHUSD,FTX:AAVEUSD,COINBASE:ADAUSD,FTX:ALCXUSD,COINBASE:ALGOUSD,BINANCE:AUDUSDT,BINANCE:BALUSD,COINBASE:BATUSD,COINBASE:BCHUSD,BINANCE:BNBUSD,BITTREX:BNTUSD,GEMINI:BONDUSD,BITFINEX:BSVUSD,BINANCE:BTGUSD,FTX:CELUSD,COINBASE:COMPUSD,COINBASE:CRVUSD,KRAKEN:DASHUSD,BITFINEX:DOGEUSD,BITFINEX:DOTUSD,KUCOIN:DPIUSDT,BITFINEX:EOSUSD,COINBASE:ETCUSD,COINBASE:FARMUSD,BINANCE:FXSUSD,FTX:HTUSD,COINBASE:ICPUSD,COINBASE:KNCUSD,BITFINEX:LEOUSD,COINBASE:LINKUSD,COINBASE:LPTUSD,COINBASE:LTCUSD,COINBASE:MANAUSD,BITTREX:MFTUSD,BINANCEUS:IOTAUSD,BINANCEUS:MKRUSD,BITFINEX:NEOUSD,COINBASE:OMGUSD,BINANCE:PAXGUSD,COINBASE:QUICKUSD,COINBASE:REPUSD,BINANCE:SANDUSD,COINBASE:SNXUSD,BINANCE:SOLUSD,FTX:SUSHIUSD,BINANCE:THETAUSD,BINANCE:TRXUSD,COINBASE:UMAUSD,COINBASE:UNIUSD,BINANCE:VETUSD,COINBASE:WBTCUSD,COINBASE:XLMUSD,BINANCE:XMRUSD,SUSHISWAP:XSUSHIUSDT,BITFINEX:XTZUSD,COINBASE:YFIUSD,COINBASE:ZECUSD,COINBASE:ZRXUSD';
 
 // Mumbai Price Feeds
 
@@ -403,14 +403,6 @@ export const MaticPriceFeeds = [
     tv: 'COINBASE:LTCUSD',
   },
   {
-    address: '0x1248573D9B62AC86a3ca02aBC6Abe6d403Cd1034',
-    base: 'LUNA',
-    baseName: 'Terra',
-    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/terra/info/logo.png',
-    quote: 'USD',
-    tv: 'BITFINEX:LUNAUSD',
-  },
-  {
     address: '0xA1CbF3Fe43BC3501e3Fc4b573e822c70e76A7512',
     base: 'MANA',
     baseName: 'Decentraland',
@@ -641,6 +633,296 @@ export const MaticPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:ZRXUSD',
   },
+  /* {
+     address: '0x9b88d07B2354eF5f4579690356818e07371c7BeD',
+     base: 'AGEUR',
+     baseName: 'Angle Protocol',
+     logo: '',
+     quote: 'USD',
+     tv: '',
+   },*/
+  /*{
+    address: '0x289833F252eaB98582D62db94Bd75aB48AD9CF0D',
+    base: 'ALPHA',
+    baseName: 'Alpha Finance',
+    logo: '',
+    quote: 'USD',
+    tv: '',
+  },*/
+  {
+    address: '0x2Ac3F3Bfac8fC9094BC3f0F9041a51375235B992',
+    base: 'APE',
+    baseName: 'APE Coin',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4d224452801ACEd8B2F0aebE155379bb5D594381/logo.png',
+    quote: 'USD',
+    tv: 'COINBASE:APEUSD',
+  },
+  {
+    address: '0xe01eA2fbd8D76ee323FbEd03eB9a8625EC981A10',
+    base: 'AVAX',
+    baseName: 'Avalanche',
+    logo: 'https://assets.coingecko.com/coins/images/12559/large/coin-round-red.png?1604021818',
+    quote: 'USD',
+    tv: 'COINBASE:AVAXUSD',
+  },
+  {
+    address: '0x9c371aE34509590E10aB98205d2dF5936A1aD875',
+    base: 'AXIE',
+    baseName: 'Axie Infinity',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b/logo.png',
+    quote: 'USD',
+    tv: 'FTX:AXSUSD',
+  },
+  {
+    address: '0xF626964Ba5e81405f47e8004F0b276Bb974742B5',
+    base: 'BADGER',
+    baseName: 'Badger DAO',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3472A5A71965499acd81997a54BBA8D852C6E53d/logo.png',
+    quote: 'USD',
+    tv: 'COINBASE:BADGERUSD',
+  },
+  {
+    address: '0xE039D4aA72A0C0d6d0218E650c1eBD6B2675A575',
+    base: 'CTX',
+    baseName: 'Cryptex Finance',
+    logo: 'https://assets.coingecko.com/coins/images/14932/large/glossy_icon_-_C200px.png?1619073171',
+    quote: 'USD',
+    tv: 'GEMINI:CTXUSD',
+  },
+  {
+    address: '0x5ec151834040B4D453A1eA46aA634C1773b36084',
+    base: 'CVX',
+    baseName: 'Convex',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B/logo.png',
+    quote: 'USD',
+    tv: 'FTX:CVXUSD',
+  },
+  {
+    address: '0x4205eC5fd179A843caa7B0860a8eC7D980013359',
+    base: 'DGB',
+    baseName: 'Digibyte',
+    logo: 'https://assets.coingecko.com/coins/images/63/large/digibyte.png?1547033717',
+    quote: 'USD',
+    tv: 'KUCOIN:DGBUSDT',
+  },
+  {
+    address: '0x59161117086a4C7A9beDA16C66e40Bdaa1C5a8B6',
+    base: 'DODO',
+    baseName: 'DODO',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd/logo.png',
+    quote: 'USD',
+    tv: 'FTX:DODOUSD',
+  },
+  {
+    address: '0x392AcaA165a882dfC63D3aeB4c446b95Fa7013B0',
+    base: 'EFI',
+    baseName: 'Efinity Token',
+    logo: 'https://assets.coingecko.com/coins/images/16558/large/efi-200px_%281%29.png?1624439132',
+    quote: 'USD',
+    tv: 'OKX:EFIUSDT',
+  },
+  {
+    address: '0x440A341bbC9FA86aA60A195e2409a547e48d4C0C',
+    base: 'ENJ',
+    baseName: 'Enjin Coin',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c/logo.png',
+    quote: 'USD',
+    tv: 'BINANCE:ENJUSDT',
+  },
+  {
+    address: '0x18617D05eE1692Ad7EAFee9839459da16097AFd8',
+    base: 'FIS',
+    baseName: 'Stafi',
+    logo: 'https://assets.coingecko.com/coins/images/12423/large/stafi_logo.jpg?1599730991',
+    quote: 'USD',
+    tv: 'HUOBI:FISUSDT',
+  },
+  {
+    address: '0x58326c0F831b2Dbf7234A4204F28Bba79AA06d5f',
+    base: 'FTM',
+    baseName: 'Fantom',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/fantom/info/logo.png',
+    quote: 'USD',
+    tv: 'FTX:FTMUSD',
+  },
+  {
+    address: '0x817A7D43f0277Ca480AE03Ec76Fc63A2EC7114bA',
+    base: 'FTT',
+    baseName: 'FTX Token',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9/logo.png',
+    quote: 'USD',
+    tv: 'BINANCE:FTTUSDT',
+  },
+  {
+    address: '0xDD229Ce42f11D8Ee7fFf29bDB71C7b81352e11be',
+    base: 'GHST',
+    baseName: 'Aavegotchi',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3F382DbD960E3a9bbCeaE22651E88158d2791550/logo.png',
+    quote: 'USD',
+    tv: 'POLONIEX:GHSTUSDT',
+  },
+  {
+    address: '0x432fa0899cF1BcDb98592D7eAA23C372b8b8ddf2',
+    base: 'GNO',
+    baseName: 'Gnosis',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6810e776880C02933D47DB1b9fc05908e5386b96/logo.png',
+    quote: 'USD',
+    tv: 'BITFINEX:GNOUSD',
+  },
+  {
+    address: '0x3FabBfb300B1e2D7c9B84512fe9D30aeDF24C410',
+    base: 'GRT',
+    baseName: 'The Graph',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc944E90C64B2c07662A292be6244BDf05Cda44a7/logo.png',
+    quote: 'USD',
+    tv: 'GEMINI:GRTUSD',
+  },
+  {
+    address: '0xC5878bDf8a89FA3bF0DC8389ae8EE6DE601D01bC',
+    base: 'HBAR',
+    baseName: 'Hedera Hashgraph',
+    logo: 'https://assets.coingecko.com/coins/images/3688/large/hbar.png?1637045634',
+    quote: 'USD',
+    tv: 'BINANCE:HBARUSDT',
+  },
+  {
+    address: '0x5438E60A06C7447432512264Fa57e2FeD3224b33',
+    base: 'KEEP',
+    baseName: 'Keep Network',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC/logo.png',
+    quote: 'USD',
+    tv: 'KRAKEN:KEEPUSD',
+  },
+  {
+    address: '0x86F87CB74238a6f24606534A2fCc05469Eb2bcF5',
+    base: 'KLAY',
+    baseName: 'Klaytn',
+    logo: 'https://assets.coingecko.com/coins/images/9672/large/klaytn.jpeg?1642775250',
+    quote: 'USD',
+    tv: 'BITTREX:KLAYUSDT',
+  },
+  {
+    address: '0x666bb13b3ED3816504E8c30D0F9B9C16b371774b',
+    base: 'NEXO',
+    baseName: 'Nexo',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB62132e35a6c13ee1EE0f84dC5d40bad8d815206/logo.png',
+    quote: 'USD',
+    tv: 'BITFINEX:NEXOUSD',
+  },
+  {
+    address: '0x1342a7a1D7264dAF8Ae790712266c7bE19f71211',
+    base: 'NU',
+    baseName: 'NuCypher',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4fE83213D56308330EC302a8BD641f1d0113A4Cc/logo.png',
+    quote: 'USD',
+    tv: 'POLONIEX:NUUSDT',
+  },
+  {
+    address: '0xdcda79097C44353Dee65684328793695bd34A629',
+    base: 'OCEAN',
+    baseName: 'Ocean Protocol',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x967da4048cD07aB37855c090aAF366e4ce1b9F48/logo.png',
+    quote: 'USD',
+    tv: 'KUCOIN:OCEANUSDT',
+  },
+  {
+    address: '0x4cE90F28C6357A7d3F47D680723d18AF3684cD00',
+    base: 'OHMv2',
+    baseName: 'Olympus v2',
+    logo: 'https://assets.coingecko.com/coins/images/14483/large/token_OHM_%281%29.png',
+    quote: 'USD',
+    tv: '',
+  },
+  {
+    address: '0xD3963855b73979B617455Fc38A7355563a289948',
+    base: 'PICKLE',
+    baseName: 'Pickle Finance',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5/logo.png',
+    quote: 'USD',
+    tv: 'OKX:PICKLEUSDT',
+  },
+  {
+    address: '0x24C0e0FC8cCb21e2fb3e1A8A4eC4b29458664f79',
+    base: 'PLA',
+    baseName: 'Playdapp',
+    logo: 'https://assets.coingecko.com/coins/images/14316/large/54023228.png?1615366911',
+    quote: 'USD',
+    tv: 'BITTREX:PLAUSD',
+  },
+
+  {
+    address: '0xC741F7752BAe936fCE97933b755884AF66fB69C1',
+    base: 'POLY',
+    baseName: 'Polymath',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9992eC3cF6A55b00978cdDF2b27BC6882d88D1eC/logo.png',
+    quote: 'USD',
+    tv: 'BINANCE:POLYUSDT',
+  },
+
+  {
+    address: '0xDCc714619E59a626fde5f082d42F314E9fB832Fb',
+    base: 'QNT',
+    baseName: 'Quant',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4a220E6096B25EADb88358cb44068A3248254675/logo.png',
+    quote: 'USD',
+    tv: 'KUCOIN:QNTUSDT',
+  },
+  {
+    address: '0x3fCEf3eDF17f515d9c0fA72020FcFc6c0001F876',
+    base: 'RGT',
+    baseName: 'Rari Governance Token',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD291E7a03283640FDc51b121aC401383A46cC623/logo.png',
+    quote: 'USD',
+    tv: 'BITTREX:RGTUSDT',
+  },
+  {
+    address: '0x2E5B04aDC0A3b7dB5Fd34AE817c7D0993315A8a6',
+    base: 'RLY',
+    baseName: 'Rally',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xf1f955016EcbCd7321c7266BccFB96c68ea5E49b/logo.png',
+    quote: 'USD',
+    tv: 'KUCOIN:RLYUSDT',
+  },
+  {
+    address: '0x3710abeb1A0Fc7C2EC59C26c8DAA7a448ff6125A',
+    base: 'SHIB',
+    baseName: 'Shiba Inu',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE/logo.png',
+    quote: 'USD',
+    tv: 'FTX:SHIBUSD',
+  },
+  {
+    address: '0xBB3eF70953fC3766bec4Ab7A9BF05B6E4caf89c6',
+    base: 'SLP',
+    baseName: 'Smooth Love Potion',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xCC8Fa225D80b9c7D42F96e9570156c65D6cAAa25/logo.png',
+    quote: 'USD',
+    tv: 'FTX:SLPUSD',
+  },
+  {
+    address: '0x9bce696Fb0DcE1ed4DDb94305757dEDc745f3786',
+    base: 'TOKE',
+    baseName: 'Tokemak',
+    logo: 'https://assets.coingecko.com/coins/images/17495/large/tokemak-avatar-200px-black.png?1628131614',
+    quote: 'USD',
+    tv: '',
+  },
+  {
+    address: '0x346C7D75e315B54129eac38CC4e2B9f9b0250e3e',
+    base: 'TRIBE',
+    baseName: 'Tribe',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B/logo.png',
+    quote: 'USD',
+    tv: 'POLONIEX:TOKEUSDT',
+  },
+  {
+    address: '0x6a99EC84819FB7007dd5D032068742604E755c56',
+    base: 'WOO',
+    baseName: 'Woo Network',
+    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4691937a7508860F876c9c0a2a617E7d9E945D4B/logo.png',
+    quote: 'USD',
+    tv: 'KUCOIN:WOOUSDT',
+  }
 ];
 
 export const PriceFeeds = {

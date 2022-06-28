@@ -69,8 +69,8 @@ const JoinGames = () => {
 
   const classes = useStyles();
 
-  const [room, setRoom] = useState(RoomType.Main);
-  const isNFT = room === RoomType.Main ? false : true;
+  const [room, setRoom] = useState(RoomType.Stable);
+  const isNFT = room === RoomType.Stable ? false : true;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -200,10 +200,8 @@ const JoinGames = () => {
                       value={room}
                       onChange={(e) => setRoom(e.target.value as RoomType)}
                       renderValue={(value) => <> {value}</>}>
-                      <MenuItem value={RoomType.Main}>
-                        {RoomType.Main}{' '}
-                      </MenuItem>
-                      <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
+                      <MenuItem value={RoomType.Stable}>{'Main'} </MenuItem>
+                      {/*<MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>*/}
                     </Select>
                   </FormControl>
                 </Grid>

@@ -37,7 +37,7 @@ export const useGameMetadataUpdater = () => {
           signedData.sig,
           signedData.messageSigned,
           data,
-          isNFT ? RoomType.NFT : RoomType.Main,
+          isNFT ? RoomType.NFT : RoomType.Stable,
           id,
           account,
           chainId,
@@ -82,7 +82,7 @@ export const useGameMetadataDeleteCallback = () => {
           signedData.sig,
           signedData.messageSigned,
           data,
-          isNFT ? RoomType.NFT : RoomType.Main,
+          isNFT ? RoomType.NFT : RoomType.Stable,
           id,
           account,
         );
@@ -112,7 +112,7 @@ export const useGameMetadata = (id: string) => {
   const isNFT = useIsNFTGame();
   const { chainId } = useLeaguesChainInfo();
   return useQuery(['GET_GAME_METADATA', id, chainId], () => {
-    return getGameMetadata(id, isNFT ? RoomType.NFT : RoomType.Main, chainId);
+    return getGameMetadata(id, isNFT ? RoomType.NFT : RoomType.Stable, chainId);
   });
 };
 
@@ -123,6 +123,6 @@ export const useGamesMetadata = (ids?: string) => {
     if (!ids) {
       return;
     }
-    return getGamesMetadata(ids, isNFT ? RoomType.NFT : RoomType.Main, chainId);
+    return getGamesMetadata(ids, isNFT ? RoomType.NFT : RoomType.Stable, chainId);
   });
 };

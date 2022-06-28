@@ -87,4 +87,5 @@ export enum GameStakeAmount {
 export enum RoomType {
   Main = 'Main Room',
   NFT = 'NFT Room',
+  Stable = 'Stable',
 }

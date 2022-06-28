@@ -27,8 +27,8 @@ import {useCoinToPlayStable} from 'modules/CoinLeague/hooks/useCoinToPlay';
 
 export function Ranking() {
   const isMobile = useMobile();
-  const [room, setRoom] = useState(RoomType.Main);
-  const isNFT = room === RoomType.Main ? false : true;
+  const [room, setRoom] = useState(RoomType.Stable);
+  const isNFT = room === RoomType.Stable ? false : true;
   const {chainId} = useLeaguesChainInfo();
   const [value, setValue] = React.useState(RankingType.MostWinner);
   const rankingQuery = useRanking(value, isNFT, chainId);
@@ -79,10 +79,8 @@ export function Ranking() {
                         value={room}
                         onChange={(e) => setRoom(e.target.value as RoomType)}
                         renderValue={(value) => <> {value}</>}>
-                        <MenuItem value={RoomType.Main}>
-                          {RoomType.Main}{' '}
-                        </MenuItem>
-                        <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
+                        <MenuItem value={RoomType.Stable}>{'Main'} </MenuItem>
+                        {/* <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>*/}
                       </Select>
                     </FormControl>
                   </Box>
@@ -107,8 +105,10 @@ export function Ranking() {
                     value={room}
                     onChange={(e) => setRoom(e.target.value as RoomType)}
                     renderValue={(value) => <> {value}</>}>
-                    <MenuItem value={RoomType.Main}>{RoomType.Main} </MenuItem>
-                    <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>
+                    <MenuItem value={RoomType.Stable}>
+                      {RoomType.Stable}{' '}
+                    </MenuItem>
+                    {/* <MenuItem value={RoomType.NFT}>{RoomType.NFT}</MenuItem>*/}
                   </Select>
                 </FormControl>
               </Grid>

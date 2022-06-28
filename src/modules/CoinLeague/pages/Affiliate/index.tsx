@@ -58,8 +58,8 @@ const AffiliatePage: React.FC = () => {
   const onChangePage = (p: number) => setPage(p);
   const onChangeRowsPerPage = (p: number) => setRowsPerPage(p);
 
-  const [room, setRoom] = useState(RoomType.Main);
-  const isNFT = room === RoomType.Main ? false : true;
+  const [room, setRoom] = useState(RoomType.Stable);
+  const isNFT = room === RoomType.Stable ? false : true;
   const {loading, data} = useAffiliateEntries(
     {
       address: account?.toLowerCase() ?? '',
@@ -92,7 +92,7 @@ const AffiliatePage: React.FC = () => {
     </React.Fragment>
   );
   const selectedRoom = useMemo(() => {
-    if (room === RoomType.Main) {
+    if (room === RoomType.Stable) {
       return `${COINSLEAGUE_ROUTE}?${AFFILIATE_FIELD}=${account}`;
     }
     if (room === RoomType.NFT) {
@@ -187,8 +187,8 @@ const AffiliatePage: React.FC = () => {
                         }
                         onChange={(e) => setRoom(e.target.value as RoomType)}
                         renderValue={(value) => <> {value}</>}>
-                        <MenuItem value={RoomType.Main}>Main</MenuItem>
-                        <MenuItem value={RoomType.NFT}>NFT</MenuItem>
+                        <MenuItem value={RoomType.Stable}>Main</MenuItem>
+                        {/*<MenuItem value={RoomType.NFT}>NFT</MenuItem>*/}
                       </Select>
                     </FormControl>
                   </Grid>

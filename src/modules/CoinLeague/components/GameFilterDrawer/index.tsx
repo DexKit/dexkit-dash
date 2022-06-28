@@ -178,15 +178,6 @@ export const GameFilterDrawer = (props: Props) => {
                     color={filtersState.isMyGames ? 'primary' : 'default'}
                   />
                 </Grid>
-                <Grid item>
-                  <Chip
-                    size='small'
-                    label='Bitboy'
-                    clickable
-                    onClick={handleToggleBitBoy}
-                    color={filtersState.isBitboy ? 'primary' : 'default'}
-                  />
-                </Grid>
               </Grid>
             </Grid>
           ) : null}
