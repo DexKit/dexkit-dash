@@ -412,7 +412,7 @@ export const ProfilePage: React.FC = () => {
               variant='outlined'
               fullWidth>
               <MenuItem value={ChainId.Matic}>Polygon</MenuItem>
-              <MenuItem value={ChainId.Binance}>Binance Smart Chain</MenuItem>
+              {/* <MenuItem value={ChainId.Binance}>Binance Smart Chain</MenuItem>*/}
             </Select>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -433,11 +433,11 @@ export const ProfilePage: React.FC = () => {
               <MenuItem value={CoinLeagueGames.CoinLeague}>
                 Coin League
               </MenuItem>
-              <MenuItem value={CoinLeagueGames.CoinLeagueNFT}>
+              {/*  <MenuItem value={CoinLeagueGames.CoinLeagueNFT}>
                 Coin League NFT
               </MenuItem>
               <MenuItem value={CoinLeagueGames.NFTLeague}>NFT League</MenuItem>
-              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>
+              <MenuItem value={CoinLeagueGames.SquidGame}>Squid Game</MenuItem>*/}
             </Select>
           </Grid>
           <Grid item xs={12}>
