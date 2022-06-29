@@ -181,30 +181,6 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </Typography>
           </Box>
         </Box>{' '}
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <Box mb={1}>
-              <RoundedIconButton onClick={onSend}>
-                <ExportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-            </Box>
-            <Typography variant='caption' className={classes.itemText}>
-              <IntlMessages id='app.dashboard.send' />
-            </Typography>
-          </Box>
-        </Box>
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <Box mb={1}>
-              <RoundedIconButton onClick={onReceive}>
-                <ImportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-            </Box>
-            <Typography variant='caption' className={classes.itemText}>
-              <IntlMessages id='app.dashboard.receive' />
-            </Typography>
-          </Box>
-        </Box>
         {onMakeFavorite ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
