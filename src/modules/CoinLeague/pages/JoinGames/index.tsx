@@ -137,11 +137,6 @@ const JoinGames = () => {
     filtersState.setIsMyGames(false);
   }, [filtersState]);
 
-  const handleToggleBitBoy = useCallback(() => {
-    filtersState.setIsMyGames(false);
-    filtersState.setIsBitboy(!filtersState.isBitboy);
-  }, [filtersState]);
-
   const handleToggleMyGames = useCallback(() => {
     filtersState.setIsBitboy(false);
     filtersState.setIsMyGames(!filtersState.isMyGames);
@@ -285,16 +280,6 @@ const JoinGames = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
-                    variant='outlined'
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    size='small'
-                    label={messages['app.coinLeagues.bitboy'] as string}
-                    clickable
-                    onClick={handleToggleBitBoy}
-                    color={filtersState.isBitboy ? 'primary' : 'default'}
                     variant='outlined'
                   />
                 </Grid>

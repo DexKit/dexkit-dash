@@ -97,11 +97,6 @@ export const GameFilterDrawer = (props: Props) => {
     filtersState.setIsMyGames(false);
   }, [filtersState]);
 
-  const handleToggleBitBoy = useCallback(() => {
-    filtersState.setIsMyGames(false);
-    filtersState.setIsBitboy(!filtersState.isBitboy);
-  }, [filtersState]);
-
   const handleToggleMyGames = useCallback(() => {
     filtersState.setIsBitboy(false);
     filtersState.setIsMyGames(!filtersState.isMyGames);

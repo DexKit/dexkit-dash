@@ -235,7 +235,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },*/
-    {
+    /* {
       id: 'nftLeague',
       title: 'NftLeague',
       messageId: 'sidebar.nftLeague',
@@ -260,7 +260,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `https://docs.dexkit.com/gaming/predictions-hub/nft-league/how-to-play`,
         },
       ],
-    },
+    },*/
     {
       id: 'myapps',
       title: 'My Apps',

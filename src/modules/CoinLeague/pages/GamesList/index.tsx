@@ -233,12 +233,6 @@ const GamesList = () => {
     filtersState.setIsJackpot(false);
   }, [filtersState]);
 
-  const handleToggleBitBoy = useCallback(() => {
-    filtersState.setIsMyGames(false);
-    filtersState.setIsJackpot(false);
-    filtersState.setIsBitboy(!filtersState.isBitboy);
-  }, [filtersState]);
-
   const handleToggleJackpot = useCallback(() => {
     filtersState.setIsMyGames(false);
     filtersState.setIsBitboy(false);
@@ -544,15 +538,6 @@ const GamesList = () => {
                     clickable
                     onClick={handleToggleMyGames}
                     color={filtersState.isMyGames ? 'primary' : 'default'}
-                    variant='outlined'
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    label={messages['app.coinLeagues.bitboy'] as string}
-                    clickable
-                    onClick={handleToggleBitBoy}
-                    color={filtersState.isBitboy ? 'primary' : 'default'}
                     variant='outlined'
                   />
                 </Grid>
