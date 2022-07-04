@@ -3433,35 +3433,31 @@
   dependencies:
     lottie-web "^5.7.8"
 
-"@magic-ext/oauth@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-0.9.0.tgz#6cf64f6a3bbbf830f201d226a9fd368b21c60c7d"
-  integrity sha512-dEaN/5S7HqIdpaygTUwl0JEH+gzfH4QcjFbqYnNen3KNPqYf8lRyRBUk+yoLXhtKCibUxEu9n27bVWEjk/EYag==
+"@magic-ext/oauth@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-2.1.1.tgz#6591bca1c17a220372f67579240efac26a9a7bdc"
+  integrity sha512-JyHy8kUVFO8i5bN81MGf6wlrQ7jVC4sd890xeS3zj2QF/A4eTJxaxVOV68D+Yqr4r8xv1dq0dJknTA0WsHzATg==
   dependencies:
-    "@magic-sdk/types" "^1.1.0"
-    crypto-js "^3.3.0"
+    "@magic-sdk/types" "^7.1.1"
 
-"@magic-sdk/commons@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-2.0.2.tgz#57e11505658153f7064184da436c5d11737c3812"
-  integrity sha512-nOzMZR5f7UAsHHQLVrJ7+1z+Eoim3VPwjLtf9914AtQqtdLmBhkycpDoUDZ1n/u7NDqZb2jgilbi89lu17aspg==
+"@magic-sdk/commons@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-4.1.1.tgz#16dc84a64cc7cafae50c4061acae46bb587c623d"
+  integrity sha512-nHbMRkssAC1z5rHpPwkiYolp3qxmtnkNaynGlreVxgtPTemJ8USRrXjg/cF0WVhRwtPTpegdTvtpJWOMd0Ratg==
 
-"@magic-sdk/provider@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-6.0.2.tgz#d1dea0ce653df36557fac7cb7861458ea2f370fa"
-  integrity sha512-XzqCMMdaWbmwfJ7QYMXUp8zTK/JRnvgbDBrUS1uUaiHhly+2EXiAg9ojd6/VHs7anFmQk8D/JSE/Tqxf9Jl5Ag==
+"@magic-sdk/provider@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-8.1.1.tgz#2ca58c7aa6260fce6c8227b557335b028afcacd5"
+  integrity sha512-1t/BJxnd1PTdrw6J0s4kBvZot9tJ9z+Tm+It2doiO3HnyRWZuIoXjXTVoX/sUZQPlsRk/E7Ut7NY9yUTdApeZw==
   dependencies:
-    "@magic-sdk/types" "^5.0.1"
+    "@magic-sdk/types" "^7.1.1"
+    eventemitter3 "^4.0.4"
+    web3-core "1.5.2"
 
-"@magic-sdk/types@^1.1.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-1.6.0.tgz#b2a45be001194358b3d8fa0c63b649b73735660e"
-  integrity sha512-CvVUPTF9tSLNFA4JhcAFjheiqWyVp9r9ooy/AheK+0rWRZCxE5QCwc81d2FduDTqzEJZeUV9+9F9R0AplhnX7w==
-
-"@magic-sdk/types@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-5.0.1.tgz#83d1768d5b1426a108ba06880d9ac3e2dfbfd82e"
-  integrity sha512-wW4J5yWLXxkqJogsgvq7ayIzMxSdhE0/zsIUl+UrMhGfp5nSJXmsSf28vzsmKNbk6CBGO2VJECS9b+QTWoqnIA==
+"@magic-sdk/types@^7.1.1":
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-7.1.1.tgz#07fed47e8a77073ac71db36ee9efbdb0585dc53a"
+  integrity sha512-s44450INTkVoaezdSzuHQozrT3uZJGduo3oAx3N2Kf2w/FcObQy82+plyz6VN7vchjwUTR8NpEIWEVHfLuGfZA==
 
 "@material-ui/core@^4.11.3":
   version "4.12.3"
@@ -11452,7 +11448,7 @@ eventemitter3@4.0.4:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.4.tgz#b5463ace635a083d018bdc7c917b4c5f10a85384"
   integrity sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==
 
-eventemitter3@4.0.7, eventemitter3@^4.0.0:
+eventemitter3@4.0.7, eventemitter3@^4.0.0, eventemitter3@^4.0.4:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
@@ -13434,6 +13430,11 @@ immediate@^3.2.3:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.3.0.tgz#1aef225517836bcdf7f2a2de2600c79ff0269266"
   integrity sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==
+
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==
 
 immediate@~3.2.3:
   version "3.2.3"
@@ -15443,6 +15444,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+lie@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  integrity sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==
+  dependencies:
+    immediate "~3.0.5"
+
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -15619,6 +15627,13 @@ loader-utils@^2.0.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^2.1.2"
+
+localforage@^1.7.4:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.10.0.tgz#5c465dc5f62b2807c3a84c0c6a1b1b3212781dd4"
+  integrity sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==
+  dependencies:
+    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -15915,14 +15930,15 @@ lz-string@^1.4.4:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
   integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
-magic-sdk@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-6.0.2.tgz#cd84472b464f332e6e51c2aed42428cad7a0d9d6"
-  integrity sha512-S5RXvOyTycKFmqbiDMtyP2uy1EpCItZWuoOmA2niMJooLAVQtmhVDbN1GoP95F0dXRaF1UHmfmXJHV1cK1bUFA==
+magic-sdk@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-8.1.1.tgz#e2b31d492e1f574137953acaeb237558537a57d0"
+  integrity sha512-BLyAufrVM/6F7Q9rKIz1r0UZnYG4SOnr650lVsJGa5V1pc4FOWBfxr7UaxhHoP6zJ7faUvY7K/x1VWDQbmYUzw==
   dependencies:
-    "@magic-sdk/commons" "^2.0.2"
-    "@magic-sdk/provider" "^6.0.2"
-    "@magic-sdk/types" "^5.0.1"
+    "@magic-sdk/commons" "^4.1.1"
+    "@magic-sdk/provider" "^8.1.1"
+    "@magic-sdk/types" "^7.1.1"
+    localforage "^1.7.4"
 
 magic-string@^0.25.7:
   version "0.25.9"

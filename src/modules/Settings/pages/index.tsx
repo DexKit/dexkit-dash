@@ -1,14 +1,13 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {isAddress} from '@ethersproject/address';
 import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
-//import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import * as types from '../types';
 
 import BrushIcon from '@material-ui/icons/Brush';
 
 import languageData from '@crema/core/LanguageSwitcher/data';
 import TranslateIcon from '@material-ui/icons/Translate';
-import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
 import {ReactComponent as EmptyWallet} from 'assets/images/icons/empty-wallet.svg';
 import {useHistory} from 'react-router-dom';
 import {
@@ -27,7 +26,11 @@ import {
   List,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import {useAddCustomToken, useCustomTokenList} from 'hooks/tokens';
+import {
+  useAddCustomToken,
+  useCustomTokenList,
+  useRemoveCustomToken,
+} from 'hooks/tokens';
 import {
   useAddCustomNetwork,
   useCustomNetworkList,
@@ -57,6 +60,10 @@ import {WALLET_ROUTE} from 'shared/constants/routes';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDarkMode} from 'redux/actions';
+import {AppNetworkList} from '../components/AppNetworkList';
+import NetworkSwitcher from 'shared/components/NetworkSwitcher';
+import {ChainId} from 'types/blockchain';
+import ConfirmRemoveTokenDialog from '../components/ConfirmRemoveTokenDialog';
 
 const MENU_CUSTOM_TOKENS = 'MENU_CUSTOM_TOKENS';
 const MENU_CUSTOM_NETWORKS = 'MENU_CUSTOM_NETWORKS';
@@ -88,6 +95,7 @@ export const Settings: React.FC = () => {
   const {tokens} = useCustomTokenList();
 
   const {removeNetwork} = useRemoveCustomNetwork();
+  const {removeToken} = useRemoveCustomToken();
 
   const {darkMode} = useSelector<AppState, AppState['settings']>(
     ({settings}) => settings,
@@ -157,8 +165,11 @@ export const Settings: React.FC = () => {
   );
 
   const [selectedNetwork, setSelectedNetwork] = useState<types.Network>();
+  const [selectedToken, setSelectedToken] =
+    useState<{address: string; chainId: ChainId; symbol: string}>();
 
   const networkRemoveDialogToggler = useToggler();
+  const tokenRemoveDialogToggler = useToggler();
 
   const handleRemoveNetwork = useCallback(
     (network: types.Network) => {
@@ -166,6 +177,14 @@ export const Settings: React.FC = () => {
       networkRemoveDialogToggler.set(true);
     },
     [networkRemoveDialogToggler],
+  );
+
+  const handleRemoveToken = useCallback(
+    (token: {address: string; chainId: ChainId; symbol: string}) => {
+      setSelectedToken(token);
+      tokenRemoveDialogToggler.set(true);
+    },
+    [tokenRemoveDialogToggler],
   );
 
   const handleConfirmRemove = useCallback(() => {
@@ -180,6 +199,15 @@ export const Settings: React.FC = () => {
       networkRemoveDialogToggler.set(false);
     }
   }, [networkRemoveDialogToggler, selectedNetwork, removeNetwork]);
+  const handleConfirmRemoveToken = useCallback(() => {
+    if (selectedToken) {
+      removeToken({
+        chainId: selectedToken.chainId,
+        address: selectedToken.address,
+      });
+      tokenRemoveDialogToggler.set(false);
+    }
+  }, [tokenRemoveDialogToggler, selectedToken, removeToken]);
 
   const handleCloseRemoveDialog = useCallback(() => {
     if (networkRemoveDialogToggler.show) {
@@ -187,6 +215,13 @@ export const Settings: React.FC = () => {
     }
     setSelectedNetwork(undefined);
   }, [networkRemoveDialogToggler]);
+
+  const handleCloseRemoveTokenDialog = useCallback(() => {
+    if (tokenRemoveDialogToggler.show) {
+      tokenRemoveDialogToggler.set(false);
+    }
+    setSelectedToken(undefined);
+  }, [tokenRemoveDialogToggler]);
 
   const handleCloseTokenImport = useCallback(() => {
     importDialogToggler.set(false);
@@ -263,7 +298,7 @@ export const Settings: React.FC = () => {
     }
   }, [tokenInfo.data]);
 
-  const [menuSelected, setMenuSelected] = useState(MENU_LANGUAGE);
+  const [menuSelected, setMenuSelected] = useState(MENU_CUSTOM_NETWORKS);
 
   const {networks} = useCustomNetworkList();
 
@@ -286,9 +321,17 @@ export const Settings: React.FC = () => {
           <Card>
             <CardHeader
               title={
-                <Typography variant='h6'>
-                  <IntlMessages id='app.settings.availableTokens' />
-                </Typography>
+                <Box
+                  display={'flex'}
+                  alignContent={'center'}
+                  alignItems={'center'}>
+                  <Typography variant='h6'>
+                    <IntlMessages id='app.settings.availableTokens' />
+                  </Typography>
+                  <Box pl={2}>
+                    <NetworkSwitcher useOnlyCustom={true} />
+                  </Box>
+                </Box>
               }
               action={
                 <Tooltip title={messages['app.settings.importToken'] as string}>
@@ -299,12 +342,17 @@ export const Settings: React.FC = () => {
               }
             />
             <Divider />
-            {tokens.length > 0 ? (
+            {tokens.filter((t) => t.chainId === chainId).length > 0 &&
+            chainId ? (
               <TokenList
-                tokens={tokens.map((t) => ({
-                  contractAddress: t.address,
-                  symbol: t.symbol,
-                }))}
+                tokens={tokens
+                  .filter((t) => t.chainId === chainId)
+                  .map((t) => ({
+                    contractAddress: t.address,
+                    symbol: t.symbol,
+                    chainId: t.chainId,
+                  }))}
+                onRemove={handleRemoveToken}
                 account={account}
               />
             ) : (
@@ -320,7 +368,10 @@ export const Settings: React.FC = () => {
                   </Grid>
                   <Grid item>
                     <Typography variant='h5'>
-                      <IntlMessages id='app.settings.noTokensYet' />
+                      <IntlMessages
+                        id='no.tokens.yet.on.this.network'
+                        defaultMessage={'No tokens yet on this network'}
+                      />
                     </Typography>
                   </Grid>
                 </Grid>
@@ -348,6 +399,8 @@ export const Settings: React.FC = () => {
               }
             />
             <Divider />
+            <AppNetworkList />
+
             {networks.length > 0 ? (
               <NetworkList
                 onEdit={handleEditNetwork}
@@ -355,7 +408,9 @@ export const Settings: React.FC = () => {
                 networks={networks}
               />
             ) : (
-              <Box py={4}>
+              <></>
+
+              /*       <Box py={4}>
                 <Grid
                   container
                   alignItems='center'
@@ -371,7 +426,7 @@ export const Settings: React.FC = () => {
                     </Typography>
                   </Grid>
                 </Grid>
-              </Box>
+            </Box>*/
             )}
           </Card>
         </Fade>
@@ -461,6 +516,14 @@ export const Settings: React.FC = () => {
         }}
         onConfirm={handleConfirmRemove}
       />
+      <ConfirmRemoveTokenDialog
+        dialogProps={{
+          open: tokenRemoveDialogToggler.show,
+          onClose: handleCloseRemoveTokenDialog,
+        }}
+        token={{symbol: selectedToken?.symbol}}
+        onConfirm={handleConfirmRemoveToken}
+      />
       <NetworkFormDialog
         dialogProps={{
           open: addNetworkDialogToggler.show,
@@ -494,6 +557,16 @@ export const Settings: React.FC = () => {
             <Card>
               <List disablePadding>
                 <ListItem
+                  divider
+                  button
+                  selected={menuSelected === MENU_CUSTOM_NETWORKS}
+                  onClick={() => setMenuSelected(MENU_CUSTOM_NETWORKS)}>
+                  <ListItemIcon>
+                    <SettingsInputAntennaIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={messages['app.settings.networks']} />
+                </ListItem>
+                <ListItem
                   button
                   selected={menuSelected === MENU_LANGUAGE}
                   onClick={() => setMenuSelected(MENU_LANGUAGE)}>
@@ -504,16 +577,7 @@ export const Settings: React.FC = () => {
                     primary={messages['app.settings.language'] as string}
                   />
                 </ListItem>
-                <ListItem
-                  divider
-                  button
-                  selected={menuSelected === MENU_CUSTOM_NETWORKS}
-                  onClick={() => setMenuSelected(MENU_CUSTOM_NETWORKS)}>
-                  <ListItemIcon>
-                    <SettingsInputAntennaIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={messages['app.settings.networks']} />
-                </ListItem>
+
                 <ListItem
                   divider
                   button
@@ -531,7 +595,7 @@ export const Settings: React.FC = () => {
                     }
                   />
                 </ListItem>
-                {/*  <ListItem
+                <ListItem
                   divider
                   button
                   selected={menuSelected === MENU_CUSTOM_TOKENS}
@@ -542,7 +606,7 @@ export const Settings: React.FC = () => {
                   <ListItemText
                     primary={messages['app.settings.customTokens'] as string}
                   />
-                </ListItem> */}
+                </ListItem>
               </List>
             </Card>
           </Grid>

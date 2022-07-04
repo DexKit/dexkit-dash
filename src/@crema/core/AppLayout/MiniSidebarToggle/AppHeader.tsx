@@ -11,7 +11,7 @@ import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
-import {useCustomNetworkList} from 'hooks/network';
+import {useAppNetworks, useCustomNetworkList} from 'hooks/network';
 
 import WalletInfo from 'shared/components/WalletInfo';
 
@@ -118,6 +118,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
   const {networks} = useCustomNetworkList();
+  const appNetworks = useAppNetworks();
 
   const handleCloseSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(false);
@@ -134,6 +135,58 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         dispatch(setWeb3State(Web3State.Connecting));
 
         const provider = getProvider();
+
+        try {
+          const customIndex = appNetworks.findIndex(
+            (n) => n.chainId === _chainId,
+          );
+          if (customIndex > -1) {
+            const params: {
+              chainId: string; // A 0x-prefixed hexadecimal string
+              chainName: string;
+              nativeCurrency?: {
+                name: string;
+                symbol: string; // 2-6 characters long
+                decimals: number;
+              };
+              rpcUrls: string[];
+              blockExplorerUrls?: string[];
+              iconUrls?: string[]; // Currently ignored.
+            } = {
+              chainId: '0x' + appNetworks[customIndex].chainId.toString(16),
+              chainName: appNetworks[customIndex].name,
+              rpcUrls: [appNetworks[customIndex].rpcURL],
+              blockExplorerUrls: appNetworks[customIndex].explorerURL
+                ? [appNetworks[customIndex].explorerURL]
+                : undefined,
+            };
+
+            const nativeCurrency: {
+              name: string;
+              symbol: string;
+              decimals: number;
+            } = {
+              name: appNetworks[customIndex].name,
+              //@ts-ignore
+              symbol: appNetworks[customIndex].symbol,
+              decimals: 18,
+            };
+
+            nativeCurrency.symbol = appNetworks[customIndex].symbol;
+
+            params.nativeCurrency = nativeCurrency;
+
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [params],
+            });
+            dispatch(setWeb3State(Web3State.Done));
+            return;
+          }
+        } catch {
+          dispatch(setWeb3State(Web3State.Done));
+          return;
+        }
 
         try {
           const customIndex = networks.findIndex((n) => n.chainId === _chainId);
@@ -180,19 +233,19 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               method: 'wallet_addEthereumChain',
               params: [params],
             });
-          } else {
-            await switchChain(provider, _chainId);
+            //  window.location.reload();
+            dispatch(setWeb3State(Web3State.Done));
+            return;
           }
-
-          //  window.location.reload();
-          dispatch(setWeb3State(Web3State.Done));
         } catch {
           //  window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
+          return;
         }
+        await switchChain(provider, _chainId);
       }
     },
-    [dispatch, getProvider, onSwitchMagicNetwork, networks],
+    [dispatch, getProvider, onSwitchMagicNetwork, networks, appNetworks],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -244,9 +297,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   const {chainName} = useChainInfo();
 
-  const {notifications} = useSelector<AppState, AppState['notification']>(
-    ({notification}) => notification,
-  );
+  const {notificationsNotSeen} = useSelector<
+    AppState,
+    AppState['notification']
+  >(({notification}) => notification);
 
   return (
     <>
@@ -311,12 +365,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         <Badge
                           variant='dot'
                           color='primary'
-                          badgeContent={
-                            notifications.filter(
-                              (notification) =>
-                                notification?.check === undefined,
-                            ).length
-                          }>
+                          badgeContent={notificationsNotSeen}>
                           <MenuIcon />
                         </Badge>
                       </IconButton>

@@ -1,7 +1,9 @@
+import { BigNumber } from 'ethers';
 import { GetAllMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 export type MyBalances = GetAllMyBalance_ethereum_address_balances & {
+  valueBN?: BigNumber;
   network: EthereumNetwork;
   price24hPercentage?: number;
   logoURI?: string;
@@ -22,6 +24,7 @@ export enum ChainId {
   Avalanche = 43114,
   Fantom = 250,
   Mumbai = 80001,
+  OKC = 66
 }
 
 export enum Web3State {

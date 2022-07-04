@@ -1,16 +1,16 @@
-import {getContractToken} from 'services/transfer-token';
-import {fromTokenUnitAmount} from '@0x/utils';
-import {Currency} from 'types/myApps';
+import { getContractToken } from 'services/transfer-token';
+import { fromTokenUnitAmount } from '@0x/utils';
+import { Currency } from 'types/myApps';
 
-import {isNativeCoinV2, truncateIsAddress} from 'utils';
-import {ChainId} from 'types/blockchain';
-import {useWeb3} from './useWeb3';
+import { isNativeCoinV2, truncateIsAddress } from 'utils';
+import { ChainId } from 'types/blockchain';
+import { useWeb3 } from './useWeb3';
 
-import {useCustomNetworkList} from 'hooks/network';
-import {useNotifications} from './useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useIntl} from 'react-intl';
+import { useAppNetworks, useCustomNetworkList } from 'hooks/network';
+import { useNotifications } from './useNotifications';
+import { getTransactionScannerUrl, getTransactionScannerUrlV2 } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import { useIntl } from 'react-intl';
 
 export enum Web3Status {
   Not_Connected,
@@ -20,11 +20,12 @@ export enum Web3Status {
 }
 
 export const useTransfer = () => {
-  const {chainId, getWeb3} = useWeb3();
-  const {messages} = useIntl();
+  const { chainId, getWeb3 } = useWeb3();
+  const { messages } = useIntl();
 
-  const {networks} = useCustomNetworkList();
-  const {createNotification} = useNotifications();
+  const { networks } = useCustomNetworkList();
+  const appNetworks = useAppNetworks();
+  const { createNotification } = useNotifications();
 
   const onTransfer = async (
     from: string,
@@ -49,10 +50,11 @@ export const useTransfer = () => {
             symbol: n.nativeTokenSymbol,
             chainId: n.chainId,
           })),
+          appNetworks.map(n => ({ symbol: n.symbol, chainId: n.chainId }))
         )
       ) {
         web3.eth
-          .sendTransaction({from, to, value: amountFn.toString()})
+          .sendTransaction({ from, to, value: amountFn.toString() })
           .once('transactionHash', (hash: string) => {
             createNotification({
               title: `Transfer ${currency.symbol.toUpperCase()}`,
@@ -60,7 +62,9 @@ export const useTransfer = () => {
                 to,
               )}`,
               timestamp: Date.now(),
-              url: getTransactionScannerUrl(chainId as ChainId, hash),
+              url: getTransactionScannerUrlV2(chainId as ChainId, hash,
+                appNetworks.map(n => ({ explorerUrl: n.explorerURL, chainId: n.chainId })).concat(networks.map(n => ({ explorerUrl: n.explorerUrl, chainId: n.chainId })))
+              ),
               urlCaption: messages['app.dashboard.viewTransaction'] as string,
               type: NotificationType.TRANSACTION,
               metadata: {
@@ -79,7 +83,7 @@ export const useTransfer = () => {
 
         contract.methods
           .transfer(to, amountFn.toString())
-          .send({from: from})
+          .send({ from: from })
           .once('transactionHash', (hash: string) => {
             createNotification({
               title: `Transfer ${currency.symbol.toUpperCase()}`,
@@ -106,5 +110,5 @@ export const useTransfer = () => {
     });
   };
 
-  return {onTransfer};
+  return { onTransfer };
 };

@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { AVAX_NETWORK, FANTOM_NETWORK } from 'shared/constants/Blockchain';
 import { isAddressEqual } from 'utils/blockchain';
 
 import {
@@ -9,6 +8,7 @@ import {
   addCustomAsset,
   removeCustomAsset,
   removeCustomNetwork,
+  removeCustomToken,
 } from './actions';
 
 export interface SettingsV2State {
@@ -19,7 +19,7 @@ export interface SettingsV2State {
 
 const initialState: SettingsV2State = {
   tokens: [],
-  networks: [AVAX_NETWORK, FANTOM_NETWORK],
+  networks: [],
   assets: [],
 };
 
@@ -105,6 +105,18 @@ export default createReducer(initialState, (builder) =>
         networks.splice(index, 1);
 
         state.networks = [...networks];
+      }
+    }).addCase(removeCustomToken, (state, action) => {
+      const index = state.tokens.findIndex(
+        (token: any) => token.chainId === action.payload.chainId && token.address === action.payload.address,
+      );
+
+      if (index > -1) {
+        const tokens = state.tokens;
+
+        tokens.splice(index, 1);
+
+        state.tokens = [...tokens];
       }
     }),
 );

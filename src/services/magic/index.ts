@@ -1,5 +1,8 @@
 import { OAuthExtension } from '@magic-ext/oauth';
 import { Magic } from 'magic-sdk';
+
+import { NetworkSlugs } from 'shared/constants/AppEnums';
+import { AppNetworks } from 'shared/constants/Networks';
 import { ChainId } from 'types/blockchain';
 
 const storageKeyNamespace = 'DexKitWallet:';
@@ -13,6 +16,10 @@ export const enum MagicNetworks {
   matic = 'matic',
   mumbai = 'mumbai',
   ropsten = 'ropsten',
+  avalanche = 'avalanche',
+  fantom = 'fantom',
+  okc = 'okc'
+
 }
 
 export const enum MagicAuthProviders {
@@ -31,6 +38,19 @@ const rpcUrls = {
     // rpcUrl: 'https://rpc-mainnet.matic.network',
     rpcUrl: 'https://polygon-rpc.com/',
     chainId: 137,
+  },
+  [MagicNetworks.okc]: {
+    rpcUrl: AppNetworks[NetworkSlugs.okc]?.rpcURL as string,
+    chainId: AppNetworks[NetworkSlugs.okc]?.chainId as number,
+  },
+  [MagicNetworks.fantom]: {
+    rpcUrl: AppNetworks[NetworkSlugs.fantom]?.rpcURL as string,
+    chainId: AppNetworks[NetworkSlugs.fantom]?.chainId as number,
+  },
+  [MagicNetworks.avalanche]: {
+
+    rpcUrl: AppNetworks[NetworkSlugs.avalanche]?.rpcURL as string,
+    chainId: AppNetworks[NetworkSlugs.avalanche]?.chainId as number,
   },
 };
 // @DEV SEE https://magic.link/posts/magic-polygon
@@ -87,33 +107,20 @@ export const getMagicRPCProvider = (networkName: MagicNetworks) => {
     return magicMumbai.rpcProvider;
   }
 
-  return magicETH.rpcProvider;
+  if (networkName === MagicNetworks.ethereum) {
+    return magicETH.rpcProvider;
+  }
+  const net = rpcUrls[networkName];
+  return new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
+    extensions: [new OAuthExtension()],
+    network: net
+  }).rpcProvider;
+
+
+
 };
 let magic: any;
-export const getMagicRPCProviderByChainId = async (chainId: ChainId) => {
-  if (chainId === ChainId.Binance) {
-    setCachedMagicNetwork(MagicNetworks.bsc);
-    return magicBSC.rpcProvider;
-  }
 
-  if (chainId === ChainId.Matic) {
-    setCachedMagicNetwork(MagicNetworks.matic);
-    return magicMatic.rpcProvider;
-  }
-
-  if (chainId === ChainId.Mumbai) {
-    setCachedMagicNetwork(MagicNetworks.matic);
-    return magicMumbai.rpcProvider;
-  }
-
-  if (chainId === ChainId.Ropsten) {
-    setCachedMagicNetwork(MagicNetworks.ethereum);
-    return magicRopsten.rpcProvider;
-  }
-
-  setCachedMagicNetwork(MagicNetworks.ethereum);
-  return magicETH.rpcProvider;
-};
 
 export const getMagicProvider = async () => {
   const network = getCachedMagicNetwork();
@@ -141,8 +148,7 @@ export const getMagic = (networkName: MagicNetworks) => {
   }
   let network;
   if (
-    networkName === MagicNetworks.matic ||
-    networkName === MagicNetworks.bsc
+    networkName !== MagicNetworks.ethereum
   ) {
     network = rpcUrls[networkName as 'bsc'];
   }
@@ -211,6 +217,10 @@ export const GET_MAGIC_NETWORK_FROM_CHAIN_ID = (chainId: ChainId) => {
     case ChainId.Mumbai:
       return MagicNetworks.mumbai;
     default:
+      const ind = Object.values(rpcUrls).findIndex(n => n.chainId === chainId);
+      if (ind > -1) {
+        return Object.keys(rpcUrls)[ind] as MagicNetworks;
+      }
       return MagicNetworks.ethereum;
   }
 };

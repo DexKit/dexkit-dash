@@ -69,18 +69,29 @@ export const isNativeCoinV2 = (
   symbol: string,
   chainId: ChainId,
   networks?: { chainId: number; symbol: string }[],
+  appNetworks?: { chainId: number; symbol: string }[],
 ) => {
   const isNative = isNativeCoin(symbol, chainId);
 
   if (isNative) {
     return true;
   }
+  if (!isNative && appNetworks) {
+    const index = appNetworks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return appNetworks[index].symbol.toUpperCase() === symbol.toUpperCase();
+    }
+  }
+
+
+
 
   if (!isNative && networks) {
     const index = networks.findIndex((n) => n.chainId === chainId);
 
     if (index > -1) {
-      return networks[index].symbol.toUpperCase() === symbol;
+      return networks[index].symbol.toUpperCase() === symbol.toUpperCase();
     }
   }
 
@@ -204,6 +215,8 @@ export const getNativeCoinWrapped = (chainId: ChainId) => {
       return 'wftm';
     case ChainId.Avalanche:
       return 'wavax';
+    case ChainId.OKC:
+      return 'wokc';
   }
 };
 

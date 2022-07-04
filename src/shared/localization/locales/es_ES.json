@@ -1847,7 +1847,7 @@
   "app.coinLeagues.warning.createGame": "Crear juego",
   "app.dashboard.overview": "Visión general",
   "app.wallet.networkIsNotSupported": "no es soportada",
-  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x aun no permite esta red. Por favor, cambia a Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom o Celo para comerciar en nuestra app.",
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x aun no permite esta red. Por favor, cambia a Ethereum, Binance Smart Chain, Polygon para comerciar en nuestra app.",
   "app.coinLeagues.champion": "Campeón",
   "app.coinLeague.buyOnOpenSea": "Compra Campeón en OpenSea",
   "app.coinLeague..mintingHalted": "Acuñación interrumpida",

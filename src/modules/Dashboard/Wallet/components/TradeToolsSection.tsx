@@ -157,6 +157,30 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         </Box>
       ) : null}
       <Box className={classes.container}>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <Box mb={1}>
+              <RoundedIconButton onClick={onSend}>
+                <ExportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
+            <Typography variant='caption' className={classes.itemText}>
+              <IntlMessages id='app.dashboard.send' />
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <Box mb={1}>
+              <RoundedIconButton onClick={onReceive}>
+                <ImportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+            </Box>
+            <Typography variant='caption' className={classes.itemText}>
+              <IntlMessages id='app.dashboard.receive' />
+            </Typography>
+          </Box>
+        </Box>{' '}
         {onMakeFavorite ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
@@ -177,7 +201,6 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </Box>
           </Box>
         ) : null}
-
         {onShare ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
@@ -218,45 +241,6 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </Typography>
           </Box>
         </Box>
-        {!disableAccounts && (
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <Box mb={1}>
-                <RoundedIconButton onClick={handleShowAccounts}>
-                  <WalletSearchIcon className={classes.icon} />
-                </RoundedIconButton>
-              </Box>
-              <Typography variant='caption' className={classes.itemText}>
-                <IntlMessages id='app.dashboard.accounts' />
-              </Typography>
-            </Box>
-          </Box>
-        )}
-
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <Box mb={1}>
-              <RoundedIconButton onClick={onSend}>
-                <ExportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-            </Box>
-            <Typography variant='caption' className={classes.itemText}>
-              <IntlMessages id='app.dashboard.send' />
-            </Typography>
-          </Box>
-        </Box>
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <Box mb={1}>
-              <RoundedIconButton onClick={onReceive}>
-                <ImportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-            </Box>
-            <Typography variant='caption' className={classes.itemText}>
-              <IntlMessages id='app.dashboard.receive' />
-            </Typography>
-          </Box>
-        </Box>
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
             <Box mb={1}>
@@ -278,6 +262,20 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             <StyledMenuItem onClick={buyWithTransak}>Transak</StyledMenuItem>
           </StyledMenu>
         </Box>
+        {!disableAccounts && (
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <Box mb={1}>
+                <RoundedIconButton onClick={handleShowAccounts}>
+                  <WalletSearchIcon className={classes.icon} />
+                </RoundedIconButton>
+              </Box>
+              <Typography variant='caption' className={classes.itemText}>
+                <IntlMessages id='app.dashboard.accounts' />
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

@@ -8,6 +8,7 @@ import {
   addCustomAsset,
   addCustomToken,
   removeCustomAsset,
+  removeCustomToken,
 } from 'redux/_settingsv2/actions';
 import { getTokenBalanceOf } from 'services/blockchain/balances';
 import { ERC721Abi } from 'contracts/abis/ERC721Abi';
@@ -18,6 +19,7 @@ import { getMulticallFromProvider } from 'services/multicall';
 import { Interface } from 'ethers/lib/utils';
 import { CallInput } from '@indexed-finance/multicall';
 import { providers } from 'ethers';
+import { ChainId } from 'types/blockchain';
 
 // por chain ID
 // por redes a parte da evm
@@ -167,3 +169,18 @@ export function useAssetList() {
     assets: assets || [],
   };
 }
+
+
+export function useRemoveCustomToken() {
+  const dispatch = useDispatch();
+
+  const removeToken = useCallback(
+    (params: { address: string, chainId: ChainId }) => {
+      dispatch(removeCustomToken(params));
+    },
+    [dispatch],
+  );
+
+  return { removeToken };
+}
+

@@ -28,7 +28,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Badge from '@material-ui/core/Badge';
 
 import {MyBalances} from 'types/blockchain';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import Close from '@material-ui/icons/Close';
 import {Search} from '@material-ui/icons';
 
@@ -36,6 +35,7 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AssetList from '../components/AssetList';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import {useAppNetworks} from 'hooks/network';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -67,6 +67,8 @@ const AssetTable: React.FC<AssetTableProps> = ({
   errorUsd,
 }) => {
   const classes = useStyles();
+
+  const appNetworks = useAppNetworks();
 
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
@@ -100,16 +102,9 @@ const AssetTable: React.FC<AssetTableProps> = ({
 
   const filteredBalances = useCallback(() => {
     let results = balances;
-
-    if (filter === 'eth') {
-      results = results.filter((b) => b.network === EthereumNetwork.ethereum);
-    }
-    if (filter === 'bnb') {
-      results = results.filter((b) => b.network === EthereumNetwork.bsc);
-    }
-
-    if (filter === 'matic') {
-      results = results.filter((b) => b.network === EthereumNetwork.matic);
+    if (appNetworks.map((n) => n.name.toLowerCase()).includes(filter)) {
+      const net = appNetworks.find((n) => n.name.toLowerCase() === filter);
+      results = results.filter((b) => b.chainId === net?.chainId);
     }
 
     if (search !== '') {
@@ -151,7 +146,16 @@ const AssetTable: React.FC<AssetTableProps> = ({
     }
 
     return results;
-  }, [orderBy, filter, search, balances, showZero, loadingUsd, errorUsd]);
+  }, [
+    orderBy,
+    filter,
+    search,
+    balances,
+    showZero,
+    loadingUsd,
+    errorUsd,
+    appNetworks,
+  ]);
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
@@ -207,7 +211,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <Grid container spacing={1}>
                 <Grid item>
                   <Chip
@@ -220,34 +224,20 @@ const AssetTable: React.FC<AssetTableProps> = ({
                   />
                 </Grid>
 
-                <Grid item>
-                  <Chip
-                    style={{marginRight: 10}}
-                    label='ETH'
-                    clickable
-                    size='small'
-                    variant={filter === 'eth' ? 'default' : 'outlined'}
-                    onClick={() => setFilter('eth')}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    label='BSC'
-                    clickable
-                    size='small'
-                    variant={filter === 'bnb' ? 'default' : 'outlined'}
-                    onClick={() => setFilter('bnb')}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    label='MATIC'
-                    clickable
-                    size='small'
-                    variant={filter === 'matic' ? 'default' : 'outlined'}
-                    onClick={() => setFilter('matic')}
-                  />
-                </Grid>
+                {appNetworks.map((n) => (
+                  <Grid item>
+                    <Chip
+                      style={{marginRight: 10}}
+                      label={n.name}
+                      clickable
+                      size='small'
+                      variant={
+                        filter === n.name.toLowerCase() ? 'default' : 'outlined'
+                      }
+                      onClick={() => setFilter(n.name.toLowerCase())}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
             <Grid item xs={12}>
