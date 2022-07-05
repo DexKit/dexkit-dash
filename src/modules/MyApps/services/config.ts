@@ -1,7 +1,8 @@
 import { ConfigResponse } from 'types/myApps';
 import { ConfigDomainResponse } from '../utils/types';
 
-const MY_APPS_ENDPOINT = 'https://dexkitapi-8oo4v.ondigitalocean.app';
+//const MY_APPS_ENDPOINT = 'https://dexkitapi-8oo4v.ondigitalocean.app';
+const MY_APPS_ENDPOINT = 'http://localhost:3005';
 
 export const sendConfig = async (formData: any) => {
     const headers = new Headers({

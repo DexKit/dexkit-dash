@@ -221,7 +221,7 @@ const BuySell: React.FC<Props> = ({
   ]);
 
   // We fill the tokenTo field with the selected token on the url
-  /* eslint-disable */
+
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;
@@ -276,7 +276,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress, networkName]);
+  }, [select1, tokenInfo, tokenTo, tokenAddress, networkName]);
   useEffect(() => {
     if (tokenFromInfo) {
       if (
@@ -329,7 +329,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, networkName, tokenInfo]);
+  }, [select1, networkName, tokenInfo, currentTab, tokenFrom]);
 
   const handleChangeToken = useCallback(
     (token: Token | undefined, type: 'from' | 'to') => {

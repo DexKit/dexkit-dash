@@ -3,6 +3,15 @@ import { Styles } from 'jss';
 
 export type WhitelabelTypes = 'DEX' | 'MARKETPLACE' | 'AGGREGATOR';
 
+export enum WhitelabelTypesEnum {
+  DEX = "DEX",
+  MARKETPLACE = "MARKETPLACE",
+  AGGREGATOR = "AGGREGATOR"
+}
+
+
+
+
 export interface ConfigResponse {
   slug: string;
   config: string;
@@ -270,6 +279,7 @@ export interface GeneralConfigAggregator {
   logo: string;
   logo_dark: string;
   domain: string;
+  share_image_url?: string;
   feeRecipient: string;
   buyTokenPercentage: string;
   brand_color: string;
