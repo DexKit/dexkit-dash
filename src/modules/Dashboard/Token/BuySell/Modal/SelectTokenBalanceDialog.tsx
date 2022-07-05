@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import {useIntl} from 'react-intl';
 
@@ -113,8 +113,14 @@ export const SelectTokenBalanceDialog = (props: Props) => {
       onClose({}, 'escapeKeyDown');
     }
   }, [onClose]);
+  const network = useNetwork();
+  const [selectedNetwork, setSelectedNetwork] = useState<
+    EthereumNetwork | undefined
+  >(network);
 
-  const [selectedNetwork, setSelectedNetwork] = useState<EthereumNetwork>();
+  useEffect(() => {
+    setSelectedNetwork(network);
+  }, [network]);
 
   /* eslint-disable */
   const getFilteredTokens = useCallback(
@@ -127,12 +133,6 @@ export const SelectTokenBalanceDialog = (props: Props) => {
     },
     [selectedNetwork],
   );
-
-  const network = useNetwork();
-
-  useEffect(() => {
-    setSelectedNetwork(network);
-  }, [network]);
 
   return (
     <Dialog
@@ -240,7 +240,10 @@ export const SelectTokenBalanceDialog = (props: Props) => {
         ) : null}
         {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
           <Box p={4} justifyContent={'center'}>
-            <Typography variant='body1'> <IntlMessages id='app.dashboard.noTokensFound' /></Typography>
+            <Typography variant='body1'>
+              {' '}
+              <IntlMessages id='app.dashboard.noTokensFound' />
+            </Typography>
           </Box>
         ) : (
           <List disablePadding>

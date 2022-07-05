@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useMemo} from 'react';
 
 import {Box, makeStyles, Tab, Tabs} from '@material-ui/core';
 
@@ -94,7 +94,6 @@ const BuySell: React.FC<Props> = ({
   const {chainId} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
-  const [select1, setSelect1] = useState<Token[]>([]);
 
   const tokensETH = useTokenList(EthereumNetwork.ethereum);
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
@@ -120,21 +119,36 @@ const BuySell: React.FC<Props> = ({
     price: 0,
     expiry: 0,
   });
-
-  useEffect(() => {
+  const select1 = useMemo(() => {
     if (chainId && chainId === ChainId.Ropsten) {
       const coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
-      setSelect1([coin, ...(TOKENS_LIST[chainId] as Token[])]);
-      return;
+      return [coin, ...(TOKENS_LIST[chainId] as Token[])];
     }
 
-    setSelect1([
+    const tokens = [
       ...tokensETH,
       ...tokensBSC,
       ...tokensMATIC,
       ...customTokens.tokens,
-    ]);
-  }, [networkName, tokensETH, tokensBSC, tokensMATIC, chainId, customTokens]);
+    ];
+    if (tokenInfo) {
+      const _token = tokens.find(
+        (t) => t.address.toLowerCase() === tokenInfo.address.toLowerCase(),
+      );
+      if (!_token) {
+        return tokens.concat(tokenInfo);
+      }
+    }
+
+    return tokens;
+  }, [
+    tokensETH,
+    tokensBSC,
+    tokensMATIC,
+    customTokens.tokens,
+    chainId,
+    tokenInfo,
+  ]);
 
   // Here, we map the balances with logos from the token lists
   useEffect(() => {
@@ -247,7 +261,6 @@ const BuySell: React.FC<Props> = ({
         );
         // If token is not available on normal list, add it
         if (!_token) {
-          setSelect1(select1.concat(tokenInfo));
           setTokenTo(tokenInfo);
         }
       }
@@ -426,7 +439,7 @@ const BuySell: React.FC<Props> = ({
             onTrade={handleTradeOpen}
           />
         )}
-        {account && (
+        {account && modalOpen && (
           <OrderDialog
             open={modalOpen}
             networkName={networkName}

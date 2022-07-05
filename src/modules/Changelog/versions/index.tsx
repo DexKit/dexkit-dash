@@ -41,7 +41,22 @@ const Changelog = () => {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls='panelv0.0.6.23'
+          aria-controls='panelv0.0.6.25'
+          id='panelv0.0.6.21-header'>
+          <Typography className={classes.heading}>v0.0.6.25 - next </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Improve swap whitelabel and my apps wizard
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.24'
           id='panelv0.0.6.21-header'>
           <Typography className={classes.heading}>
             v0.0.6.24 - 29-06-2022{' '}
