@@ -62,9 +62,9 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     name: '',
     symbol: '',
   });
-
+  /* eslint-disable */
   useEffect(() => {
-    if (open && tokenFrom && tokenTo && networkName && chainId) {
+    if (open && tokenFrom && tokenTo && networkName) {
       setLoading(true);
       let stepsFn: Steps[] = [];
 
@@ -90,13 +90,12 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
         setIsConvert(false);
         stepsFn = [Steps.APPROVE, Steps.LIMIT];
       }
-
       setSteps(stepsFn);
       setCurrentStep(stepsFn[0]);
       setCurrentStepIndex(-1);
       setIsRequestConfirmed(false);
     }
-  }, [open, tokenFrom, tokenTo, networkName, chainId, isMarket, tokenSymbol]);
+  }, [open, tokenFrom, tokenTo, networkName]);
 
   // Problem: there is a delay after Approve to get the new allowance
   // Fix: wait X seconds before going to the next step

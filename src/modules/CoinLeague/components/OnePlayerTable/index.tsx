@@ -522,37 +522,13 @@ function OnePlayerTable(props: Props): JSX.Element {
                 <Grid container spacing={4} justifyContent='space-between'>
                   <Grid item>
                     {playerData.coins?.length > 0 &&
+                      playerData.captainCoin &&
                       (isMobile ? (
                         <AvatarGroup max={10} spacing={17}>
-                          {playerData?.coins.map((coin) =>
-                            isBalanceVisible ? (
-                              <Avatar
-                                className={classes.chip}
-                                src={getIconByCoin(
-                                  coin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                                style={{height: 35, width: 35}}>
-                                {getIconSymbol(
-                                  coin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                              </Avatar>
-                            ) : (
-                              <Badge color={'primary'} overlap='circular'>
-                                <Avatar
-                                  className={classes.chip}
-                                  style={{height: 35, width: 35}}
-                                />
-                              </Badge>
-                            ),
-                          )}
-                        </AvatarGroup>
-                      ) : (
-                        <Grid container spacing={3}>
-                          {playerData?.coins.map((coin) =>
-                            isBalanceVisible ? (
-                              <Grid item>
+                          {[playerData.captainCoin]
+                            .concat(playerData?.coins)
+                            .map((coin) =>
+                              isBalanceVisible ? (
                                 <Avatar
                                   className={classes.chip}
                                   src={getIconByCoin(
@@ -565,18 +541,47 @@ function OnePlayerTable(props: Props): JSX.Element {
                                     GET_LEAGUES_CHAIN_ID(chainId),
                                   )}
                                 </Avatar>
-                              </Grid>
-                            ) : (
-                              <Grid item>
-                                <Badge color='primary' overlap='circular'>
+                              ) : (
+                                <Badge color={'primary'} overlap='circular'>
                                   <Avatar
                                     className={classes.chip}
                                     style={{height: 35, width: 35}}
                                   />
                                 </Badge>
-                              </Grid>
-                            ),
-                          )}
+                              ),
+                            )}
+                        </AvatarGroup>
+                      ) : (
+                        <Grid container spacing={3}>
+                          {[playerData.captainCoin]
+                            .concat(playerData?.coins)
+                            .map((coin) =>
+                              isBalanceVisible ? (
+                                <Grid item>
+                                  <Avatar
+                                    className={classes.chip}
+                                    src={getIconByCoin(
+                                      coin,
+                                      GET_LEAGUES_CHAIN_ID(chainId),
+                                    )}
+                                    style={{height: 35, width: 35}}>
+                                    {getIconSymbol(
+                                      coin,
+                                      GET_LEAGUES_CHAIN_ID(chainId),
+                                    )}
+                                  </Avatar>
+                                </Grid>
+                              ) : (
+                                <Grid item>
+                                  <Badge color='primary' overlap='circular'>
+                                    <Avatar
+                                      className={classes.chip}
+                                      style={{height: 35, width: 35}}
+                                    />
+                                  </Badge>
+                                </Grid>
+                              ),
+                            )}
                         </Grid>
                       ))}
                   </Grid>
