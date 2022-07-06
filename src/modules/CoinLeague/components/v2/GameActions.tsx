@@ -83,6 +83,13 @@ export const GameActions: React.FC<Props> = ({
     }
   }, [startTimestamp, durationBN]);
 
+  const canStartGameTime = useMemo(() => {
+    if (startTimestamp) {
+      const start = startTimestamp.toNumber() * 1000;
+      return new Date().getTime() > start;
+    }
+  }, [startTimestamp]);
+
   const handleGameEndError = useCallback((error: any) => {
     if (error.data?.message) {
       setErrorMessage(error.data?.message);
@@ -131,7 +138,8 @@ export const GameActions: React.FC<Props> = ({
     currentPlayers !== undefined &&
     currentPlayers >= 2 &&
     !game?.started &&
-    !canEnterGame;
+    !canEnterGame &&
+    canStartGameTime;
 
   const showButtons =
     canEnterGame ||
