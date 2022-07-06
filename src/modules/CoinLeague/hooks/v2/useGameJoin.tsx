@@ -55,7 +55,7 @@ export function useGameJoin({
     (
       coins: string[],
       amount: string,
-      capitainCoin: string,
+      captainCoin: string,
       isNFTGame: boolean,
       affiliate?: string | null,
     ) => {
@@ -123,7 +123,7 @@ export function useGameJoin({
         onJoinGameCallback(
           coins,
           amount,
-          capitainCoin,
+          captainCoin,
           {
             onConfirmation: onConfirmTx,
             onError,

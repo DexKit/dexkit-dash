@@ -98,9 +98,6 @@ export const SelectCoinLeagueDialog = (props: Props) => {
       .filter((coin: CoinFeed) => {
         if (isCaptainCoin && selectedCoins) {
           const index = selectedCoins.indexOf(coin);
-
-          console.log('index', index);
-
           if (index > -1) {
             return false;
           }

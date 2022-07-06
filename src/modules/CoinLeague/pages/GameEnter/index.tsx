@@ -64,6 +64,7 @@ import SelectChampionDialog from 'modules/CoinLeague/components/SelectChampion/i
 import {
   AFFILIATE_FIELD,
   CREATOR_PRIZES_ADDRESSES,
+  PriceFeeds,
 } from 'modules/CoinLeague/constants';
 import {useTokensMultipliers} from 'modules/CoinLeague/hooks/useMultipliers';
 import UpdateGameMetadataModal from 'modules/CoinLeague/components/UpdateGameMetadataModal';
@@ -127,6 +128,7 @@ function GameEnter(props: Props) {
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
   const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
+  const [editCoins, setEditCoins] = useState(false);
   const [openUpdateGameMetadataModal, setOpenUpdateGameMetadataModal] =
     useState(false);
   const [openRemoveGameMetadataModal, setOpenRemoveGameMetadataModal] =
@@ -134,7 +136,7 @@ function GameEnter(props: Props) {
   const [openShowGameMetadataModal, setOpenShowGameMetadataModal] =
     useState(false);
   const [openChampionDialog, setOpenChampionDialog] = useState(false);
-  const [isCaptainCoin, setIsChaptainCoin] = useState(false);
+  const [isCaptainCoin, setIsCaptainCoin] = useState(false);
 
   const handleRefetch = useCallback(() => refetch(), [refetch]);
 
@@ -147,7 +149,7 @@ function GameEnter(props: Props) {
   );
 
   const onOpenSelectCaptainDialog = useCallback((ev: any) => {
-    setIsChaptainCoin(true);
+    setIsCaptainCoin(true);
     setMaxSelectedCoins(1);
     setOpen(true);
   }, []);
@@ -217,7 +219,7 @@ function GameEnter(props: Props) {
   }, []);
 
   const onCloseSelectDialog = useCallback(() => {
-    setIsChaptainCoin(false);
+    setIsCaptainCoin(false);
     setOpen(false);
   }, []);
 
@@ -230,7 +232,7 @@ function GameEnter(props: Props) {
     (coins: CoinFeed[]) => {
       if (isCaptainCoin) {
         setCaptainCoin(coins[0]);
-        setIsChaptainCoin(false);
+        setIsCaptainCoin(false);
       } else {
         setSelectedCoins(coins);
       }
@@ -258,7 +260,7 @@ function GameEnter(props: Props) {
           }
         }
 
-        setIsChaptainCoin(false);
+        setIsCaptainCoin(false);
         setOpen(false);
       } else {
         let index = selectedCoins.indexOf(coin);
@@ -846,9 +848,42 @@ function GameEnter(props: Props) {
                     ? () => setOpenRemoveGameMetadataModal(true)
                     : undefined
                 }
+                onCanEditCoins={() => {
+                  if (editCoins) {
+                    setEditCoins(false);
+                  } else {
+                    const coins =
+                      PriceFeeds[
+                        chainId as
+                          | ChainId.Matic
+                          | ChainId.Mumbai
+                          | ChainId.Binance
+                      ];
+                    if (player?.coin_feeds && player.captain_coin) {
+                      const captainCoin = player.captain_coin;
+                      const addressFeeds = player.coin_feeds.map((c: any) =>
+                        c.toLowerCase(),
+                      );
+                      setCaptainCoin(
+                        coins.find(
+                          (c) =>
+                            c.address.toLowerCase() ===
+                            captainCoin.toLowerCase(),
+                        ),
+                      );
+                      setSelectedCoins(
+                        coins.filter((c) =>
+                          addressFeeds.includes(c.address.toLowerCase()),
+                        ),
+                      );
+                    }
+
+                    setEditCoins(true);
+                  }
+                }}
                 canEnterGame={
                   game &&
-                  !player &&
+                  (!player || editCoins) &&
                   !isLoading &&
                   !gameFull &&
                   !started &&
@@ -859,6 +894,7 @@ function GameEnter(props: Props) {
                   sufficientFunds &&
                   selectedCoins.length === (game?.num_coins.toNumber() || 0) - 1
                 }
+                player={player}
                 game={game}
                 coinToPlay={coinToPlay}
                 coinToPlayBalance={coinToPlayBalance}
@@ -869,7 +905,7 @@ function GameEnter(props: Props) {
             </Grid>
           )}
           {game &&
-            !player &&
+            (!player || editCoins) &&
             !isLoading &&
             !gameFull &&
             !aborted &&
@@ -931,8 +967,8 @@ function GameEnter(props: Props) {
                           <Grid item xs={12}>
                             <Alert severity='info'>
                               {tokensMultipliersQuery.data.isHoldingMultiplier
-                                ? 'Congrats you are holding 50 KIT or 200 to boost from 1.2 to 1.3 your captain multiplier. Your champions multiplier it will multiply by 1.3 now!'
-                                : 'Hold 50 KIT or 200 BITT to boost your captain multiplier to 1.3. Your champions multiplier it will multiply by 1.2 instead of 1.3!'}
+                                ? 'Congrats you are holding 50 KIT to boost from 1.2 to 1.3 your captain multiplier. Your champions multiplier it will multiply by 1.3 now!'
+                                : 'Hold 50 KIT to boost your captain multiplier to 1.3. Your champions multiplier it will multiply by 1.2 instead of 1.3!'}
                             </Alert>
                           </Grid>
                         )}

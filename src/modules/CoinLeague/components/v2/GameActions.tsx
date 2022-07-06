@@ -13,7 +13,7 @@ import {useMobile} from 'hooks/useMobile';
 import {useGameEnd} from 'modules/CoinLeague/hooks/v2/useGameEnd';
 import {useGameStart} from 'modules/CoinLeague/hooks/v2/useGameStart';
 import React, {useCallback, useState, useMemo} from 'react';
-import {Game} from 'types/coinleague';
+import {Game, Player} from 'types/coinleague';
 
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
@@ -35,12 +35,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   game?: Game;
+  player?: Player;
   coinToPlay?: CoinToPlayInterface;
   coinToPlayBalance?: {
     balance: BigNumber;
     allowance: BigNumber;
   };
   canEnterGame?: boolean;
+  onCanEditCoins: () => void;
   onEnterGame: () => void;
   onEditMetadata?: () => void;
   onShowMetadata?: () => void;
@@ -52,10 +54,12 @@ interface Props {
 
 export const GameActions: React.FC<Props> = ({
   game,
+  player,
   canEnterGame,
   coinToPlay,
   coinToPlayBalance,
   onEnterGame,
+  onCanEditCoins,
   onEditMetadata,
   onShowMetadata,
   onRemoveMetadata,
@@ -133,6 +137,8 @@ export const GameActions: React.FC<Props> = ({
 
   const isCanEndGameEnabled =
     game?.started && !game?.finished && !game?.aborted && canEndGame;
+
+  const isCanEditCoins = player && !game?.started;
 
   const isEnterGameEnabled =
     currentPlayers !== undefined &&
@@ -281,6 +287,13 @@ export const GameActions: React.FC<Props> = ({
                     defaultMessage='Abort Game'
                   />
                 </Button>
+              )}
+              {isCanEditCoins && (
+                <Grid item>
+                  <Button startIcon={<Edit />} onClick={onCanEditCoins}>
+                    <IntlMessages id='edit.coins' defaultMessage='Edit Coins' />
+                  </Button>
+                </Grid>
               )}
             </Grid>
           </Grid>
