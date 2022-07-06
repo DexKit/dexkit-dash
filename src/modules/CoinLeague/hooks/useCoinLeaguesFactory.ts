@@ -19,6 +19,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE } from 'shared/constants/routes';
 import {
   COIN_LEAGUES_FACTORY_ADDRESS,
+  COIN_LEAGUES_FACTORY_ADDRESS_V3,
   COIN_LEAGUES_NFT_FACTORY_ADDRESS,
 } from '../constants';
 import { useLeaguesChainInfo } from './useLeaguesChainInfo';
@@ -288,7 +289,7 @@ export const useCoinLeaguesFactoryTotalGames = () => {
       ? room
       : isNFTGame
         ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-        : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+        : COIN_LEAGUES_FACTORY_ADDRESS_V3[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room, isNFTGame]);
 
   const totalGamesQuery = useQuery(['GetTotalGames', factoryAddress], () => {
