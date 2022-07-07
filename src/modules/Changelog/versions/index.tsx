@@ -50,6 +50,9 @@ const Changelog = () => {
             <Typography className={classes.item}>
               Improve swap whitelabel and my apps wizard
             </Typography>
+            <Typography className={classes.item}>
+              Add Coinleague with USDT stablecoin
+            </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>

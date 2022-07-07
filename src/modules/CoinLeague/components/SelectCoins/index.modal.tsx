@@ -22,6 +22,7 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {CoinFeed} from 'modules/CoinLeague/utils/types';
 import {SelectCoinListItem} from './SelectCoinItem';
+import {SelectedCoinListItem} from './SelectedCoinItem';
 import {PriceFeeds} from 'modules/CoinLeague/constants';
 import {ChainId} from 'types/blockchain';
 
@@ -193,6 +194,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
+
         {filteredCoins.length === 0 ? (
           <Typography variant='body1'>
             <IntlMessages id='app.coinLeagues.noCoinsFound' />
@@ -220,6 +222,22 @@ export const SelectCoinLeagueDialog = (props: Props) => {
               )}
             </VariableSizeList>
           </List>
+        )}
+        {currSelectedCoins.length > 0 && (
+          <Box mb={4} p={2}>
+            <Typography variant='body1'>
+              {isCaptainCoin
+                ? messages['app.coinLeagues.selectCaptainCoin']
+                : `${messages['app.coinLeagues.selectCoin']} - ${currSelectedCoins.length}/${maxSelectedCoins}`}
+            </Typography>
+            {currSelectedCoins?.map((c, index) => (
+              <SelectedCoinListItem
+                onClick={handleSelectCoin}
+                coin={c}
+                key={index}
+              />
+            ))}
+          </Box>
         )}
       </DialogContent>
       <Divider />

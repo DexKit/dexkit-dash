@@ -345,6 +345,7 @@ function GameEnter(props: Props) {
     } else {
       onJoin();
     }
+    setEditCoins(false);
   }, [
     gameJoin,
     amountToPlay,
