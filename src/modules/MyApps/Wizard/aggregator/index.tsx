@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -19,18 +19,22 @@ import {
 } from '@material-ui/core';
 import {Form, Formik} from 'formik';
 
-import {ConfigFileAggregator, GeneralConfigAggregator} from 'types/myApps';
+import {
+  ConfigFileAggregator,
+  GeneralConfigAggregator,
+  WhitelabelTypesEnum,
+} from 'types/myApps';
 
 import {NavigationButton} from '../shared/Buttons/navigationButton';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
-import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
 import {ValidationSchemas} from './utils/validationSchemas';
 import {useSendConfig} from 'modules/MyApps/hooks/useSendConfig';
 import {GeneralForm} from './forms/General';
 import {ThemeForm} from './forms/Theme';
 import {WALLET_ROUTE} from 'shared/constants/routes';
+import {useMyAppsConfig} from 'modules/MyApps/hooks/useMyAppsConfig';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -120,9 +124,6 @@ export default function WizardAggregator(props: any) {
   } = props;
   const {slug} = params;
   const history = useHistory();
-
-  const [data, setData] = useState<ConfigFileAggregator>();
-
   const classes = useStyles();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -132,19 +133,18 @@ export default function WizardAggregator(props: any) {
 
   const {configs} = useMyAppsConfig(account);
 
-  const {onSendConfigCallback, isLoading} = useSendConfig();
+  const {onSendConfigMutation} = useSendConfig();
 
-  useEffect(() => {
-    if (configs) {
+  const data = useMemo(() => {
+    if (configs && slug) {
       const index = configs.findIndex(
         (c, i) =>
-          c.type === 'AGGREGATOR' &&
+          c.type === WhitelabelTypesEnum.AGGREGATOR &&
           c.slug?.toLowerCase() === slug?.toLowerCase(),
       );
 
       if (index >= 0) {
-        const config: ConfigFileAggregator = JSON.parse(configs[index].config);
-        setData({...config});
+        return JSON.parse(configs[index].config) as ConfigFileAggregator;
       }
     }
   }, [configs, slug]);
@@ -232,7 +232,10 @@ export default function WizardAggregator(props: any) {
   }, []);
 
   const _handleSubmit = (values: any) => {
-    onSendConfigCallback(values, 'AGGREGATOR');
+    onSendConfigMutation.mutate({
+      config: values,
+      type: WhitelabelTypesEnum.AGGREGATOR,
+    });
   };
   const showForm = useMemo(() => {
     if (slug) {
@@ -343,13 +346,17 @@ export default function WizardAggregator(props: any) {
                         />
                       </Button>
                       <Button
-                        disabled={isLoading}
+                        disabled={onSendConfigMutation.isLoading}
                         variant='contained'
                         color='primary'
                         type='submit'
                         className={classes.button}>
-                        {isLoading && <CircularProgress color='inherit' />}
-                        {isLoading ? 'Waiting Wallet' : 'Submit'}
+                        {onSendConfigMutation.isLoading && (
+                          <CircularProgress color='inherit' />
+                        )}
+                        {onSendConfigMutation.isLoading
+                          ? 'Waiting Wallet'
+                          : 'Submit'}
                       </Button>
                     </Paper>
                   )}

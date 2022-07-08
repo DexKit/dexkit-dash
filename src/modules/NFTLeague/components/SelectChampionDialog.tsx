@@ -15,11 +15,11 @@ import React, {useCallback, useState} from 'react';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 import ImageIcon from '@material-ui/icons/Image';
 import {useIntl} from 'react-intl';
-import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
+import {CoinLeaguesChampion} from 'modules/CoinLeague/utils/types';
 
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {GET_CHAMPIONS_CONTRACT_ADDR} from 'modules/CoinLeagues/utils/champions';
-import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
+import {GET_CHAMPIONS_CONTRACT_ADDR} from 'modules/CoinLeague/utils/champions';
+import {useMyChampions} from 'modules/CoinLeague/hooks/champions';
 
 import ChampionCard from './ChampionCard';
 

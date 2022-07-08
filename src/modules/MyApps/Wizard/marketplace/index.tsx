@@ -21,7 +21,6 @@ import {
 } from 'types/myApps';
 import {ChainId} from 'types/blockchain';
 
-import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
 import {useWeb3} from 'hooks/useWeb3';
 import {SubmitComponent} from '../shared/Buttons/submit';
 import {NavigationButton} from '../shared/Buttons/navigationButton';
@@ -34,6 +33,7 @@ import ThemeForm from '../shared/Theme/themeForm';
 import {DefaultTheme} from '../shared/Theme';
 import CollectionsForm from './collection/collectionsForm';
 import TokensForm from '../shared/Token/tokensForm';
+import {useMyAppsConfig} from 'modules/MyApps/hooks/useMyAppsConfig';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -15,13 +15,13 @@ import {
   GeneralConfig,
   TokenMetaData,
   CurrencyPairMetaData,
+  WhitelabelTypesEnum,
 } from 'types/myApps';
 import {GridContainer} from '@crema';
 import {Box, Breadcrumbs, Grid, IconButton, Link} from '@material-ui/core';
 
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
-import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
 import {SubmitComponent} from '../shared/Buttons/submit';
 import {NavigationButton} from '../shared/Buttons/navigationButton';
 import LoadingView from 'modules/Common/LoadingView';
@@ -32,6 +32,7 @@ import ThemeForm from '../shared/Theme/themeForm';
 import PairsForm from './pairsForm';
 import TokensForm from '../shared/Token/tokensForm';
 import {DefaultTheme} from '../shared/Theme';
+import {useMyAppsConfig} from 'modules/MyApps/hooks/useMyAppsConfig';
 //import initConfig from './config.json'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -309,7 +310,6 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
 
   const {account, chainId} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
-
   const steps = getSteps();
 
   const updateForm = useCallback(
@@ -327,10 +327,10 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
 
   /* eslint-disable */
   useEffect(() => {
-    if (editable && configs != null) {
+    if (editable && configs) {
       const index = configs.findIndex(
         (c, i) =>
-          c.type === 'DEX' &&
+          c.type === WhitelabelTypesEnum.DEX &&
           c.slug?.toLowerCase() === slug?.toLowerCase() &&
           configs[i]?.config != null,
       );

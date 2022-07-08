@@ -17,13 +17,14 @@ import IntlMessages from '@crema/utility/IntlMessages';
 interface Props {
   loading?: boolean;
   error?: boolean;
+  errorMsg?: any;
   done?: boolean;
   cname?: string;
   dialogProps: DialogProps;
 }
 
 export const DeployDomainDialog = (props: Props) => {
-  const {dialogProps, loading, error, done, cname} = props;
+  const {dialogProps, loading, error, done, cname, errorMsg} = props;
 
   const theme = useTheme();
 
@@ -124,12 +125,16 @@ export const DeployDomainDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages
-                    id='app.myapps.domainErrorSubmit'
-                    defaultMessage={
-                      'Error submitting domain, is this domain already in use?'
-                    }
-                  />
+                  {errorMsg && errorMsg?.message ? (
+                    errorMsg.message
+                  ) : (
+                    <IntlMessages
+                      id='app.myapps.domainErrorSubmit'
+                      defaultMessage={
+                        'Error submitting domain, is this domain already in use?'
+                      }
+                    />
+                  )}
                 </Typography>
               </Grid>
 

@@ -108,7 +108,9 @@ export const Slider = (props: SliderProps) => {
               <Button
                 fullWidth={isMobile}
                 size={isMobile ? 'small' : 'medium'}
-                startIcon={<ArrowForwardIcon />}
+                startIcon={
+                  index === slideCount - 1 ? null : <ArrowForwardIcon />
+                }
                 color='primary'
                 onClick={index === slideCount - 1 ? onStart : onNext}
                 variant='contained'>

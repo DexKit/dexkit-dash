@@ -76,13 +76,25 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
-  const [token, setToken] = useState<Token>();
 
   const [tokenToAddress, setTokenToAddress] = useState<string>(address);
   const [tokenToInfo, setTokenToInfo] = useState<Token>();
   const [tokenFromInfo, setTokenFromInfo] = useState<Token>();
 
   const [disableSide, setDisableSide] = useState<'from' | 'to'>();
+
+  const token = useMemo(() => {
+    if (tokenInfo && address && tokenInfo.symbol) {
+      return {
+        address: address,
+        name: tokenInfo.name,
+        symbol: tokenInfo.symbol.toUpperCase(),
+        decimals: tokenInfo.decimals,
+        chainId: tokenInfo.chainId,
+        coingecko_id: tokenInfo.coingecko_id,
+      };
+    }
+  }, [tokenInfo, address]);
 
   const priceUSD = useTokenPriceUSD(
     address,
@@ -111,19 +123,6 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
       return false;
     }
   }, [favoriteCoins, token]);
-
-  useEffect(() => {
-    if (tokenInfo && tokenInfo.symbol) {
-      setToken({
-        address: address,
-        name: tokenInfo.name,
-        symbol: tokenInfo.symbol.toUpperCase(),
-        decimals: tokenInfo.decimals,
-        chainId: tokenInfo.chainId,
-        coingecko_id: tokenInfo.coingecko_id,
-      });
-    }
-  }, [tokenInfo, address]);
 
   const infoMyTakerOrders = useFetch(
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,

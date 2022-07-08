@@ -16,7 +16,6 @@ interface GeneralFormProps {
 
 export const GeneralForm = (props: GeneralFormProps) => {
   const {formik} = props;
-  console.log(formik);
   return (
     <Grid container spacing={6}>
       <Grid item xs={6} md={6} sm={6}>
@@ -84,6 +83,29 @@ export const GeneralForm = (props: GeneralFormProps) => {
           helperText={formik.errors.domain}
           InputProps={{
             endAdornment: <InfoComponent text={HELP_TEXT.domain[0]} />,
+          }}
+        />
+      </Grid>
+      <Grid item xs={6} md={6} sm={6}>
+        <TextField
+          fullWidth
+          id='share_image_url'
+          name='share_image_url'
+          label='Share Image URL'
+          variant='outlined'
+          value={formik.values.share_image_url}
+          onChange={formik.handleChange}
+          error={Boolean(formik.errors.share_image_url)}
+          helperText={formik.errors.share_image_url}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent
+                text={
+                  HELP_TEXT.share_image_url &&
+                  (HELP_TEXT.share_image_url[0] as string)
+                }
+              />
+            ),
           }}
         />
       </Grid>

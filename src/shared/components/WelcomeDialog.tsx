@@ -76,7 +76,7 @@ const LazyImage = (props: LazyImageProps) => {
 
 const SLIDES_TEXTS: {title: string; description: string}[] = [
   {
-    title: 'Super App Dexkit',
+    title: 'Super App DexKit',
     description:
       'You can manage all your ERC, BEP and POLY assets from any internet connected device.',
   },

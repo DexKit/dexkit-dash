@@ -1,9 +1,9 @@
-import {Interface} from '@ethersproject/abi';
-import {CallInput} from '@indexed-finance/multicall';
-import {ContractTransaction, ethers, providers} from 'ethers';
-import {getMulticallFromProvider} from 'services/multicall';
+import { Interface } from '@ethersproject/abi';
+import { CallInput } from '@indexed-finance/multicall';
+import { ContractTransaction, ethers, providers } from 'ethers';
+import { getMulticallFromProvider } from 'services/multicall';
 import battleFactoryAbi from '../constants/ABI/BattleNFTFactory.json';
-import {Coin, CreateAndJoinParams, Game, JoinGameParams} from '../utils/types';
+import { Coin, CreateAndJoinParams, Game, JoinGameParams } from '../utils/types';
 
 export const getBattleFactoryContract = async (
   address: string,
@@ -96,7 +96,7 @@ export const createAndJoinGame = async (
     params.duration,
     params.entry,
     params.type,
-    {value: params.entry},
+    { value: params.entry },
   ) as Promise<ContractTransaction>;
 };
 
@@ -110,7 +110,7 @@ export const joinGame = async (
     params.championId,
     params.bittFeed,
     params.multiplier,
-    {value: params.entry},
+    { value: params.entry },
   ) as Promise<ContractTransaction>;
 };
 
@@ -129,7 +129,6 @@ export const endGame = async (
   id: number,
   provider: any,
 ) => {
-  console.log('ENDING', id);
 
   return (await getBattleFactoryContract(gameAddress, provider)).endGame(
     id,

@@ -25,8 +25,8 @@ import {useOnChainCurrentRoundGame} from 'modules/SquidLeague/hooks/useOnChainCu
 import {GameState} from 'modules/SquidLeague/utils/types';
 
 import {ChainId} from 'types/blockchain';
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants/PriceFeeds/matic';
-import {MumbaiPriceFeeds} from 'modules/CoinLeagues/constants';
+import {MaticPriceFeeds} from 'modules/CoinLeague/constants/PriceFeeds/matic';
+import {MumbaiPriceFeeds} from 'modules/CoinLeague/constants';
 import {useWeb3} from 'hooks/useWeb3';
 import Countdown from 'modules/SquidLeague/components/Countdown';
 import {convertUSDPriceUnit} from 'modules/SquidLeague/utils/format';

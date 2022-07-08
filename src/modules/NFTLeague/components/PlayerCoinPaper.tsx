@@ -18,7 +18,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 
 import {Skeleton} from '@material-ui/lab';
-import {useChampionMetadataQuery} from 'modules/CoinLeagues/hooks/champions';
+import {useChampionMetadataQuery} from 'modules/CoinLeague/hooks/champions';
 import React, {useCallback, useMemo, useState} from 'react';
 import {getNormalizedUrl} from 'utils/browser';
 import {useModuleStyle} from '../styles';
@@ -27,10 +27,10 @@ import {ReactComponent as UserSquareIcon} from '../assets/user-square.svg';
 import CoinSelect from './CoinSelect';
 import {useIntl} from 'react-intl';
 import {GET_CHAMPIONS_COINS, NFT_LEAGUE_MULTIPLIERS} from '../constants';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {ethers} from 'ethers';
 import {useCoinFeed} from '../hooks/useCoinFeed';
-import {useProfileGame} from 'modules/CoinLeagues/hooks/useGameProfile';
+import {useProfileGame} from 'modules/CoinLeague/hooks/useGameProfile';
 import {truncateAddress} from 'utils';
 import {useChampionPoints} from '../hooks/useChampionPoints';
 

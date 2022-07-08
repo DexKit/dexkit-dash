@@ -18,7 +18,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import {Skeleton} from '@material-ui/lab';
 
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants/PriceFeeds/matic';
+import {MaticPriceFeeds} from 'modules/CoinLeague/constants/PriceFeeds/matic';
 
 import {ReactComponent as TimerIcon} from 'assets/images/vuesax/twotone/timer.svg';
 

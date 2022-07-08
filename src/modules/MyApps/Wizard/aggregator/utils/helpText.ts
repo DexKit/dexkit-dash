@@ -9,6 +9,9 @@ export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   domain: [
     'Enter your project url that you will be hosting the wordpress plugin',
   ],
+  share_image_url: [
+    'Image that shows when you share the url from your project',
+  ],
   feeRecipient: [],
   affiliateAddress: ['Enter the wallet that should receive the fee'],
   brand_color: [],

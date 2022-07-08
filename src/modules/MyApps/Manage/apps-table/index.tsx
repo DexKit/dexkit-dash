@@ -30,7 +30,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {stableSort, getComparator} from 'utils/table';
 import {useWeb3} from 'hooks/useWeb3';
 import {setInsufficientAmountAlert} from 'redux/actions';
-import {WhitelabelTypes} from 'types/myApps';
+import {WhitelabelTypes, WhitelabelTypesEnum} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
 import {useSetupDomainConfig} from 'modules/MyApps/hooks/useSetupDomainConfig';
 import {DeployDomainDialog} from 'modules/MyApps/components/dialogs/DeployDomain';
@@ -85,8 +85,7 @@ const AppsTable = () => {
   const [showDeployDialog, setShowDeployDialog] = useState(false);
   const {account, chainId} = useWeb3();
   const {configs, loading, refetch} = useMyAppsConfig(account);
-  const {onSendDomainConfigCallback, isError, isLoading, isDone} =
-    useSetupDomainConfig();
+  const {onSendDomainConfigMutation} = useSetupDomainConfig();
 
   const domainStatusMutation = useDomainConfigStatusMutation();
   const deleteAppMutation = useDeleteMyAppMutation();
@@ -139,8 +138,23 @@ const AppsTable = () => {
     setPage(0);
   };
   const classes = useStyles();
-  const onEditConfig = (slug: string) => {
-    history.push(`/my-apps/wizard/aggregator/${slug}`);
+  const onEditConfig = (slug: string, type: WhitelabelTypesEnum) => {
+    switch (type) {
+      case WhitelabelTypesEnum.DEX:
+        window.open(
+          `https://exchange.dexkit.com/#/trade/dex-wizard?dex=${slug}`,
+        );
+        break;
+      case WhitelabelTypesEnum.MARKETPLACE:
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
+        break;
+      case WhitelabelTypesEnum.AGGREGATOR:
+        history.push(`/my-apps/wizard/aggregator/${slug}`);
+        break;
+      default:
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
+        break;
+    }
   };
 
   const onOpenApp = (slug: string, type: WhitelabelTypes, domain?: string) => {
@@ -150,13 +164,13 @@ const AppsTable = () => {
     }
 
     switch (type) {
-      case 'DEX':
+      case WhitelabelTypesEnum.DEX:
+        window.open(`https://exchange.dexkit.com/#/trade?dex=${slug}`);
+        break;
+      case WhitelabelTypesEnum.MARKETPLACE:
         window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
         break;
-      case 'MARKETPLACE':
-        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
-        break;
-      case 'AGGREGATOR':
+      case WhitelabelTypesEnum.AGGREGATOR:
         window.open(`https://swap.dexkit.com/#/swap?id=${slug}`);
         break;
       default:
@@ -183,12 +197,12 @@ const AppsTable = () => {
   );
 
   const onDeployToDomainCallback = useCallback(
-    (config: any) => {
+    (config: any, type: string) => {
       deployDomainToggler.toggle();
       setShowDeployDialog(false);
-      onSendDomainConfigCallback(config, 'AGGREGATOR');
+      onSendDomainConfigMutation.mutate({dataSubmit: config, type});
     },
-    [onSendDomainConfigCallback, deployDomainToggler],
+    [onSendDomainConfigMutation, deployDomainToggler],
   );
 
   const onOpenValidateDomainModal = useCallback(
@@ -266,9 +280,10 @@ const AppsTable = () => {
 
         <Paper className={classes.paper}>
           <DeployDomainDialog
-            done={isDone}
-            loading={isLoading}
-            error={isError}
+            done={onSendDomainConfigMutation.isSuccess}
+            loading={onSendDomainConfigMutation.isLoading}
+            error={onSendDomainConfigMutation.isError}
+            errorMsg={onSendDomainConfigMutation.error as string}
             dialogProps={{
               open: deployDomainToggler.show,
               onClose: handleCloseSetupDomainDialog,
@@ -318,7 +333,12 @@ const AppsTable = () => {
               title={`Deploy your app to your own domain, you will receive a CNAME to point to your app. Make sure to have 100 KIT on BSC, Polygon or Ethereum on your Fee Address to domain keep active.`}
               dialogTitle={'Deploy to your own domain?'}
               open={showDeployDialog}
-              onConfirm={() => onDeployToDomainCallback(selectedConfig)}
+              onConfirm={() =>
+                onDeployToDomainCallback(
+                  selectedConfig,
+                  selectedConfig?.type as string,
+                )
+              }
               onDeny={(x) => setShowDeployDialog(x)}
             />
           )}
@@ -433,7 +453,12 @@ const AppsTable = () => {
                         <Box className={classes.badgeRoot}>
                           <IconButton
                             aria-label='edit'
-                            onClick={() => onEditConfig(config.slug)}>
+                            onClick={() =>
+                              onEditConfig(
+                                config.slug,
+                                config.type as WhitelabelTypesEnum,
+                              )
+                            }>
                             <EditIcon />
                           </IconButton>
                           <IconButton

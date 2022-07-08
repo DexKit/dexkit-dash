@@ -1,4 +1,4 @@
-import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+import {COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 export interface IconProps {
   src: string;
@@ -108,7 +108,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'coinleague',
           url: `${COINSLEAGUE_ROUTE}`,
         },
-        {
+        /*   {
           id: 'coinleague.nftroom',
           title: 'NFT Room',
           messageId: 'sidebar.app.nft-room',
@@ -116,7 +116,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'game',
           url: `${COINLEAGUENFT_ROUTE}`,
-        },
+        },*/
         {
           id: 'coinleague.myprofile',
           title: 'Profile',
@@ -153,7 +153,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'ranking',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
-        {
+        /*  {
           id: 'coinleague.competition',
           title: 'Competition',
           messageId: 'sidebar.competition',
@@ -161,7 +161,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/competition`,
-        },
+        },*/
         /*{
           id: 'coinleague.mintnft',
           title: 'Mint NFT',
@@ -235,7 +235,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },*/
-    {
+    /* {
       id: 'nftLeague',
       title: 'NftLeague',
       messageId: 'sidebar.nftLeague',
@@ -260,7 +260,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `https://docs.dexkit.com/gaming/predictions-hub/nft-league/how-to-play`,
         },
       ],
-    },
+    },*/
     {
       id: 'myapps',
       title: 'My Apps',

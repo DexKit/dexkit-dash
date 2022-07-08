@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import {
   Box,
   Paper,
@@ -131,7 +131,6 @@ const TotalBalance = (props: Props) => {
 
   const theme = useTheme();
   const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
-  const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const {account} = useWeb3();
 
@@ -145,17 +144,16 @@ const TotalBalance = (props: Props) => {
   // const networkName = useNetwork();
 
   const {network: networkName} = useChainInfo();
-  /* eslint-disable */
-  useEffect(() => {
+
+  const tokens = useMemo(() => {
     if (only) {
       const dataFn = balances?.find(
         (e) =>
           e.currency?.address?.toLowerCase() === only.address.toLowerCase(),
       );
-
       if (!dataFn) {
         if (networkName) {
-          setTokens([
+          return [
             {
               __typename: 'EthereumBalance',
               currency: {
@@ -170,10 +168,10 @@ const TotalBalance = (props: Props) => {
               value: 0,
               valueInUsd: 0,
             },
-          ]);
+          ] as MyBalances[];
         }
       } else {
-        setTokens([
+        return [
           {
             __typename: 'EthereumBalance',
             currency: {
@@ -188,12 +186,11 @@ const TotalBalance = (props: Props) => {
             value: dataFn.value ?? 0,
             valueInUsd: dataFn.valueInUsd ?? 0,
           },
-        ]);
+        ] as MyBalances[];
       }
-    } else {
-      setTokens(balances);
     }
-  }, [only, balances]);
+    return balances;
+  }, [only, balances, networkName]);
 
   const usdTotalAmount = useMemo(() => {
     return (
@@ -222,7 +219,7 @@ const TotalBalance = (props: Props) => {
       return tokens[0].valueInUsd?.toFixed(2);
     }
     return null;
-  }, [only, tokens.length]);
+  }, [only, tokens]);
 
   // const onlyTokenValue = useMemo(() => {
   //   if (only && tokens.length > 0) {
@@ -265,13 +262,13 @@ const TotalBalance = (props: Props) => {
 
   const handleSwap = useCallback(() => {
     setShowSwap(true);
-  }, [init]);
+  }, []);
 
-  const handleTrade = useCallback(() => setShowTrade(true), [init]);
+  const handleTrade = useCallback(() => setShowTrade(true), []);
 
   const handleToggleVisibility = useCallback(() => {
     setBalanceIsVisible();
-  }, []);
+  }, [setBalanceIsVisible]);
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
@@ -291,12 +288,16 @@ const TotalBalance = (props: Props) => {
     accountsModal.setShow(true);
   }, [accountsModal]);
 
+  const senderBalanceTokens = useMemo(() => {
+    return tokens.filter((t) => t.network === networkName);
+  }, [networkName, tokens]);
+
   return (
     <>
       <Sender
         open={showSender}
         onClose={handleCloseSender}
-        balances={tokens.filter((t) => t.network === networkName)}
+        balances={senderBalanceTokens}
         onResult={handleResult}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />

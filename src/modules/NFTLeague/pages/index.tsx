@@ -12,7 +12,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useMobile} from 'hooks/useMobile';
 import {useToggler} from 'hooks/useToggler';
 import {useWeb3} from 'hooks/useWeb3';
-import CreateGameButton from 'modules/CoinLeagues/components/v2/CreateGameButton';
+import CreateGameButton from 'modules/CoinLeague/components/v2/CreateGameButton';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useIntl} from 'react-intl';
 import {useHistory} from 'react-router';

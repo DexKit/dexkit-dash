@@ -12,7 +12,8 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import {WhitelabelTypes} from 'types/myApps';
 import Aggregator from 'assets/images/aggregator.png';
-import {blue} from '@material-ui/core/colors';
+import Exchange from 'assets/images/exchange.png';
+import {blue, teal} from '@material-ui/core/colors';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 
 const useStyles = makeStyles((theme) => ({
@@ -119,7 +120,11 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     Number(process.env.REACT_APP_APP_COST_KIT_MARKETPLACE),
   ]);
 
-  const buttonAction = (url: string, type: WhitelabelTypes) => {
+  const buttonAction = (
+    url: string,
+    type: WhitelabelTypes,
+    isOpenOutside?: boolean,
+  ) => {
     switch (type) {
       case 'AGGREGATOR': {
         setAmount(allKitValues[0]);
@@ -138,7 +143,11 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     if (data && data?.value && data?.value < amount) {
       setShowDialog(true);
     } else {
-      history.push(url);
+      if (isOpenOutside) {
+        window.open(url);
+      } else {
+        history.push(url);
+      }
     }
   };
 
@@ -187,19 +196,29 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
               }}
             />
 
-            {/*  <Kit
+            <Kit
               key={'exg'}
               icon={Exchange}
               color={bgColor}
               bgColor={teal[600]}
-              value={allKitValues[1]}
+              value={0}
               name={'Exchange'}
               button={{
                 color: 'secondary',
-                action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/exchange`, 'DEX'),
-                title: 'ADD +'
+                action: (
+                  $e: React.MouseEvent<
+                    HTMLAnchorElement | HTMLButtonElement,
+                    MouseEvent
+                  >,
+                ) =>
+                  buttonAction(
+                    `https://exchange.dexkit.com/wizard#/trade/dex-wizard`,
+                    'DEX',
+                    true,
+                  ),
+                title: 'ADD +',
               }}
-            />*/}
+            />
 
             {/*  <Kit
               key={'market'}

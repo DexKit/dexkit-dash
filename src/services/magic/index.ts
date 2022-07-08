@@ -1,5 +1,6 @@
 import { OAuthExtension } from '@magic-ext/oauth';
 import { Magic } from 'magic-sdk';
+
 import { NetworkSlugs } from 'shared/constants/AppEnums';
 import { AppNetworks } from 'shared/constants/Networks';
 import { ChainId } from 'types/blockchain';
@@ -83,7 +84,7 @@ const magicMumbai = new Magic(
     extensions: [new OAuthExtension()],
     network: {
       //rpcUrl: 'https://rpc-mainnet.matic.network',
-      rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+      rpcUrl: 'https://matic-mumbai.chainstacklabs.com',
       chainId: 80001,
     },
   },

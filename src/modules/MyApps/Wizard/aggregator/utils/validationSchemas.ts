@@ -19,7 +19,10 @@ export const ValidationSchemas = [
         domain: yup
             .string()
             .url()
-            .required('Logo is required'),
+            .required('Domain is required'),
+        share_image_url: yup
+            .string()
+            .url(),
         feeRecipient: yup
             .string()
             .test('is-address', 'Address not valid', (value) => !!isAddress(value))

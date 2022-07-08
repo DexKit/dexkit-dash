@@ -25,7 +25,7 @@ import {
   GET_NFT_LEAGUE_FACTORY_ADDRESS,
   NFT_LEAGUE_MULTIPLIERS,
 } from '../constants';
-import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {SelectChampionDialog} from './SelectChampionDialog';
 
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';

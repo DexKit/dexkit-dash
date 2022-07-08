@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {useCountdown} from 'hooks/utils/useCountdown';
 
-import {strPad} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeague/utils/time';
 
 interface Props {
   duration?: number;
