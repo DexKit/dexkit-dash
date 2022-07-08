@@ -46,9 +46,9 @@ export const ChainSelect = ({fullWidth}: {fullWidth?: boolean}) => {
           <MenuItem value={ChainId.Matic}>
             {GET_CHAIN_ID_NAME(ChainId.Matic)}{' '}
           </MenuItem>
-          <MenuItem value={ChainId.Binance}>
+          {/* <MenuItem value={ChainId.Binance}>
             {GET_CHAIN_ID_NAME(ChainId.Binance)}
-          </MenuItem>
+    </MenuItem>*/}
         </Select>
       </FormControl>
     </Tooltip>
