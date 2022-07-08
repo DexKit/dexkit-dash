@@ -43,7 +43,9 @@ const Changelog = () => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.25'
           id='panelv0.0.6.21-header'>
-          <Typography className={classes.heading}>v0.0.6.25 - next </Typography>
+          <Typography className={classes.heading}>
+            v0.0.6.25 - - 8-07-2022{' '}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>

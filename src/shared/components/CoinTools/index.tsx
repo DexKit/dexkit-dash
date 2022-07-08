@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import {Box, Grid, Backdrop} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
@@ -108,13 +108,10 @@ const CoinTools = (props: Props) => {
     disableAccounts,
   } = props;
 
-  const [tokens, setTokens] = useState<MyBalances[]>([]);
-
   const net = useNetwork();
   const networkName = network || net;
 
-  /* eslint-disable */
-  useEffect(() => {
+  const tokens = useMemo(() => {
     if (only) {
       const dataFn = balances?.find(
         (e) =>
@@ -122,7 +119,7 @@ const CoinTools = (props: Props) => {
       );
 
       if (!dataFn) {
-        setTokens([
+        return [
           {
             __typename: 'EthereumBalance',
             currency: {
@@ -137,9 +134,9 @@ const CoinTools = (props: Props) => {
             value: 0,
             valueInUsd: 0,
           },
-        ]);
+        ] as MyBalances[];
       } else {
-        setTokens([
+        return [
           {
             __typename: 'EthereumBalance',
             currency: {
@@ -154,12 +151,12 @@ const CoinTools = (props: Props) => {
             value: dataFn.value ?? 0,
             valueInUsd: dataFn.valueInUsd ?? 0,
           },
-        ]);
+        ] as MyBalances[];
       }
     } else {
-      setTokens(balances);
+      return balances as MyBalances[];
     }
-  }, [only, balances]);
+  }, [only, balances, networkName]);
 
   const classes = useStyles();
   const [showSender, setShowSender] = useState(false);

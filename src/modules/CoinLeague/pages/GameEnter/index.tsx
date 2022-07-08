@@ -520,9 +520,11 @@ function GameEnter(props: Props) {
             </Grid>
           )}
 
-          <Grid item xs={12}>
-            <TickerTapeTV />
-          </Grid>
+          {!isMobile && (
+            <Grid item xs={12}>
+              <TickerTapeTV />
+            </Grid>
+          )}
 
           <Grid item xs={12}>
             <Grid container justifyContent='space-between'>

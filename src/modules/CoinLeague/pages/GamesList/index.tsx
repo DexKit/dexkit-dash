@@ -33,9 +33,6 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import BuyCryptoButton from 'shared/components/BuyCryptoButton';
-import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import {ShareButton} from 'shared/components/ShareButton';
 
 import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
 import CardGame from 'modules/CoinLeague/components/CardGame';
@@ -51,7 +48,6 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useGamesMetadata} from 'modules/CoinLeague/hooks/useGameMetadata';
-import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {ChainSelect} from 'modules/CoinLeague/components/ChainSelect';
 import {useMobile} from 'hooks/useMobile';
 import CreateGameButton from 'modules/CoinLeague/components/v2/CreateGameButton';
@@ -59,6 +55,7 @@ import {IconButton, makeStyles, TextField} from '@material-ui/core';
 import CoinLeagueShareDialog from 'modules/CoinLeague/components/CoinLeagueShareDialog';
 import {AAdsCoinleagueBanner} from 'modules/CoinLeague/components/AAds';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {ToolButtons} from 'modules/CoinLeague/components/ToolButtons';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -77,7 +74,6 @@ const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
   const {account} = useWeb3();
-  const {coinSymbol} = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
   const isMobile = useMobile();
 
@@ -301,9 +297,12 @@ const GamesList = () => {
 
       <CreateGameModal open={open} setOpen={setOpen} />
       <Grid container spacing={6} alignItems={'center'}>
-        <Grid item xs={12}>
-          <TickerTapeTV />
-        </Grid>
+        `
+        {!isMobile && (
+          <Grid item xs={12}>
+            <TickerTapeTV />
+          </Grid>
+        )}
         {/*<Hidden smUp={true}>
           <Grid item xs={12}>
             <Box display={'flex'} justifyContent={'center'}>
@@ -338,9 +337,11 @@ const GamesList = () => {
               </Box>
             </Grid>
             <Grid item>
-              <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+              <ToolButtons shareText={`Coin League Games`} />
+
+              {/* <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
                 <Box pr={2}>
-                  <ShareButton shareText={`Coin League Games`} />
+                  <ShareButton shareText={} />
                 </Box>
                 <Box pr={2}>
                   <BuyCryptoButton
@@ -351,7 +352,7 @@ const GamesList = () => {
                 <Box pr={2}>
                   <MaticBridgeButton />
                 </Box>
-              </Box>
+      </Box>*/}
             </Grid>
           </Grid>
         </Grid>
@@ -386,7 +387,6 @@ const GamesList = () => {
             </Hidden>
           </Grid>
         </Grid>
-
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>
             <IntlMessages id='app.coinLeagues.gamesInProgress' />:{' '}
@@ -403,7 +403,6 @@ const GamesList = () => {
             </Button>
           </Box>
         </Grid>
-
         <Grid item xs={12}>
           <Grid container spacing={4}>
             {gamesInProgress?.slice(0, 6).map((g, id) => (
@@ -470,7 +469,6 @@ const GamesList = () => {
             </Grid>
           </Grid>
         </Grid>
-
         <Grid item xs={12}>
           <CreateGameButton
             onClick={handleShowCreateGameModal}
@@ -482,7 +480,6 @@ const GamesList = () => {
             }
           />
         </Grid>
-
         <Grid item xs={12}>
           <Grid
             container
@@ -574,7 +571,6 @@ const GamesList = () => {
             </Grid>
           </Grid>
         </Grid>
-
         {value === Tabs.Games && (
           <Grid item xs={12}>
             <Grid container spacing={4}>
