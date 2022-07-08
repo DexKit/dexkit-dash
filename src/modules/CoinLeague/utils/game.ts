@@ -127,15 +127,15 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
 export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic, coinToPlayAddress?: string) => {
   const coinToPlay = CoinToPlay[chainId]?.find(c => c.address.toLowerCase() === coinToPlayAddress?.toLowerCase());
   if (coinToPlay && coinToPlay.address.toLowerCase() !== NativeCoinAddress.toLowerCase()) {
-    if (entry.lt(ethers.utils.parseEther('1'))) {
+    if (entry.lt(ethers.utils.parseEther('2'))) {
       return 'Beginner';
-    } else if (entry.lt(ethers.utils.parseEther('5'))) {
+    } else if (entry.lt(ethers.utils.parseEther('10'))) {
       return 'Intermediate';
     } else if (entry.lt(ethers.utils.parseEther('50'))) {
       return 'Advanced';
-    } else if (entry.lt(ethers.utils.parseEther('100'))) {
+    } else if (entry.lt(ethers.utils.parseEther('110'))) {
       return 'Expert';
-    } else if (entry.lt(ethers.utils.parseEther('250'))) {
+    } else if (entry.lt(ethers.utils.parseEther('270'))) {
       return 'Master';
     } else {
       return 'Grand Master';
@@ -193,7 +193,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (
   switch (gameLevel) {
     case GameLevel.Beginner:
       if (isStable) {
-        return ethers.utils.parseUnits('0.001', coinToPlay.decimals);
+        return ethers.utils.parseUnits('1', coinToPlay.decimals);
       }
       switch (chainId) {
         case ChainId.Matic:
