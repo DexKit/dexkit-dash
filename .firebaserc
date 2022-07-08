@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "dexkit-dash"
+    "default": "dexkit-dash",
+    "coinleague": "coinleague-1d619"
   }
 }
