@@ -34,26 +34,19 @@ import PlayersTable from 'modules/CoinLeague/components/PlayersTable';
 import OnePlayerTable from 'modules/CoinLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinLeague/components/WaitingPlayers';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  GET_LEAGUES_CHAIN_ID,
-  IS_SUPPORTED_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeague/utils/constants';
+import {IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeague/utils/constants';
 import {ChainId, SupportedNetworkType} from 'types/blockchain';
 import Countdown from 'modules/CoinLeague/components/Countdown';
 import CountdownStartsAt from 'modules/CoinLeague/components/CountdownStartsAt';
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
-import BuyCryptoButton from 'shared/components/BuyCryptoButton';
-import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import PlayersTableSkeleton from 'modules/CoinLeague/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
-import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
 import {
   useCoinLeaguesFactoryRoutes,
   useIsNFTGame,
 } from 'modules/CoinLeague/hooks/useCoinLeaguesFactory';
-import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
 import {useDispatch} from 'react-redux';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -72,7 +65,6 @@ import {useGameMetadata} from 'modules/CoinLeague/hooks/useGameMetadata';
 import ViewGameMetadataModal from 'modules/CoinLeague/components/ViewGameMetadataModal';
 import RemoveGameMetadataModal from 'modules/CoinLeague/components/RemoveGameMetadataModal';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useGameProfilesState} from 'modules/CoinLeague/hooks/useGameProfilesState';
@@ -86,6 +78,7 @@ import {useMobile} from 'hooks/useMobile';
 import {useCoinLeagueFactory} from 'modules/CoinLeague/hooks/useCoinLeagueFactoryV3';
 import {useCoinToPlay} from 'modules/CoinLeague/hooks/useCoinToPlay';
 import {useTokenBalanceAndAllowance} from 'modules/CoinLeague/hooks/useTokenBalanceAndAllowance';
+import {ToolButtons} from 'modules/CoinLeague/components/ToolButtons';
 
 //import {AAdsCoinleagueBanner} from 'modules/CoinLeagues/components/AAds';
 
@@ -583,39 +576,10 @@ function GameEnter(props: Props) {
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid
-                  container
-                  spacing={4}
-                  alignItems='center'
-                  alignContent='center'>
-                  <Grid item>
-                    <SwapButton />
-                  </Grid>
-                  <Grid item>
-                    <ShareButton
-                      shareText={`${messages['app.coinLeagues.coinsLeagueGame']} #Id ${id}`}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <BuyCryptoButton
-                      btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}`}
-                      defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <BuyCryptoButton
-                      btnMsg={`Buy ${currencySymbol || 'USDT'}`}
-                      defaultCurrency={currencySymbol.toUpperCase() || 'USDT'}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <MaticBridgeButton />
-                  </Grid>
-                </Grid>
+                <ToolButtons
+                  shareText={`${messages['app.coinLeagues.coinsLeagueGame']} #Id ${id}`}
+                  coin_to_play={game?.coin_to_play}
+                />
               </Grid>
             </Grid>
           </Grid>

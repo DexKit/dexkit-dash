@@ -27,8 +27,6 @@ import {Empty} from 'shared/components/Empty';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
-import SwapButton from 'shared/components/SwapButton';
-
 import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
@@ -196,9 +194,6 @@ const GamesInProgress = () => {
         </Grid>
         <Grid item xs={12} sm={6} xl={6}>
           <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-            <Box pr={2}>
-              <SwapButton />
-            </Box>
             <Box pr={2}>
               <ShareButton
                 shareText={

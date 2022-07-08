@@ -23,7 +23,6 @@ import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeague/components/CreateGameModal';
 
 import {Empty} from 'shared/components/Empty';
-import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeague/components/SmallCardGame';
 import {useHistory} from 'react-router-dom';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
@@ -341,10 +340,7 @@ const GamesList = () => {
             <Grid item>
               <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
                 <Box pr={2}>
-                  <SwapButton />
-                </Box>
-                <Box pr={2}>
-                  <ShareButton shareText={`Coin league Games`} />
+                  <ShareButton shareText={`Coin League Games`} />
                 </Box>
                 <Box pr={2}>
                   <BuyCryptoButton

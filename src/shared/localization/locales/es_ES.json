@@ -1825,7 +1825,7 @@
   "app.onBoarding.useTheAppInDemoMode": "Usa la aplicación en modo demostración.",
   "app.onBoarding.clickHereToOpenADemo": "Click aquí para abrir una desmotración de la aplicación.",
   "app.onBoarding.welcome": "Bienvenido",
-  "app.onBoarding.welcomeToSuperAppDexkit": "Bienvenido a la SuperApp de DEXKIT. Acá podrás hacer tus transacciones y mantener tu billetera, además de otras acciones.",
+  "app.onBoarding.welcomeToSuperAppDexkit": "Bienvenido a la SuperApp de DexKit. Acá podrás hacer tus transacciones y mantener tu billetera, además de otras acciones.",
   "app.onBoarding.addAWalletAddress": "Agrega una dirección de billetera o coloca las extensiones de abajo.",
   "app.onBoarding.metamask": "Metamask",
   "app.onBoarding.walletConnect": "WalletConnect",

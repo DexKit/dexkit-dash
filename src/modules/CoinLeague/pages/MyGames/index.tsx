@@ -26,9 +26,6 @@ import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import MyGamesTable from 'modules/CoinLeague/components/MyGamesTable';
-
-import SwapButton from 'shared/components/SwapButton';
-
 import {RoomType} from 'modules/CoinLeague/constants/enums';
 
 import {useLeaguesChainInfo} from 'modules/CoinLeague/hooks/useLeaguesChainInfo';
@@ -116,9 +113,6 @@ const MyGames = () => {
       </Grid>
       <Grid item xs={12} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-          <Box pr={2}>
-            <SwapButton />
-          </Box>
           <Box pr={2}>
             <BuyCryptoButton
               btnMsg={`Buy ${coinSymbol}`}

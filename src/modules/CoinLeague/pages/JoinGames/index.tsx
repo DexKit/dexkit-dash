@@ -39,7 +39,6 @@ import {ShareButton} from 'shared/components/ShareButton';
 import {useCoinLeagueGames} from 'modules/CoinLeague/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeague/components/CardGame';
 import TickerTapeTV from '../../components/TickerTapeTV';
-import SwapButton from 'shared/components/SwapButton';
 import {GameOrderBy, RoomType} from 'modules/CoinLeague/constants/enums';
 import {useGamesFilters} from 'modules/CoinLeague/hooks/useGamesFilter';
 import GameOrderBySelect from 'modules/CoinLeague/components/GameOrderBySelect';
@@ -207,9 +206,6 @@ const JoinGames = () => {
             </Grid>
             <Grid item>
               <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-                <Box pr={2}>
-                  <SwapButton />
-                </Box>
                 <Box pr={2}>
                   <ShareButton shareText={`Coin leagues Games`} />
                 </Box>
