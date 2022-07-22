@@ -38,13 +38,28 @@ const Changelog = () => {
         mb={2}>
         Changelog
       </Box>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.26'
+          id='panelv0.0.6.26-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.26 - 22-07-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Simplify dashboard</Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.25'
           id='panelv0.0.6.21-header'>
           <Typography className={classes.heading}>
-            v0.0.6.25 - - 8-07-2022{' '}
+            v0.0.6.25 - 8-07-2022{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -73,7 +88,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.23'

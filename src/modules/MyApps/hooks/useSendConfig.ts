@@ -91,12 +91,7 @@ export const useSendConfig = () => {
         };
         dispatch(onAddNotification([notification]));
         history.push(`/my-apps/manage`);
-
-
-
-
       }
-
     })
 
 

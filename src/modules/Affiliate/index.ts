@@ -5,7 +5,7 @@ export const affiliateConfigs = [
     routes: [
       {
         auth: ['wallet'],
-        path: '/affiliate/overview',
+        path: '/affiliate',
         component: React.lazy(() => import('./page/wrapper')),
       },
     ],

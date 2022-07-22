@@ -37,7 +37,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'wallet-2',
           url: `/wallet`,
         },
-        {
+        /*  {
           id: 'trade',
           title: 'Trade',
           messageId: 'app.trade',
@@ -54,7 +54,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'star',
           url: `/favorite-coins`,
-        },
+        },*/
         /* Removing for now NFT wallet  
         {
           id: 'nfts',
@@ -300,7 +300,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'profile-2user',
-          url: '/affiliate/overview',
+          url: '/affiliate',
         },
       ],
     },

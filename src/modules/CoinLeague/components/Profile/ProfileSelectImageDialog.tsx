@@ -61,7 +61,7 @@ export const ProfileSelectImageDialog: React.FC<Props> = ({
 
   const [selectedAsset, setSelectedAsset] =
     useState<{contractAddress: string; tokenId: string; image: string}>();
-  const [listOption, setListOption] = useState(LIST_CHAMPIONS);
+  const [listOption, setListOption] = useState(LIST_KITTYGOTCHI);
 
   const {onClose} = dialogProps;
 
@@ -260,7 +260,7 @@ export const ProfileSelectImageDialog: React.FC<Props> = ({
                   onChange={handleChangeListOption}
                   variant='outlined'
                   value={listOption}>
-                  <MenuItem value={LIST_CHAMPIONS}>Champions</MenuItem>
+                  {/*  <MenuItem value={LIST_CHAMPIONS}>Champions</MenuItem>*/}
                   <MenuItem value={LIST_KITTYGOTCHI}>Kittygotchi</MenuItem>
                 </Select>
               </FormControl>
