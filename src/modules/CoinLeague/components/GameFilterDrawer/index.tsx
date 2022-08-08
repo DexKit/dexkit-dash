@@ -264,6 +264,12 @@ export const GameFilterDrawer = (props: Props) => {
                 <MenuItem value={GameDuration.WEEK}>
                   <IntlMessages id='app.coinLeagues.1week' />
                 </MenuItem>
+                <MenuItem value={GameDuration.MONTH}>
+                  <IntlMessages
+                    id='app.coinLeagues.1month'
+                    defaultMessage={'1 Month'}
+                  />
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>

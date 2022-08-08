@@ -257,7 +257,7 @@ const CreateGameModal = (props: Props) => {
                     chainId,
                     stableCoinAddress,
                   )}>
-                  <IntlMessages id='app.coinLeagues.intermediate' />-{' '}
+                  <IntlMessages id='app.coinLeagues.intermediate' /> -{' '}
                   {GET_GAME_LEVEL_AMOUNTS_UNITS(
                     GameLevel.Intermediate,
                     chainId,

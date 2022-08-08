@@ -1,4 +1,4 @@
-import {FilterGame, FilterPlayerGame, GameDuration} from '../constants/enums';
+import { FilterGame, FilterPlayerGame, GameDuration } from '../constants/enums';
 
 export const strPad = (str: number): string => {
   if (str > 100) {
@@ -22,6 +22,8 @@ export const GET_LABEL_FROM_DURATION = (time: Number) => {
       return '24 hrs';
     case 7 * 24 * 60 * 60:
       return '1 week';
+    case 30 * 7 * 24 * 60 * 60:
+      return '1 month';
     default:
       return '1 hr';
   }
@@ -41,6 +43,8 @@ export const GET_DURATION_FROM_FILTER = (filter: FilterGame) => {
       return 24 * 60 * 60;
     case FilterGame.Week:
       return 7 * 24 * 60 * 60;
+    case FilterGame.Month:
+      return 30 * 7 * 24 * 60 * 60;
     default:
       return null;
   }
@@ -60,6 +64,8 @@ export const GET_DURATION_FROM_FILTER_V2 = (filter: GameDuration) => {
       return 24 * 60 * 60;
     case GameDuration.WEEK:
       return 7 * 24 * 60 * 60;
+    case GameDuration.MONTH:
+      return 30 * 7 * 24 * 60 * 60;
     default:
       return null;
   }

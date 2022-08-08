@@ -288,6 +288,9 @@ export interface GeneralConfigAggregator {
   support_bsc?: boolean;
   bsc_as_default?: boolean;
   matic_as_default?: boolean;
+  hide_tabs?: boolean;
+  hide_network_selector?: boolean;
+  hide_network_dropdown?: boolean;
   avax_as_default?: boolean;
   fantom_as_default?: boolean;
   fee_waive_for_default_token?: boolean;

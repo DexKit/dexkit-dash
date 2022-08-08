@@ -114,7 +114,7 @@ export const GeneralForm = (props: GeneralFormProps) => {
           fullWidth
           id='feeRecipient'
           name='feeRecipient'
-          label='Fee Recipient'
+          label='Affiliate'
           variant='outlined'
           value={formik.values.feeRecipient}
           onChange={formik.handleChange}
@@ -287,6 +287,77 @@ export const GeneralForm = (props: GeneralFormProps) => {
             text={
               HELP_TEXT?.fantom_as_default
                 ? HELP_TEXT?.fantom_as_default[0]
+                : ''
+            }
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={6} md={6} sm={6}>
+        <Box display={'flex'} alignContent={'center'} alignItems={'center'}>
+          <FormControlLabel
+            value={formik.values.hide_tabs}
+            control={
+              <Checkbox
+                defaultChecked={formik.values.hide_tabs}
+                onChange={formik.handleChange}
+                name={'hide_tabs'}
+                id='hide_tabs'
+                color='primary'
+              />
+            }
+            label={'Hide tabs'}
+            labelPlacement='end'
+          />
+          <InfoComponent
+            text={HELP_TEXT?.hide_tabs ? HELP_TEXT?.hide_tabs[0] : ''}
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={6} md={6} sm={6}>
+        <Box display={'flex'} alignContent={'center'} alignItems={'center'}>
+          <FormControlLabel
+            value={formik.values.hide_network_selector}
+            control={
+              <Checkbox
+                defaultChecked={formik.values.hide_network_selector}
+                onChange={formik.handleChange}
+                name={'hide_network_selector'}
+                id='hide_network_selector'
+                color='primary'
+              />
+            }
+            label={'Hide network selector'}
+            labelPlacement='end'
+          />
+          <InfoComponent
+            text={
+              HELP_TEXT?.hide_network_selector
+                ? HELP_TEXT?.hide_network_selector[0]
+                : ''
+            }
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={6} md={6} sm={6}>
+        <Box display={'flex'} alignContent={'center'} alignItems={'center'}>
+          <FormControlLabel
+            value={formik.values.hide_network_dropdown}
+            control={
+              <Checkbox
+                defaultChecked={formik.values.hide_network_dropdown}
+                onChange={formik.handleChange}
+                name={'hide_network_dropdown'}
+                id=' hide_network_dropdown'
+                color='primary'
+              />
+            }
+            label={'Hide network dropdown'}
+            labelPlacement='end'
+          />
+          <InfoComponent
+            text={
+              HELP_TEXT?.hide_network_dropdown
+                ? HELP_TEXT?.hide_network_dropdown[0]
                 : ''
             }
           />

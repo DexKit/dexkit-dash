@@ -5,6 +5,7 @@ export enum FilterGame {
   Eight = '8hrs',
   Day = '24hrs',
   Week = 'Week',
+  Month = 'Month',
   Mine = 'My Games',
 }
 
@@ -15,6 +16,7 @@ export enum GameDuration {
   EIGHT,
   DAY,
   WEEK,
+  MONTH
 }
 
 export enum FilterPlayerGame {

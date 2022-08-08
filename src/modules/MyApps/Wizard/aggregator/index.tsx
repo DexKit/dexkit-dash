@@ -28,7 +28,7 @@ import {
 import {NavigationButton} from '../shared/Buttons/navigationButton';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 import {ValidationSchemas} from './utils/validationSchemas';
 import {useSendConfig} from 'modules/MyApps/hooks/useSendConfig';
 import {GeneralForm} from './forms/General';
@@ -90,6 +90,7 @@ const initConfig: GeneralConfigAggregator = {
   brand_color: '#ff7149',
   brand_color_dark: '#2172E5',
   support_bsc: true,
+
   bsc_as_default: true,
   matic_as_default: false,
   avax_as_default: false,
@@ -124,6 +125,14 @@ export default function WizardAggregator(props: any) {
   } = props;
   const {slug} = params;
   const history = useHistory();
+  const location = useLocation();
+  const search = location.search;
+
+  const format = useMemo(() => {
+    let params = new URLSearchParams(search);
+    return params.get('format') || '';
+  }, [search]);
+
   const classes = useStyles();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -165,71 +174,106 @@ export default function WizardAggregator(props: any) {
     'Copy Wordpress Shortcode',
   );
 
-  const handleCopyShortcode = useCallback((values: any) => {
-    if (!values) {
-      return;
-    }
+  const handleCopyShortcode = useCallback(
+    (values: any) => {
+      if (!values) {
+        return;
+      }
 
-    setTextButtonCopy('Copied');
-    let text = '';
-    if (values.logo) {
-      text = `logo="${values.logo}"`;
-    }
-    if (values.logo_dark) {
-      text = `${text} logo_dark="${values.logo_dark}"`;
-    }
-    if (values.bsc_as_default) {
-      text = `${text} bsc_as_default="true"`;
-    }
-    if (values.matic_as_default) {
-      text = `${text} matic_as_default="true"`;
-    }
-    if (values.avax_as_default) {
-      text = `${text} matic_as_default="true"`;
-    }
-    if (values.fantom_as_default) {
-      text = `${text} matic_as_default="true"`;
-    }
-    if (values.is_dark_mode) {
-      text = `${text} is_dark_mode="true"`;
-    }
-    if (values.default_token_address) {
-      text = `${text} default_token_address_eth="${values.default_token_address}"`;
-    }
-    if (values.buy_token_percentage) {
-      text = `${text} default_token_address_eth="${values.buy_token_percentage}"`;
-    }
-    if (values.default_token_address_bsc) {
-      text = `${text} default_token_address_bsc="${values.default_token_address_bsc}"`;
-    }
-    if (values.default_token_address_matic) {
-      text = `${text} default_token_address_matic="${values.default_token_address_matic}"`;
-    }
+      setTextButtonCopy('Copied');
+      let text = '';
+      if (values.logo) {
+        text = `logo="${values.logo}"`;
+      }
+      if (values.logo_dark) {
+        text = `${text} logo_dark="${values.logo_dark}"`;
+      }
+      if (values.bsc_as_default) {
+        text = `${text} bsc_as_default="true"`;
+      }
+      if (values.matic_as_default) {
+        text = `${text} matic_as_default="true"`;
+      }
+      if (values.avax_as_default) {
+        text = `${text} avax_as_default="true"`;
+      }
+      if (values.fantom_as_default) {
+        text = `${text} fantom_as_default="true"`;
+      }
+      if (values.is_dark_mode) {
+        text = `${text} is_dark_mode="true"`;
+      }
+      if (values.hide_tabs) {
+        text = `${text} hide_tabs="true"`;
+      }
 
-    if (values.default_token_address_avax) {
-      text = `${text} default_token_address_avax="${values.default_token_address_avax}"`;
-    }
+      if (values.hide_network_selector) {
+        text = `${text} hide_network_selector="true"`;
+      }
 
-    if (values.default_token_address_fantom) {
-      text = `${text} default_token_address_fantom="${values.default_token_address_fantom}"`;
-    }
-    if (values.brand_color) {
-      text = `${text} brand_color="${values.brand_color}"`;
-    }
-    if (values.brand_color_dark) {
-      text = `${text} brand_color_dark="${values.brand_color_dark}"`;
-    }
-    if (values.default_slippage) {
-      text = `${text} default_slippage="${values.default_slippage}"`;
-    }
+      if (values.hide_network_dropdown) {
+        text = `${text} hide_network_dropdown="true"`;
+      }
 
-    const shortCodeToCopy = `[dexkit_aggregator ${text} ]`;
-    navigator.clipboard.writeText(shortCodeToCopy);
-    document.execCommand('copy');
-    setTimeout(() => {
-      setTextButtonCopy('Copy Shortcode');
-    }, 500);
-  }, []);
+      if (values.default_token_address) {
+        text = `${text} default_token_address_eth="${values.default_token_address}"`;
+      }
+
+      if (values.default_token_address_bsc) {
+        text = `${text} default_token_address_bsc="${values.default_token_address_bsc}"`;
+      }
+      if (values.default_token_address_matic) {
+        text = `${text} default_token_address_matic="${values.default_token_address_matic}"`;
+      }
+
+      if (values.default_token_address_avax) {
+        text = `${text} default_token_address_avax="${values.default_token_address_avax}"`;
+      }
+
+      if (values.default_token_address_fantom) {
+        text = `${text} default_token_address_fantom="${values.default_token_address_fantom}"`;
+      }
+
+      if (values.feeRecipient) {
+        text = `${text} affiliate="${values.feeRecipient}"`;
+      }
+
+      if (values.buyTokenPercentage) {
+        text = `${text} buy_token_percentage="${values.buyTokenPercentage}"`;
+      }
+
+      if (values.default_token_address_fantom) {
+        text = `${text} default_token_address_fantom="${values.default_token_address_fantom}"`;
+      }
+      if (values.brand_color) {
+        text = `${text} brand_color="${values.brand_color}"`;
+      }
+      if (values.brand_color_dark) {
+        text = `${text} brand_color_dark="${values.brand_color_dark}"`;
+      }
+      if (values.default_slippage) {
+        text = `${text} default_slippage="${values.default_slippage}"`;
+      }
+
+      if (values.name) {
+        text = `${text} name="${values.name}"`;
+      }
+
+      if (values.hide_powered_by_dexkit) {
+        text = `${text} hide_powered_by_dexkit="true"`;
+      }
+      let shortCodeToCopy = `[dexkit_aggregator ${text} ]`;
+      if (format === 'codecanyon') {
+        shortCodeToCopy = `[dexkit_aggregator_codecanyon ${text} ]`;
+      }
+      navigator.clipboard.writeText(shortCodeToCopy);
+      document.execCommand('copy');
+      setTimeout(() => {
+        setTextButtonCopy('Copy Shortcode');
+      }, 500);
+    },
+    [format],
+  );
 
   const _handleSubmit = (values: any) => {
     onSendConfigMutation.mutate({

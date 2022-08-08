@@ -41,6 +41,74 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.29'
+          id='panelv0.0.6.29-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.30 - 8-08-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Update on Coin League
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.29'
+          id='panelv0.0.6.29-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.29 - 2-08-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Minor updates to aggregator wizard
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.28'
+          id='panelv0.0.6.28-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.28 - 1-08-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Add more options to aggregator wizard
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.26'
+          id='panelv0.0.6.26-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.27 - 30-07-2022{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Add more options to aggregator wizard
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.26'
           id='panelv0.0.6.26-header'>
           <Typography className={classes.heading}>

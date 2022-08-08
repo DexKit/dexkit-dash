@@ -12,10 +12,10 @@ export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   share_image_url: [
     'Image that shows when you share the url from your project',
   ],
-  feeRecipient: [],
+  feeRecipient: ['Affiliate address that collects the fee'],
   affiliateAddress: ['Enter the wallet that should receive the fee'],
-  brand_color: [],
-  brand_color_dark: [],
+  brand_color: ["White brand color"],
+  brand_color_dark: ["Dark brand color"],
   bsc_as_default: ['Bsc as default network on Aggregator'],
   matic_as_default: ['Matic as default network on Aggregator'],
   avax_as_default: ['Avax as default network on Aggregator'],
@@ -35,6 +35,15 @@ export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   support_bsc: [],
   default_slippage: [
     'Define initial slippage set on UI, 10 is 0.1%, 100 is 1%, 1000 is 10% etc ',
+  ],
+  hide_tabs: [
+    'Hide aggregator tabs where it says Swap, Limit and Pool',
+  ],
+  hide_network_selector: [
+    'Hide network selector not allowing user to change network',
+  ],
+  hide_network_dropdown: [
+    'Hide network dropdown related to networks',
   ],
 };
 
