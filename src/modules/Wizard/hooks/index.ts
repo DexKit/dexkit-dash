@@ -1,17 +1,17 @@
-import {useCallback, useState, useRef} from 'react';
-import axios, {AxiosInstance} from 'axios';
-import {AppState} from 'redux/store';
-import {useSelector} from 'react-redux';
-import {Collection} from 'redux/_wizard/reducers';
-import {useWeb3} from 'hooks/useWeb3';
-import {ERC721Abi} from 'contracts/abis/ERC721Abi';
-import {BigNumber, ethers} from 'ethers';
+import { useCallback, useState, useRef } from 'react';
+import axios, { AxiosInstance } from 'axios';
+import { AppState } from 'redux/store';
+import { useSelector } from 'react-redux';
+import { Collection } from 'redux/_wizard/reducers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ERC721Abi } from 'contracts/abis/ERC721Abi';
+import { BigNumber, ethers } from 'ethers';
 
 function isIpfsUrl(url: string) {
   return url.startsWith('ipfs://');
 }
 
-interface WizardItemAttribute {}
+interface WizardItemAttribute { }
 
 export interface WizardItem {
   name: string;
@@ -32,7 +32,7 @@ export interface WizardCollection {
 
 export function useWizardApi() {
   const axiosRef = useRef<AxiosInstance>(
-    axios.create({baseURL: process.env.REACT_APP_WIZARD_API_ENDPOINT}),
+    axios.create({ baseURL: process.env.REACT_APP_WIZARD_API_ENDPOINT }),
   );
 
   const uploadImage = useCallback(
@@ -66,7 +66,7 @@ export function useWizardApi() {
     [axiosRef],
   );
 
-  return {sendItemsMetadata, sendCollectionMetadata, uploadImage};
+  return { sendItemsMetadata, sendCollectionMetadata, uploadImage };
 }
 
 export function useCollectionList() {
@@ -75,11 +75,11 @@ export function useCollectionList() {
   /* eslint-disable */
   let [error, setError] = useState<string | null>(null);
 
-  const {collections} = useSelector<AppState, AppState['wizard']>(
-    ({wizard}) => wizard,
+  const { collections } = useSelector<AppState, AppState['wizard']>(
+    ({ wizard }) => wizard,
   );
 
-  return {data: collections, error, loading};
+  return { data: collections, error, loading };
 }
 
 export function useCollectionDetails() {
@@ -89,8 +89,8 @@ export function useCollectionDetails() {
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<Collection | null>(null);
 
-  const {collections} = useSelector<AppState, AppState['wizard']>(
-    ({wizard}) => wizard,
+  const { collections } = useSelector<AppState, AppState['wizard']>(
+    ({ wizard }) => wizard,
   );
 
   const get = useCallback(
@@ -104,14 +104,14 @@ export function useCollectionDetails() {
     [collections],
   );
 
-  return {data, loading, error, get};
+  return { data, loading, error, get };
 }
 
 export function useCollectionMetadata() {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<any | null>(null);
-  let {getProvider} = useWeb3();
+  let { getProvider } = useWeb3();
 
   const get = useCallback(
     async (address: string) => {
@@ -139,7 +139,7 @@ export function useCollectionMetadata() {
             contractURI = `https://ipfs.io/ipfs/${cleanImageHash}`;
           }
 
-          let metadata: {name: string; description: string; image: string} =
+          let metadata: { name: string; description: string; image: string } =
             await axios.get(contractURI).then((response) => response.data);
 
           let contractImage = metadata.image;
@@ -167,14 +167,14 @@ export function useCollectionMetadata() {
     [getProvider],
   );
 
-  return {data, loading, error, get};
+  return { data, loading, error, get };
 }
 
 export function useCollectionItems() {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<any | null>(null);
-  let {getProvider} = useWeb3();
+  let { getProvider } = useWeb3();
 
   const get = useCallback(
     async (address: string) => {
@@ -219,7 +219,7 @@ export function useCollectionItems() {
               url = `https://ipfs.io/ipfs/${cleanHash}`;
             }
 
-            let metadata: {name: string; description: string; image: string} =
+            let metadata: { name: string; description: string; image: string } =
               await axios.get(url).then((response) => response.data);
 
             let imageUrl = metadata.image;
@@ -247,7 +247,7 @@ export function useCollectionItems() {
     [getProvider],
   );
 
-  return {data, error, loading, get};
+  return { data, error, loading, get };
 }
 
 export function useTokensList() {
@@ -256,11 +256,11 @@ export function useTokensList() {
   /* eslint-disable */
   let [error, setError] = useState<string | null>(null);
 
-  const {tokens} = useSelector<AppState, AppState['wizard']>(
-    ({wizard}) => wizard,
+  const { tokens } = useSelector<AppState, AppState['wizard']>(
+    ({ wizard }) => wizard,
   );
 
-  const list = useCallback(() => {}, []);
+  const list = useCallback(() => { }, []);
 
-  return {list, data: tokens || [], error, loading};
+  return { list, data: tokens || [], error, loading };
 }

@@ -1,5 +1,5 @@
-import {useQuery} from 'react-query';
-import {getProfile} from '../services/profileApi';
+import { useQuery } from 'react-query';
+import { getProfile } from '../services/profileApi';
 
 const GET_COIN_LEAGUE_PROFILE = 'GET_COIN_LEAGUE_PROFILE';
 

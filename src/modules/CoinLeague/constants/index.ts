@@ -443,14 +443,6 @@ export const MaticPriceFeeds = [
     tv: 'BITFINEX:NEOUSD',
   },
   {
-    address: '0xa8B05B6337040c0529919BDB51f6B40A684eb08C',
-    base: 'OHM',
-    baseName: 'Olympus',
-    logo: 'https://assets.coingecko.com/coins/images/14483/large/token_OHM_%281%29.png',
-    quote: 'USD',
-    tv: 'SUSHISWAP:OHMDAI',
-  },
-  {
     address: '0x93FfEE768F74208a7b9f2a4426f0F6BCbb1D09de',
     base: 'OMG',
     baseName: 'OMG Network',
