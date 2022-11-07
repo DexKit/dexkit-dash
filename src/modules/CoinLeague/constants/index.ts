@@ -585,14 +585,14 @@ export const MaticPriceFeeds = [
     quote: 'USD',
     tv: 'BITFINEX:XRPUSD',
   },
-  {
-    address: '0xC16Cb62CddE46f43Fd73257b957Bf527f07b51C0',
-    base: 'XSUSHI',
-    baseName: 'xSUSHI',
-    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272/logo.png',
-    quote: 'USD',
-    tv: 'SUSHISWAP:XSUSHIUSDT',
-  },
+  /* {
+     address: '0xC16Cb62CddE46f43Fd73257b957Bf527f07b51C0',
+     base: 'XSUSHI',
+     baseName: 'xSUSHI',
+     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272/logo.png',
+     quote: 'USD',
+     tv: 'SUSHISWAP:XSUSHIUSDT',
+   },*/
   {
     address: '0x691e26AB58ff05800E028b0876A41B720b26FC65',
     base: 'XTZ',
